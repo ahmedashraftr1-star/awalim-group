@@ -373,9 +373,32 @@ body {
   text-transform: uppercase; color: var(--muted);
 }
 
-.nav { display: flex; align-items: center; gap: .25rem; }
+/* The floating capsule — the reference's single loudest signature, and the one
+   thing a full-width bar can never imitate. Measured off the real site at
+   1440px: 680x75, border-radius 500px, solid white, 10px of padding, and a
+   two-layer shadow so faint it reads as lift rather than as a drop
+   (0 0 3px rgba(0,0,0,.14) + a wider, weaker second pass).
+
+   Only .nav becomes the pill; the wordmark and the CTA stay at the edges of the
+   bar. Making the whole header a capsule would have meant restructuring the
+   markup of nine pages for a difference the eye reads as the same gesture. */
+.nav {
+  display: flex; align-items: center; gap: .1rem;
+  padding: 10px;
+  border-radius: 500px;
+  background: var(--surface-1);
+  box-shadow:
+    0 0 3px rgba(0, 0, 0, .14),
+    0 6px 22px -10px rgba(0, 0, 0, .10);
+}
+:root[data-theme="dark"] .nav {
+  background: var(--surface-2);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 8px 26px -12px rgba(0, 0, 0, .7);
+}
 .nav a {
-  padding: .5rem .8rem; border-radius: 8px; font-size: var(--t-sm); font-weight: 500;
+  padding: .5rem .95rem; border-radius: 500px; font-size: var(--t-sm); font-weight: 500;
   color: var(--fg-dim); transition: color .2s ease, background-color .2s ease;
 }
 .nav a:hover { color: var(--fg); background: var(--sheen); }

@@ -184,9 +184,14 @@
     </div>
 
     <h3 class="h4 rv" style="margin-bottom:1.2rem">الوحدات المتوفّرة</h3>
-    <div class="tbl-wrap rv">
+    <!-- tabindex="0" is required, not decorative: .tbl-wrap scrolls horizontally
+         below ~700px, and a scrollable region that cannot be focused is
+         unreachable by keyboard — there is no way to scroll it without a mouse.
+         role="region" + the caption as its accessible name make it announce as
+         a named landmark instead of an anonymous focus stop. -->
+    <div class="tbl-wrap rv" tabindex="0" role="region" aria-labelledby="cmp-modules-cap">
       <table class="cmp">
-        <caption class="sr-only">جدول وحدات نظام محاسب ذكي وما تشمله كل وحدة</caption>
+        <caption class="sr-only" id="cmp-modules-cap">جدول وحدات نظام محاسب ذكي وما تشمله كل وحدة</caption>
         <thead><tr><th scope="col">الوحدة</th><th scope="col">ما تشمله</th></tr></thead>
         <tbody>
           <tr><td>الأستاذ العام</td><td>شجرة حسابات، قيود يومية، ترحيل، أرصدة مجمّعة، وكشف حساب لكل بند</td></tr>
