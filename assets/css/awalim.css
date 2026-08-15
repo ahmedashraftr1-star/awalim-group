@@ -1122,6 +1122,12 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
 .panelgrid { display: grid; }
 @media (min-width: 900px) {
   .panelgrid { grid-template-columns: var(--rail) minmax(0, 1fr); gap: 0; }
+  /* The rail is position:fixed, which takes it OUT OF FLOW — so without this the
+     panel container becomes the first IN-FLOW grid item and is auto-placed into
+     the 300px rail track, collapsing every panel to 300px and its image column
+     to 0x0. Placing the content explicitly in column 2 keeps the track reserved
+     as pure gutter, which is exactly what it is now. */
+  .panelgrid > :not(.railnav) { grid-column: 2; }
 }
 
 /* rail index — numbered like the reference's sidebar */
