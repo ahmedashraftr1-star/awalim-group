@@ -401,9 +401,9 @@ body {
 }
 .nav a {
   padding: .5rem .95rem; border-radius: 500px; font-size: var(--t-sm); font-weight: 500;
-  color: var(--fg-dim); transition: color .2s ease, background-color .2s ease;
+  color: var(--fg-dim); transition: color .2s ease, background-color .15s ease-in-out;
 }
-.nav a:hover { color: var(--fg); background: var(--sheen); }
+.nav a:hover { background: var(--sheen); }
 .nav a[aria-current="page"] { color: var(--fg); font-weight: 600; }
 
 .hdr__act { display: flex; align-items: center; gap: .5rem; flex: none; }
@@ -720,8 +720,8 @@ table.cmp td:first-child { font-weight: 600; }
 /* ==========================================================================
    MOTION
    ========================================================================== */
-.rv { opacity: 0; transform: translateY(18px); }
-.rv.in { opacity: 1; transform: none; transition: opacity .7s cubic-bezier(.2,.8,.3,1), transform .7s cubic-bezier(.2,.8,.3,1); }
+.rv { opacity: 0; transform: translateY(100px); }
+.rv.in { opacity: 1; transform: none; transition: opacity 1s cubic-bezier(.165,.84,.44,1), transform 1s cubic-bezier(.165,.84,.44,1); }
 .rv-d1.in { transition-delay: .07s; }
 .rv-d2.in { transition-delay: .14s; }
 .rv-d3.in { transition-delay: .21s; }
@@ -827,7 +827,7 @@ table.cmp td:first-child { font-weight: 600; }
   inline-size: 100%; block-size: 100%; object-fit: cover;
   transition: transform .9s cubic-bezier(.2,.8,.3,1);
 }
-.tile:hover .tile__img img, .tile:focus-visible .tile__img img { transform: scale(1.035); }
+.tile:hover .tile__img img, .tile:focus-visible .tile__img img { transform: scale(1.02); }
 .tile:focus-visible { outline: none; }
 .tile:focus-visible .tile__img { outline: 2px solid var(--jade); outline-offset: 3px; }
 
@@ -852,6 +852,43 @@ table.cmp td:first-child { font-weight: 600; }
 .tile[hidden] { display: none; }
 
 /* ---------- CASE STUDY ---------- */
+/* ── ONE COLUMN FOR THE WHOLE INDEXED PAGE ──────────────────────────────────
+   The case sections, the journal and the campaigns grid all ran at
+   .wrap-wide's 1480px while the panel strip above them ran at
+   `--col + --rail` = 1350px — 390px wider, for no reason anyone chose. The
+   reference has exactly one content width: every one of its 14 blocks is
+   1050px.
+
+   That mismatch stopped being cosmetic the moment the rail got a z-index. The
+   rail is fixed at the 1350px container's start edge, so a 1351.7px section ran
+   straight underneath it — and while the rail painted below the content nobody
+   could see the collision. Making it clickable made it visible: case headlines
+   printed through the index.
+
+   So every section the rail indexes now shares the panel strip's container and
+   reserves its first column as the rail's lane. Same fix, three problems: the
+   overlap goes, the two-width inconsistency goes, and the page finally reads as
+   one column beside one index. */
+@media (min-width: 900px) {
+  /* .band is not indexed, but it scrolls into view while the last indexed
+     section is still current, so it shares the lane or it collides. Measured:
+     a 251px overlap at y=16200 before it was added here. */
+  /* .band and .metrics are not indexed, but they scroll into view while the
+     last indexed section is still current, so they share the lane or they
+     collide. .metrics is the one block on the page with no <section> and no
+     .wrap around it — a direct child of <main> — which is exactly why the first
+     two attempts at this rule missed it and it kept measuring a 251px overlap. */
+  .case > .wrap,
+  #grid > .wrap,
+  #journal > .wrap,
+  #campaigns > .wrap,
+  .panelwrap ~ .band > .wrap,
+  main > .metrics {
+    max-width: calc(var(--col) + var(--rail));
+    padding-inline-start: calc(var(--rail) + var(--gutter));
+    margin-inline: auto;
+  }
+}
 .case { padding-block: clamp(3.5rem, 2.4rem + 4vw, 6.5rem); border-top: 1px solid var(--line); scroll-margin-top: 84px; }
 .case:first-of-type { border-top: 0; }
 .case__head { display: grid; gap: 1rem; max-width: 72ch; margin-bottom: clamp(1.8rem, 1.2rem + 2vw, 3rem); }
@@ -962,7 +999,7 @@ table.cmp td:first-child { font-weight: 600; }
   inline-size: 100%; block-size: 100%; object-fit: cover;
   transition: transform .9s cubic-bezier(.2,.8,.3,1);
 }
-.post:hover .post__img img { transform: scale(1.035); }
+.post:hover .post__img img { transform: scale(1.02); }
 .post__body { display: grid; gap: .5rem; }
 .post__meta { font-family: var(--sans); font-size: var(--t-xs); color: var(--muted); letter-spacing: normal; }
 .post h3 { font-size: var(--t-md); font-weight: 600; line-height: 1.5; transition: color .2s ease; }
@@ -1069,7 +1106,7 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
 /* footer-card: #f8f8f8, radius 20px, padding 40px, margin-top 40px */
 .fcard {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-  gap: 1.2rem; background: var(--surface-3); border: 1px solid var(--line);
+  gap: 1.2rem; background: var(--surface-3);
   border-radius: var(--r-xl); padding: clamp(1.4rem, 1rem + 1.6vw, 2.5rem);
   margin-top: calc(40px - var(--cardgap)); margin-bottom: var(--cardgap);
 }
@@ -1118,10 +1155,10 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
    non-link headings, the reference's structure. Group heading 14px/600 and
    items at --t-sm, measured off the reference (14px/600 headings, 16px/400
    items). */
-.railgroup + .railgroup { margin-top: 1.75rem; }
+.railgroup + .railgroup { margin-top: 2.75rem; }
 .railgroup__h {
   font-family: var(--sans); font-size: var(--t-xs); font-weight: 600;
-  letter-spacing: normal; color: var(--muted); margin-bottom: .5rem;
+  letter-spacing: normal; color: var(--muted); margin-bottom: .15rem;
 }
 @media (max-width: 899px) { .railnav { display: none; } }
 
@@ -1149,7 +1186,7 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
   background: var(--line-2); flex: none; transform: translateY(-.35em);
   transition: background-color .2s ease, transform .2s ease;
 }
-.railnav .caseindex-list a:hover { color: var(--fg); border-bottom-color: var(--line); }
+.railnav .caseindex-list a:hover { color: var(--fg); border-bottom-color: var(--line); padding-inline-start: 5px; }
 
 /* ==========================================================================
    HIGHLIGHTS + IN-PANEL STATS + CENTRED PANELS
