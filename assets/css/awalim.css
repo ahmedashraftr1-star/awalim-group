@@ -863,11 +863,10 @@ table.cmp td:first-child { font-weight: 600; }
 .case__sub { font-size: var(--t-md); color: var(--fg-dim); font-weight: 300; line-height: 1.7; }
 
 .case__shot {
+  inline-size: min(100%, 880px);
   border-radius: var(--r-xl); overflow: hidden;
-  border: 1px solid var(--line); background: var(--surface-2);
-  box-shadow: var(--shadow-md);
 }
-.case__shot img { inline-size: 100%; block-size: auto; display: block; }
+.case__shot img { inline-size: 100%; block-size: auto; display: block; aspect-ratio: 3 / 2; object-fit: cover; }
 
 .facts {
   display: grid; gap: 1px; background: var(--line);
@@ -1026,7 +1025,10 @@ table.cmp td:first-child { font-weight: 600; }
   text-decoration: none; overflow: hidden;
   transition: transform .2s cubic-bezier(.55,.085,.68,.53), box-shadow .2s ease;
 }
-@media (min-width: 900px) { .panel { grid-template-columns: 1fr 1fr; align-items: center; } }
+/* minmax(0,1fr), not 1fr: with a bare 1fr a text column whose min-content
+   exceeds the track pushes its sibling below zero, which is how six panel
+   photos rendered at 0x0 when the panel was briefly squeezed to 300px. */
+@media (min-width: 900px) { .panel { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; } }
 a.panel:hover, a.panel:focus-visible {
   transform: scale(1.02);
   box-shadow: 4px 20px 16px 1px #0000001c;
@@ -1098,6 +1100,10 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
   top: 92px;
   inline-size: var(--rail);
   inset-inline-start: max(var(--gutter), calc((100vw - (var(--col) + var(--rail))) / 2 + var(--gutter)));
+  z-index: 50; /* below .hdr (100). Without this the fixed rail paints UNDER
+     every `.section{position:relative}` that follows it in the DOM and swallows
+     nothing — it receives no pointer events at all. Measured: 0/13 links
+     hittable, clicks delivered to SECTION.case. */
   max-height: calc(100vh - 112px);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -1115,7 +1121,7 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
 .railgroup + .railgroup { margin-top: 1.75rem; }
 .railgroup__h {
   font-family: var(--sans); font-size: var(--t-xs); font-weight: 600;
-  letter-spacing: normal; color: var(--fg-dim); margin-bottom: .5rem;
+  letter-spacing: normal; color: var(--muted); margin-bottom: .5rem;
 }
 @media (max-width: 899px) { .railnav { display: none; } }
 
