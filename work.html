@@ -113,16 +113,35 @@
 <section class="panelwrap" style="padding-block:clamp(2rem,1.4rem+2vw,3.5rem)">
   <div class="wrap">
     <div class="panelgrid">
-      <nav class="railnav rv" data-spy-rail aria-label="فهرس دراسات الحالة">
-        <p class="eyebrow" style="margin-bottom:1rem">دراسات الحالة</p>
-        <ol class="caseindex-list">
-          <li><a href="#panel-rahmacare">RahmaCare</a></li>
-          <li><a href="#panel-jameel">Jameel Store</a></li>
-          <li><a href="#panel-vibeos">Vibe OS 4.0</a></li>
-          <li><a href="#panel-maya">Maya</a></li>
-          <li><a href="#panel-academy">أكاديمية عوالِم</a></li>
-          <li><a href="#panel-hmi">لوحة قيادة سيارة</a></li>
-        </ol>
+      <nav class="railnav rv" data-spy-rail aria-label="فهرس الصفحة">
+        <div class="railgroup">
+          <p class="railgroup__h">دراسات الحالة</p>
+          <ol class="caseindex-list">
+            <li><a href="#case-rahmacare">RahmaCare</a></li>
+            <li><a href="#case-jameel">Jameel Store</a></li>
+            <li><a href="#case-vibeos">Vibe OS 4.0</a></li>
+            <li><a href="#case-maya">Maya</a></li>
+            <li><a href="#case-academy">أكاديمية عوالِم</a></li>
+            <li><a href="#case-hmi">لوحة قيادة سيارة</a></li>
+          </ol>
+        </div>
+        <div class="railgroup">
+          <p class="railgroup__h">مقالات</p>
+          <ol class="caseindex-list">
+            <li><a href="#art-agents">وكلاء الذكاء الاصطناعي</a></li>
+            <li><a href="#art-build">بناء وكيل حتى الإنتاج</a></li>
+            <li><a href="#art-flutter">Flutter ومعايير Apple</a></li>
+            <li><a href="#art-aws">بنية Serverless</a></li>
+            <li><a href="#art-saas">من الفكرة إلى MRR</a></li>
+            <li><a href="#art-glass">Sovereign Glass</a></li>
+          </ol>
+        </div>
+        <div class="railgroup">
+          <p class="railgroup__h">حملات وأنظمة</p>
+          <ol class="caseindex-list">
+            <li><a href="#campaigns">حملات وأنظمة تصميم</a></li>
+          </ol>
+        </div>
       </nav>
       <div>
       <a class="panel panel--ink" id="panel-rahmacare" href="work.html#case-rahmacare" style="--panel-bg:#245964">
@@ -370,7 +389,68 @@
   </div>
 </section>
 
-<section class="section" style="background:var(--surface-2);border-block:1px solid var(--line)">
+
+<section class="section" id="journal" style="scroll-margin-top:96px">
+  <div class="wrap wrap-wide">
+    <div class="sec-head rv">
+      <p class="eyebrow eyebrow-jade">مقالات · JOURNAL</p>
+      <h2 class="display" style="margin-top:.9rem">ما نكتبه بين المشاريع</h2>
+      <p class="lede">ما نتعلّمه أثناء الشحن، مكتوباً بينما لا يزال طازجاً.</p>
+    </div>
+    <div class="posts rv">
+        <a class="post rv" id="art-agents" href="insights.html">
+          <span class="post__img"><img src="assets/img/journal/ai-agent.webp" alt="" width="900" height="562" loading="lazy" decoding="async"></span>
+          <span class="post__body">
+            <span class="post__meta">ذكاء اصطناعي · تحليل</span>
+            <h3>ثورة وكلاء الذكاء الاصطناعي: من الأدوات إلى الأنظمة المستقلة</h3>
+            <p>لماذا انتقلت الصناعة من نموذج يُجيب إلى وكيلٍ ينفّذ — وما الذي يتغيّر في الهندسة حين يصبح النظام هو من يقرّر الخطوة التالية.</p>
+          </span>
+        </a>
+        <a class="post rv" id="art-build" href="insights.html">
+          <span class="post__img"><img src="assets/img/journal/ai-prompts.webp" alt="" width="900" height="562" loading="lazy" decoding="async"></span>
+          <span class="post__body">
+            <span class="post__meta">ذكاء اصطناعي · تطبيق</span>
+            <h3>دليل بناء وكلاء AI: من الصفر إلى النشر في الإنتاج</h3>
+            <p>المسار الكامل: اختيار النموذج، تصميم الأدوات، إدارة الذاكرة، ثم ما الذي ينكسر فعلاً حين يخرج الوكيل إلى مستخدمين حقيقيّين.</p>
+          </span>
+        </a>
+        <a class="post rv" id="art-flutter" href="insights.html">
+          <span class="post__img"><img src="assets/img/journal/flutter-rn.webp" alt="" width="900" height="562" loading="lazy" decoding="async"></span>
+          <span class="post__body">
+            <span class="post__meta">هندسة واجهات</span>
+            <h3>Flutter ومعايير Apple: كيف تبني تجربة بمستوى iOS الرسمي</h3>
+            <p>الفروق التي يلاحظها المستخدم ولا يسمّيها: منحنيات الحركة، ارتداد التمرير، وتوقيت اللمس — ومن أين تأتي حين لا تكون أصلية.</p>
+          </span>
+        </a>
+        <a class="post rv" id="art-aws" href="insights.html">
+          <span class="post__img"><img src="assets/img/journal/hero.webp" alt="" width="900" height="562" loading="lazy" decoding="async"></span>
+          <span class="post__body">
+            <span class="post__meta">بنية سحابية</span>
+            <h3>بنية Serverless على AWS: هندسة تتمدّد بلا حدود</h3>
+            <p>متى يكون بلا خادم القرار الصحيح ومتى يكون فخّاً — بحساب التكلفة والبرود والحدّ الأقصى، لا بالحماس.</p>
+          </span>
+        </a>
+        <a class="post rv" id="art-saas" href="insights.html">
+          <span class="post__img"><img src="assets/img/journal/business.webp" alt="" width="900" height="562" loading="lazy" decoding="async"></span>
+          <span class="post__body">
+            <span class="post__meta">منتج · أعمال</span>
+            <h3>من الفكرة إلى MRR: بناء SaaS من الصفر في 8 أسابيع</h3>
+            <p>جدول زمنيّ حقيقيّ لما يُبنى ولما يُؤجَّل، ولماذا يقتل النطاقُ المنتجاتِ الصغيرة أسرع من أي خطأ تقنيّ.</p>
+          </span>
+        </a>
+        <a class="post rv" id="art-glass" href="insights.html">
+          <span class="post__img"><img src="assets/img/journal/instagram.webp" alt="" width="900" height="562" loading="lazy" decoding="async"></span>
+          <span class="post__body">
+            <span class="post__meta">تصميم · نظام</span>
+            <h3>Sovereign Glass Design: ما وراء الزجاجية</h3>
+            <p>الزجاج ليس تأثيراً بل قراراً عن الضوء والعمق والأرضية — وما الذي يجعله يقرأ كمادة لا كمرشّح.</p>
+          </span>
+        </a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="campaigns" style="scroll-margin-top:96px;background:var(--surface-2);border-block:1px solid var(--line)">
   <div class="wrap wrap-wide">
     <div class="sec-head rv">
       <p class="eyebrow">أعمال أخرى</p>

@@ -950,7 +950,11 @@ table.cmp td:first-child { font-weight: 600; }
 .metric > span { display: block; font-size: var(--t-sm); color: var(--muted); margin-top: .55rem; }
 
 /* ---------- JOURNAL ---------- */
-.post { display: flex; flex-direction: column; gap: 1rem; }
+.posts {
+  display: grid; gap: clamp(1.6rem, 1.2rem + 1.6vw, 2.6rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+}
+.post { display: flex; flex-direction: column; gap: 1rem; scroll-margin-top: 110px; }
 .post__img {
   aspect-ratio: 16 / 10; overflow: hidden; border-radius: var(--r-lg);
   background: var(--surface-2); border: 1px solid var(--line);
@@ -1073,7 +1077,46 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
 .fcard__meta { display: flex; flex-wrap: wrap; gap: .5rem; }
 
 /* sticky rail matching .nav-sidebar { position: sticky; top: 40px } */
-.railnav { position: sticky; top: 40px; align-self: start; }
+/* The rail is FIXED, not sticky, and that is a structural fix rather than a
+   preference. Sticky confines an element to its containing block, and this one
+   lived inside .panelgrid — which ends at the bottom of the panel strip, ~270px
+   BEFORE the first case section begins. So the index could never travel beside
+   the sections it indexes: past the strip it simply scrolled away and nothing
+   was ever marked current. The alternative fix — moving the closing tags so the
+   grid wraps the whole page — would have re-nested every section on the page
+   inside a 1050px column, changing the width of six case studies to solve a
+   positioning bug.
+
+   Fixed instead, pinned to the same edge the grid track occupies: the track is
+   an explicit `var(--rail)` column, so it keeps reserving its space even with
+   the nav out of flow, and the content column does not move by a pixel.
+
+   `top: 92px` clears the 69px sticky header (at 40px the first item rendered
+   behind it). The reference pins its own rail 61px below its 101px navbar. */
+.railnav {
+  position: fixed;
+  top: 92px;
+  inline-size: var(--rail);
+  inset-inline-start: max(var(--gutter), calc((100vw - (var(--col) + var(--rail))) / 2 + var(--gutter)));
+  max-height: calc(100vh - 112px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition: opacity .3s ease;
+}
+/* Visible only while the page actually has a current section. The scroll-spy
+   clears aria-current on every link when nothing is intersecting, so this is
+   already an exact "am I inside the indexed content" signal — no second
+   observer, no scroll listener. */
+.railnav:not(:has(a[aria-current="true"])) { opacity: 0; pointer-events: none; }
+/* The rail is a grouped table of contents, not a numbered list: three
+   non-link headings, the reference's structure. Group heading 14px/600 and
+   items at --t-sm, measured off the reference (14px/600 headings, 16px/400
+   items). */
+.railgroup + .railgroup { margin-top: 1.75rem; }
+.railgroup__h {
+  font-family: var(--sans); font-size: var(--t-xs); font-weight: 600;
+  letter-spacing: normal; color: var(--fg-dim); margin-bottom: .5rem;
+}
 @media (max-width: 899px) { .railnav { display: none; } }
 
 .panelgrid { display: grid; }
@@ -1082,7 +1125,7 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
 }
 
 /* rail index — numbered like the reference's sidebar */
-.railnav .caseindex-list { display: grid; gap: .1rem; counter-reset: rn; list-style: none; padding: 0; }
+.railnav .caseindex-list { display: grid; gap: .1rem; list-style: none; padding: 0; margin: 0; }
 .railnav .caseindex-list a {
   display: flex; align-items: baseline; gap: .6rem;
   padding: .5rem 0; font-size: var(--t-sm); color: var(--muted);
@@ -1090,8 +1133,9 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
   transition: color .2s ease, border-color .2s ease;
 }
 .railnav .caseindex-list a::before {
-  counter-increment: rn; content: counter(rn, decimal-leading-zero);
-  font-family: var(--mono); font-size: var(--t-xs); color: var(--faint);
+  content: ""; inline-size: 5px; block-size: 5px; border-radius: 50%;
+  background: var(--line-2); flex: none; transform: translateY(-.35em);
+  transition: background-color .2s ease, transform .2s ease;
 }
 .railnav .caseindex-list a:hover { color: var(--fg); border-bottom-color: var(--line); }
 
@@ -1178,4 +1222,4 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
   color: var(--fg); font-weight: 600;
   border-bottom-color: var(--jade);
 }
-.railnav .caseindex-list a[aria-current="true"]::before { color: var(--jade); }
+.railnav .caseindex-list a[aria-current="true"]::before { background: var(--jade); transform: translateY(-.35em) scale(1.4); }

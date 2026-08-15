@@ -189,34 +189,60 @@
   });
 
 
-  /* ---------- rail scroll-spy (reference highlights the current case) ---------- */
+  /* ---------- rail scroll-spy ----------
+     Rewritten from ratio-based to midpoint-based, because ratio is the wrong
+     question once a section is taller than the viewport.
+
+     The old version kept a Map of intersectionRatio per visible target and lit
+     whichever was highest. Our case sections are ~2200px tall against a 900px
+     viewport, so their maximum achievable ratio is ~0.41 — and IntersectionObserver
+     only updates a ratio when a threshold is CROSSED, so a section you are sitting
+     in the middle of keeps whatever small ratio it had on entry. Measured symptoms:
+     scrolled to y=6000, fully inside case-rahmacare, NOTHING was marked current;
+     at y=10000, fully inside case-vibeos, the rail said "Jameel Store".
+
+     Midpoint instead: the current section is the last one whose top has crossed the
+     viewport midpoint. That is a total order over the targets, so it cannot flicker
+     between two candidates and cannot go blank inside a tall section. Reading
+     positions on a rAF-throttled scroll costs one getBoundingClientRect per target
+     per frame — 13 here — which is nothing next to the layout the browser already
+     did. Above the first target and below the last, nothing is marked, which is
+     what gates the rail's visibility in CSS. */
   var rail = document.querySelector("[data-spy-rail]");
-  if (rail && "IntersectionObserver" in window) {
+  if (rail) {
     var links = Array.prototype.slice.call(rail.querySelectorAll('a[href^="#"]'));
     var targets = links
       .map(function (a) { return document.getElementById(a.getAttribute("href").slice(1)); })
       .filter(Boolean);
 
     if (targets.length) {
-      var visible = new Map();
+      var currentId = null;
       var mark = function () {
-        var best = null, bestRatio = 0;
-        visible.forEach(function (ratio, id) {
-          if (ratio > bestRatio) { bestRatio = ratio; best = id; }
-        });
+        var mid = window.innerHeight / 2;
+        var best = null;
+        for (var i = 0; i < targets.length; i++) {
+          var r = targets[i].getBoundingClientRect();
+          if (r.top <= mid && r.bottom > 0) best = targets[i].id;
+        }
+        // Past the last target entirely: leave nothing current so the rail hides.
+        var last = targets[targets.length - 1].getBoundingClientRect();
+        if (last.bottom <= 0) best = null;
+        if (best === currentId) return;
+        currentId = best;
         links.forEach(function (a) {
-          var on = best && a.getAttribute("href") === "#" + best;
-          a.setAttribute("aria-current", on ? "true" : "false");
+          a.setAttribute("aria-current", best && a.getAttribute("href") === "#" + best ? "true" : "false");
         });
       };
-      var spy = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (en.isIntersecting) visible.set(en.target.id, en.intersectionRatio);
-          else visible.delete(en.target.id);
-        });
-        mark();
-      }, { threshold: [0, 0.25, 0.5, 0.75, 1], rootMargin: "-20% 0px -55% 0px" });
-      targets.forEach(function (t) { spy.observe(t); });
+
+      var ticking = false;
+      var onScroll = function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () { ticking = false; mark(); });
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
+      mark();
     }
   }
 
