@@ -276,11 +276,11 @@ body {
   border: 1px solid var(--btn-bd);
   font-size: var(--t-sm); font-weight: 600; letter-spacing: normal;
   cursor: pointer; text-align: center; white-space: nowrap;
-  transition: transform .18s cubic-bezier(.2,.8,.3,1), background-color .22s ease,
-              border-color .22s ease, color .22s ease, box-shadow .22s ease;
+  /* No transform leg: the lift it drove is gone, and the reference's button
+     moves background alone over 0.4s ease. */
+  transition: background-color .4s ease, border-color .4s ease, color .4s ease,
+              box-shadow .4s ease;
 }
-.btn:hover { transform: translateY(-2px); }
-.btn:active { transform: translateY(0); }
 
 /* .button---new in the reference: near-black pill, #32343a on hover, #43464d active */
 .btn--primary { --btn-bg: var(--btn-ink); --btn-fg: var(--ink); --btn-bd: transparent; }
@@ -1060,7 +1060,7 @@ table.cmp td:first-child { font-weight: 600; }
   padding: clamp(1.8rem, 1.2rem + 2.6vw, 3.75rem);
   margin-bottom: var(--cardgap);
   text-decoration: none; overflow: hidden;
-  transition: transform .2s cubic-bezier(.55,.085,.68,.53), box-shadow .2s ease;
+  transition: transform .2s cubic-bezier(.55,.085,.68,.53), box-shadow .2s ease-in-out;
 }
 /* minmax(0,1fr), not 1fr: with a bare 1fr a text column whose min-content
    exceeds the track pushes its sibling below zero, which is how six panel
@@ -1105,7 +1105,7 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
 
 /* footer-card: #f8f8f8, radius 20px, padding 40px, margin-top 40px */
 .fcard {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   gap: 1.2rem; background: var(--surface-3);
   border-radius: var(--r-xl); padding: clamp(1.4rem, 1rem + 1.6vw, 2.5rem);
   margin-top: calc(40px - var(--cardgap)); margin-bottom: var(--cardgap);
@@ -1174,10 +1174,10 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
 }
 
 /* rail index — numbered like the reference's sidebar */
-.railnav .caseindex-list { display: grid; gap: .1rem; list-style: none; padding: 0; margin: 0; }
+.railnav .caseindex-list { display: grid; gap: 0; list-style: none; padding: 0; margin: 0; }
 .railnav .caseindex-list a {
   display: flex; align-items: baseline; gap: .6rem;
-  padding: .5rem 0; font-size: var(--t-sm); color: var(--muted);
+  padding: .75rem 0; font-size: var(--t-sm); color: var(--muted);
   border-bottom: 1px solid transparent;
   transition: color .2s ease, border-color .2s ease;
 }
