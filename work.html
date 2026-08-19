@@ -123,6 +123,7 @@
             <li><a href="#case-maya">Maya</a></li>
             <li><a href="#case-academy">أكاديمية عوالِم</a></li>
             <li><a href="#case-hmi">لوحة قيادة سيارة</a></li>
+            <li><a href="#case-islandhaven">آيلاند هيفن</a></li>
           </ol>
         </div>
         <div class="railgroup">
@@ -389,6 +390,33 @@
   </div>
 </section>
 
+
+<section class="case" id="case-islandhaven">
+  <div class="case__head rv">
+    <p class="case__label"><span>SYS-IH-07 · منصّة</span><span aria-hidden="true">·</span><span>07</span></p>
+    <h2 class="case__t">آيلاند هيفن — حاضنة تقنية أرقامها قابلة للتحقّق</h2>
+    <p class="case__sub">منصّة حاضنة في غزّة: كل رقم عامّ موقّع تشفيريّاً بـEd25519، ويتحقّق منه متصفّح الزائر نفسه عبر WebCrypto — لا ثقة مطلوبة بالخادم.</p>
+  </div>
+
+  <div class="case__shot rv rv-d1">
+    <img src="assets/img/work/islandhaven-verify.webp" alt="صفحة التحقّق في آيلاند هيفن: مفتاح Ed25519 عام، وثلاثة فحوص تجري في المتصفّح — الهاش يطابق، التوقيع صحيح، المفتاح منشور" width="1760" height="1174" loading="lazy" decoding="async">
+  </div>
+
+  <dl class="facts rv"><div class="fact"><dt>المنصّة</dt><dd>ويب</dd></div><div class="fact"><dt>التقنية</dt><dd>React · SSR</dd></div><div class="fact"><dt>التحقّق</dt><dd>Ed25519 · WebCrypto</dd></div><div class="fact"><dt>الوصولية</dt><dd>WCAG 2.1 AA</dd></div></dl>
+
+  <div class="case__body">
+    <div class="case__notes rv"><div class="case__note"><b>لا تثق بنا — تحقّق منّا</b><span>الأرقام العامّة مختومة في سلسلة هاش، والمفتاح العامّ منشور. التحقّق يجري في المتصفّح، فلا يمرّ عبرنا.</span></div><div class="case__note"><b>عربيّ أوّلاً</b><span>الاتّجاه والطباعة والأرقام عربية بالأصل، والإنجليزية طبقة فوقها — لا العكس.</span></div><div class="case__note"><b>تصيير من الخادم</b><span>المحتوى مخبوز في مصدر الصفحة، فالزائر يقرأ قبل أن يعمل أي جافاسكربت.</span></div></div>
+    <div class="rv rv-d1">
+      <p class="muted small" style="line-height:1.85">
+        تفاصيل هذه الدراسة مختصرة هنا. للاطّلاع على القرارات المعمارية الكاملة
+        أو على أعمال لم تُنشر بعد، تواصل معنا مباشرة.
+      </p>
+      <div class="btn-row" style="margin-top:1.2rem">
+        <a class="btn btn--ghost btn--sm" href="contact.html"><span>اطلب التفاصيل</span><span class="arrow" aria-hidden="true">←</span></a>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="section" id="journal" style="scroll-margin-top:96px">
   <div class="wrap wrap-wide">
