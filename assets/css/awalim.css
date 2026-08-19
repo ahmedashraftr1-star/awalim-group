@@ -899,9 +899,35 @@ table.cmp td:first-child { font-weight: 600; }
 .case__t { font-size: clamp(1.8rem, 1.35rem + 1.9vw, 3rem); font-weight: 600; line-height: 1.35; letter-spacing: -.02em; }
 .case__sub { font-size: var(--t-md); color: var(--fg-dim); font-weight: 300; line-height: 1.7; }
 
+/* The reference never repeats a hero shape. Across its 13 in-card images it
+   leaves 7 at radius 0 and gives 6 a radius, four of those ASYMMETRIC
+   (0 70px 40px 0 · 50px 50px 0 · 0 0 36px 38px · 50px 50px 0). We had one
+   radius on 6 of 6 — the frame was the only thing distinguishing a hero, and
+   once its border and shadow came off there was nothing left to vary.
+
+   So the variation moves into the corner. Cases 1, 4 and 7 keep the square
+   corner the reference uses most; 2 and 5 take a deep leading corner; 3 and 6
+   take a deep trailing one. Written with logical properties, so the deep corner
+   stays on the reading side in both directions. */
 .case__shot {
   inline-size: min(100%, 880px);
-  border-radius: var(--r-xl); overflow: hidden;
+  border-radius: 0; overflow: hidden;
+}
+/* :not(:nth-of-type(3n)) matters — 6 is divisible by both, so without it the
+   sixth hero matched BOTH rules and came out rounded on all four corners, which
+   is a shape the reference never uses. Now: 3 square, 2 leading, 2 trailing. */
+.case:nth-of-type(2n):not(:nth-of-type(3n)) .case__shot { border-start-start-radius: 56px; border-end-start-radius: 56px; }
+.case:nth-of-type(3n) .case__shot { border-start-end-radius: 56px; border-end-end-radius: 56px; }
+/* Two of the seven bleed past the text column's leading edge — the reference's
+   most distinctive framing move, used on 5 of its 13 and by us until now on 0.
+   Bounded to widths where the lane has room; below 900px the rail is gone and
+   the column is already full-bleed. */
+@media (min-width: 1100px) {
+  /* The bleed runs toward the TRAILING edge, away from the rail's lane. Bleeding
+     inline-start pushed the plate 64px into the fixed rail — measured on
+     case-jameel at y=6400 — because in RTL the start edge is the side the index
+     occupies. The reference bleeds away from its sidebar for the same reason. */
+  .case:nth-of-type(4n+2) .case__shot { inline-size: min(calc(100% + 4rem), 944px); margin-inline-end: -4rem; }
 }
 .case__shot img { inline-size: 100%; block-size: auto; display: block; aspect-ratio: 3 / 2; object-fit: cover; }
 
