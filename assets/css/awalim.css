@@ -878,14 +878,24 @@ table.cmp td:first-child { font-weight: 600; }
      collide. .metrics is the one block on the page with no <section> and no
      .wrap around it — a direct child of <main> — which is exactly why the first
      two attempts at this rule missed it and it kept measuring a 251px overlap. */
-  .case > .wrap,
   #grid > .wrap,
   #journal > .wrap,
   #campaigns > .wrap,
   .panelwrap ~ .band > .wrap,
-  main > .metrics {
+  main > .metrics,
+  /* The footer is shared by all nine pages, so it cannot be indented globally —
+     :has() scopes the inset to the one page that actually has a rail. It needs
+     the lane because the last indexed section is still current while the footer
+     scrolls in: measured a 193px overlap on the footer's brand paragraph at
+     y=18300, with #campaigns' bottom at 18371. */
+  body:has(.railnav) footer.ftr > .wrap {
     max-width: calc(var(--col) + var(--rail));
-    padding-inline-start: calc(var(--rail) + var(--gutter));
+    /* +25px: the reference leaves a 25px gutter between its rail and its card
+       (60 inset + 260 rail + 25 + 1050 card + 45 = 1440). Without it the card's
+       edge and the index touch at exactly the same pixel — measured 1051 to
+       1051, no overlap but no air either, the same zero-clearance the drawer's
+       wordmark had. */
+    padding-inline-start: calc(var(--rail) + var(--gutter) + 25px);
     margin-inline: auto;
   }
 }
@@ -1298,3 +1308,55 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
   border-bottom-color: var(--jade);
 }
 .railnav .caseindex-list a[aria-current="true"]::before { background: var(--jade); transform: translateY(-.35em) scale(1.4); }
+
+/* ==========================================================================
+   THE CASE CARD
+   The reference wraps every one of its 13 blocks in a card — 16px radius, a
+   solid fill, `60px 20px 20px` of padding, no shadow, no border — sitting on a
+   ground they read against. Ours had `.case` at background rgba(0,0,0,0) and
+   radius 0, so the ONE card the reference draws was split across two of our
+   components: the coloured .panel strip at the top of the page and a plain,
+   unbounded .case section far below it.
+
+   Measured mix on the reference: 6 of 13 neutral white, 7 tinted. Ours goes 4
+   white / 3 tinted, and only the LIGHT tints. Its dark fills (#18188E, #B60605,
+   #EB7700) carry inverted type through the whole card — that is a content
+   change, not a surface one, and nothing here needs it.
+   ========================================================================== */
+#grid { background: var(--surface-2); }
+
+.case {
+  border-top: 0;
+  padding-block: 0;
+  margin-block-end: var(--cardgap);
+  scroll-margin-top: 96px;
+}
+/* The card goes on .case itself. There is no `.case > .wrap` — the seven cases
+   are siblings inside #grid's single .wrap, which already carries the rail's
+   lane, so .case spans exactly the content column. */
+.case {
+  background: var(--ink);
+  border-radius: var(--r-lg);
+  padding: clamp(2.2rem, 1.6rem + 2.4vw, 3.75rem) clamp(1.4rem, 1rem + 1.8vw, 2.5rem) clamp(1.6rem, 1.2rem + 1.4vw, 2.4rem);
+}
+/* Tints reused from the panel strip, which already carries the reference's own
+   values. 3 of 7, spaced so no two tinted cards are adjacent. */
+#case-jameel      { background: #F5E7DA; }
+#case-academy     { background: #E5E8FC; }
+#case-islandhaven { background: #E3F6FA; }
+
+/* Dark mode has no reference to copy — jonnyczar ships light only — so these
+   are this system's own requirements, and both were wrong on the first pass:
+
+   1. The card was DARKER than its ground (#0A0B0D on #16191E), which reads as a
+      well rather than a card. Light mode has it the other way round (white card
+      on #F7F7F7), so dark swaps the pair instead of inheriting it.
+   2. The three tinted cards kept their LIGHT fills while the type flipped to
+      #F2F0EC — measured 1.02:1 on the Island Haven headline, 2.43:1 on its
+      labels. They get dark tints of the same three hues, so "3 of 7 tinted"
+      survives the theme instead of the tint being a light-mode-only idea. */
+:root[data-theme="dark"] #grid { background: var(--void); }
+:root[data-theme="dark"] .case { background: var(--surface-1); }
+:root[data-theme="dark"] #case-jameel      { background: #241C15; }
+:root[data-theme="dark"] #case-academy     { background: #17182A; }
+:root[data-theme="dark"] #case-islandhaven { background: #12212A; }
