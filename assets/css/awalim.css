@@ -37,12 +37,18 @@
    the true axis range is what makes `font-weight: 400` resolve to an actual 400.
 
    Archivo's range was 400-800, which also clamped the 900 display weight; it is
-   now the full axis, and font-stretch matches the real wdth axis (62-125%).
+   now the full axis. font-stretch is GONE with the wdth axis: the stylesheet
+   declared 62%-125% and never used it once, and pinning that axis to its
+   default took the file from 88.0KB to 17.3KB — an 80% cut on every page —
+   while leaving wght fully variable, which is the axis that is actually read.
+   Also subsetted to printable Latin + typographic punctuation: measured, this
+   face renders only 13 distinct characters site-wide, nearly all digits, because
+   the headings it was installed for are Arabic and resolve to Plex.
 
    The third face below (Montserrat 600) is dropped: its file was a byte-identical
    copy of the 400 file, so it silently rendered at regular. One variable file now
    serves every weight it is asked for. */
-@font-face{font-family:'Archivo';font-style:normal;font-weight:100 900;font-stretch:62% 125%;font-display:swap;src:url('../fonts/archivo-400-800-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Archivo';font-style:normal;font-weight:100 900;font-display:swap;src:url('../fonts/archivo-400-800-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
 @font-face{font-family:'Montserrat';font-style:normal;font-weight:100 900;font-display:swap;src:url('../fonts/montserrat-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
 
 /* ---------- reset ---------- */
@@ -296,7 +302,14 @@ body {
 .btn--sm { padding: .62rem 1.25rem; font-size: var(--t-sm); }
 .btn-row { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
 
-.arrow { display: inline-block; transition: transform .22s ease; }
+/* The arrow is drawn, not typed. Measured: NOT ONE of the 21 shipped font files
+   contains U+2190 — nor U+2713 or U+2192 — so all 34 arrows on the site were
+   rendering from an unspecified system fallback (.SF NS here, something else on
+   Windows or Android). The most repeated element in the interface had no
+   controlled metrics. An inline SVG inherits currentColor and sizes in em, so it
+   tracks the label it sits beside on every platform. */
+.arrow { display: inline-flex; align-items: center; transition: transform .22s ease; }
+.arrow svg { inline-size: .95em; block-size: .95em; display: block; }
 .btn:hover .arrow, .lnk:hover .arrow { transform: translateX(-4px); }
 [dir="ltr"] .btn:hover .arrow, [dir="ltr"] .lnk:hover .arrow { transform: translateX(4px); }
 
@@ -1360,3 +1373,6 @@ a.panel:focus-visible { outline: 2px solid var(--panel-fg); outline-offset: 4px;
 :root[data-theme="dark"] #case-jameel      { background: #241C15; }
 :root[data-theme="dark"] #case-academy     { background: #17182A; }
 :root[data-theme="dark"] #case-islandhaven { background: #12212A; }
+
+/* Same reason as .arrow: U+2713 is in none of the 21 shipped faces. */
+.tick { inline-size: .8em; block-size: .8em; display: inline-block; vertical-align: -.08em; }
