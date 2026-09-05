@@ -1,0 +1,11 @@
+# build sources and tooling — not part of the served site
+src/
+scripts/
+build.mjs
+package.json
+package-lock.json
+node_modules/
+DESIGN-TOKENS.md
+README.md
+.claude/
+CLAUDE.md

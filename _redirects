@@ -1,0 +1,14 @@
+# Netlify — legacy routes
+/about            /group    301
+/about.html       /group    301
+/insights         /journal  301
+/insights.html    /journal  301
+/work.html        /work     301
+/products.html    /products 301
+/services.html    /services 301
+/academy.html     /academy  301
+/contact.html     /contact  301
+/start            /contact  302
+/en/about          /en/group    301
+/en/insights       /en/journal  301
+/en/start          /en/contact  302

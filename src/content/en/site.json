@@ -1,0 +1,333 @@
+{
+  "_note": "English overrides for site.json. Deep-merged over the Arabic: only translated keys appear here — stats values, themes, stack and codes stay shared, so a number changed in Arabic is a number changed in English.",
+  "brand": {
+    "name": "Awalim Group",
+    "tagline": "We don't build websites. We build the systems that run companies.",
+    "shortDescription": "A digital engineering house building enterprise systems, from Palestine to the world. Founded 2021.",
+    "founder": {
+      "name": "Ahmed Ashraf",
+      "role": "Founder & Chief Engineer"
+    }
+  },
+  "stats": {
+    "founded": {
+      "label": "Founded"
+    },
+    "systemsDelivered": {
+      "label": "systems and products delivered"
+    },
+    "engineersTrained": {
+      "label": "engineers trained by us"
+    },
+    "certifiedGraduates": {
+      "label": "certified graduates who finished a full track"
+    },
+    "clientCountries": {
+      "label": "countries we serve clients in"
+    },
+    "graduateCountries": {
+      "label": "countries our graduates work in"
+    },
+    "yearsBuilding": {
+      "label": "years of building since 2018"
+    },
+    "tracks": {
+      "label": "engineering tracks"
+    },
+    "accountingModules": {
+      "label": "modules, ready"
+    },
+    "countryPacks": {
+      "label": "country packs"
+    },
+    "isolationLayers": {
+      "label": "data isolation layers"
+    },
+    "standards": {
+      "label": "conditions we don't ship without"
+    }
+  },
+  "contact": {
+    "availability": "Taking projects for next quarter",
+    "responseTime": "We reply within two working days"
+  },
+  "nav": [
+    {
+      "href": "/",
+      "label": "Home",
+      "key": "home"
+    },
+    {
+      "href": "/work",
+      "label": "Work",
+      "key": "work"
+    },
+    {
+      "href": "/products",
+      "label": "Products",
+      "key": "products"
+    },
+    {
+      "href": "/services",
+      "label": "Services",
+      "key": "services"
+    },
+    {
+      "href": "/academy",
+      "label": "Academy",
+      "key": "academy"
+    },
+    {
+      "href": "/group",
+      "label": "Group",
+      "key": "group"
+    },
+    {
+      "href": "/contact",
+      "label": "Contact",
+      "key": "contact"
+    }
+  ],
+  "footer": {
+    "columns": [
+      {
+        "title": "Work",
+        "links": [
+          {
+            "href": "/work",
+            "label": "All projects"
+          },
+          {
+            "href": "/work/rahmacare",
+            "label": "RahmaCare"
+          },
+          {
+            "href": "/work/vibe-os",
+            "label": "Vibe OS 4.0"
+          },
+          {
+            "href": "/work/island-haven",
+            "label": "Island Haven"
+          },
+          {
+            "href": "/journal",
+            "label": "Journal"
+          }
+        ]
+      },
+      {
+        "title": "Products",
+        "links": [
+          {
+            "href": "/products/smart-accountant",
+            "label": "Smart Accountant"
+          },
+          {
+            "href": "/products/rahmacare",
+            "label": "RahmaCare"
+          },
+          {
+            "href": "/products/vibe-os",
+            "label": "Vibe OS"
+          },
+          {
+            "href": "/products/ai-lab",
+            "label": "AI Lab"
+          },
+          {
+            "href": "/academy",
+            "label": "Awalim Academy"
+          }
+        ]
+      },
+      {
+        "title": "Services",
+        "links": [
+          {
+            "href": "/services#systems",
+            "label": "Enterprise systems"
+          },
+          {
+            "href": "/services#ai",
+            "label": "Agentic AI"
+          },
+          {
+            "href": "/services#mobile",
+            "label": "Mobile engineering"
+          },
+          {
+            "href": "/services#brand",
+            "label": "Brand & interface"
+          },
+          {
+            "href": "/services#process",
+            "label": "How we work"
+          }
+        ]
+      },
+      {
+        "title": "Group",
+        "links": [
+          {
+            "href": "/group",
+            "label": "About Awalim"
+          },
+          {
+            "href": "/group#timeline",
+            "label": "The story"
+          },
+          {
+            "href": "/group#values",
+            "label": "Values"
+          },
+          {
+            "href": "/verify",
+            "label": "Verify our numbers"
+          },
+          {
+            "href": "/group#founder",
+            "label": "Founder's note"
+          },
+          {
+            "href": "/contact",
+            "label": "Start your project"
+          },
+          {
+            "href": "/careers",
+            "label": "Careers"
+          },
+          {
+            "href": "/press",
+            "label": "Press kit"
+          },
+          {
+            "href": "/privacy",
+            "label": "Privacy"
+          },
+          {
+            "href": "/terms",
+            "label": "Terms"
+          }
+        ]
+      }
+    ]
+  },
+  "standards": [
+    {
+      "n": "01",
+      "t": "Journal entries that balance",
+      "d": "No unbalanced entry passes. No in-between state, no fixing it later."
+    },
+    {
+      "n": "02",
+      "t": "Multi-tenant isolation",
+      "d": "Three independent layers stop one client's data from reaching another."
+    },
+    {
+      "n": "03",
+      "t": "An audit log that can't be erased",
+      "d": "Every change carries an actor, a time, and the value before and after."
+    },
+    {
+      "n": "04",
+      "t": "Reversible migrations",
+      "d": "Every database change is exported, reviewed and revertible."
+    },
+    {
+      "n": "05",
+      "t": "Tests that block regressions",
+      "d": "A pipeline that stops the release when it breaks what used to work."
+    },
+    {
+      "n": "06",
+      "t": "AA accessibility",
+      "d": "Keyboard, screen reader, and colour contrast measured — not assumed."
+    },
+    {
+      "n": "07",
+      "t": "Arabic from the root",
+      "d": "Direction, typography, numerals and dates — not a translation over a Latin design."
+    },
+    {
+      "n": "08",
+      "t": "A performance budget",
+      "d": "Bundle size and first paint are measured on every release."
+    }
+  ],
+  "process": [
+    {
+      "n": "01",
+      "t": "Diagnosis",
+      "d": "We sit with your real process before a line of code: who does what, with which tool, and how long it takes. We come out with a scope, risk and honest timeline document — yours to keep even if we never continue together.",
+      "tags": [
+        "Workshop",
+        "Scope document",
+        "Estimate"
+      ]
+    },
+    {
+      "n": "02",
+      "t": "Design & architecture",
+      "d": "Data model, API contracts and a permissions model — reviewed and approved before we build. Fixing an architectural mistake here costs an hour; three months in it costs a rebuild.",
+      "tags": [
+        "Database schema",
+        "API contracts",
+        "Permissions"
+      ]
+    },
+    {
+      "n": "03",
+      "t": "Build & ship",
+      "d": "Weekly increments on a live environment you can see yourself — not slide decks. Automated tests stop regressions, and every release passes a performance and accessibility budget.",
+      "tags": [
+        "Weekly increments",
+        "Live environment",
+        "Automated tests"
+      ]
+    },
+    {
+      "n": "04",
+      "t": "Handover & care",
+      "d": "Full handover of the code, the docs, the deployment accounts and the database. An agreed care period, then an optional maintenance contract — we never make your system's survival depend on it.",
+      "tags": [
+        "Full handover",
+        "Documentation",
+        "Care period"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "How long does an enterprise system take?",
+      "a": "It depends on scope. A full accounting system with its modules is built in increments over months, but a first usable version usually reaches you within a few weeks of the architecture being approved. We commit to a stated schedule in the scope document, and tell you immediately if anything changes."
+    },
+    {
+      "q": "Do I own the code after handover?",
+      "a": "Yes, entirely. We hand over the repository, the documentation, the deployment accounts and the database. We keep no key that forces you to stay with us."
+    },
+    {
+      "q": "Do you work with clients outside Palestine?",
+      "a": "Yes. We serve clients in more than ten countries; the work is fully remote with regular meetings and a shared tracking board."
+    },
+    {
+      "q": "Does Smart Accountant replace the accountant?",
+      "a": "No. It replaces the repetitive manual work: entering invoices, posting routine entries, reconciling balances. The accounting judgement and the review stay human — and the system is designed to make that review easier, not to bypass it."
+    },
+    {
+      "q": "How do you handle support after launch?",
+      "a": "Every delivery comes with an agreed care period for defects, and an optional maintenance contract afterwards. We never make your system's survival depend on that contract."
+    },
+    {
+      "q": "Do you take over stalled projects from another team?",
+      "a": "Yes. We start with a blunt technical audit: what works, what must be rebuilt, and the cost of each path. Sometimes our recommendation is not to rebuild — and we say so."
+    }
+  ],
+  "founderQuote": "I started in 2018 from Gaza with a mobile phone and a slow connection. The goal was never just to have work; it was to prove that an Arab engineer can build systems measured by the global standard — not by a lenient local one. That is still the measure we hold everything we ship against.",
+  "highlights": [
+    "First complete enterprise system in 2022",
+    "{engineersTrained} engineers trained at the Academy — and {certifiedGraduates} finished a full track",
+    "Clients in {clientCountries} countries",
+    "AI agents in production since 2024",
+    "Smart Accountant — an IFRS accounting system"
+  ]
+}

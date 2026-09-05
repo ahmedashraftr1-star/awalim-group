@@ -1,0 +1,882 @@
+{
+  "_note": "English overrides for cases.json. Merged by slug: images, themes, devices, codes and impact numbers stay shared with the Arabic.",
+  "cases": [
+    {
+      "slug": "rahmacare",
+      "kind": "Healthcare",
+      "title": "RahmaCare",
+      "headline": "smart healthcare in the family's hands",
+      "summary": "A complete Flutter app for managing a family's health with AI: instant triage, close follow-up, and an experience built around the person before the screen.",
+      "heroAlt": "The general ledger in RahmaCare: entries in sequence, each with a serial number and a hash",
+      "gallery": [
+        {
+          "src": "/assets/img/work/rahmacare-ui.webp",
+          "alt": "RahmaCare home screen",
+          "cap": "The home screen — every family member's file in a single card"
+        },
+        {
+          "src": "/assets/img/work/rahmacare-ledger.webp",
+          "alt": "The general ledger: a verifiable record",
+          "cap": "The general ledger — every action is sequenced and hashed, so nothing changes quietly"
+        }
+      ],
+      "facts": [
+        {
+          "k": "Client",
+          "v": "An Awalim product"
+        },
+        {
+          "k": "Sector",
+          "v": "Health and relief"
+        },
+        {
+          "k": "Year",
+          "v": "2024 — present"
+        },
+        {
+          "k": "Role",
+          "v": "Full product: design, engineering, release"
+        },
+        {
+          "k": "Platform",
+          "v": "iOS · Android"
+        },
+        {
+          "k": "Status",
+          "v": "Live"
+        }
+      ],
+      "metric": {
+        "platform": "iOS · Android",
+        "standard": "WCAG 2.1 AA",
+        "honor": "A complete product, live"
+      },
+      "challenge": {
+        "p": "A single family manages appointments, medicines and reports for several people across paper, WhatsApp messages and the mother's memory. And in health relief specifically, polished numbers are everywhere with no traceable source.",
+        "points": [
+          "A health record per person with different permissions inside the same family",
+          "An AI assistant that reads the case and warns early — without making the medical decision",
+          "No number published on the platform without a source that can be traced",
+          "Full accessibility: keyboard, screen reader, and a path for deaf users"
+        ]
+      },
+      "approach": [
+        {
+          "t": "A health file for the whole family",
+          "d": "A record per person with their appointments, medicines and reports, with different view permissions per role inside the family. The father sees his own, the mother sees the children, the doctor sees only what was granted."
+        },
+        {
+          "t": "An assistant that reads the case, not just answers",
+          "d": "An AI layer summarises the indicators and warns early, while the medical decision stays human. Every alert carries its source: which reading, which date, and which threshold it crossed."
+        },
+        {
+          "t": "A ledger that cannot change quietly",
+          "d": "Every action — appointment, medicine, aid — is recorded with a serial number and a hash chained to the one before it. The beneficiary sees who viewed their file and when, and consent is explicit and revocable."
+        }
+      ],
+      "solution": "A Flutter app with one codebase for iOS and Android, over a Firebase backend, with an AI layer that works inside the task flow rather than in a side panel. Accessibility is not an add-on: the full path is tested with a screen reader, with a dedicated path for deaf and non-speaking users.",
+      "impact": [
+        {
+          "n": 2,
+          "label": "platforms from one codebase"
+        },
+        {
+          "n": 100,
+          "suffix": "%",
+          "label": "of published numbers tied to a source"
+        },
+        {
+          "n": 1,
+          "label": "general ledger, sequenced and hashed"
+        },
+        {
+          "text": "AA",
+          "label": "WCAG 2.1 accessibility across the app"
+        }
+      ],
+      "notes": [
+        {
+          "b": "A health file for the whole family",
+          "s": "A record per person with appointments, medicines and reports, with different view permissions per role."
+        },
+        {
+          "b": "An assistant that reads the case",
+          "s": "An AI layer summarises indicators and warns early, while the medical decision stays human."
+        },
+        {
+          "b": "AA accessibility",
+          "s": "Keyboard, screen reader and a full path for deaf users — because someone who cannot use the product was not built for."
+        }
+      ]
+    },
+    {
+      "slug": "jameel-store",
+      "kind": "E-commerce",
+      "title": "Jameel Store",
+      "headline": "a luxury store with a world-class shopping experience",
+      "summary": "From browsing to payment in one flow that never breaks — a Flutter interface over a Firebase backend, designed Arabic-first.",
+      "heroAlt": "The Jameel Store interface: a product page and a cart, rendered Arabic-first",
+      "gallery": [
+        {
+          "src": "/assets/img/work/jameel-store-ui.webp",
+          "alt": "The store interface",
+          "cap": "Product page and cart — numbers, prices and dates are Arabic by origin"
+        }
+      ],
+      "facts": [
+        {
+          "k": "Client",
+          "v": "A luxury retail brand"
+        },
+        {
+          "k": "Sector",
+          "v": "E-commerce"
+        },
+        {
+          "k": "Year",
+          "v": "2024"
+        },
+        {
+          "k": "Role",
+          "v": "Interface design and Flutter development"
+        },
+        {
+          "k": "Platform",
+          "v": "iOS · Android"
+        },
+        {
+          "k": "Status",
+          "v": "Live"
+        }
+      ],
+      "metric": {
+        "platform": "iOS · Android",
+        "standard": "Native Arabic rendering",
+        "honor": "A complete store, live"
+      },
+      "challenge": {
+        "p": "Arabic stores are usually built on a Latin template and then flipped. The result: reversed prices, strange dates, and a cart that is lost when the network drops — and it does drop.",
+        "points": [
+          "One flow from browsing to payment that does not break at any step",
+          "Native Arabic rendering: direction, numerals, prices and dates",
+          "A cart preserved across sessions and devices, syncing when the network returns",
+          "Smooth scrolling on long lists on mid-range devices"
+        ]
+      },
+      "approach": [
+        {
+          "t": "Figma to Flutter, pixel-accurate",
+          "d": "The interface was designed in Figma on an Arabic-first component system, then carried into Flutter with a matching component library — so there are no surprises between design and build."
+        },
+        {
+          "t": "A cart that is never lost",
+          "d": "Cart state is stored locally and synced with Firebase when the network returns. The user closes the app in a lift and opens it in the car to find the cart exactly as they left it."
+        },
+        {
+          "t": "Steady performance on long lists",
+          "d": "Lazy list building and multi-size images, so scrolling stays smooth on mid-range devices — not only on the newest phone."
+        }
+      ],
+      "solution": "A Flutter app with one codebase, a Firebase backend for the catalogue and orders, and a component library taken from the Figma file itself. Direction, numerals, prices and dates are all tuned for Arabic from the root — not flipped from a Latin template.",
+      "impact": [
+        {
+          "n": 1,
+          "label": "purchase flow that never breaks"
+        },
+        {
+          "n": 2,
+          "label": "platforms from one codebase"
+        },
+        {
+          "text": "RTL",
+          "label": "native Arabic rendering from the root"
+        },
+        {
+          "text": "Offline",
+          "label": "a cart that works offline and syncs later"
+        }
+      ],
+      "notes": [
+        {
+          "b": "A cart that is never lost",
+          "s": "Preserved across sessions and devices, syncing when the network returns."
+        },
+        {
+          "b": "Native Arabic rendering",
+          "s": "Direction, numerals, prices and dates tuned for Arabic — not flipped from a Latin template."
+        },
+        {
+          "b": "Steady performance on long lists",
+          "s": "Lazy building and multi-size images keep scrolling smooth on mid-range devices."
+        }
+      ]
+    },
+    {
+      "slug": "vibe-os",
+      "kind": "Platform",
+      "title": "Vibe OS 4.0",
+      "headline": "an operating system for the web, not just a website",
+      "summary": "A complete interface layer built on AI and a live glass surface — every component in it is independent and reusable across the group's products.",
+      "heroAlt": "The Vibe OS 4.0 surface: independent glass windows, an in-task assistant, and an app dock",
+      "facts": [
+        {
+          "k": "Client",
+          "v": "An Awalim product"
+        },
+        {
+          "k": "Sector",
+          "v": "Web platforms"
+        },
+        {
+          "k": "Year",
+          "v": "2023 — present (version 4.0)"
+        },
+        {
+          "k": "Role",
+          "v": "Interface engineering and design system"
+        },
+        {
+          "k": "Platform",
+          "v": "Web"
+        },
+        {
+          "k": "Status",
+          "v": "Live"
+        }
+      ],
+      "metric": {
+        "platform": "Web",
+        "standard": "A documented component system",
+        "honor": "The base for Smart Accountant and the Academy"
+      },
+      "challenge": {
+        "p": "Every product in the group was rebuilding its own buttons, windows and tables. Any change to the identity meant redoing the work in four places, and AI was always a chat panel stuck to the side.",
+        "points": [
+          "One component system where the whole identity changes from a single place",
+          "AI inside the task itself, not in a side panel",
+          "A live glass surface that stays readable in Arabic at AA contrast",
+          "A base the next products start from without a rebuild"
+        ]
+      },
+      "approach": [
+        {
+          "t": "A component system, not pages",
+          "d": "Every surface is built from documented components driven by central design tokens: colour, spacing, type, motion. Changing one value changes the identity in every product that consumes the system."
+        },
+        {
+          "t": "AI embedded in the flow",
+          "d": "Help appears inside the field or table the user is working in and suggests the next step in context — instead of a separate chat window that interrupts the task."
+        },
+        {
+          "t": "Glass that reads in Arabic",
+          "d": "Glass layers are tuned to measured contrast, with a fixed dark ground behind the text so transparency never turns into visual noise behind Arabic letterforms."
+        }
+      ],
+      "solution": "A full interface layer in TypeScript and React over a central design-token system, with independent components that carry their own state. It became the ground the Smart Accountant and Academy interfaces started from — the same buttons, the same tables, the same motion.",
+      "impact": [
+        {
+          "n": 1,
+          "label": "design system feeding every product in the group"
+        },
+        {
+          "n": 4,
+          "label": "major versions, up to 4.0"
+        },
+        {
+          "n": 2,
+          "label": "products built on top of it"
+        },
+        {
+          "text": "AA",
+          "label": "measured contrast on the glass surfaces"
+        }
+      ],
+      "notes": [
+        {
+          "b": "A component system, not pages",
+          "s": "Every surface is built from documented components, so the whole identity changes from one place."
+        },
+        {
+          "b": "AI embedded in the flow",
+          "s": "Help appears inside the task itself instead of a separate chat panel."
+        },
+        {
+          "b": "The base for what came next",
+          "s": "What was built here became the ground for the Smart Accountant and Academy interfaces."
+        }
+      ]
+    },
+    {
+      "slug": "smart-accountant",
+      "kind": "Enterprise system",
+      "title": "Smart Accountant",
+      "headline": "an IFRS accounting system, Arabic from the root",
+      "summary": "A complete double-entry accounting system built on IFRS that reads your invoices, proposes the balanced entry and closes the month with you — built to replace manual data entry, not the accountant.",
+      "heroAlt": "The Smart Accountant cockpit: revenue, expenses, net cash flow and the last balanced entry",
+      "facts": [
+        {
+          "k": "Client",
+          "v": "An Awalim product — live at clients in several countries"
+        },
+        {
+          "k": "Sector",
+          "v": "Finance and accounting"
+        },
+        {
+          "k": "Year",
+          "v": "2025 — 2026"
+        },
+        {
+          "k": "Role",
+          "v": "Full product: architecture, engineering, interface"
+        },
+        {
+          "k": "Platform",
+          "v": "Web"
+        },
+        {
+          "k": "Status",
+          "v": "Live"
+        }
+      ],
+      "metric": {
+        "platform": "Web",
+        "standard": "IFRS · IAS 19",
+        "honor": "10 modules · 7 country packs"
+      },
+      "challenge": {
+        "p": "Most of what is sold in this region as an «accounting system» is a pretty interface over a spreadsheet: unbalanced entries pass, one client's data shows up for another, and Arabic is a translation laid over a Latin template.",
+        "points": [
+          "No unbalanced entry passes — no in-between state, no fixing it later",
+          "Multi-tenant data isolation on three independent layers",
+          "Behaviour that changes entirely by country pack: currency, tax, zakat, weekend, end of service",
+          "Reading invoices with the camera and proposing a balanced entry for human approval"
+        ]
+      },
+      "approach": [
+        {
+          "t": "The accounting core first",
+          "d": "A hierarchical chart of accounts, a ledger per account, upward balance aggregation with the correct sign, and posted journal entries with a full audit trail. The core was built and tested before any screen."
+        },
+        {
+          "t": "Isolation on three layers",
+          "d": "A permission guard on the route, a storage layer scoped to the entity, and row-level security policies inside PostgreSQL itself — defence in depth that does not rest on one layer."
+        },
+        {
+          "t": "Scan the invoice, take the entry",
+          "d": "A document box reads photographs of invoices and receipts — uploaded or from the camera — extracts the fields and proposes a balanced entry. Approval is always human."
+        },
+        {
+          "t": "The financial decision room",
+          "d": "A financial health indicator, early alerts, a cash-flow forecast and «what if» simulation before the decision — built on the real numbers, not on estimates."
+        }
+      ],
+      "solution": "TypeScript end to end with contracts shared between client and server, PostgreSQL with Drizzle and exported reviewable migrations, schema validation on every request, and automated tests covering the critical accounting paths. The interface is natively right-to-left with tuned Arabic typography and tabular numerals.",
+      "impact": [
+        {
+          "n": 10,
+          "label": "modules, from the general ledger to the decision room"
+        },
+        {
+          "n": 7,
+          "label": "country packs, each with full behaviour"
+        },
+        {
+          "n": 3,
+          "label": "data isolation layers"
+        },
+        {
+          "text": "IAS 19",
+          "label": "payroll and end-of-service to the standard"
+        }
+      ],
+      "notes": [
+        {
+          "b": "No entry passes unless it balances",
+          "s": "A hierarchical chart of accounts, a ledger per account, and posted entries with a full audit trail."
+        },
+        {
+          "b": "Scan the invoice, take the entry",
+          "s": "A document box reads the images and proposes a balanced entry for human approval."
+        },
+        {
+          "b": "Isolation on three layers",
+          "s": "A route guard, entity-scoped storage, and row policies inside the database itself."
+        }
+      ]
+    },
+    {
+      "slug": "maya",
+      "kind": "Brand identity",
+      "title": "Maya",
+      "headline": "an identity where eastern heritage meets modernity",
+      "summary": "A complete visual identity for a perfume brand: mark, colour palette, Arabic and Latin typography, and an application system that runs from the bottle to the screen.",
+      "heroAlt": "The Maya identity: the mark and the hand-drawn Arabic name on the bottle",
+      "gallery": [
+        {
+          "src": "/assets/img/work/maya-brand.webp",
+          "alt": "The Maya identity",
+          "cap": "Mark and name — tested on bottle, card and screen before approval"
+        }
+      ],
+      "facts": [
+        {
+          "k": "Client",
+          "v": "A perfume brand"
+        },
+        {
+          "k": "Sector",
+          "v": "Perfume and luxury goods"
+        },
+        {
+          "k": "Year",
+          "v": "2024"
+        },
+        {
+          "k": "Role",
+          "v": "Full identity and usage guide"
+        },
+        {
+          "k": "Deliverables",
+          "v": "Mark · colour · type · guide"
+        },
+        {
+          "k": "Status",
+          "v": "Delivered"
+        }
+      ],
+      "metric": {
+        "platform": "Packaging · print · screen",
+        "standard": "A mark that works at 1 cm",
+        "honor": "A full identity, delivered"
+      },
+      "challenge": {
+        "p": "An identity that looks beautiful in a slide and then collapses on a three-centimetre bottle is not an identity. And an Arabic name set in an off-the-shelf typeface loses the joins between its letters at small sizes.",
+        "points": [
+          "A mark that works at one centimetre on the bottle and full-screen at the same time",
+          "An Arabic name that keeps its letter joins at every size",
+          "A colour palette that holds the same on paper and on screen",
+          "A usage guide a designer and a print shop both understand"
+        ]
+      },
+      "approach": [
+        {
+          "t": "A mark tested before it is approved",
+          "d": "The mark was tested on the bottle, the card and the screen at real sizes before approval — not on a slide. Anything that did not hold at one centimetre was redrawn."
+        },
+        {
+          "t": "Hand-drawn Arabic type",
+          "d": "The Arabic name was drawn by hand to keep its letter joins at small sizes, with a Latin cut that shares its rhythm without imitating it."
+        },
+        {
+          "t": "A guide that can be executed",
+          "d": "Clear rules for spacing, backgrounds and forbidden uses, with files ready for print and for screen — not a slide deck forgotten in a month."
+        }
+      ],
+      "solution": "A complete identity: mark, colour palette, Arabic and Latin typography, and an application system running from the bottle to the screen, with an executable usage guide.",
+      "impact": [
+        {
+          "n": 1,
+          "suffix": " cm",
+          "label": "smallest size at which the mark still reads"
+        },
+        {
+          "n": 2,
+          "label": "type systems, Arabic and Latin, on one rhythm"
+        },
+        {
+          "text": "CMYK · RGB",
+          "label": "a palette tuned for paper and screen"
+        },
+        {
+          "text": "Guide",
+          "label": "executable, for designer and print shop"
+        }
+      ],
+      "notes": [
+        {
+          "b": "A mark that works at one centimetre",
+          "s": "Tested on bottle, card and screen before approval — not on a slide."
+        },
+        {
+          "b": "Tuned Arabic typography",
+          "s": "The Arabic name was drawn by hand to keep its joins at small sizes."
+        },
+        {
+          "b": "An executable usage guide",
+          "s": "Clear rules for spacing, backgrounds and forbidden uses — understood by designer and printer alike."
+        }
+      ],
+      "tech": [
+        "Figma",
+        "Arabic typography",
+        "Brand guide",
+        "Print applications"
+      ]
+    },
+    {
+      "slug": "academy-platform",
+      "kind": "Education",
+      "title": "Awalim Academy",
+      "headline": "a learning platform for the next generation of engineers",
+      "summary": "Tracks, real projects and code review — a platform built to teach engineering the way it is practised, not the way it is explained in a video.",
+      "heroAlt": "The Academy platform: the track project, its tasks with their states, and a code review written on the trainee's own code",
+      "gallery": [
+        {
+          "src": "/assets/img/work/card_3.webp",
+          "alt": "The Academy platform",
+          "cap": "The track screen — the project, the code reviews and the tests in one place"
+        }
+      ],
+      "facts": [
+        {
+          "k": "Client",
+          "v": "An Awalim product"
+        },
+        {
+          "k": "Sector",
+          "v": "Engineering education"
+        },
+        {
+          "k": "Year",
+          "v": "2023 — present"
+        },
+        {
+          "k": "Role",
+          "v": "Platform and curriculum"
+        },
+        {
+          "k": "Platform",
+          "v": "Web"
+        },
+        {
+          "k": "Status",
+          "v": "Live"
+        }
+      ],
+      "metric": {
+        "platform": "Web",
+        "standard": "4 engineering tracks",
+        "honor": "{engineersTrained} trained · {certifiedGraduates} certified",
+        "users": "{engineersTrained}"
+      },
+      "challenge": {
+        "p": "Video series get watched and forgotten. An engineer learns by writing real code, having it reviewed line by line, and resubmitting — exactly as in a real team. The platform had to force that, not merely allow it.",
+        "points": [
+          "A full track built around one project delivered at the end",
+          "Code review written on the trainee's own code",
+          "Tests from day one, before the feature",
+          "A published deliverable for the professional portfolio"
+        ]
+      },
+      "approach": [
+        {
+          "t": "A track around one project",
+          "d": "Every trainee builds one product across the whole track instead of scattered exercises that are forgotten. The platform tracks the project, not the lessons."
+        },
+        {
+          "t": "Code review, not a model answer",
+          "d": "Written notes on the trainee's own code, then a resubmission — as it goes in a real team. There is no «model solution», because real solutions are many."
+        },
+        {
+          "t": "The team comes from here",
+          "d": "Training is not a revenue line — it is how we build the team we later hire, and how we keep our engineering standards alive. A large part of the Awalim team today came from the Academy."
+        }
+      ],
+      "solution": "A web platform where tracks are run as projects: a repository per trainee, written code reviews, and tests run on every submission. Four engineering tracks, each ending in a published product.",
+      "notes": [
+        {
+          "b": "A track around one project",
+          "s": "Every trainee builds one product across the whole track instead of scattered exercises."
+        },
+        {
+          "b": "Code review, not a model answer",
+          "s": "Written notes on the trainee's own code, then a resubmission — as it goes in a real team."
+        },
+        {
+          "b": "{engineersTrained} trainees",
+          "s": "and {certifiedGraduates} finished a full track — a large part of today's Awalim team came from them."
+        }
+      ],
+      "tech": [
+        "React",
+        "TypeScript",
+        "PostgreSQL",
+        "Code review",
+        "Playwright"
+      ]
+    },
+    {
+      "slug": "car-hmi",
+      "kind": "Design study",
+      "title": "Automotive dashboard",
+      "headline": "instant reading in an environment that tolerates no hesitation",
+      "summary": "An interface study for driving: speed, energy and route in a single visual sequence, with absolute priority for safety over decoration.",
+      "heroAlt": "A dashboard: speed, energy and route in a three-level visual hierarchy",
+      "gallery": [
+        {
+          "src": "/assets/img/work/card_1.webp",
+          "alt": "The dashboard",
+          "cap": "The visual hierarchy — what must be seen in a fraction of a second comes first"
+        }
+      ],
+      "facts": [
+        {
+          "k": "Type",
+          "v": "Interface study"
+        },
+        {
+          "k": "Field",
+          "v": "HMI — human/machine interface"
+        },
+        {
+          "k": "Year",
+          "v": "2024"
+        },
+        {
+          "k": "Role",
+          "v": "Design exploration"
+        },
+        {
+          "k": "Scope",
+          "v": "Exploration"
+        },
+        {
+          "k": "Status",
+          "v": "Study"
+        }
+      ],
+      "metric": {
+        "platform": "Driving display",
+        "standard": "Contrast measured in daylight",
+        "honor": "Design study"
+      },
+      "challenge": {
+        "p": "A driver does not read the screen; they glance at it. Anything that takes more than a fraction of a second to understand is a hazard — and the visual decoration that looks superb in a dark room disappears under midday sun.",
+        "points": [
+          "What must be seen in a fraction of a second, then what is read at a stop, then what is hidden",
+          "One colour that carries meaning — so when it changes the driver knows something really changed",
+          "Contrast measured under direct brightness, not on a desk monitor",
+          "No motion that pulls attention off the road"
+        ]
+      },
+      "approach": [
+        {
+          "t": "A three-level visual hierarchy",
+          "d": "Speed and warnings in the first level, at a size readable without focusing. Energy and route in the second. Everything else hidden until asked for."
+        },
+        {
+          "t": "One colour that carries meaning",
+          "d": "Green for a healthy state only. No decorative green and no «brand» green — so when something turns amber or red the driver does not need to read why."
+        },
+        {
+          "t": "Tested in daylight",
+          "d": "Contrast was measured under direct brightness, not on a desk monitor in a dark room. Anything that failed under the sun was redesigned."
+        }
+      ],
+      "solution": "A complete interface study in Figma with a three-level visual hierarchy, a semantic rather than decorative colour palette, and contrast measured under real lighting conditions.",
+      "impact": [
+        {
+          "n": 3,
+          "label": "levels in the visual hierarchy"
+        },
+        {
+          "n": 1,
+          "label": "colour carrying the meaning of a healthy state"
+        },
+        {
+          "text": "☀",
+          "label": "contrast tested under direct sun"
+        },
+        {
+          "text": "0",
+          "label": "motion that pulls attention off the road"
+        }
+      ],
+      "notes": [
+        {
+          "b": "A three-level visual hierarchy",
+          "s": "What must be seen in a fraction of a second, then what is read at a stop, then what is hidden."
+        },
+        {
+          "b": "One colour that carries meaning",
+          "s": "Green for a healthy state only — so a change in colour means something really changed."
+        },
+        {
+          "b": "Tested in daylight",
+          "s": "Contrast measured under direct brightness, not on a desk monitor in a dark room."
+        }
+      ],
+      "tech": [
+        "Figma",
+        "Measured contrast",
+        "Visual hierarchy",
+        "Daylight testing"
+      ]
+    },
+    {
+      "slug": "island-haven",
+      "kind": "Platform",
+      "title": "Island Haven",
+      "headline": "a tech incubator whose numbers can be verified",
+      "summary": "An incubator platform in Gaza: every public number is cryptographically signed with Ed25519, and the visitor's own browser verifies it through WebCrypto — no trust in the server required.",
+      "heroAlt": "The verification page at Island Haven: a public Ed25519 key and three checks running in the browser — the hash matches, the signature is valid, the key is published",
+      "gallery": [
+        {
+          "src": "/assets/img/work/islandhaven-verify.webp",
+          "alt": "The verification page",
+          "cap": "The verification page — three checks running in the visitor's browser, not on our server"
+        }
+      ],
+      "facts": [
+        {
+          "k": "Client",
+          "v": "Island Haven incubator — Gaza"
+        },
+        {
+          "k": "Sector",
+          "v": "Startup incubation"
+        },
+        {
+          "k": "Year",
+          "v": "2026"
+        },
+        {
+          "k": "Role",
+          "v": "Full engineering and design"
+        },
+        {
+          "k": "Platform",
+          "v": "Web — React · SSR"
+        },
+        {
+          "k": "Verification",
+          "v": "Ed25519 · WebCrypto"
+        }
+      ],
+      "metric": {
+        "platform": "Web",
+        "standard": "WCAG 2.1 AA",
+        "honor": "A cryptographic signature on every public number"
+      },
+      "challenge": {
+        "p": "An incubator publishing public numbers — companies, funding, graduates — in an environment where every number is doubted. What was needed was not «believe us», but «check for yourselves».",
+        "points": [
+          "Every public number cryptographically signed and sealed in a hash chain",
+          "Verification running in the visitor's browser through WebCrypto — not through our server",
+          "Arabic first in direction, typography and numerals, with English as a layer above it",
+          "Content baked into the page source, readable before any JavaScript runs"
+        ]
+      },
+      "approach": [
+        {
+          "t": "Don't trust us — verify us",
+          "d": "Public numbers are sealed in a hash chain and the public key is published. The verification page runs three checks in the visitor's browser: the hash matches, the signature is valid, the key is published."
+        },
+        {
+          "t": "Server-side rendering",
+          "d": "The content is baked into the page source, so the visitor — and the search engine — reads before any JavaScript runs. JavaScript adds the verification; it does not carry the content."
+        },
+        {
+          "t": "Arabic first",
+          "d": "Direction, typography and numerals are Arabic by origin, with English as a layer above — not the other way round. WCAG 2.1 AA accessibility across the platform."
+        }
+      ],
+      "solution": "A React platform with server-side rendering, an Ed25519 signature on every public number, and verification in the browser through WebCrypto. Trust never passes through us.",
+      "impact": [
+        {
+          "n": 3,
+          "label": "verification checks running in the browser"
+        },
+        {
+          "n": 0,
+          "label": "trust required in the server"
+        },
+        {
+          "text": "Ed25519",
+          "label": "a cryptographic signature on every public number"
+        },
+        {
+          "text": "AA",
+          "label": "WCAG 2.1 accessibility across the platform"
+        }
+      ],
+      "notes": [
+        {
+          "b": "Don't trust us — verify us",
+          "s": "Public numbers are sealed in a hash chain and the key is published. Verification runs in the browser, so it never passes through us."
+        },
+        {
+          "b": "Arabic first",
+          "s": "Direction, typography and numerals are Arabic by origin, with English as a layer above — not the other way round."
+        },
+        {
+          "b": "Server-side rendering",
+          "s": "The content is baked into the page source, so the visitor reads before any JavaScript runs."
+        }
+      ]
+    }
+  ],
+  "minor": [
+    {
+      "title": "Ramadan Seoul 2025",
+      "d": "A Ramadan campaign — East meets West in one visual moment.",
+      "img": "/assets/img/work/ramadan-seoul.webp",
+      "tags": [
+        "Campaign",
+        "Branding"
+      ],
+      "cat": "brand"
+    },
+    {
+      "title": "Social Design System",
+      "d": "A scalable social-media design system — templates and design tokens instead of scattered files.",
+      "img": "/assets/img/work/social-design.webp",
+      "tags": [
+        "Design",
+        "System"
+      ],
+      "cat": "brand"
+    },
+    {
+      "title": "Awalim Ramadan 2024",
+      "d": "A Ramadan identity for Awalim — warm, authentic, contemporary.",
+      "img": "/assets/img/work/ramadan-awalim.webp",
+      "tags": [
+        "Branding"
+      ],
+      "cat": "brand"
+    },
+    {
+      "title": "Ramadan 1004",
+      "d": "An exceptional visual experience for the Ramadan season.",
+      "img": "/assets/img/work/ramadan-1004.webp",
+      "tags": [
+        "Design"
+      ],
+      "cat": "brand"
+    }
+  ],
+  "filters": [
+    {
+      "key": "all",
+      "label": "All"
+    },
+    {
+      "key": "systems",
+      "label": "Systems"
+    },
+    {
+      "key": "apps",
+      "label": "Apps"
+    },
+    {
+      "key": "brand",
+      "label": "Brand"
+    },
+    {
+      "key": "web",
+      "label": "Web"
+    }
+  ]
+}

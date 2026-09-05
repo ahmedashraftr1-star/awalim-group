@@ -1,0 +1,141 @@
+{
+  "_note": "English overrides for careers.json — merged by slug.",
+  "seo": {
+    "title": "Careers — join a team building systems measured by the global standard | Awalim Group",
+    "description": "Engineering and design roles at Awalim Group: fully remote, real code review, and standards we don't trade away. Apply with a project, not a CV."
+  },
+  "h": "Build the systems that run companies, with us",
+  "lede": "We hire to the standard we ship to: balanced entries, tests that block regressions, and Arabic from the root. We ask less for years of experience than for something you built that we can read.",
+  "why": {
+    "eyebrow": "Why here",
+    "h": "Four things we guarantee you",
+    "items": [
+      { "t": "Real code review", "d": "Everything you write is reviewed line by line — and everything we write is reviewed by you. That is how all of us learn." },
+      { "t": "Fully remote", "d": "The team has been distributed since day one. We measure output, not hours online, and we meet on a published schedule rather than by interruption." },
+      { "t": "A product you watch run", "d": "You are not building a slide. You are building a system an accountant in Saudi Arabia or a family in Gaza will use tomorrow." },
+      { "t": "A clear path", "d": "Written expectations for every level, and a review every six months against criteria known in advance — no surprises." }
+    ]
+  },
+  "process": {
+    "eyebrow": "How we hire",
+    "h": "Four steps. No riddles.",
+    "steps": [
+      { "n": "01", "t": "Apply with a project", "d": "Send something you built — a repository, a published app, or a design file — and two lines about a hard decision you made in it." },
+      { "n": "02", "t": "A 30-minute call", "d": "We talk about that project specifically: why that decision, and what you would change about it today." },
+      { "n": "03", "t": "A paid practical task", "d": "A task from our real work, with a sensible time limit, and paid. We do not ask for free labour." },
+      { "n": "04", "t": "A decision within a week", "d": "We answer yes or no with a written reason. If it is no, we say precisely what was missing." }
+    ]
+  },
+  "roles": [
+    {
+      "slug": "senior-backend-engineer",
+      "title": "Senior backend engineer",
+      "team": "Enterprise systems",
+      "type": "Full time",
+      "location": "Remote — Gulf time ±3 hours preferred",
+      "level": "4+ years",
+      "summary": "You build the heart of Smart Accountant: the ledger engine, posting, and multi-tenant isolation on three layers. Precision here is not a feature — it is the condition.",
+      "does": [
+        "Designing data schemas and migrations that can be reviewed and reverted",
+        "Writing accounting logic where no unbalanced entry passes",
+        "Building multi-tenant isolation at the route, storage and row level",
+        "Reviewing your colleagues' code, and accepting theirs on yours"
+      ],
+      "needs": [
+        "PostgreSQL in depth: transactions, isolation levels, indexing and query plans",
+        "TypeScript on the server with schema validation on every request",
+        "Automated tests you write before the feature, not after",
+        "The ability to explain an architectural decision in writing"
+      ],
+      "bonus": ["An accounting background or ERP experience", "Drizzle or any ORM that emits exported migrations"]
+    },
+    {
+      "slug": "flutter-engineer",
+      "title": "Flutter engineer",
+      "team": "Mobile engineering",
+      "type": "Full time",
+      "location": "Remote",
+      "level": "2+ years",
+      "summary": "You build apps used daily in environments where the network really does drop — RahmaCare, Jameel Store and what comes next.",
+      "does": [
+        "Turning Figma files into pixel-accurate interfaces with full Arabic support",
+        "Building local storage and sync when the network returns",
+        "Watching the frame and bundle budget on every release",
+        "Publishing to both stores and handling the review"
+      ],
+      "needs": [
+        "Flutter with clean state management (Riverpod or Bloc) that survives growth",
+        "A working understanding of right-to-left — not just flipping a flag",
+        "Widget and integration tests",
+        "An eye for detail: motion curves, scroll bounce and touch timing"
+      ],
+      "bonus": ["Having shipped an app to both stores yourself", "Mobile accessibility experience"]
+    },
+    {
+      "slug": "ai-engineer",
+      "title": "Applied AI engineer",
+      "team": "AI Lab",
+      "type": "Full time",
+      "location": "Remote",
+      "level": "2+ years",
+      "summary": "You build agents that carry out real tasks inside client systems — with written permission boundaries and measured evaluation before every launch.",
+      "does": [
+        "Defining the task, the permission boundary and the tool design",
+        "Building knowledge systems that cite the source in every answer",
+        "Building evaluation sets from real data and measuring accuracy before release",
+        "Designing human stopping points at every financial or legal effect"
+      ],
+      "needs": [
+        "Hands-on experience building agents or RAG systems that reached real users",
+        "Python or TypeScript, and the ability to measure what you build rather than describe it",
+        "An understanding of cost and latency as engineering constraints",
+        "Healthy scepticism: you know when a task does not need an agent at all"
+      ],
+      "bonus": ["A published evaluation or model comparison", "Arabic document-extraction experience"]
+    },
+    {
+      "slug": "product-designer",
+      "title": "Product designer (Arabic-first)",
+      "team": "Brand Studio",
+      "type": "Full time",
+      "location": "Remote",
+      "level": "3+ years",
+      "summary": "You design Arabic interfaces that are measured, not estimated: measured contrast, tuned typography, and design tokens that reach the code.",
+      "does": [
+        "Designing systems rather than screens: tokens, components and states",
+        "Tuning Arabic typography — spacing, joining and diacritics",
+        "Measuring contrast and accessibility before handover, not after",
+        "Working inside the repository: you read the code and push CSS changes yourself"
+      ],
+      "needs": [
+        "A portfolio with at least one Arabic design system in it",
+        "Figma with components and variables, not scattered frames",
+        "Reading HTML/CSS with confidence — even if you never write JavaScript",
+        "Working knowledge of WCAG"
+      ],
+      "bonus": ["Arabic lettering experience", "Interface motion"]
+    },
+    {
+      "slug": "academy-mentor",
+      "title": "Academy mentor (part time)",
+      "team": "Awalim Academy",
+      "type": "Part time — 10 hours a week",
+      "location": "Remote",
+      "level": "3+ years in one of our tracks",
+      "summary": "You review trainees' code and write notes they resubmit against — not a model answer.",
+      "does": [
+        "Reviewing weekly submissions with written notes",
+        "One weekly session discussing an architectural decision",
+        "Proposing curriculum improvements from what you see repeat"
+      ],
+      "needs": ["Real production experience in the track you mentor", "The ability to explain «why», not only «how»", "Patience and clear language"],
+      "bonus": ["Previous teaching experience"]
+    }
+  ],
+  "spontaneous": {
+    "h": "Didn't find your role?",
+    "d": "We read every message. Send a project you built and two lines about the role you want, and we will reply even if the answer is «not now».",
+    "cta": "Send an open application"
+  },
+  "equal": "We hire on skill and standard alone. Our seats are open regardless of gender, age, geography or background — and we especially encourage women engineers and designers to apply."
+}

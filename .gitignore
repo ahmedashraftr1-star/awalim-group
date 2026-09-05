@@ -2,14 +2,10 @@
 *.log
 node_modules/
 .vercel/
+shots/
+.keys/
+test-results/
 
 # Claude Code tooling — NOT part of the site.
-# 6.1MB / 493 files of iOS·macOS·visionOS skills landed here from
-# `cp -r claude-code-apple-skills/skills your-project/.claude/skills/`, where
-# "your-project" resolved to this directory. This site is 9 static HTML pages
-# with zero Swift outside .claude/ (72 .swift files inside it, 0 outside).
-# Ignored rather than deleted — the files are yours to move; the real Apple
-# projects on this machine are ~/RahmaCarevip, ~/AndroidStudioProjects/rahma_care
-# and ~/Desktop/ahmed, all of which currently have 0 skills installed.
 .claude/
 CLAUDE.md

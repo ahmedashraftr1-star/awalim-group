@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Journal — Awalim Group</title>
+  <link>https://awalimgroup.com/en/journal</link>
+  <description>Engineering notes from real projects — not marketing content. What we learn while shipping, written down while it is still fresh.</description>
+  <language>en</language>
+  <atom:link href="https://awalimgroup.com/en/journal/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>The agent revolution: from tools to systems that act</title>
+    <link>https://awalimgroup.com/en/journal/ai-agents-revolution</link>
+    <guid isPermaLink="true">https://awalimgroup.com/en/journal/ai-agents-revolution</guid>
+    <pubDate>Sat, 14 Mar 2026 00:00:00 GMT</pubDate>
+    <description>Why the industry moved from a model that answers to an agent that executes — and what changes in engineering once the system is the one deciding the next step.</description>
+  </item>
+  <item>
+    <title>Building AI agents: from zero to production</title>
+    <link>https://awalimgroup.com/en/journal/building-ai-agents</link>
+    <guid isPermaLink="true">https://awalimgroup.com/en/journal/building-ai-agents</guid>
+    <pubDate>Fri, 20 Feb 2026 00:00:00 GMT</pubDate>
+    <description>The full path: choosing the model, designing the tools, managing memory — then what actually breaks when the agent meets real users.</description>
+  </item>
+  <item>
+    <title>Flutter and Apple's standards: building an experience at the level of official iOS</title>
+    <link>https://awalimgroup.com/en/journal/flutter-apple-standards</link>
+    <guid isPermaLink="true">https://awalimgroup.com/en/journal/flutter-apple-standards</guid>
+    <pubDate>Wed, 28 Jan 2026 00:00:00 GMT</pubDate>
+    <description>The differences a user notices without naming them: motion curves, scroll bounce and touch timing — and where they come from when they are not native.</description>
+  </item>
+  <item>
+    <title>Serverless on AWS: architecture that scales without limits</title>
+    <link>https://awalimgroup.com/en/journal/serverless-on-aws</link>
+    <guid isPermaLink="true">https://awalimgroup.com/en/journal/serverless-on-aws</guid>
+    <pubDate>Wed, 10 Dec 2025 00:00:00 GMT</pubDate>
+    <description>When serverless is the right call and when it is a trap — by the cost, the cold start and the ceiling, not by enthusiasm.</description>
+  </item>
+  <item>
+    <title>From idea to MRR: building a SaaS from zero in 8 weeks</title>
+    <link>https://awalimgroup.com/en/journal/idea-to-mrr-8-weeks</link>
+    <guid isPermaLink="true">https://awalimgroup.com/en/journal/idea-to-mrr-8-weeks</guid>
+    <pubDate>Wed, 05 Nov 2025 00:00:00 GMT</pubDate>
+    <description>A real timeline of what gets built and what gets postponed, and why scope kills small products faster than any technical mistake.</description>
+  </item>
+  <item>
+    <title>Sovereign Glass Design: beyond the blur</title>
+    <link>https://awalimgroup.com/en/journal/sovereign-glass-design</link>
+    <guid isPermaLink="true">https://awalimgroup.com/en/journal/sovereign-glass-design</guid>
+    <pubDate>Thu, 02 Oct 2025 00:00:00 GMT</pubDate>
+    <description>Glass is not an effect but a decision about light, depth and ground — and what makes it read as a material rather than as a filter.</description>
+  </item>
+</channel>
+</rss>

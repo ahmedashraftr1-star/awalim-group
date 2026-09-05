@@ -1,0 +1,155 @@
+/* ==========================================================================
+   TOKENS — the single source of every colour, size, radius, shadow and
+   motion value on the site. Components never carry raw numbers; they read
+   these. Documented in DESIGN-TOKENS.md.
+   ========================================================================== */
+:root {
+  /* ---- colour · light (the identity) ---- */
+  --bg:            #FAFAF8;
+  --surface:       #FFFFFF;
+  --surface-2:     #F2F2EF;
+  --surface-3:     #E9E9E4;
+  --text:          #111112;
+  --text-2:        #3A3A3E;      /* lede / secondary — 10.8:1 */
+  --text-muted:    #5A5A5E;      /* captions — 6.5:1 (was #A7A7A7 · 2.3:1) */
+  --border:        #E6E6E1;
+  --border-2:      #CFCFC8;
+  --ink-strip:     #111112;      /* the dark tech strip */
+  --ink-strip-fg:  #F5F5F3;
+
+  /* brand accent — turquoise. `--accent` is for large type & graphics (3.4:1),
+     `--accent-text` is the darker step for body-size text on light (5.2:1). */
+  --accent:        #189C8E;
+  --accent-text:   #0E7A6F;
+  --accent-strong: #0B6A60;
+  --accent-soft:   rgba(24, 156, 142, .09);
+  --accent-line:   rgba(24, 156, 142, .34);
+  --accent-glow:   rgba(24, 156, 142, .22);
+  --amber:         #8A5A00;
+  --amber-soft:    rgba(196, 132, 0, .12);
+  --amber-line:    rgba(196, 132, 0, .36);
+  --live:          #1C8A3F;
+
+  --btn-bg:        #111112;
+  --btn-fg:        #FFFFFF;
+  --btn-bg-h:      #2A2A2E;
+
+  --shadow-card:   0 20px 60px -20px rgba(0, 0, 0, .12);
+  --shadow-card-h: 0 34px 80px -24px rgba(0, 0, 0, .20);
+  --shadow-pill:   0 1px 2px rgba(0,0,0,.06), 0 10px 30px -14px rgba(0,0,0,.18);
+  --shadow-dev:    0 40px 90px -36px rgba(0, 0, 0, .32);
+
+  /* ---- type ---- */
+  --font-ar:      "IBM Plex Sans Arabic", "Noto Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-display-ar: "Alexandria", "IBM Plex Sans Arabic", "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-latin:   "Archivo", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* scale (section 3.1). display-hero was specified at 9vw; Arabic lines of
+     ~24 glyphs must still fit 1280px, so the fluid term is 7vw — max 7.5rem. */
+  --fs-hero:  clamp(2.5rem, 6.3vw, 6.75rem);   /* Alexandria runs ~12% wider than Plex */
+  --fs-d1:    clamp(2.25rem, 5vw, 5.25rem);
+  --fs-d2:    clamp(1.6rem, 3.2vw, 3rem);
+  --fs-h3:    clamp(1.25rem, 2vw, 1.75rem);
+  --fs-lg:    1.25rem;
+  --fs-body:  1.0625rem;
+  --fs-sm:    .9375rem;
+  --fs-xs:    .8125rem;
+
+  --lh-hero:  1.18;   /* Alexandria sits tighter than Plex; still clears tashkeel */
+  --lh-d:     1.24;
+  --lh-h3:    1.4;
+  --lh-lg:    1.7;
+  --lh-body:  1.75;
+
+  --w-light: 300; --w-regular: 400; --w-medium: 500; --w-semibold: 600; --w-bold: 700; --w-black: 800;
+
+  /* ---- spacing · 8pt ---- */
+  --space-1: 4px;  --space-2: 8px;   --space-3: 12px;  --space-4: 16px;  --space-5: 24px;
+  --space-6: 32px; --space-7: 48px;  --space-8: 64px;  --space-9: 96px;  --space-10: 128px; --space-11: 160px;
+
+  /* vertical rhythm between sections: each section pads half, so two
+     adjacent sections meet at exactly --sec-y. */
+  --sec-y:       clamp(96px, 12vw, 200px);
+  --sec-y-tight: clamp(48px, 6vw, 96px);
+
+  /* ---- grid ---- */
+  --container: 1280px;
+  --container-wide: 1440px;
+  --measure: 68ch;
+  --gutter: clamp(20px, 5vw, 80px);
+  --nav-h: 84px;
+  --sideidx-w: 220px;
+
+  /* ---- radius ---- */
+  --r-sm: 12px; --r-md: 20px; --r-lg: 28px; --r-xl: 40px; --r-pill: 999px;
+
+  /* ---- motion (section 4) ---- */
+  --ease-out:   cubic-bezier(.22, 1, .36, 1);
+  --ease-in:    cubic-bezier(.64, 0, .78, 0);
+  --ease-inout: cubic-bezier(.83, 0, .17, 1);
+  --d-fast: 200ms; --d-base: 420ms; --d-slow: 700ms; --d-max: 900ms;
+  --stagger: 75ms;
+  --reveal-y: 24px;
+  --parallax: 40px;
+
+  color-scheme: light;
+}
+
+/* ---- dark (designed, not inverted) ---- */
+:root[data-theme="dark"] {
+  --bg:            #0A0A0B;
+  --surface:       #141416;
+  --surface-2:     #1C1C1F;
+  --surface-3:     #26262A;
+  --text:          #F5F5F3;
+  --text-2:        #C9C9CD;
+  --text-muted:    #A6A6AB;      /* 8.2:1 on --bg */
+  --border:        #26262A;
+  --border-2:      #3A3A40;
+  --ink-strip:     #1C1C1F;
+  --ink-strip-fg:  #F5F5F3;
+
+  --accent:        #2FC4B4;      /* lighter step in the dark: 9.6:1 */
+  --accent-text:   #6FE0D0;
+  --accent-strong: #9FF0E4;
+  --accent-soft:   rgba(47, 196, 180, .12);
+  --accent-line:   rgba(47, 196, 180, .38);
+  --accent-glow:   rgba(47, 196, 180, .28);
+  --amber:         #F0B84A;
+  --amber-soft:    rgba(240, 184, 74, .14);
+  --amber-line:    rgba(240, 184, 74, .38);
+  --live:          #5ED47E;
+
+  --btn-bg:        #F5F5F3;
+  --btn-fg:        #0A0A0B;
+  --btn-bg-h:      #FFFFFF;
+
+  --shadow-card:   0 20px 60px -20px rgba(0, 0, 0, .6);
+  --shadow-card-h: 0 34px 80px -24px rgba(0, 0, 0, .75);
+  --shadow-pill:   0 0 0 1px rgba(255,255,255,.06), 0 10px 30px -14px rgba(0,0,0,.8);
+  --shadow-dev:    0 40px 90px -36px rgba(0, 0, 0, .85);
+
+  color-scheme: dark;
+}
+
+/* ---- wide screens: Apple-scale display ---- */
+@media (min-width: 1700px) { :root { --fs-hero: clamp(2.5rem, 6.3vw, 8rem); --fs-d1: clamp(2.25rem, 5vw, 6rem); } }
+
+/* ---- prefers-contrast: more — heavier hairlines and captions ---- */
+@media (prefers-contrast: more) {
+  :root { --text-muted: #3F3F44; --text-2: #222226; --border: #B9B9B2; --border-2: #8E8E86; --accent-text: #0A5F56; }
+  :root[data-theme="dark"] { --text-muted: #D2D2D6; --text-2: #E8E8EA; --border: #4A4A52; --border-2: #6A6A74; --accent-text: #8FEDE0; }
+}
+
+/* ---- English mirror: the same system, tuned for Latin text ----
+   Alexandria carries the display voice in both languages so the brand does
+   not change when the language does; only the metrics that Arabic needed
+   extra room for are tightened. */
+[dir="ltr"] {
+  --lh-hero: 1.04;
+  --lh-d: 1.12;
+  --lh-body: 1.65;
+  --lh-lg: 1.6;
+  --measure: 72ch;
+}

@@ -1,0 +1,50 @@
+{
+  "_note": "English overrides for legal.json — merged by slug.",
+  "pages": [
+    {
+      "slug": "privacy",
+      "seo": {
+        "title": "Privacy policy — no cookies, no tracking, no server | Awalim Group",
+        "description": "What we collect (nothing), what stays on your device, and how the contact form works without sending anything to our server."
+      },
+      "h": "Privacy policy",
+      "lede": "The shortest privacy policy you have read, because this site collects nothing about you. This is a description of what actually happens — not a copied legal template.",
+      "sections": [
+        { "h": "What we do not do", "ul": [
+          "We set no cookies — not one.",
+          "We run no analytics and no third-party tracking script.",
+          "We load no fonts, images or libraries from external servers; every file comes from our own domain.",
+          "We sell no data and share none, because we hold no data to sell."
+        ]},
+        { "h": "What stays on your device", "p": "Three things are stored in your own browser and never reach us:", "ul": [
+          "<b>Your dark-mode preference</b> in <bdi lang=\"en\">localStorage</bdi> under the key <bdi lang=\"en\">awalim-theme</bdi>.",
+          "<b>An offline cache</b> through a Service Worker, so pages you have visited open without a connection.",
+          "<b>What you type into the contact form</b> — it stays in the page until you press send, and is not saved afterwards."
+        ], "note": "Clear this site's data in your browser and all of it disappears immediately." },
+        { "h": "The contact form", "p": "The send button transmits nothing to a server. It opens a WhatsApp chat or an email on your own device, pre-filled with what you wrote, and you are the one who presses send in your own app. From that moment WhatsApp's or your email provider's privacy policy applies, not ours." },
+        { "h": "Hosting logs", "p": "The hosting provider may keep standard technical logs (IP address, request time, browser type) for operations and abuse protection. We do not access those logs to analyse visitor behaviour and we link them to no identity." },
+        { "h": "Children", "p": "The site is aimed at companies and professionals, and we knowingly collect data from no one, including anyone under 16." },
+        { "h": "Your rights", "p": "Because we hold no personal data, there is nothing to request deletion or export of. If you contact us on WhatsApp or by email and we keep your message in the context of a project, you can ask us to delete it at any time at the address below and we will do so within 30 days." },
+        { "h": "Changes", "p": "Any material change — adding analytics, for instance — is written here the same day, with its date. We will not add tracking quietly." }
+      ]
+    },
+    {
+      "slug": "terms",
+      "seo": {
+        "title": "Terms of use — the site, the work, and ownership | Awalim Group",
+        "description": "Terms for using the Awalim Group website, ownership of what we deliver to clients, and the limits of what is published here."
+      },
+      "h": "Terms of use",
+      "lede": "Short terms in plain language. What concerns your specific project is governed by a signed contract, not by this page.",
+      "sections": [
+        { "h": "Using the site", "p": "You may browse the site and quote its articles with attribution. You may not copy the design, the code or the content wholesale to republish under another name." },
+        { "h": "Ownership of what we deliver", "p": "What we build for a client belongs entirely to that client on completion of payment: the code repository, the documentation, the deployment accounts and the database. We keep no key that makes staying with us compulsory. Open-source libraries remain under their original licences." },
+        { "h": "Case studies", "p": "We publish no client name and no screenshot of their system without written permission. What you see on the work page is either a product we own or work we were permitted to publish. If you are a client and want to withdraw permission, tell us and we remove it." },
+        { "h": "Published numbers", "p": "The public numbers on this site are cryptographically signed and can be checked on the <a href=\"/verify\">verification page</a>. We correct them when they change and re-sign them. If you find a number you cannot verify, tell us." },
+        { "h": "No implied warranty on content", "p": "The articles and engineering guides here are experience we share, not professional advice for your situation. Your architectural or financial decision is your responsibility — and we are glad to discuss it with you on a call." },
+        { "h": "Limitation of liability", "p": "The site is provided as is. We accept no liability for interruption or error in the free content published here. Our liability towards clients is defined solely in the contract signed with them." },
+        { "h": "Governing law", "p": "These terms are governed by the law applicable at the company's seat, and disputes are resolved amicably first, then before the competent forum stated in the contract." }
+      ]
+    }
+  ]
+}

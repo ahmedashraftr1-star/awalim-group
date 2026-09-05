@@ -1,253 +1,293 @@
 /* ==========================================================================
-   AWALIM GROUP — progressive enhancement
-   No dependencies. Everything degrades gracefully without JS.
+   AWALIM — core behaviours (no dependencies, ~6KB).
+   theme · pill nav · drawer · reveal/stagger · count-up · accordion ·
+   filters · scroll-spy side index · multi-step brief form · year.
+   Everything degrades: without JS the page is fully readable.
    ========================================================================== */
 (function () {
   "use strict";
-
-  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* ---------- theme ---------- */
   var root = document.documentElement;
+  var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
-  function applyTheme(theme) {
-    if (theme === "dark") root.setAttribute("data-theme", "dark");
-    else root.removeAttribute("data-theme");
-    var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", theme === "dark" ? "#0A0B0D" : "#FAF9F6");
+  /* ---------- language ----------
+     The page declares its own language; every runtime string picks the
+     matching side of T(arabic, english) so the two mirrors never drift. */
+  var EN = document.documentElement.lang === "en";
+  var T = function (ar, en) { return EN ? en : ar; };
+  window.AwalimT = T;
+
+  /* ---------- theme: system default, saved choice wins ---------- */
+  function applyTheme(t, save) {
+    root.setAttribute("data-theme", t);
+    if (save) { try { localStorage.setItem("awalim-theme", t); root.setAttribute("data-theme-saved", ""); } catch (_) {} }
+    $$("[data-theme-toggle]").forEach(function (b) {
+      b.setAttribute("aria-pressed", t === "dark" ? "true" : "false");
+      b.setAttribute("aria-label", t === "dark" ? T("التبديل إلى الوضع النهاري", "Switch to light mode") : T("التبديل إلى الوضع الليلي", "Switch to dark mode"));
+    });
   }
-
-  function currentTheme() {
-    return root.getAttribute("data-theme") === "dark" ? "dark" : "light";
-  }
-
+  applyTheme(root.getAttribute("data-theme") || "light", false);
   document.addEventListener("click", function (e) {
     var t = e.target.closest("[data-theme-toggle]");
     if (!t) return;
-    var next = currentTheme() === "dark" ? "light" : "dark";
-    applyTheme(next);
-    try { localStorage.setItem("awalim-theme", next); } catch (_) {}
-    t.setAttribute("aria-label", next === "light" ? "التبديل إلى الوضع الليلي" : "التبديل إلى الوضع النهاري");
+    var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next, true);
+    say(next === "dark" ? T("الوضع الليلي", "Dark mode") : T("الوضع النهاري", "Light mode"));
+  });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
+    if (!root.hasAttribute("data-theme-saved")) applyTheme(e.matches ? "dark" : "light", false);
   });
 
-  /* ---------- sticky header ---------- */
-  var hdr = document.querySelector(".hdr");
-  if (hdr) {
-    var onScroll = function () {
-      hdr.setAttribute("data-stuck", window.scrollY > 8 ? "true" : "false");
+  /* ---------- dynamic island: one surface for every live notification ---------- */
+  var island = $("[data-island]"), islandTimer = null;
+  var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+  function say(text, icon, ms) {
+    if (!island) return;
+    $(".island__t", island).textContent = text;
+    $(".island__ic", island).innerHTML = icon || CHECK;
+    island.classList.remove("is-on"); void island.offsetWidth;
+    island.classList.add("is-on");
+    clearTimeout(islandTimer);
+    islandTimer = setTimeout(function () { island.classList.remove("is-on"); }, ms || 2600);
+  }
+  window.AwalimIsland = { say: say };
+  document.addEventListener("awalim:notify", function (e) { say(e.detail.text, e.detail.icon, e.detail.ms); });
+
+  /* ---------- service worker: instant repeat visits, offline fallback ---------- */
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+    addEventListener("load", function () { navigator.serviceWorker.register("/sw.js").catch(function () {}); });
+  }
+
+  /* ---------- pill nav shrink ---------- */
+  var nav = $("[data-nav]");
+  if (nav) {
+    var stuck = null;
+    var onNav = function () {
+      var s = window.scrollY > 24;
+      if (s !== stuck) { stuck = s; nav.setAttribute("data-stuck", s ? "true" : "false"); }
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    onNav();
+    addEventListener("scroll", onNav, { passive: true });
   }
 
-  /* ---------- mobile drawer (focus-trapped) ---------- */
-  var drawer = document.getElementById("drawer");
-  var lastFocus = null;
-
+  /* ---------- drawer (focus-trapped) ---------- */
+  var drawer = $("#drawer"), lastFocus = null;
   function focusables(el) {
-    return Array.prototype.filter.call(
-      el.querySelectorAll('a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])'),
-      function (n) { return n.offsetParent !== null; }
-    );
+    return $$('a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])', el).filter(function (n) { return n.offsetParent !== null; });
   }
-
   function setDrawer(open) {
     if (!drawer) return;
     drawer.setAttribute("data-open", open ? "true" : "false");
     drawer.setAttribute("aria-hidden", open ? "false" : "true");
     document.body.style.overflow = open ? "hidden" : "";
-    document.querySelectorAll("[data-drawer-open]").forEach(function (b) {
-      b.setAttribute("aria-expanded", open ? "true" : "false");
-    });
-    if (open) {
-      lastFocus = document.activeElement;
-      var f = focusables(drawer);
-      if (f.length) f[0].focus();
-    } else if (lastFocus) {
-      lastFocus.focus();
-    }
+    $$("[data-drawer-open]").forEach(function (b) { b.setAttribute("aria-expanded", open ? "true" : "false"); });
+    if (open) { lastFocus = document.activeElement; var f = focusables(drawer); if (f.length) f[0].focus(); }
+    else if (lastFocus) lastFocus.focus();
   }
-
   document.addEventListener("click", function (e) {
-    if (e.target.closest("[data-drawer-open]")) { setDrawer(true); return; }
-    if (e.target.closest("[data-drawer-close]")) { setDrawer(false); return; }
-    if (drawer && drawer.getAttribute("data-open") === "true" && e.target.closest(".drawer__nav a")) {
-      setDrawer(false);
-    }
+    if (e.target.closest("[data-drawer-open]")) return setDrawer(true);
+    if (e.target.closest("[data-drawer-close]")) return setDrawer(false);
+    if (drawer && drawer.getAttribute("data-open") === "true" && e.target.closest(".drawer__nav a")) setDrawer(false);
   });
-
   document.addEventListener("keydown", function (e) {
     if (!drawer || drawer.getAttribute("data-open") !== "true") return;
-    if (e.key === "Escape") { setDrawer(false); return; }
+    if (e.key === "Escape") return setDrawer(false);
     if (e.key !== "Tab") return;
-    var f = focusables(drawer);
-    if (!f.length) return;
+    var f = focusables(drawer); if (!f.length) return;
     var first = f[0], last = f[f.length - 1];
     if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 
-  /* ---------- scroll reveal ---------- */
-  var revealables = document.querySelectorAll(".rv");
-  if (reduced || !("IntersectionObserver" in window)) {
-    revealables.forEach(function (el) { el.classList.add("in"); });
-  } else {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        en.target.classList.add("in");
-        io.unobserve(en.target);
-      });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.06 });
-    revealables.forEach(function (el) { io.observe(el); });
+  /* ---------- reveal + stagger ---------- */
+  $$("[data-stagger]").forEach(function (g) {
+    Array.prototype.forEach.call(g.children, function (c, i) { c.style.setProperty("--i", String(i)); });
+  });
+  var rv = $$(".rv, [data-stagger]");
+  if (reduced || !("IntersectionObserver" in window)) rv.forEach(function (el) { el.classList.add("in"); });
+  else {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+    rv.forEach(function (el) { io.observe(el); });
   }
 
-  /* ---------- count-up ---------- */
-  var counters = document.querySelectorAll("[data-count]");
+  /* ---------- count-up (skips the live cockpit numbers; motion.js owns those) ---------- */
+  var counters = $$("[data-count]:not([data-count-live])");
+  function runCount(el) {
+    var target = parseFloat(el.getAttribute("data-count")) || 0, dur = 1300, t0 = null;
+    var step = function (ts) {
+      if (t0 === null) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1), eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased).toLocaleString("en-US");
+      if (p < 1) requestAnimationFrame(step); else el.textContent = target.toLocaleString("en-US");
+    };
+    requestAnimationFrame(step);
+  }
   if (counters.length) {
-    if (reduced || !("IntersectionObserver" in window)) {
-      counters.forEach(function (el) { el.textContent = el.getAttribute("data-count"); });
-    } else {
-      var cio = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (!en.isIntersecting) return;
-          var el = en.target;
-          cio.unobserve(el);
-          var target = parseFloat(el.getAttribute("data-count")) || 0;
-          var dur = 1150, t0 = null;
-          var step = function (ts) {
-            if (t0 === null) t0 = ts;
-            var p = Math.min((ts - t0) / dur, 1);
-            var eased = 1 - Math.pow(1 - p, 3);
-            el.textContent = Math.round(target * eased).toLocaleString("en-US");
-            if (p < 1) requestAnimationFrame(step);
-            else el.textContent = target.toLocaleString("en-US");
-          };
-          requestAnimationFrame(step);
-        });
+    if (reduced || !("IntersectionObserver" in window)) counters.forEach(function (el) { el.textContent = (+el.getAttribute("data-count")).toLocaleString("en-US"); });
+    else {
+      var cio = new IntersectionObserver(function (es) {
+        es.forEach(function (en) { if (en.isIntersecting) { cio.unobserve(en.target); runCount(en.target); } });
       }, { threshold: 0.4 });
       counters.forEach(function (el) { el.textContent = "0"; cio.observe(el); });
     }
   }
 
-  /* ---------- contact form → WhatsApp / mail (no backend required) ---------- */
-  var form = document.getElementById("brief-form");
-  if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var d = new FormData(form);
-      var lines = [
-        "طلب مشروع جديد — awalimgroup.com",
-        "",
-        "الاسم: " + (d.get("name") || "—"),
-        "الشركة: " + (d.get("company") || "—"),
-        "البريد: " + (d.get("email") || "—"),
-        "نوع المشروع: " + (d.get("scope") || "—"),
-        "الميزانية: " + (d.get("budget") || "—"),
-        "",
-        "التفاصيل:",
-        (d.get("message") || "—")
-      ];
-      var text = encodeURIComponent(lines.join("\n"));
-      var status = document.getElementById("brief-status");
-      if (status) {
-        status.hidden = false;
-        status.textContent = "جارٍ فتح واتساب بتفاصيل طلبك…";
-      }
-      window.open("https://wa.me/970593636136?text=" + text, "_blank", "noopener");
-    });
-  }
-
-
-  /* ---------- tile filtering (works without JS: everything visible) ---------- */
-  document.querySelectorAll("[data-filter-group]").forEach(function (group) {
-    var pills = group.querySelectorAll("[data-filter]");
-    var gridId = group.getAttribute("data-filter-group");
-    var grid = document.getElementById(gridId);
-    if (!grid) return;
-    var live = group.querySelector("[data-filter-count]");
-    var tiles = grid.querySelectorAll("[data-cat]");
-
-    function apply(value) {
-      var shown = 0;
-      tiles.forEach(function (t) {
-        var match = value === "all" || (" " + t.getAttribute("data-cat") + " ").indexOf(" " + value + " ") > -1;
-        t.hidden = !match;
-        if (match) shown++;
-      });
-      pills.forEach(function (p) {
-        p.setAttribute("aria-pressed", p.getAttribute("data-filter") === value ? "true" : "false");
-      });
-      if (live) live.textContent = shown + " من " + tiles.length;
+  /* ---------- accordion: animated height, native <details> semantics kept ---------- */
+  document.addEventListener("click", function (e) {
+    var q = e.target.closest(".acc__q"); if (!q) return;
+    var it = q.parentElement; e.preventDefault();
+    if (it.open) {
+      it.classList.remove("is-open");
+      var a = $(".acc__a", it);
+      var done = function () { it.open = false; a.removeEventListener("transitionend", done); };
+      if (reduced) done(); else a.addEventListener("transitionend", done);
+    } else {
+      it.open = true;
+      requestAnimationFrame(function () { requestAnimationFrame(function () { it.classList.add("is-open"); }); });
     }
+  });
 
-    group.addEventListener("click", function (e) {
-      var p = e.target.closest("[data-filter]");
-      if (p) apply(p.getAttribute("data-filter"));
-    });
+  /* ---------- filters (works without JS: everything visible) ---------- */
+  $$("[data-filter-group]").forEach(function (group) {
+    var grid = document.getElementById(group.getAttribute("data-filter-group")); if (!grid) return;
+    var pills = $$("[data-filter]", group), live = $("[data-filter-count]", group), items = $$("[data-cat]", grid);
+    function apply(v) {
+      var shown = 0;
+      items.forEach(function (t) {
+        var ok = v === "all" || (" " + t.getAttribute("data-cat") + " ").indexOf(" " + v + " ") > -1;
+        t.hidden = !ok; if (ok) shown++;
+      });
+      pills.forEach(function (p) { p.setAttribute("aria-pressed", p.getAttribute("data-filter") === v ? "true" : "false"); });
+      if (live) live.textContent = EN ? shown + " of " + items.length : shown + " من " + items.length;
+    }
+    group.addEventListener("click", function (e) { var p = e.target.closest("[data-filter]"); if (p) apply(p.getAttribute("data-filter")); });
     apply("all");
   });
 
-
-  /* ---------- rail scroll-spy ----------
-     Rewritten from ratio-based to midpoint-based, because ratio is the wrong
-     question once a section is taller than the viewport.
-
-     The old version kept a Map of intersectionRatio per visible target and lit
-     whichever was highest. Our case sections are ~2200px tall against a 900px
-     viewport, so their maximum achievable ratio is ~0.41 — and IntersectionObserver
-     only updates a ratio when a threshold is CROSSED, so a section you are sitting
-     in the middle of keeps whatever small ratio it had on entry. Measured symptoms:
-     scrolled to y=6000, fully inside case-rahmacare, NOTHING was marked current;
-     at y=10000, fully inside case-vibeos, the rail said "Jameel Store".
-
-     Midpoint instead: the current section is the last one whose top has crossed the
-     viewport midpoint. That is a total order over the targets, so it cannot flicker
-     between two candidates and cannot go blank inside a tall section. Reading
-     positions on a rAF-throttled scroll costs one getBoundingClientRect per target
-     per frame — 13 here — which is nothing next to the layout the browser already
-     did. Above the first target and below the last, nothing is marked, which is
-     what gates the rail's visibility in CSS. */
-  var rail = document.querySelector("[data-spy-rail]");
-  if (rail) {
-    var links = Array.prototype.slice.call(rail.querySelectorAll('a[href^="#"]'));
-    var targets = links
-      .map(function (a) { return document.getElementById(a.getAttribute("href").slice(1)); })
-      .filter(Boolean);
-
-    if (targets.length) {
-      var currentId = null;
-      var mark = function () {
-        var mid = window.innerHeight / 2;
-        var best = null;
-        for (var i = 0; i < targets.length; i++) {
-          var r = targets[i].getBoundingClientRect();
-          if (r.top <= mid && r.bottom > 0) best = targets[i].id;
-        }
-        // Past the last target entirely: leave nothing current so the rail hides.
-        var last = targets[targets.length - 1].getBoundingClientRect();
-        if (last.bottom <= 0) best = null;
-        if (best === currentId) return;
-        currentId = best;
-        links.forEach(function (a) {
-          a.setAttribute("aria-current", best && a.getAttribute("href") === "#" + best ? "true" : "false");
-        });
-      };
-
-      var ticking = false;
-      var onScroll = function () {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(function () { ticking = false; mark(); });
-      };
-      window.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("resize", onScroll, { passive: true });
-      mark();
+  /* ---------- scroll-spy side index with moving indicator ----------
+     Midpoint rule: the current section is the last one whose top has crossed
+     the viewport midpoint. Total order → no flicker inside tall sections. */
+  $$("[data-spy]").forEach(function (rail) {
+    var links = $$('a[href^="#"]', rail);
+    var targets = links.map(function (a) { return document.getElementById(a.getAttribute("href").slice(1)); });
+    var bar = $(".sideidx__bar", rail), cur = null;
+    if (!links.length) return;
+    function mark() {
+      var mid = innerHeight * 0.45, best = -1;
+      for (var i = 0; i < targets.length; i++) {
+        if (!targets[i]) continue;
+        var r = targets[i].getBoundingClientRect();
+        if (r.top <= mid) best = i;
+      }
+      if (best === cur) return;
+      cur = best;
+      links.forEach(function (a, i) { a.setAttribute("aria-current", i === best ? "true" : "false"); });
+      if (bar) {
+        if (best < 0) { bar.style.blockSize = "0px"; return; }
+        var a = links[best];
+        bar.style.setProperty("--y", (a.offsetTop) + "px");
+        bar.style.blockSize = a.offsetHeight + "px";
+      }
     }
+    var tick = false;
+    var onS = function () { if (tick) return; tick = true; requestAnimationFrame(function () { tick = false; mark(); }); };
+    addEventListener("scroll", onS, { passive: true });
+    addEventListener("resize", onS, { passive: true });
+    mark();
+  });
+
+  /* ---------- multi-step brief form ----------
+     Nothing leaves the device: submit builds a WhatsApp / mailto URL. */
+  var form = $("[data-msf]");
+  if (form) {
+    var steps = $$(".msf__step", form), labels = $$("[data-msf-label]", form);
+    var prev = $("[data-msf-prev]", form), next = $("[data-msf-next]", form), submit = $("[data-msf-submit]", form), mail = $("[data-msf-mail]", form);
+    var bar = $("[data-msf-bar]", form), live = $("[data-msf-live]", form), review = $("[data-msf-review]", form), summary = $("[data-msf-summary]", form), status = $("[data-msf-status]", form);
+    var cur = 0, WA = "970593636136", MAIL = "hello@awalimgroup.com";
+
+    function setErr(name, on) {
+      var err = $('[data-err-for="' + name + '"]', form); if (err) err.hidden = !on;
+      var f = form.elements[name]; var field = f && f.closest ? f.closest(".field") : null;
+      if (field) field.classList.toggle("is-invalid", !!on);
+    }
+    function validate(i) {
+      var ok = true;
+      if (i === 0) { if (!form.querySelector('input[name="scope"]:checked')) { setErr("scope", true); ok = false; } else setErr("scope", false); }
+      if (i === 2) { var m = form.elements.message; if (!m.value || m.value.trim().length < 20) { setErr("message", true); ok = false; } else setErr("message", false); }
+      if (i === 3) {
+        var n = form.elements.name, em = form.elements.email;
+        if (!n.value || n.value.trim().length < 2) { setErr("name", true); ok = false; } else setErr("name", false);
+        if (!em.value || !em.checkValidity()) { setErr("email", true); ok = false; } else setErr("email", false);
+      }
+      return ok;
+    }
+    function data() {
+      var d = new FormData(form);
+      return { scope: d.get("scope") || "—", budget: d.get("budget") || "—", timeline: d.get("timeline") || "—", message: d.get("message") || "—", company: d.get("company") || "—", name: d.get("name") || "—", email: d.get("email") || "—", phone: d.get("phone") || "—" };
+    }
+    function text() {
+      var d = data();
+      return EN
+        ? ["New project request — awalimgroup.com", "", "Name: " + d.name, "Company: " + d.company, "Email: " + d.email, "WhatsApp: " + d.phone, "Project type: " + d.scope, "Budget: " + d.budget, "Start: " + d.timeline, "", "Details:", d.message].join("\n")
+        : ["طلب مشروع جديد — awalimgroup.com", "", "الاسم: " + d.name, "الشركة: " + d.company, "البريد: " + d.email, "واتساب: " + d.phone, "نوع المشروع: " + d.scope, "الميزانية: " + d.budget, "البدء: " + d.timeline, "", "التفاصيل:", d.message].join("\n");
+    }
+    function renderSummary() {
+      var d = data(), rows = EN
+        ? [["Project type", d.scope], ["Budget", d.budget], ["Start", d.timeline], ["Company", d.company], ["Details", d.message]]
+        : [["نوع المشروع", d.scope], ["الميزانية", d.budget], ["البدء", d.timeline], ["الشركة", d.company], ["التفاصيل", d.message]];
+      summary.innerHTML = rows.map(function (r) { return "<div><dt>" + r[0] + "</dt><dd>" + String(r[1]).replace(/[<>&]/g, function (c) { return { "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]; }) + "</dd></div>"; }).join("");
+      review.hidden = false;
+    }
+    function go(i, initial) {
+      steps[cur].hidden = true; steps[cur].classList.remove("is-enter");
+      cur = i; steps[cur].hidden = false; if (!reduced) steps[cur].classList.add("is-enter");
+      labels.forEach(function (l, k) { l.classList.toggle("is-on", k === cur); l.classList.toggle("is-done", k < cur); });
+      bar.style.setProperty("--p", String((cur + 1) / steps.length));
+      prev.hidden = cur === 0; next.hidden = cur === steps.length - 1; submit.hidden = cur !== steps.length - 1; mail.hidden = cur !== steps.length - 1;
+      if (cur === steps.length - 1) renderSummary();
+      live.textContent = EN ? "Step " + (cur + 1) + " of " + steps.length : "الخطوة " + (cur + 1) + " من " + steps.length;
+      if (initial) return;                       // never move the page on load
+      var first = $("input, textarea, select", steps[cur]); if (first) first.focus({ preventScroll: true });
+      steps[cur].scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
+    }
+    next.addEventListener("click", function () { if (validate(cur)) go(cur + 1); });
+    prev.addEventListener("click", function () { go(cur - 1); });
+    form.addEventListener("input", function (e) { if (e.target.name) setErr(e.target.name, false); });
+    form.addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.tagName !== "TEXTAREA" && cur < steps.length - 1) { e.preventDefault(); next.click(); } });
+    mail.addEventListener("click", function (e) { if (!validate(3)) { e.preventDefault(); return; } mail.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent("طلب مشروع — " + data().name) + "&body=" + encodeURIComponent(text()); });
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!validate(3)) return;
+      /* explicit confirmation before anything leaves the page (section 6.10 security note) */
+      if (!confirm(T("سيُفتح واتساب برسالة مُعبّأة بتفاصيل طلبك. هل تريد المتابعة؟", "WhatsApp will open with a message pre-filled with your request. Continue?"))) return;
+      status.hidden = false; status.textContent = T("جارٍ فتح واتساب بتفاصيل طلبك…", "Opening WhatsApp with your request…");
+      say(T("جارٍ فتح واتساب بتفاصيل طلبك", "Opening WhatsApp with your request"));
+      window.open("https://wa.me/" + WA + "?text=" + encodeURIComponent(text()), "_blank", "noopener");
+    });
+    go(0, true);
   }
 
-  /* ---------- current year ---------- */
-  document.querySelectorAll("[data-year]").forEach(function (el) {
-    el.textContent = new Date().getFullYear();
+  /* ---------- copy-to-clipboard (press kit) ---------- */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-copy]"); if (!b) return;
+    var src = $(b.getAttribute("data-copy")); if (!src) return;
+    var txt = src.textContent.trim();
+    var done = function () {
+      say(T("نُسخ", "Copied"));
+      var label = $("span", b); if (!label) return;
+      var old = label.textContent; label.textContent = T("نُسخ ✓", "Copied ✓");
+      setTimeout(function () { label.textContent = old; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(function () {});
+    else { var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); done(); } catch (_) {} document.body.removeChild(ta); }
+  });
+
+  /* ---------- misc ---------- */
+  $$("[data-year]").forEach(function (el) { el.textContent = String(new Date().getFullYear()); });
+  document.addEventListener("click", function (e) {
+    if (e.target.closest("[data-scroll-top]")) { e.preventDefault(); window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }); }
   });
 })();

@@ -1,0 +1,46 @@
+{
+  "_note": "English overrides for press.json.",
+  "seo": {
+    "title": "Press kit — logo, approved boilerplate, and verifiable numbers | Awalim Group",
+    "description": "Everything a journalist or partner needs: the logo in its forms, the approved description at three lengths, the founder's bio, and cryptographically signed numbers."
+  },
+  "h": "A press kit ready to copy",
+  "lede": "Writing about us? Take what you need straight from here. The description is approved, and the numbers are signed — you can verify them yourself before you publish.",
+  "boilerplate": {
+    "eyebrow": "Approved description",
+    "h": "Three lengths — copy whichever fits your space",
+    "items": [
+      { "label": "One line", "chars": "≈ 90 characters", "text": "Awalim Group: a Palestinian digital engineering house building the enterprise systems that run companies." },
+      { "label": "Short paragraph", "chars": "≈ 300 characters", "text": "Awalim Group is a digital engineering house founded in 2021 in Palestine, building enterprise products to a global standard: a double-entry accounting system on IFRS, AI agents that work inside client systems, Flutter apps and web platforms. It serves clients in more than ten countries and runs an engineering academy that has trained hundreds of engineers." },
+      { "label": "Full paragraph", "chars": "≈ 700 characters", "text": "Awalim Group is a digital engineering house founded in 2021 in Palestine by Ahmed Ashraf, who began in 2018 from Gaza with a mobile phone and a slow connection. The group today builds enterprise products that hold under real pressure: Smart Accountant — a complete double-entry accounting system built on IFRS and Arabic from the root; AI agents that carry out tasks inside client systems with written permission boundaries and a human in the approval loop; and Flutter apps and web platforms measured against a strict performance budget. Awalim serves clients in more than ten countries and runs an engineering academy taught the way it works: a real project, code review and tests. The group publishes its public numbers cryptographically signed so any visitor can verify them in their own browser." }
+    ]
+  },
+  "assets": {
+    "eyebrow": "Assets",
+    "h": "Logo and colours",
+    "note": "Use the logo on a background that gives clear contrast, and do not recolour it, distort its proportions, or place it inside another shape.",
+    "items": [
+      { "t": "The square mark", "d": "For icons, avatars and small spaces", "src": "/assets/img/awalim-mark.webp", "kind": "mark" },
+      { "t": "The full lockup", "d": "The default use in articles and decks", "src": "/assets/img/awalim-logo.webp", "kind": "lockup" },
+      { "t": "The 3D mark", "d": "For presentation use", "src": "/assets/img/awalim-logo-3d.webp", "kind": "mark" }
+    ],
+    "colors": [
+      { "name": "Ink", "hex": "#111112" },
+      { "name": "Turquoise", "hex": "#189C8E" },
+      { "name": "Deep turquoise (for text)", "hex": "#0E7A6F" },
+      { "name": "Paper", "hex": "#FAFAF8" }
+    ]
+  },
+  "founder": {
+    "eyebrow": "Founder",
+    "h": "Ahmed Ashraf",
+    "role": "Founder & Chief Engineer",
+    "bio": "Ahmed Ashraf is the founder and chief engineer of Awalim Group. He began programming in 2018 from Gaza with a mobile phone and a slow connection, and turned solo work into an engineering house in 2021. He leads the development of Smart Accountant and the group's product ecosystem, and oversees the Awalim engineering academy."
+  },
+  "facts": {
+    "eyebrow": "Facts",
+    "h": "Numbers you can verify before you publish",
+    "note": "Every number here is signed with an Ed25519 key when the site is built. The verification page runs the check in your own browser."
+  },
+  "contact": { "eyebrow": "Press contact", "h": "A question or an interview request?", "d": "We answer press requests within one working day. For additional material or to arrange an interview with the founder, contact us directly." }
+}

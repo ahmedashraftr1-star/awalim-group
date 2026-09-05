@@ -1,0 +1,265 @@
+{
+  "_note": "English overrides for products.json. Merged by slug: codes, themes, devices, icons and proof numbers stay shared with the Arabic.",
+  "products": [
+    {
+      "slug": "smart-accountant",
+      "kind": "Flagship product",
+      "title": "Smart Accountant",
+      "headline": "A complete double-entry accounting system, built on IFRS, designed in Arabic from the root",
+      "summary": "It reads your invoices, proposes the balanced entry, and closes the month with you. Built to replace manual data entry — not the accountant.",
+      "tags": ["IFRS", "Double entry", "7 country packs", "Native RTL"],
+      "features": [
+        { "t": "A full chart of accounts and journal", "d": "A ledger per account, automatic posting, and upward balance aggregation with the correct sign." },
+        { "t": "Operational modules, ready", "d": "Sales, purchasing, inventory, fixed assets and depreciation, banks, and cost centres." },
+        { "t": "HR and payroll on IAS 19", "d": "Employees, attendance, leave, and a monthly payroll run that posts its entries and provisions automatically." },
+        { "t": "The smart document box", "d": "Photograph the invoice with your camera — the system extracts the data and proposes an entry that is balanced and accounting-correct." },
+        { "t": "The financial decision room", "d": "A financial health indicator, early alerts, a cash-flow forecast, and «what if» simulation before you decide." },
+        { "t": "Data isolation on three layers", "d": "A route guard, a scoped storage layer, and row policies in the database — defence in depth." }
+      ],
+      "modules": [
+        ["General ledger", "Chart of accounts, journal entries, posting, aggregated balances, and a statement per line"],
+        ["Sales", "Customers, invoices, credit notes, and collections linked to the entries"],
+        ["Purchasing", "Vendors, purchase invoices, and payments with automatic posting"],
+        ["Inventory", "Items, movements, and valuation linked to cost accounts"],
+        ["Fixed assets", "Asset register, periodic depreciation, and disposal with its accounting effect"],
+        ["HR and payroll", "Employees, attendance, leave, and a monthly payroll run with IAS 19 provisions"],
+        ["Banks", "Bank accounts, movements and reconciliation"],
+        ["Cost centres", "Allocating cost and revenue to cost centres at document level"],
+        ["Reports", "IFRS financial statements and exportable operational reports"],
+        ["Decision room", "Financial health indicator, alerts, cash-flow forecast, and «what if» scenarios"]
+      ],
+      "countries": ["International", "Saudi Arabia", "UAE", "Egypt", "Kuwait", "Qatar", "Jordan"],
+      "countriesNote": "The system changes its behaviour entirely by country pack: currency, VAT rate, zakat, weekend days, social insurance rates, and the end-of-service formula.",
+      "useCases": [
+        { "t": "A mid-sized trading company", "d": "Sales, purchasing and inventory in one flow, with IFRS reports ready for the auditor." },
+        { "t": "An accounting firm serving several entities", "d": "Full isolation between entities on three layers, and one dashboard for the firm." },
+        { "t": "An organisation with payroll in more than one country", "d": "A country pack per branch: tax, insurance and end of service by each country's formula." }
+      ],
+      "proof": [
+        { "stat": "accountingModules" },
+        { "stat": "countryPacks" },
+        { "stat": "isolationLayers" },
+        { "text": "IAS 19", "label": "payroll and provisions to the standard" }
+      ],
+      "architecture": [
+        "TypeScript end to end — contracts shared between client and server",
+        "PostgreSQL with Drizzle ORM and exported, reviewable migrations",
+        "Schema validation on every request — no data enters unchecked",
+        "Comprehensive automated tests over the critical accounting paths",
+        "A natively right-to-left interface with tuned Arabic typography and tabular numerals"
+      ],
+      "cta": { "label": "Request a demo", "sub": "We run the demo on a case from your own company — not on canned sample data." },
+      "film": {
+        "eyebrow": "How it works",
+        "h": "From the photograph to the close. Five steps.",
+        "lede": "The device stays where it is — the scroll tells the story.",
+        "chapters": [
+          { "k": "photo", "t": "Scan.", "d": "A paper invoice, a photo from a phone, or a PDF from email — the document box takes it as it is, with no re-entry." },
+          { "k": "extract", "t": "Extract.", "d": "The system reads the vendor, the date, the net and the tax, and proposes the right account from your own chart of accounts." },
+          { "k": "balance", "t": "Balance.", "d": "A double entry: debit equals credit — or it does not pass. No in-between state, no fixing it later." },
+          { "k": "post", "t": "Post.", "d": "On your approval the entry posts to the general ledger, and balances and reports update in the same moment." },
+          { "k": "close", "t": "Close.", "d": "IFRS financial statements ready for the auditor, and a monthly close after which nothing changes quietly." }
+        ]
+      },
+      "moments": [
+        { "n": 0, "label": "unbalanced entries allowed through — ever" },
+        { "stat": "accountingModules" },
+        { "stat": "countryPacks" },
+        { "stat": "isolationLayers" }
+      ]
+    },
+    {
+      "slug": "rahmacare",
+      "kind": "Health",
+      "title": "RahmaCare",
+      "headline": "Smart healthcare in the family's hands — and a record with no number without a source",
+      "summary": "A Flutter app for managing family health with AI, and a relief platform linking a case to a donor through a record that can be verified.",
+      "tags": ["Flutter", "iOS · Android", "AI", "WCAG 2.1 AA"],
+      "features": [
+        { "t": "A beneficiary file with explicit consent", "d": "Consent revocable at any time, and an access log showing the beneficiary who viewed their file." },
+        { "t": "A verifiable aid record", "d": "Every aid item linked to the case with a clear approval path — no number published without a traceable source." },
+        { "t": "An assistant that reads the case", "d": "It summarises the indicators and warns early, while the medical decision stays human." },
+        { "t": "A path for deaf users", "d": "A full path for deaf and non-speaking users — because someone who cannot use the product was not built for." },
+        { "t": "Privacy by design", "d": "Health data with role permissions per family member, encrypted in transit and at rest." },
+        { "t": "WCAG 2.1 AA accessibility", "d": "Keyboard, screen reader, and measured contrast across the whole app." }
+      ],
+      "useCases": [
+        { "t": "A family managing several people's health", "d": "Appointments, medicines and reports per person, with different permissions inside the family." },
+        { "t": "A health relief organisation", "d": "Linking the case to the donor through a signed record that cannot change quietly." }
+      ],
+      "proof": [
+        { "n": 2, "label": "platforms from one codebase" },
+        { "n": 100, "suffix": "%", "label": "of published numbers tied to a source" },
+        { "text": "AA", "label": "WCAG 2.1 accessibility" },
+        { "text": "Ed", "label": "a sequenced, hashed record" }
+      ],
+      "architecture": [
+        "Flutter with one codebase for iOS and Android and clean state management",
+        "Firebase for sync and authentication, with local storage for offline work",
+        "An AI layer inside the task flow, not in a side panel",
+        "A general ledger with a serial number and a hash for every action"
+      ],
+      "cta": { "label": "Request a demo", "sub": "We walk you through the app on a scenario from your own organisation." }
+    },
+    {
+      "slug": "jameel-store",
+      "kind": "E-commerce",
+      "title": "Jameel Store",
+      "headline": "A luxury store with a world-class shopping experience — Arabic from the root",
+      "summary": "A Flutter store template over Firebase: from browsing to payment in one flow that never breaks, and a cart that is not lost when the network drops.",
+      "tags": ["Flutter", "Firebase", "Offline-first", "Native RTL"],
+      "features": [
+        { "t": "A cart that is never lost", "d": "Preserved across sessions and devices, syncing when the network returns." },
+        { "t": "Native Arabic rendering", "d": "Direction, numerals, prices and dates all tuned for Arabic." },
+        { "t": "Steady performance on long lists", "d": "Lazy building and multi-size images — smooth scrolling on mid-range devices." },
+        { "t": "Components from the Figma file itself", "d": "A Flutter library matching the design file, so there are no surprises between design and build." },
+        { "t": "Checkout in one step", "d": "One purchase flow from product to confirmation, with no jumps." },
+        { "t": "A secured Firebase backend", "d": "Document-level security rules, and authentication with no exposed credentials." }
+      ],
+      "useCases": [
+        { "t": "A luxury retail brand", "d": "An experience worthy of the product on the phone: large imagery, calm motion, and frictionless payment." },
+        { "t": "A store growing from zero", "d": "A ready template customised with your identity without rebuilding the foundation." }
+      ],
+      "proof": [
+        { "n": 1, "label": "purchase flow that never breaks" },
+        { "n": 2, "label": "platforms from one codebase" },
+        { "text": "RTL", "label": "Arabic rendering from the root" },
+        { "text": "Offline", "label": "a cart that works offline" }
+      ],
+      "architecture": [
+        "Flutter with clean state management that survives catalogue growth",
+        "Firebase for the catalogue and orders, with local cart storage",
+        "Multi-size images and lazy list building"
+      ],
+      "cta": { "label": "Request your build", "sub": "We customise the template with your identity and ship it to both stores." }
+    },
+    {
+      "slug": "vibe-os",
+      "kind": "Web platform · version 4.0",
+      "title": "Vibe OS 4.0",
+      "headline": "An operating system for the web, not just a website",
+      "summary": "A complete interface layer built on AI and a live glass surface — every component in it is independent and reusable across the group's products.",
+      "tags": ["TypeScript", "React", "Design Tokens", "AI"],
+      "features": [
+        { "t": "A component system, not pages", "d": "Every surface is built from documented components, so the whole identity changes from one place." },
+        { "t": "AI embedded in the flow", "d": "Help appears inside the task itself instead of a separate chat panel." },
+        { "t": "Central design tokens", "d": "Colour, spacing, type and motion — one value changes every product." },
+        { "t": "Glass that reads in Arabic", "d": "Measured contrast on glass surfaces with a fixed ground behind the text." },
+        { "t": "A performance budget", "d": "Bundle size and first paint are measured on every release." },
+        { "t": "AA accessibility", "d": "Keyboard and screen reader in every component, not only on the page." }
+      ],
+      "useCases": [
+        { "t": "A SaaS product that needs a full interface quickly", "d": "Start from a mature component system instead of building the buttons from scratch." },
+        { "t": "A group with several products", "d": "One identity, managed from one place, across every product." }
+      ],
+      "proof": [
+        { "n": 4, "label": "major versions" },
+        { "n": 2, "label": "products built on top of it" },
+        { "n": 1, "label": "design system for the whole group" },
+        { "text": "AA", "label": "measured contrast on glass" }
+      ],
+      "architecture": [
+        "TypeScript + React with independent components that carry their own state",
+        "Central design tokens (CSS variables) exported to every product",
+        "Deployed on Vercel Edge with a measured performance budget"
+      ],
+      "cta": { "label": "Request a demo", "sub": "We show the system running on an interface from your own product." }
+    },
+    {
+      "slug": "web-platforms",
+      "kind": "Product line",
+      "title": "Web Platforms",
+      "headline": "Sites and dashboards built to a strict performance budget",
+      "summary": "Because every 100 milliseconds has a price. Web platforms and dashboards built on Vibe OS, Arabic from the root, and measured on every release.",
+      "tags": ["React", "TypeScript", "Vercel Edge", "Core Web Vitals"],
+      "features": [
+        { "t": "A performance budget on every release", "d": "LCP, CLS and INP are measured automatically, and the release stops if the budget is exceeded." },
+        { "t": "Live dashboards", "d": "Indicators, alerts, and view permissions per role." },
+        { "t": "Arabic from the root", "d": "Direction, typography, numerals and dates — not a translation over a Latin template." },
+        { "t": "Security headers and CSP", "d": "A strict content policy and tuned caching from day one." },
+        { "t": "SEO and structured data", "d": "Server-side rendering, JSON-LD and a sitemap — readable before any JavaScript." },
+        { "t": "AA accessibility", "d": "Keyboard, screen reader and measured contrast." }
+      ],
+      "useCases": [
+        { "t": "A corporate site that is measured", "d": "Speed, SEO and accessibility in numbers, not promises." },
+        { "t": "An internal dashboard", "d": "Live indicators and precise permissions per role." }
+      ],
+      "proof": [
+        { "text": "< 2.5s", "label": "LCP budget on every release" },
+        { "text": "< 0.1", "label": "CLS budget on every release" },
+        { "text": "AA", "label": "WCAG 2.1 accessibility" },
+        { "text": "SSR", "label": "content readable before JavaScript" }
+      ],
+      "architecture": [
+        "React + TypeScript over the Vibe OS component system",
+        "Server-side rendering, deployed on Vercel Edge",
+        "Playwright tests over the core journeys"
+      ],
+      "cta": { "label": "Start your project", "sub": "Tell us about the platform you want and we come back with a diagnosis." }
+    },
+    {
+      "slug": "brand-studio",
+      "kind": "Studio",
+      "title": "Brand Studio",
+      "headline": "An identity that never reaches the code is not an identity",
+      "summary": "A complete visual identity and design system: tokens, colour, Arabic typography, and a component library ready to build with — understood by developer and designer alike.",
+      "tags": ["Visual identity", "Design system", "Arabic typography", "Figma"],
+      "features": [
+        { "t": "Visual identity", "d": "Mark, colour and type — in a system that works on screen and in print." },
+        { "t": "Design system", "d": "Design tokens and components in code, not slides forgotten in a month." },
+        { "t": "Arabic typography", "d": "Spacing, joining and diacritics tuned — Arabic deserves care, not assumptions." },
+        { "t": "AA accessibility", "d": "Colour contrast, keyboard navigation and screen-reader support." },
+        { "t": "Social media systems", "d": "Templates and design tokens instead of scattered files." },
+        { "t": "An executable guide", "d": "Spacing, background and forbidden-use rules with ready files." }
+      ],
+      "useCases": [
+        { "t": "A new brand", "d": "A full identity from the mark to the packaging to the screen." },
+        { "t": "A digital product that needs a design system", "d": "Tokens and components in code that the development team consumes directly." }
+      ],
+      "proof": [
+        { "n": 1, "suffix": " cm", "label": "smallest size at which the mark still reads" },
+        { "n": 2, "label": "type systems, Arabic and Latin" },
+        { "text": "Tokens", "label": "design tokens in code" },
+        { "text": "AA", "label": "contrast measured, not assumed" }
+      ],
+      "architecture": [
+        "Figma with components and variables exported as tokens",
+        "A code component library that matches the design file",
+        "A usage guide for screen and print"
+      ],
+      "cta": { "label": "Start your identity", "sub": "We begin with a short workshop about the brand before any drawing." }
+    },
+    {
+      "slug": "ai-lab",
+      "kind": "Lab",
+      "title": "AI Lab",
+      "headline": "Agents that carry out real tasks — with clear limits and a human in the loop",
+      "summary": "Data extraction, process automation, and knowledge systems wired to your own data. The difference between a chatbot and an agent is responsibility: the first suggests text, the second changes state in your system.",
+      "tags": ["Agents", "RAG", "Evaluation", "Governance"],
+      "features": [
+        { "t": "Document extraction", "d": "Invoices, receipts and contracts — from an image into structured fields ready for approval." },
+        { "t": "Knowledge systems", "d": "An assistant that answers from your own documents and data, citing the source in every answer." },
+        { "t": "Workflow automation", "d": "Agents that run a chain of steps across your systems and stop at the human decision points." },
+        { "t": "Evaluation and governance", "d": "Output accuracy measured before launch, and a log of every decision the agent made." },
+        { "t": "Model-swappable", "d": "We pick the model by the task, not the fashion, and the system stays swappable without a rebuild." },
+        { "t": "Explicit permission limits", "d": "What the agent can do is written and tested — and so is what it cannot." }
+      ],
+      "useCases": [
+        { "t": "A finance team drowning in invoices", "d": "Extraction, classification and a proposed entry — with approval left to a human." },
+        { "t": "A support team answering the same questions", "d": "An assistant built on your documents, with a citation to the source." }
+      ],
+      "proof": [
+        { "text": "2024", "label": "first agents in production at clients" },
+        { "text": "HITL", "label": "a human in the loop on every financial or legal effect" },
+        { "text": "Eval", "label": "accuracy evaluated before every launch" },
+        { "text": "Log", "label": "a record of every decision the agent made" }
+      ],
+      "architecture": [
+        "A tool layer with a narrow permission boundary per agent",
+        "Automated evaluation against a test set before deployment",
+        "A reviewable decision log"
+      ],
+      "cta": { "label": "Book a discovery session", "sub": "We identify the one task that deserves an agent with you — and tell you if it doesn't." }
+    }
+  ]
+}

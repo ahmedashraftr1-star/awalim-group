@@ -1,0 +1,32 @@
+# Apache / cPanel / Hostinger — clean URLs + legacy redirects + security headers
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # legacy routes
+  RewriteRule ^about(\.html)?/?$ /group [R=301,L]
+  RewriteRule ^insights(\.html)?/?$ /journal [R=301,L]
+  RewriteRule ^(work|products|services|academy|contact)\.html$ /$1 [R=301,L]
+  RewriteRule ^start/?$ /contact [R=302,L]
+  # /work → /work/index.html without the trailing slash redirect
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteRule ^(.*)$ /$1/index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self' https://wa.me; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
+  <FilesMatch "\.(woff2|webp|png|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>

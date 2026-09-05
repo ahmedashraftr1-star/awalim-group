@@ -1,0 +1,248 @@
+{
+  "_note": "English overrides for pages.json. Keys not present here fall back to the Arabic.",
+  "home": {
+    "seo": {
+      "title": "Awalim Group — we build the systems that run companies",
+      "description": "Awalim Group: a digital engineering house, from Palestine to the world. IFRS accounting systems, agentic AI, Flutter apps and web platforms. Founded 2021."
+    },
+    "hero": {
+      "eyebrow": "From Palestine to the world · Founded 2021",
+      "lines": ["We don't build websites.", "We build the <em>systems</em>", "that run companies."],
+      "lede": "Awalim Group is a digital engineering house building enterprise products that hold under real pressure: double-entry accounting on IFRS, AI agents that execute rather than chat, Flutter apps with native performance, and web platforms measured in milliseconds."
+    },
+    "story": {
+      "big": "From a room in Gaza to systems running in ten countries",
+      "p": "Awalim started in 2021 on a single conviction: the Arab engineer can build systems measured by the global standard. These are the milestones."
+    },
+    "manifesto": {
+      "eyebrow": "The thesis",
+      "h": "The difference between a website and a system is the difference between a pitch and a product.",
+      "p1": "Most of what is sold in this region as a «platform» is a pretty interface over a spreadsheet. We build the layer nobody sees: balanced journal entries, multi-tenant data isolation, reversible migrations, tests that stop regressions, and an audit log that cannot be erased.",
+      "p2": "The beautiful interface comes after that — and it comes because the structure underneath has earned it."
+    }
+  },
+
+  "work": {
+    "seo": {
+      "title": "Work — systems, apps and identities delivered to real clients | Awalim Group",
+      "description": "Case studies explained the way they were built: RahmaCare, Jameel Store, Vibe OS 4.0, Smart Accountant, Maya, Awalim Academy, an automotive HMI study, and Island Haven."
+    },
+    "h": "Work",
+    "lede": "Systems, apps and identities delivered to real clients. Not a grid of images without context — every project is explained the way it was built: what the problem was, what we decided, and why."
+  },
+
+  "products": {
+    "seo": {
+      "title": "Products — systems we build and run as standalone products | Awalim Group",
+      "description": "Smart Accountant, RahmaCare, Jameel Store, Vibe OS 4.0, Web Platforms, Brand Studio and the AI Lab."
+    },
+    "h": "Products",
+    "lede": "Systems we build and develop as standalone products — each one built to solve a specific problem completely, not an extended prototype."
+  },
+
+  "services": {
+    "seo": {
+      "title": "Services — four disciplines we work in deeply | Awalim Group",
+      "description": "Enterprise systems, agentic AI, mobile engineering, and brand & interface — with a four-stage process and no surprises."
+    },
+    "h": "Services",
+    "lede": "We don't offer an endless service list. Four disciplines where we have real depth — and for everything else we point you to someone better than us.",
+    "items": [
+      {
+        "id": "systems",
+        "t": "Enterprise systems",
+        "h": "Systems that handle money cannot afford «roughly right»",
+        "d": "We build them to the standard of people who handle money: balanced entries, precise permissions, an audit log that cannot be erased, and migrations that can be reviewed and reverted.",
+        "includes": [
+          "Finance and accounting: general ledger, receivables, inventory, fixed assets, and reports to international standards",
+          "HR and payroll: attendance, leave, payroll runs, and end-of-service provisions per country formula",
+          "Operations dashboards: live indicators, alerts, and view permissions per role",
+          "Integrations: banks, payment gateways, e-invoicing, and your existing systems over documented APIs"
+        ],
+        "deliverables": [
+          "An approved data model and API contracts",
+          "A system running on a live environment in weekly increments",
+          "Automated tests for the critical paths",
+          "Documentation, deployment accounts and database — all yours"
+        ],
+        "for": "Companies handling money or operations at a size that cannot absorb a mistake, and firms serving several entities."
+      },
+      {
+        "id": "ai",
+        "t": "Agentic AI",
+        "h": "The difference between a chatbot and an agent is responsibility",
+        "d": "The first suggests text; the second changes state inside your system. We build the second — with explicit limits, a full log, and a human in the approval loop on every decision with a financial or legal effect.",
+        "includes": [
+          "Document extraction: invoices, receipts and contracts from an image into structured fields",
+          "Knowledge systems that answer from your documents, with a citation on every answer",
+          "Workflow automation across your systems, stopping at the human decision points",
+          "Evaluation and governance: accuracy measured before launch, and a log for every decision"
+        ],
+        "deliverables": [
+          "A written task definition and permission boundary",
+          "An evaluation set and its results before deployment",
+          "An agent running inside your system with a decision log",
+          "The ability to swap the model without a rebuild"
+        ],
+        "for": "Teams repeating definable manual work: data entry, classification, answering questions from documents."
+      },
+      {
+        "id": "mobile",
+        "t": "Mobile engineering",
+        "h": "One codebase, and two experiences that both feel native",
+        "d": "Flutter with clean state management that survives the product's growth — not quick fixes that collapse at the tenth feature.",
+        "includes": [
+          "Figma to implementation, pixel-accurate, with full right-to-left support",
+          "Offline work: local storage and sync when the network returns",
+          "Store releases: accounts, review, versions and post-launch support",
+          "Measured performance: a frame and bundle budget watched on every release"
+        ],
+        "deliverables": [
+          "An iOS and Android app from one codebase",
+          "A component library that matches the design file",
+          "A release pipeline and automated tests",
+          "Support through both store reviews"
+        ],
+        "for": "Products that need an app used daily in environments where the network really does drop."
+      },
+      {
+        "id": "brand",
+        "t": "Brand & interface",
+        "h": "An identity that never reaches the code is not an identity",
+        "d": "We hand over a living system: design tokens, built components, and a usage guide that a developer and a designer both understand.",
+        "includes": [
+          "Visual identity: mark, colour and type in a system that works on screen and in print",
+          "Design system: tokens and components in code, not slides",
+          "Arabic typography: spacing, joining and diacritics tuned properly",
+          "AA accessibility: contrast, keyboard navigation and screen-reader support"
+        ],
+        "deliverables": [
+          "Figma files with components and variables",
+          "Design tokens exported to code",
+          "A usage guide for screen and print",
+          "A built component library"
+        ],
+        "for": "New brands, and digital products whose development team needs a system it can consume directly."
+      }
+    ],
+    "pricing": {
+      "eyebrow": "How we price",
+      "h": "A written scope, then a price — not the other way round",
+      "models": [
+        { "t": "Fixed scope", "d": "An approved scope document with a stated price and schedule. Fits clearly defined projects.", "tag": "Most common" },
+        { "t": "Weekly increments", "d": "A team working in weekly increments on a live environment, with a report and an invoice each week. Fits products that evolve.", "tag": "For products" },
+        { "t": "Care & maintenance", "d": "An optional contract after handover for defects and updates. Your system's survival never depends on it.", "tag": "Optional" }
+      ]
+    }
+  },
+
+  "academy": {
+    "seo": {
+      "title": "Awalim Academy — engineering tracks taught the way we work | SYS-ACAD-03",
+      "description": "A real project, code review and tests — not a video series. Four engineering tracks, each ending in a published product."
+    },
+    "h": "Awalim Academy",
+    "lede": "Engineering tracks taught the way we actually work — a real project, code review and tests — not a video series.",
+    "tracks": [
+      { "n": "01", "t": "Systems & database engineering", "d": "From data modelling to migrations, indexes and transactions. You leave able to design a database that survives growth, not just to run a query.", "tags": ["PostgreSQL", "Drizzle", "Transactions", "Indexing"], "duration": "12 weeks", "project": "A multi-tenant invoicing system", "syllabus": ["Data modelling and normalisation", "Migrations and indexes", "Transactions and isolation", "Performance and query measurement", "Row-level security"] },
+      { "n": "02", "t": "Applied AI and agents", "d": "Building agents that carry out real tasks: task definition, permission boundaries, knowledge systems, and accuracy evaluation before release.", "tags": ["Agents", "RAG", "Evaluation", "Governance"], "duration": "10 weeks", "project": "A document-extraction agent with a human in the loop", "syllabus": ["Task definition and permission limits", "Tools and memory", "Knowledge systems and citation", "Evaluation before release", "Governance and logging"] },
+      { "n": "03", "t": "Flutter product development", "d": "From Figma to the app store: clean state management, offline work, full Arabic support, and measured performance.", "tags": ["Flutter", "State management", "RTL", "Release"], "duration": "12 weeks", "project": "An offline-capable app published to both stores", "syllabus": ["Figma to components", "State management", "Local storage and sync", "Arabic and direction", "Release and review"] },
+      { "n": "04", "t": "Design and Arabic design systems", "d": "Design tokens, Arabic typography, contrast and accessibility — and how an identity reaches the code instead of staying in a slide deck.", "tags": ["Design tokens", "Arabic typography", "WCAG", "Components"], "duration": "8 weeks", "project": "An Arabic design system exported to code", "syllabus": ["Design tokens", "Arabic typography", "Contrast and accessibility", "Components", "Exporting to code"] }
+    ],
+    "philosophy": {
+      "h": "Not just recorded lectures",
+      "p": "We start from a problem, not a topic. You write the code, we review it with you line by line, then you fix it and resubmit — exactly as it goes in a real team.",
+      "pillars": [
+        { "t": "One project that runs through", "d": "You build a single product across the whole track instead of scattered exercises." },
+        { "t": "Real code review", "d": "Written notes on your own code, not a model answer." },
+        { "t": "Tests from day one", "d": "You learn to write the test before you learn to write the feature." },
+        { "t": "Something you can show", "d": "You leave with a published project for your portfolio." }
+      ]
+    },
+    "why": {
+      "h": "Training is not a revenue line",
+      "p1": "It is how we build the team we later hire, and how we keep our engineering standards alive. When you explain an architectural decision to a hundred engineers, you find out quickly whether the decision was weak.",
+      "p2": "A large part of the Awalim team today came out of the Academy."
+    }
+  },
+
+  "group": {
+    "seo": {
+      "title": "The Group — from a room in Gaza to systems running in ten countries | Awalim Group",
+      "description": "The story of Awalim Group: founded 2021 in Palestine. The timeline, the values, and a note from founder Ahmed Ashraf."
+    },
+    "h": "The Group",
+    "lede": "Awalim Group is a digital engineering house founded in 2021 in Palestine. We build enterprise products to a global standard — and we measure ourselves by that standard and no other.",
+    "timeline": [
+      { "y": "2018", "t": "First line of code, from Gaza", "d": "A mobile phone and a slow connection. Starting from zero, and building the first iOS and Android apps to strict performance standards." },
+      { "y": "2020", "t": "First paying client", "d": "Fifty dollars that were less a fee than a proof that skill outruns geography." },
+      { "y": "2021", "t": "Awalim Group is founded", "d": "Turning solo work into an engineering house with institutional standards: documentation, code review, and contractual responsibility." },
+      { "y": "2022", "t": "First complete enterprise system", "d": "The move from apps to systems: databases, permissions, and audit logs." },
+      { "y": "2023", "t": "The Academy passes 100 graduates", "d": "Engineering tracks begin — and a large part of today's team came from them." },
+      { "y": "2024", "t": "Agents reach production", "d": "The first agentic AI systems running inside real products at real clients." },
+      { "y": "2025", "t": "More than 50 systems in 10 countries", "d": "Expanding from local clients to a regional and international network." },
+      { "y": "2026", "t": "Smart Accountant", "d": "Our most mature product ships: an enterprise accounting system, Arabic from the root, on IFRS." }
+    ],
+    "values": [
+      { "n": "01", "t": "Honesty before marketing", "d": "We publish no number we cannot prove, and no compliance badge we have not earned. If a feature is still in development, we write that." },
+      { "n": "02", "t": "The client owns it", "d": "Code, data and deployment accounts are handed over in full. We keep no key that makes staying with us compulsory." },
+      { "n": "03", "t": "Arabic is not a translation", "d": "We design right-to-left from the start: the typography, the numerals, the dates, and the whole visual flow." },
+      { "n": "04", "t": "Accessibility is a condition, not a feature", "d": "Everything we build is tested with a keyboard and a screen reader. Someone who cannot use the product was not built for." }
+    ],
+    "founder": {
+      "lede": "He started in 2018 from Gaza with a mobile phone. He learned to program under siege, then turned individual skill into an engineering company in 2021.",
+      "full": [
+        "I started in 2018 from Gaza with a mobile phone and a slow connection. The goal was never just to have work; it was to prove that an Arab engineer can build systems measured by the global standard — not by a lenient local one.",
+        "The first fifty dollars were less a fee than a proof that skill outruns geography. And when the solo work became an engineering house in 2021, the only condition was that the standards stay the same: documentation, code review, and contractual responsibility.",
+        "Today an engineering team serves clients in more than ten countries, and much of it came from the Academy we built to keep our standards alive. That is still the measure we hold everything we ship against."
+      ]
+    }
+  },
+
+  "journal": {
+    "seo": {
+      "title": "Journal — engineering notes from real projects | Awalim Group",
+      "description": "What we learn while building — architectural decisions, mistakes we paid for, and Arabic details nobody else writes about."
+    },
+    "h": "Journal",
+    "lede": "Engineering notes from real projects — not marketing content. What we learn while shipping, written down while it is still fresh."
+  },
+
+  "contact": {
+    "seo": {
+      "title": "Start your project — tell us about the problem, not the solution | Awalim Group",
+      "description": "A four-step brief, or WhatsApp directly. We come back with a first diagnosis and a scope estimate — no commitment."
+    },
+    "h": "Start your project",
+    "lede": "Tell us about the problem, not the solution. The best projects began with a call where the process was described honestly — and we come back with a first diagnosis.",
+    "steps": [
+      { "id": "type",    "t": "Project type",  "q": "What do you want to build?" },
+      { "id": "scope",   "t": "Scope & budget","q": "Roughly how big is the project?" },
+      { "id": "details", "t": "Details",       "q": "Describe the process you want solved" },
+      { "id": "you",     "t": "Your details",  "q": "How do we get back to you?" }
+    ],
+    "types": [
+      { "v": "Enterprise system (accounting / HR / operations)", "t": "Enterprise system", "d": "Accounting, HR, operations", "icon": "ledger" },
+      { "v": "Agentic AI and automation", "t": "Agentic AI", "d": "Extraction, automation, knowledge systems", "icon": "spark" },
+      { "v": "Mobile app", "t": "Mobile app", "d": "Flutter — iOS and Android", "icon": "phone" },
+      { "v": "Brand identity and design system", "t": "Identity & design system", "d": "Mark, colour, type, components", "icon": "tokens" },
+      { "v": "Web platform or dashboard", "t": "Web platform", "d": "A site or a dashboard that is measured", "icon": "browser" },
+      { "v": "Audit of an existing project", "t": "Audit an existing project", "d": "What works, and what must be rebuilt", "icon": "search" },
+      { "v": "Team training / the Academy", "t": "Team training", "d": "Academy tracks for your team", "icon": "book" }
+    ],
+    "budgets": ["Not decided yet", "Under $5,000", "$5,000 — $15,000", "$15,000 — $50,000", "Over $50,000"],
+    "timelines": ["As soon as possible", "Within a month", "Within three months", "Not fixed"],
+    "after": ["We read the brief and reply within two working days", "A 30-minute diagnosis call — no commitment", "An initial scope document with a candid time and price estimate", "You decide: we start, or you take the document and go"],
+    "faq": [
+      { "q": "Is anything I write here stored?", "a": "No. The button opens a WhatsApp chat (or an email) pre-filled with your request on your own device — nothing is sent to any server from this site." },
+      { "q": "What if I don't know the budget?", "a": "Choose «Not decided yet». The first diagnosis produces a scope and a candid price you can then decide on." },
+      { "q": "Is the first call paid?", "a": "No. Thirty minutes of diagnosis, no commitment. If we are not the right people we say so and point you to someone who is." }
+    ]
+  },
+
+  "notFound": {
+    "seo": { "title": "Page not found — 404 | Awalim Group", "description": "The page you asked for does not exist." },
+    "h": "This page doesn't work. Everything else does.",
+    "lede": "The link you came from is old or wrong. Pick a destination from the list, or start from the home page."
+  }
+}

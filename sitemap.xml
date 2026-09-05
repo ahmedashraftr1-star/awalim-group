@@ -1,11 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://awalimgroup.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://awalimgroup.com/work.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://awalimgroup.com/products.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://awalimgroup.com/services.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://awalimgroup.com/academy.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://awalimgroup.com/insights.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://awalimgroup.com/about.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://awalimgroup.com/contact.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url><loc>https://awalimgroup.com/</loc><lastmod>2026-09-05</lastmod><priority>1.0</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/"/></url>
+  <url><loc>https://awalimgroup.com/work</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/work"/></url>
+  <url><loc>https://awalimgroup.com/work/rahmacare</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/work/rahmacare"/></url>
+  <url><loc>https://awalimgroup.com/work/jameel-store</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/work/jameel-store"/></url>
+  <url><loc>https://awalimgroup.com/work/vibe-os</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/work/vibe-os"/></url>
+  <url><loc>https://awalimgroup.com/work/smart-accountant</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/work/smart-accountant"/></url>
+  <url><loc>https://awalimgroup.com/work/maya</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/work/maya"/></url>
+  <url><loc>https://awalimgroup.com/work/academy-platform</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/work/academy-platform"/></url>
+  <url><loc>https://awalimgroup.com/work/car-hmi</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/work/car-hmi"/></url>
+  <url><loc>https://awalimgroup.com/work/island-haven</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/work/island-haven"/></url>
+  <url><loc>https://awalimgroup.com/products</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/products"/></url>
+  <url><loc>https://awalimgroup.com/products/smart-accountant</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/products/smart-accountant"/></url>
+  <url><loc>https://awalimgroup.com/products/rahmacare</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/products/rahmacare"/></url>
+  <url><loc>https://awalimgroup.com/products/jameel-store</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/products/jameel-store"/></url>
+  <url><loc>https://awalimgroup.com/products/vibe-os</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/products/vibe-os"/></url>
+  <url><loc>https://awalimgroup.com/products/web-platforms</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/products/web-platforms"/></url>
+  <url><loc>https://awalimgroup.com/products/brand-studio</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/products/brand-studio"/></url>
+  <url><loc>https://awalimgroup.com/products/ai-lab</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/products/ai-lab"/></url>
+  <url><loc>https://awalimgroup.com/services</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/services"/></url>
+  <url><loc>https://awalimgroup.com/academy</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/academy"/></url>
+  <url><loc>https://awalimgroup.com/group</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/group"/></url>
+  <url><loc>https://awalimgroup.com/journal</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/journal"/></url>
+  <url><loc>https://awalimgroup.com/journal/ai-agents-revolution</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/journal/ai-agents-revolution"/></url>
+  <url><loc>https://awalimgroup.com/journal/building-ai-agents</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/journal/building-ai-agents"/></url>
+  <url><loc>https://awalimgroup.com/journal/flutter-apple-standards</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/journal/flutter-apple-standards"/></url>
+  <url><loc>https://awalimgroup.com/journal/serverless-on-aws</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/journal/serverless-on-aws"/></url>
+  <url><loc>https://awalimgroup.com/journal/idea-to-mrr-8-weeks</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/journal/idea-to-mrr-8-weeks"/></url>
+  <url><loc>https://awalimgroup.com/journal/sovereign-glass-design</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/journal/sovereign-glass-design"/></url>
+  <url><loc>https://awalimgroup.com/contact</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/contact"/></url>
+  <url><loc>https://awalimgroup.com/careers</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/careers"/></url>
+  <url><loc>https://awalimgroup.com/press</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/press"/></url>
+  <url><loc>https://awalimgroup.com/privacy</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/privacy"/></url>
+  <url><loc>https://awalimgroup.com/terms</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/terms"/></url>
+  <url><loc>https://awalimgroup.com/verify</loc><lastmod>2026-09-05</lastmod><priority>0.9</priority><xhtml:link rel="alternate" hreflang="ar" href="https://awalimgroup.com/verify"/></url>
+  <url><loc>https://awalimgroup.com/en/</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/"/></url>
+  <url><loc>https://awalimgroup.com/en/work</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/work"/></url>
+  <url><loc>https://awalimgroup.com/en/work/rahmacare</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/work/rahmacare"/></url>
+  <url><loc>https://awalimgroup.com/en/work/jameel-store</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/work/jameel-store"/></url>
+  <url><loc>https://awalimgroup.com/en/work/vibe-os</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/work/vibe-os"/></url>
+  <url><loc>https://awalimgroup.com/en/work/smart-accountant</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/work/smart-accountant"/></url>
+  <url><loc>https://awalimgroup.com/en/work/maya</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/work/maya"/></url>
+  <url><loc>https://awalimgroup.com/en/work/academy-platform</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/work/academy-platform"/></url>
+  <url><loc>https://awalimgroup.com/en/work/car-hmi</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/work/car-hmi"/></url>
+  <url><loc>https://awalimgroup.com/en/work/island-haven</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/work/island-haven"/></url>
+  <url><loc>https://awalimgroup.com/en/products</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/products"/></url>
+  <url><loc>https://awalimgroup.com/en/products/smart-accountant</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/products/smart-accountant"/></url>
+  <url><loc>https://awalimgroup.com/en/products/rahmacare</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/products/rahmacare"/></url>
+  <url><loc>https://awalimgroup.com/en/products/jameel-store</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/products/jameel-store"/></url>
+  <url><loc>https://awalimgroup.com/en/products/vibe-os</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/products/vibe-os"/></url>
+  <url><loc>https://awalimgroup.com/en/products/web-platforms</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/products/web-platforms"/></url>
+  <url><loc>https://awalimgroup.com/en/products/brand-studio</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/products/brand-studio"/></url>
+  <url><loc>https://awalimgroup.com/en/products/ai-lab</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/products/ai-lab"/></url>
+  <url><loc>https://awalimgroup.com/en/services</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/services"/></url>
+  <url><loc>https://awalimgroup.com/en/academy</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/academy"/></url>
+  <url><loc>https://awalimgroup.com/en/group</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/group"/></url>
+  <url><loc>https://awalimgroup.com/en/journal</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/journal"/></url>
+  <url><loc>https://awalimgroup.com/en/journal/ai-agents-revolution</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/journal/ai-agents-revolution"/></url>
+  <url><loc>https://awalimgroup.com/en/journal/building-ai-agents</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/journal/building-ai-agents"/></url>
+  <url><loc>https://awalimgroup.com/en/journal/flutter-apple-standards</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/journal/flutter-apple-standards"/></url>
+  <url><loc>https://awalimgroup.com/en/journal/serverless-on-aws</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/journal/serverless-on-aws"/></url>
+  <url><loc>https://awalimgroup.com/en/journal/idea-to-mrr-8-weeks</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/journal/idea-to-mrr-8-weeks"/></url>
+  <url><loc>https://awalimgroup.com/en/journal/sovereign-glass-design</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/journal/sovereign-glass-design"/></url>
+  <url><loc>https://awalimgroup.com/en/contact</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/contact"/></url>
+  <url><loc>https://awalimgroup.com/en/careers</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/careers"/></url>
+  <url><loc>https://awalimgroup.com/en/press</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/press"/></url>
+  <url><loc>https://awalimgroup.com/en/privacy</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/privacy"/></url>
+  <url><loc>https://awalimgroup.com/en/terms</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/terms"/></url>
+  <url><loc>https://awalimgroup.com/en/verify</loc><lastmod>2026-09-05</lastmod><priority>0.7</priority><xhtml:link rel="alternate" hreflang="en" href="https://awalimgroup.com/en/verify"/></url>
 </urlset>

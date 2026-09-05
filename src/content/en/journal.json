@@ -1,0 +1,198 @@
+{
+  "_note": "English overrides for journal.json. Merged by slug: images, dates, themes and categories stay shared with the Arabic; the whole body is translated.",
+  "categories": [
+    { "key": "all", "label": "All" },
+    { "key": "ai", "label": "AI" },
+    { "key": "mobile", "label": "Mobile" },
+    { "key": "infra", "label": "Infrastructure" },
+    { "key": "product", "label": "Product" },
+    { "key": "design", "label": "Design" }
+  ],
+  "articles": [
+    {
+      "slug": "ai-agents-revolution",
+      "catLabel": "AI · Analysis",
+      "coverWord": "From tool to agent",
+      "title": "The agent revolution: from tools to systems that act",
+      "excerpt": "Why the industry moved from a model that answers to an agent that executes — and what changes in engineering once the system is the one deciding the next step.",
+      "author": "Ahmed Ashraf",
+      "body": [
+        { "p": "In 2023 the question was: «what can the model say?». In 2026 it became: «what can the model do — and who carries responsibility for what it did?». That move from answering to acting is what we call an agent, and it changes the shape of the engineering far more than it changes the shape of the interface." },
+        { "h2": "The difference is not intelligence, it is responsibility" },
+        { "p": "A chatbot suggests text and you decide what to do with it. An agent changes state inside your system: it creates an entry, sends an email, edits a record. The difference is not in the model's capability — the same model may run in both cases — but in the fact that the next step became its decision rather than yours." },
+        { "p": "Which means everything we learned about permissions, logs and rollback in enterprise systems comes suddenly back to the interface: who is allowed to do what, what gets recorded, and how we undo a wrong step." },
+        { "h2": "Three things break once the system is the one deciding" },
+        { "ul": [
+          "<b>The permission boundary:</b> the model does not know what it «must not» do unless you write it down. A tool handed to an agent should carry the narrowest permission that completes the task — exactly like a service account in a production system.",
+          "<b>Explainability:</b> when an agent takes a decision with a financial effect, you must be able to know why a month later. A decision log is not an optional feature; it is what makes the system auditable.",
+          "<b>The human in the loop:</b> not every decision deserves a human stop, but every decision with a financial or legal effect does. Designing those stopping points is half the work."
+        ]},
+        { "h2": "What changes in the team" },
+        { "p": "A team building agents needs a skill that a team building interfaces never required: evaluation. You cannot test an agent with a classic unit test, because its output is not deterministic. You need a set of real cases, a criterion for success, and a measurement before every launch — otherwise you are shipping a guess." },
+        { "quote": "An agent whose accuracy you cannot measure before release is not a product — it is an experiment run on your users." },
+        { "h2": "When you do not need an agent" },
+        { "p": "Most tasks we are asked to build «an agent» for are really conventional automation with clear rules. If the path is fully determined — if this, then that — an agent adds cost and non-determinism for nothing. An agent earns its place when the inputs are unstructured, or when the path requires a judgement about context." },
+        { "p": "We open every discovery session with that question: is this an agent task at all? And in roughly half the cases the answer is no — and we say so." },
+        { "h2": "In short" },
+        { "p": "The agent revolution is not a revolution in models; it is a revolution in responsibility. Whoever builds an agent is building a system that takes decisions — and must engineer it the way any decision-taking system is engineered: narrow permissions, a full log, measured evaluation, and a human at every effect that cannot be undone." }
+      ]
+    },
+    {
+      "slug": "building-ai-agents",
+      "catLabel": "AI · Practice",
+      "coverWord": "From zero to production",
+      "title": "Building AI agents: from zero to production",
+      "excerpt": "The full path: choosing the model, designing the tools, managing memory — then what actually breaks when the agent meets real users.",
+      "author": "Ahmed Ashraf",
+      "body": [
+        { "p": "This is not a theoretical guide. It is the path we actually walk when a client asks for an agent, ordered by the steps we take — and the mistakes we paid for in the first agent we put into production in 2024." },
+        { "h2": "Step 0: define the task in one sentence" },
+        { "p": "If you cannot write what the agent does in one sentence with one verb and one output, you are not ready to build. «Reads an invoice and proposes a balanced entry for approval» is a valid sentence. «Helps the accounting department» is not." },
+        { "h2": "Step 1: tools before the model" },
+        { "p": "An agent without tools is a chatbot. Tools are what let it do something — and they are also its permission boundary. Our rule: every tool does one thing, with the narrowest permission that suffices, and returns a clear error when it fails." },
+        { "code": "// one tool, one permission, one output\nconst proposeEntry = tool({\n  name: 'propose_journal_entry',\n  description: 'Proposes a balanced journal entry from extracted invoice fields. Does not post.',\n  input: z.object({\n    vendor: z.string(),\n    total:  z.number().positive(),\n    vat:    z.number().min(0),\n    date:   z.string().date(),\n  }),\n  // the entry stays a draft until a human approves it\n  execute: async (inv) => ledger.draft(balanceEntry(inv)),\n});", "lang": "ts" },
+        { "p": "Note that the tool does not post. Posting is a decision with a financial effect, and every decision with a financial effect passes through a human. That is not hesitation about trusting the model; it is responsibility by design." },
+        { "h2": "Step 2: choose the model by the task, not the fashion" },
+        { "p": "There is no «best model». There is a best model for this task, at this cost, in this time. Extracting fields from an invoice does not need the largest model on the market; judging a legal contract might. Design the system so the model can be swapped without a rebuild — one interface, and a provider changed from a config file." },
+        { "h2": "Step 3: memory is not free" },
+        { "p": "Everything you put in the context costs money and time and distracts the model. Good memory is selective: what the agent needs for this step, not everything that ever happened. In the invoice agent, for instance, it needs the chart of accounts and the last five entries for that vendor — not the company's entire history." },
+        { "h2": "Step 4: evaluate before release — always" },
+        { "p": "This is where a product separates from an experiment. Before any user sees the agent, we build an evaluation set from real cases — a hundred actual invoices with their correct entries — and we measure: how many entries did the agent propose correctly? How many errors would have slipped through without a human review?" },
+        { "ul": [
+          "The evaluation set comes from real data, not generated data",
+          "A numeric success criterion written before the run (say: 95% correct entries, 0 unbalanced entries)",
+          "The evaluation repeats on every change to the model or the instructions — like a regression test"
+        ]},
+        { "h2": "Step 5: what breaks in production" },
+        { "p": "Three things broke for us and did not show up in the evaluation:" },
+        { "ul": [
+          "<b>Ugly inputs:</b> an invoice photographed at an angle, in handwriting, in two languages. The evaluation set was cleaner than reality. The fix: add the ugly cases to the set the moment they appear.",
+          "<b>Over-trust:</b> the user approves the proposed entry without reading it because «the agent is usually right». The fix: highlight what deviates from the norm, and make approval require a look rather than a click.",
+          "<b>Cost:</b> retry calls doubled the bill in the first month. The fix: a call budget per task, and an explicit stop instead of a retry loop."
+        ]},
+        { "h2": "In short" },
+        { "p": "A production agent is not a clever model; it is a system: narrow-permission tools, selective memory, measured evaluation, a log of every decision, and a human at every financial effect. Whoever starts from the model ends with an experiment. Whoever starts from the task ends with a product." }
+      ]
+    },
+    {
+      "slug": "flutter-apple-standards",
+      "catLabel": "Interface engineering · Mobile",
+      "coverWord": "The native feel",
+      "title": "Flutter and Apple's standards: building an experience at the level of official iOS",
+      "excerpt": "The differences a user notices without naming them: motion curves, scroll bounce and touch timing — and where they come from when they are not native.",
+      "author": "Awalim mobile team",
+      "body": [
+        { "p": "An iPhone user does not say «this app is not native». They say «something feels off» and delete it. That something is usually one of five details that can be measured — and all of them are fixable in Flutter if you know where to look." },
+        { "h2": "1. Motion curves" },
+        { "p": "iOS does not use the standard ease-in-out. Screen transitions use a spring curve with a specific damping, and menus open on a different curve than buttons. Flutter ships with <code>Curves.easeInOut</code> by default, and that is the first thing that feels wrong." },
+        { "code": "// instead of Curves.easeInOut — a curve closer to UIKit's behaviour\nfinal iosCurve = Cubic(0.25, 0.1, 0.25, 1.0);\n\n// and for screen transitions: CupertinoPageRoute, not MaterialPageRoute\nNavigator.of(context).push(\n  CupertinoPageRoute(builder: (_) => const DetailsScreen()),\n);", "lang": "dart" },
+        { "h2": "2. Scroll bounce" },
+        { "p": "Lists in iOS bounce at the edge and decelerate with a specific friction coefficient. <code>BouncingScrollPhysics</code> exists in Flutter but is not applied to every list unless you set <code>ScrollBehavior</code> at the app level. Set it once at the root, not in every list." },
+        { "h2": "3. Touch timing" },
+        { "p": "A button in iOS responds on release, not on press, and cancels if the finger moves beyond a certain distance. <code>CupertinoButton</code> does this; <code>ElevatedButton</code> does not. The difference is felt in the first second of use." },
+        { "h2": "4. Typography and Arabic letterforms" },
+        { "p": "SF Pro is the system font and Flutter cannot ship it. But using <code>.SF Pro Text</code> through the platform's default font family works on iOS. Arabic, though, needs a font you ship yourself — and we use IBM Plex Sans Arabic at its real weights, not one weight faked with a stroke." },
+        { "ul": [
+          "Never apply <code>letterSpacing</code> to Arabic text — it severs the joins between letters",
+          "A taller line height for Arabic (1.6 and up), because diacritics and extenders need the room",
+          "Tabular figures (<code>tabularFigures</code>) in any column of numbers"
+        ]},
+        { "h2": "5. Safe areas and direction" },
+        { "p": "An Arabic screen mirrors: back is on the right, and drawers pull from the right. Flutter mirrors automatically if you use <code>EdgeInsetsDirectional</code> and <code>AlignmentDirectional</code> — and breaks the app if you use explicit <code>left/right</code>. The rule: no word «left» or «right» in the code without a written reason." },
+        { "quote": "A native app is not the one that uses the system's widgets, but the one that behaves the way the system's user expects — on the first touch, the first scroll, and the first transition." },
+        { "h2": "In short" },
+        { "p": "Flutter is capable of an experience at the level of official iOS, but it does not hand it to you by default. Five decisions — the curve, the physics, the touch, the typography, the direction — are taken once at the root of the app, and everything after inherits the right feel." }
+      ]
+    },
+    {
+      "slug": "serverless-on-aws",
+      "catLabel": "Cloud architecture",
+      "coverWord": "Serverless — by the numbers",
+      "title": "Serverless on AWS: architecture that scales without limits",
+      "excerpt": "When serverless is the right call and when it is a trap — by the cost, the cold start and the ceiling, not by enthusiasm.",
+      "author": "Awalim infrastructure team",
+      "body": [
+        { "p": "«Serverless» is a promise that you pay only for what you use and never manage a machine. The promise is true — with conditions. And when the conditions are broken, either the surprise bill arrives at the end of the month or the response time angers the first user of the morning." },
+        { "h2": "When it is the right call" },
+        { "ul": [
+          "<b>Intermittent load:</b> an API called hundreds of times an hour and then silent all night. Paying per invocation is cheaper than a machine running 24 hours.",
+          "<b>Event processing:</b> an image is uploaded and processed, a file arrives and is parsed. The function runs for seconds and disappears.",
+          "<b>A small team with no infrastructure engineer:</b> no machines to patch and no operating system to update."
+        ]},
+        { "h2": "When it is a trap" },
+        { "p": "Three cases we have seen repeat:" },
+        { "ul": [
+          "<b>Cold start:</b> a rarely called function needs a second or more to wake. For an interface a human is waiting on, that is unacceptable. The fix is either paid warming (provisioned concurrency) — at which point you have lost half the cost advantage — or a small always-on server.",
+          "<b>Database connections:</b> every function opens a new connection. At a peak of hundreds of concurrent functions, the database collapses, not the functions. You need a connection proxy (RDS Proxy or equivalent) from day one.",
+          "<b>High steady load:</b> if your service runs at a constant load all day, a dedicated server is cheaper several times over. The arithmetic is simple: invocations × duration × price, against the monthly price of a server."
+        ]},
+        { "h2": "The calculation we run before deciding" },
+        { "code": "# rough monthly cost for one function\ninvocations   = 3_000_000        # invocations/month\navg_ms        = 250              # average duration\nmemory_gb     = 0.5\ngb_seconds    = invocations * (avg_ms/1000) * memory_gb\ncompute_cost  = gb_seconds * 0.0000166667\nrequest_cost  = invocations * 0.0000002\n\nprint(round(compute_cost + request_cost, 2))  # ≈ $6.85\n# against a small always-on server ≈ $15–30 — with no cold start and no concurrency ceiling", "lang": "python" },
+        { "p": "The numbers are approximate and vary by region and provider, but the idea holds: the decision is taken by arithmetic, not by enthusiasm." },
+        { "h2": "What we usually do" },
+        { "p": "We mix. The main interface a human waits on runs on a small always-on server (or at the Edge, with a near-zero wake time). The heavy intermittent processors — parsing a document, generating a report, sending a batch of email — run on serverless functions. And the database always sits behind a connection proxy." },
+        { "quote": "«Serverless» is not an architecture; it is a billing model. Choose it where it saves, and avoid it where it costs." },
+        { "h2": "In short" },
+        { "p": "Unlimited scale is real — and so is an unlimited bill. What separates them is arithmetic before the decision, a connection proxy before the first deploy, and an alert budget before the first month." }
+      ]
+    },
+    {
+      "slug": "idea-to-mrr-8-weeks",
+      "catLabel": "Product · Business",
+      "coverWord": "Eight weeks",
+      "title": "From idea to MRR: building a SaaS from zero in 8 weeks",
+      "excerpt": "A real timeline of what gets built and what gets postponed, and why scope kills small products faster than any technical mistake.",
+      "author": "Ahmed Ashraf",
+      "body": [
+        { "p": "Eight weeks is not a magic number. It is how long a small team can hold a single focus before scope starts expanding. This timeline comes from a real product we built — with what was done and what was deliberately postponed." },
+        { "h2": "Week 0: the decision that shapes everything" },
+        { "p": "Before any code: who is the single user who will pay first, and what is the single task they will pay for? Not «small businesses» but «an accounting firm serving ten entities that is drowning in invoices». The product is built for that person; the rest come later, or not at all." },
+        { "h2": "Weeks 1–2: the core, without an interface" },
+        { "p": "We build the thing that makes the product a product — the business logic — with an API and tests, and not a single screen. If the product proposes journal entries, the first two weeks go to proposing correct entries from a command line. The beautiful interface can wait; a wrong core is not fixed by design." },
+        { "h2": "Weeks 3–4: the first end-to-end screen" },
+        { "p": "One screen that completes the single task: sign in, input, result. No dashboard, no settings, no pricing page. The first user — the person defined in week 0 — is onboarded and actually uses it." },
+        { "ul": [
+          "What was built: authentication, the single task, a simple log",
+          "What was deliberately postponed: billing, roles, reports, notifications, the mobile app"
+        ]},
+        { "h2": "Weeks 5–6: billing and repair" },
+        { "p": "Now — and not before — we add payment. Not because payment is hard, but because building billing before anyone uses the product means building a billing system for a product you do not yet know is used. And in the same week we fix what the first user broke — and they will break things." },
+        { "h2": "Weeks 7–8: three paying users" },
+        { "p": "The goal is not a hundred users; it is three who actually pay. Those three give you what a hundred free users never will: a real reason to pay, a real objection to the price, and one feature all of them ask for. That feature is week nine." },
+        { "h2": "Why scope kills small products" },
+        { "p": "A technical mistake is fixed in a day. Excess scope is fixed by a rebuild. Every «small» feature added before anyone pays doubles what must be maintained and slows the one feature that matters. The rule we hold: no feature before week 8 unless a paying user asked for it — or its absence stopped someone from paying." },
+        { "quote": "A small product does not die because it is small. It dies because it tried to be big before it was useful." },
+        { "h2": "In short" },
+        { "p": "Eight weeks: two for the core, two for one screen, two for billing and repair, two for three paying users. And everything else — everything — waits until someone paying asks for it." }
+      ]
+    },
+    {
+      "slug": "sovereign-glass-design",
+      "catLabel": "Design · Systems",
+      "coverWord": "Glass is a material",
+      "title": "Sovereign Glass Design: beyond the blur",
+      "excerpt": "Glass is not an effect but a decision about light, depth and ground — and what makes it read as a material rather than as a filter.",
+      "author": "Awalim Brand Studio",
+      "body": [
+        { "p": "Most «glass» interfaces fail in Arabic for one reason: the glass is added as a filter over an interface designed for something else. The result is Arabic text with joined letterforms floating over coloured noise, and a contrast that cannot be measured because it changes with whatever sits behind it." },
+        { "h2": "Glass is a material, not an effect" },
+        { "p": "In Vibe OS we treated glass as a material with thickness, elevation and a ground. A glass panel does not float in a void; it rests on a fixed dark ground, carries a hairline border that defines its thickness, and casts a shadow that says where it sits in depth. Those three decisions — ground, border, shadow — are what make it read as a material." },
+        { "h2": "Rule one: a fixed ground behind the text" },
+        { "p": "Contrast cannot be measured against a changing background. So every piece of text on a glass surface here sits over a fixed dark layer inside the panel — not over the blur directly. The blur is for edges and empty space; the text has its own ground." },
+        { "code": "/* the panel: blur for the surface, a fixed ground for the text */\n.glass {\n  background: rgba(10, 12, 16, .55);      /* the ground contrast is measured against */\n  -webkit-backdrop-filter: blur(18px) saturate(140%);\n          backdrop-filter: blur(18px) saturate(140%);\n  border: 1px solid rgba(255,255,255,.12); /* the thickness */\n  box-shadow: 0 24px 60px -30px rgba(0,0,0,.6); /* the depth */\n}\n.glass p { color: #F2F0EC; } /* 4.5:1 on the ground — measured, not assumed */", "lang": "css" },
+        { "h2": "Rule two: Arabic needs height, not opacity" },
+        { "p": "Joined Arabic letterforms lose their clarity when their edges blend into the background. The fix is not more weight — it is a taller line height (1.7 and up), a size one step larger, and no letter-spacing at all. Glass keeps its effect in the space around the text, not in the text itself." },
+        { "h2": "Rule three: motion reveals depth" },
+        { "p": "A static glass panel can read as an image. When it moves at a slightly different speed from the background (a light parallax of ±20px), the eye understands it is a layer in front of a layer. This is not decoration — it is what proves the glass has depth." },
+        { "ul": [
+          "No more than three glass layers in one screen — beyond that it becomes noise",
+          "Blur of 14–20px; less looks like a mistake and more dissolves the background entirely",
+          "In light mode: a light, nearly opaque ground and a dark border — not the reverse"
+        ]},
+        { "quote": "Good glass is not noticed. What is noticed is the clear text on it and the depth behind it." },
+        { "h2": "In short" },
+        { "p": "Glassiness is not a filter added at the last minute. It is three material decisions — a fixed ground, a border that gives thickness, and a shadow that gives depth — taken once in the design system, then measured against real contrast with real Arabic text." }
+      ]
+    }
+  ]
+}

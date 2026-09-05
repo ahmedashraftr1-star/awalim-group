@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>رؤى — عوالِم قروب</title>
+  <link>https://awalimgroup.com/journal</link>
+  <description>ملاحظات هندسية من مشاريع حقيقية — لا محتوى تسويقي. ما نتعلّمه أثناء البناء، مكتوباً بينما لا يزال طازجاً.</description>
+  <language>ar</language>
+  <atom:link href="https://awalimgroup.com/journal/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>ثورة وكلاء الذكاء الاصطناعي: من الأدوات إلى الأنظمة المستقلة</title>
+    <link>https://awalimgroup.com/journal/ai-agents-revolution</link>
+    <guid isPermaLink="true">https://awalimgroup.com/journal/ai-agents-revolution</guid>
+    <pubDate>Sat, 14 Mar 2026 00:00:00 GMT</pubDate>
+    <description>لماذا انتقلت الصناعة من نموذج يُجيب إلى وكيلٍ ينفّذ — وما الذي يتغيّر في الهندسة حين يصبح النظام هو من يقرّر الخطوة التالية.</description>
+  </item>
+  <item>
+    <title>دليل بناء وكلاء AI: من الصفر إلى النشر في الإنتاج</title>
+    <link>https://awalimgroup.com/journal/building-ai-agents</link>
+    <guid isPermaLink="true">https://awalimgroup.com/journal/building-ai-agents</guid>
+    <pubDate>Fri, 20 Feb 2026 00:00:00 GMT</pubDate>
+    <description>المسار الكامل: اختيار النموذج، تصميم الأدوات، إدارة الذاكرة، ثم ما الذي ينكسر فعلاً حين يخرج الوكيل إلى مستخدمين حقيقيّين.</description>
+  </item>
+  <item>
+    <title>Flutter ومعايير Apple: كيف تبني تجربة بمستوى iOS الرسمي</title>
+    <link>https://awalimgroup.com/journal/flutter-apple-standards</link>
+    <guid isPermaLink="true">https://awalimgroup.com/journal/flutter-apple-standards</guid>
+    <pubDate>Wed, 28 Jan 2026 00:00:00 GMT</pubDate>
+    <description>الفروق التي يلاحظها المستخدم ولا يسمّيها: منحنيات الحركة، ارتداد التمرير، وتوقيت اللمس — ومن أين تأتي حين لا تكون أصلية.</description>
+  </item>
+  <item>
+    <title>بنية Serverless على AWS: هندسة تتمدّد بلا حدود</title>
+    <link>https://awalimgroup.com/journal/serverless-on-aws</link>
+    <guid isPermaLink="true">https://awalimgroup.com/journal/serverless-on-aws</guid>
+    <pubDate>Wed, 10 Dec 2025 00:00:00 GMT</pubDate>
+    <description>متى يكون بلا خادم القرار الصحيح ومتى يكون فخّاً — بحساب التكلفة والبرود والحدّ الأقصى، لا بالحماس.</description>
+  </item>
+  <item>
+    <title>من الفكرة إلى MRR: بناء SaaS من الصفر في 8 أسابيع</title>
+    <link>https://awalimgroup.com/journal/idea-to-mrr-8-weeks</link>
+    <guid isPermaLink="true">https://awalimgroup.com/journal/idea-to-mrr-8-weeks</guid>
+    <pubDate>Wed, 05 Nov 2025 00:00:00 GMT</pubDate>
+    <description>جدول زمنيّ حقيقيّ لما يُبنى ولما يُؤجَّل، ولماذا يقتل النطاقُ المنتجاتِ الصغيرة أسرع من أي خطأ تقنيّ.</description>
+  </item>
+  <item>
+    <title>Sovereign Glass Design: ما وراء الزجاجية</title>
+    <link>https://awalimgroup.com/journal/sovereign-glass-design</link>
+    <guid isPermaLink="true">https://awalimgroup.com/journal/sovereign-glass-design</guid>
+    <pubDate>Thu, 02 Oct 2025 00:00:00 GMT</pubDate>
+    <description>الزجاج ليس تأثيراً بل قراراً عن الضوء والعمق والأرضية — وما الذي يجعله يقرأ كمادة لا كمرشّح.</description>
+  </item>
+</channel>
+</rss>

@@ -1,0 +1,9 @@
+{
+  "alg": "Ed25519",
+  "issued": "2026-09-05",
+  "publicKey": "tDhddbWncn0R9q4CsjMuXkV6rjPNh9O0Q1O2Y01q2sc=",
+  "payload": "{\"issued\":\"2026-09-05\",\"issuer\":\"Awalim Group\",\"stats\":{\"accountingModules\":10,\"certifiedGraduates\":682,\"clientCountries\":10,\"countryPacks\":7,\"engineersTrained\":1200,\"founded\":2021,\"graduateCountries\":6,\"isolationLayers\":3,\"standards\":8,\"systemsDelivered\":50,\"tracks\":4,\"yearsBuilding\":8},\"url\":\"https://awalimgroup.com\"}",
+  "sha256": "c529f88f2b00f7669951804acd4ee62318ac3096360924a326a55ca645211a7e",
+  "signature": "aHiVyOmwOOhCsMDw3Ehul90lekVZkNmtEgJ8R+1zpXaipg4vSHGTid5qGErty0FXOcQphKYM+myrt5JLJjDlBg==",
+  "note": "Verify: sha256(payload) == sha256 · Ed25519.verify(publicKey, signature, payload). See /verify."
+}

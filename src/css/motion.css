@@ -1,0 +1,121 @@
+/* ==========================================================================
+   MOTION — section 4. Transform/opacity only. Every decorative motion is
+   gated by prefers-reduced-motion at the end of this file.
+   ========================================================================== */
+
+/* @critical */
+/* 4.1 reveal on scroll — .rv elements start hidden once JS is present; the
+   `in` class (IntersectionObserver) plays them. --i drives stagger. */
+.js .rv { opacity: 0; transform: translateY(var(--reveal-y)); }
+.js .rv.in { opacity: 1; transform: none; transition: opacity var(--d-slow) var(--ease-out), transform var(--d-slow) var(--ease-out); transition-delay: calc(var(--i, 0) * var(--stagger)); }
+/* children of [data-stagger] receive --i from JS */
+.js [data-stagger] > * { opacity: 0; transform: translateY(var(--reveal-y)); }
+.js [data-stagger].in > * { opacity: 1; transform: none; transition: opacity var(--d-slow) var(--ease-out), transform var(--d-slow) var(--ease-out); transition-delay: calc(var(--i, 0) * var(--stagger)); }
+/* [data-stagger] containers that are also .rv reveal themselves instantly and let children stagger */
+.js .rv[data-stagger] { opacity: 1; transform: none; }
+
+/* Hero-level entrances never wait for JS and never gate opacity: the hero
+   text is the LCP element, so it must paint on first frame (transform only). */
+.js :is(.hero, .phero, .chero) .rv { opacity: 1; transform: none; animation: fx-in .8s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 90ms + 120ms); }
+@keyframes fx-in { from { transform: translateY(var(--reveal-y)); } }
+
+/* 4.2 kinetic hero — line-by-line mask reveal. Pure CSS: it plays on load,
+   with or without JS. Padding keeps Arabic descenders from being clipped. */
+.kl { display: block; overflow: hidden; padding-block: .06em .14em; margin-block-end: -.14em; }
+.kl__in { display: inline-block; transform: translateY(112%); animation: kl-up .95s var(--ease-out) forwards; animation-delay: calc(var(--i, 0) * 120ms + 60ms); will-change: transform; }
+@keyframes kl-up { to { transform: translateY(0); } }
+
+/* hero float + orb */
+.hero__dev { animation: float 7s ease-in-out infinite; }
+@keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+.hero__orb { position: absolute; inset-inline-end: -12%; inset-block-end: -18%; inline-size: 60%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, var(--accent-glow), transparent 65%); filter: blur(10px); pointer-events: none; z-index: -1; animation: orb 12s ease-in-out infinite alternate; }
+@keyframes orb { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-6%, 8%, 0) scale(1.12); } }
+
+/* nav entrance */
+.js .pillnav__links, .js .pillnav__act, .js .pillnav .brand { animation: nav-in .7s var(--ease-out) both; }
+@keyframes nav-in { from { opacity: 0; transform: translateY(-10px); } }
+/* @/critical */
+
+/* 4.3 parallax — JS writes --py (px) via ScrollTrigger; CSS does the paint.
+   Pointer tilt (extras.js) writes --tx/--ty on the device; hovering a
+   [data-tilt] container flattens the resting tilt so the pointer leads. */
+[data-parallax] { transform: translate3d(0, var(--py, 0px), 0); }
+.dev--tilt[data-parallax], .dev--tilt { --st: 1; transform: perspective(1400px) rotateX(calc(var(--tilt-x) * var(--st) + var(--ty, 0deg))) rotateY(calc(var(--tilt-y) * var(--st) + var(--tx, 0deg))) rotateZ(calc(var(--tilt-z) * var(--st))) translate3d(0, var(--py, 0px), 0); }
+.hero__dev.dev--tilt { --st: calc(1 - var(--hp, 0)); }
+[data-tilt]:hover .dev--tilt { --st: 0; }
+.hcard:hover .dev--tilt { scale: 1.02; }
+
+/* scroll tint: the page ground leans toward the active card's theme */
+.js body { background: color-mix(in srgb, var(--bg) 91%, var(--tint, var(--bg))); transition: background-color .9s ease, color var(--d-base) ease; }
+:root[data-theme="dark"].js body { background: color-mix(in srgb, var(--bg) 94%, var(--tint, var(--bg))); }
+
+/* 4.4 pinned process — see .proc in pages.css; the stage progress is --p */
+
+/* 4.7 count-up: numbers get tabular figures so width never jitters */
+[data-count] { font-variant-numeric: tabular-nums; }
+
+/* 4.8 page transitions — native cross-document View Transitions where
+   supported; the .curtain element is the JS fallback (motion.js). */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-out .32s var(--ease-in) forwards; }
+::view-transition-new(root) { animation: vt-in .5s var(--ease-out) forwards; }
+/* shared-element morph: a themed card grows into the page it opens */
+::view-transition-group(.vt-card) { animation-duration: .62s; animation-timing-function: var(--ease-inout); }
+::view-transition-image-pair(.vt-card) { isolation: isolate; }
+::view-transition-old(.vt-card) { animation: vt-card-out .3s ease forwards; }
+::view-transition-new(.vt-card) { animation: vt-card-in .45s ease .1s both; }
+@keyframes vt-card-out { to { opacity: 0; } }
+@keyframes vt-card-in { from { opacity: 0; } }
+@keyframes vt-out { to { opacity: 0; transform: translateY(-12px); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(18px); } }
+.curtain { position: fixed; inset: 0; z-index: 900; background: var(--text); display: grid; place-items: center; transform: translateY(101%); pointer-events: none; will-change: transform; }
+.curtain__mark { inline-size: 56px; block-size: 56px; border-radius: 14px; background: var(--bg); display: grid; place-items: center; opacity: 0; transition: opacity .2s ease .15s; }
+.curtain__mark img { inline-size: 36px; block-size: 36px; }
+.curtain.is-leaving { transform: translateY(0); transition: transform .42s var(--ease-inout); }
+.curtain.is-leaving .curtain__mark { opacity: 1; }
+.curtain.is-entering { transform: translateY(0); animation: curtain-up .55s var(--ease-inout) .05s forwards; }
+@keyframes curtain-up { to { transform: translateY(-101%); } }
+
+/* 4.9 custom cursor — desktop pointers only; native cursor stays visible */
+.cursor { position: fixed; inset-block-start: 0; inset-inline-start: 0; z-index: 950; inline-size: 36px; block-size: 36px; border-radius: 50%; border: 1.5px solid var(--accent); pointer-events: none; opacity: 0; transform: translate3d(-50%, -50%, 0) scale(.6); transition: opacity .25s ease, transform .35s var(--ease-out), background-color .25s ease, border-color .25s ease; mix-blend-mode: normal; margin: 0; left: 0; top: 0; }
+.cursor.is-on { opacity: .9; transform: translate3d(-50%, -50%, 0) scale(1); }
+.cursor.is-hover { transform: translate3d(-50%, -50%, 0) scale(1.9); background: color-mix(in srgb, var(--accent) 18%, transparent); border-color: transparent; }
+.cursor.is-down { transform: translate3d(-50%, -50%, 0) scale(.75); }
+@media (hover: none), (pointer: coarse) { .cursor { display: none; } }
+
+/* reading progress */
+.readbar { position: fixed; inset-block-start: 0; inset-inline: 0; block-size: 3px; z-index: 300; pointer-events: none; }
+.readbar span { display: block; block-size: 100%; background: var(--accent); transform: scaleX(var(--p, 0)); transform-origin: right; }
+[dir="ltr"] .readbar span { transform-origin: left; }
+
+/* hover states (4.6) */
+.tile:hover .tile__img img { transform: scale(1.03); }
+.tile__img img { transition: transform var(--d-max) var(--ease-out); }
+
+/* ---------- reduced motion: stop everything decorative ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within { scroll-behavior: auto; }
+  .js .rv, .js [data-stagger] > * { opacity: 1; transform: none; transition: none; }
+  .kl__in { transform: none; animation: none; }
+  .js :is(.hero, .phero, .chero) .rv { animation: none; }
+  .hero__dev, .hero__orb, .marq__track, .chip--pulse .dot { animation: none; }
+  [data-parallax], .dev--tilt[data-parallax] { --py: 0px; }
+  .dev--tilt { transform: none; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+  .curtain { display: none; }
+  .cursor { display: none; }
+  .post__img img, .tile__img img, .founder__img img, .btn__arrow, .cap, .frow, .hcard, .card, .pcard { transition: none; }
+  .hcard:hover, .cap:hover, .frow:hover, .card--hover:hover { transform: none; }
+  .cockpit__bars i, .cockpit__tick svg path { transition: none; }
+  .blueprint { --draw: 1; } .bp__flow { animation: none; }
+  .js body { transition: none; --tint: var(--bg); }
+  .ledger__beam, .ledger__doc-l, .ledger__prop, .pal__box, .verify__checks li.is-run .verify__ic, .live:not(.is-static) b::before, .ff__beam, .ff__shutter, .ff__fields > div, .js .pillnav__links, .js .pillnav__act, .js .pillnav .brand { animation: none; }
+  .ff__fields > div { opacity: 1; transform: none; }
+  .hero { --hp: 0 !important; }
+  .film__f, .film__cap, .moment, .subnav, .island { transition: none; }
+  .moment { --m: 1; }
+  .ledger__doc-l { opacity: 1; transform: none; }
+  ::view-transition-group(.vt-card), ::view-transition-old(.vt-card), ::view-transition-new(.vt-card) { animation: none; }
+  .proc__p, .proc__progress span, .msf__bar span, .sideidx__bar, .drawer, .drawer__nav a { transition: none; }
+  .msf__step.is-enter { animation: none; }
+}
