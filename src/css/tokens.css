@@ -29,6 +29,9 @@
   --amber:         #8A5A00;
   --amber-soft:    rgba(196, 132, 0, .12);
   --amber-line:    rgba(196, 132, 0, .36);
+  --bad:           #B42318;
+  --bad-soft:      rgba(180, 35, 24, .10);
+  --bad-line:      rgba(180, 35, 24, .34);
   --live:          #1C8A3F;
 
   --btn-bg:        #111112;
@@ -143,6 +146,9 @@
   --amber:         #F0B84A;
   --amber-soft:    rgba(240, 184, 74, .14);
   --amber-line:    rgba(240, 184, 74, .38);
+  --bad:           #F0736A;      /* the red inverts in the dark like the amber does */
+  --bad-soft:      rgba(240, 115, 106, .14);
+  --bad-line:      rgba(240, 115, 106, .38);
   --live:          #5ED47E;
 
   --btn-bg:        #F5F5F3;

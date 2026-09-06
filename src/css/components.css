@@ -496,7 +496,10 @@ body.pal-open { overflow: hidden; }
 .live b { font-family: var(--font-mono); font-weight: var(--w-medium); direction: ltr; unicode-bidi: isolate; padding: 2px 8px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); transition: background-color var(--d-base) ease, color var(--d-base) ease; }
 .live.is-good b { color: var(--accent-text); border-color: var(--accent-line); background: var(--accent-soft); }
 .live.is-meh b { color: var(--amber); border-color: var(--amber-line); background: var(--amber-soft); }
-.live.is-bad b { color: #B42318; }
+/* the failing state of the live self-audit only appears on a slow device — a
+   hardcoded red left it at 2.59:1 on the dark strip, seen by exactly the
+   visitors whose vitals were bad enough to show it */
+.live.is-bad b { color: var(--bad); border-color: var(--bad-line); background: var(--bad-soft); }
 .live--static b { direction: rtl; font-family: var(--font-ar); }
 .live:not(.is-static) b::before { content: ""; display: inline-block; inline-size: 6px; block-size: 6px; border-radius: 50%; background: currentColor; margin-inline-end: 6px; vertical-align: middle; opacity: .7; animation: pulse-soft 2s ease-in-out infinite; }
 @keyframes pulse-soft { 50% { opacity: .25; } }

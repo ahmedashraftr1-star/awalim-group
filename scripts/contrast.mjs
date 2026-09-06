@@ -30,6 +30,9 @@ const pairs = [
   ["btn-fg", "btn-bg", 4.5, "primary button label"],
   ["ink-strip-fg", "ink-strip", 4.5, "tech strip"],
   ["amber", "bg", 4.5, "beta status label"],
+  ["amber", "surface-2", 4.5, "the live self-audit's warning state"],
+  ["bad", "bg", 4.5, "failure state on the page"],
+  ["bad", "surface-2", 4.5, "the live self-audit's failing state (only visible on a slow device)"],
   ["accent-ink", "accent-text", 4.5, "ink on an accent fill (skip link, checks, verify ticks)"]
 ];
 

@@ -65,7 +65,10 @@ const IN_PAGE = () => {
   const out = [];
   const seen = new Set();
   const push = (o) => { const k = o.kind + o.sel + (o.text || "").slice(0, 24); if (!seen.has(k)) { seen.add(k); out.push(o); } };
-  const painted = (el, cs) => cs.display !== "none" && cs.visibility !== "hidden" && parseFloat(cs.opacity) >= 0.15;
+  /* opacity is a group property: an element at 1 inside an ancestor at 0 is not
+     painted at all, so the gate has to be the product up the tree. */
+  const effOpacity = (el) => { let o = 1; for (let n = el; n; n = n.parentElement) { o *= parseFloat(getComputedStyle(n).opacity); if (o < 0.15) break; } return o; };
+  const painted = (el, cs) => cs.display !== "none" && cs.visibility !== "hidden" && effOpacity(el) >= 0.15;
 
   /* 1. contrast, against the ground the text is actually painted on */
   for (const el of document.querySelectorAll("body *")) {
@@ -84,7 +87,7 @@ const IN_PAGE = () => {
     const grounds = b.floats && b.bg.a < 0.995 ? [over(b.bg, WHITE), over(b.bg, BLACK)] : [b.bg];
     let worst = Infinity;
     for (const g of grounds) worst = Math.min(worst, ratio(fg.a < 1 ? over(fg, g) : fg, g));
-    if (worst < need - 0.05) push({ kind: "contrast", sel: sel(el), parent: sel(el.parentElement), text: txt.slice(0, 44), got: `${worst.toFixed(2)}:1 (need ${need} at ${Math.round(size)}px)` });
+    if (worst < need - 0.05) push({ kind: "contrast", sel: sel(el), parent: sel(el.parentElement), text: txt.slice(0, 44), got: `${worst.toFixed(2)}:1 (need ${need} at ${Math.round(size)}px) — ${cs.color} on rgb(${[b.bg.r, b.bg.g, b.bg.b].map(Math.round).join(",")})` });
   }
 
   /* 2. text painted outside the box that clips it */
@@ -138,6 +141,7 @@ const contexts = new Map();
 for (const [theme, width] of CONFIGS)
   contexts.set(`${theme}@${width}`, await browser.newContext({ viewport: { width, height: 900 }, colorScheme: theme, reducedMotion: "reduce" }));
 
+const transients = [];
 const jobs = only.flatMap((r) => CONFIGS.map(([theme, width]) => ({ r, theme, width })));
 let next = 0;
 const worker = async () => {
@@ -147,8 +151,11 @@ const worker = async () => {
     try {
       await page.goto(BASE + r, { waitUntil: "domcontentloaded" });
       await page.evaluate((t) => document.documentElement.setAttribute("data-theme", t), theme);
-      /* touch the length of the page so scroll-triggered content exists, then
-         settle every reveal outright rather than waiting for its transition */
+      /* touch the length of the page so scroll-triggered content exists, settle
+         every reveal, then FREEZE. A fixed delay is not a settle: under a busy
+         pool a .btn's background-color transition was still in flight, and half
+         a fill composited over the dark hero behind it read 4.4:1 on an element
+         that rests at 14.9:1. Measure the resting state or measure nothing. */
       await page.evaluate(async () => {
         const H = document.documentElement.scrollHeight;
         for (let y = 0; y <= H; y += Math.max(600, innerHeight)) { window.scrollTo(0, y); await new Promise((res) => setTimeout(res, 16)); }
@@ -156,8 +163,30 @@ const worker = async () => {
         document.querySelectorAll(".rv,[data-stagger]").forEach((e) => e.classList.add("in"));
         await document.fonts.ready;
       });
-      await page.waitForTimeout(120);
-      for (const f of await page.evaluate(IN_PAGE)) all.push({ route: r, theme, width, ...f });
+      await page.addStyleTag({ content: "*,*::before,*::after{transition:none!important;animation-duration:0s!important;animation-delay:0s!important;}" });
+      const settled = await page.evaluate(async () => {
+        for (const a of document.getAnimations()) { try { a.finish(); } catch { a.cancel(); } }
+        for (let i = 0; i < 40; i++) {
+          await new Promise((res) => requestAnimationFrame(() => res()));
+          if (!document.getAnimations().some((a) => a.playState === "running")) return true;
+        }
+        return false;
+      });
+      if (!settled) all.push({ route: r, theme, width, kind: "unsettled", sel: "document", parent: "—", text: "animations still running after the freeze", got: "measurement not trustworthy" });
+      /* Confirm every finding in a second pass. A defect in the resting state is
+         stable; anything that measured once and not again was a transient, and a
+         gate that reports those gets ignored on the day it is right. */
+      const first = await page.evaluate(IN_PAGE);
+      if (first.length) {
+        await page.evaluate(async () => { for (const a of document.getAnimations()) { try { a.finish(); } catch { a.cancel(); } } await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res))); });
+        const second = await page.evaluate(IN_PAGE);
+        const key = (f) => `${f.kind}|${f.sel}|${f.text}`;
+        const seen2 = new Set(second.map(key));
+        for (const f of first) {
+          if (seen2.has(key(f))) all.push({ route: r, theme, width, ...f });
+          else transients.push(`${r} ${theme}@${width} ${f.kind} ${f.sel} «${f.text}» ${f.got}`);
+        }
+      }
     } finally {
       await page.close();
       process.stdout.write(".");
@@ -168,7 +197,11 @@ await Promise.all(Array.from({ length: POOL }, worker));
 await browser.close();
 
 console.log("");
-for (const kind of ["contrast", "clipped", "target"]) {
+if (transients.length) {
+  console.log(`\n· ${transients.length} transient measurement(s) dropped — seen once, gone on re-measure, so not reported:`);
+  for (const t of transients) console.log("  " + t);
+}
+for (const kind of ["unsettled", "contrast", "clipped", "target"]) {
   const list = all.filter((f) => f.kind === kind);
   if (!list.length) continue;
   console.log(`\n✖ ${kind} — ${list.length} instances`);
