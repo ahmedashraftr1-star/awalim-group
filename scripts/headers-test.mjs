@@ -69,7 +69,11 @@ for (const f of html) {
     const h = "sha256-" + createHash("sha256").update(m[1], "utf8").digest("base64");
     if (!hashes.has(h)) hashes.set(h, f.slice(ROOT.length + 1));
   }
-  handlers += (src.match(/ on[a-z]{2,12}="/g) || []).length;
+  /* only inside a real tag opening: script bodies and comments are not markup,
+     and prose about engineering quotes onclick= without meaning it. Counting
+     raw matches failed the build on a comment that merely mentioned onload. */
+  const markup = src.replace(/<!--[\s\S]*?-->/g, "").replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, "<$1></$1>");
+  for (const tag of markup.matchAll(/<[a-zA-Z][^>]*>/g)) handlers += (tag[0].match(/\son[a-z]{2,12}\s*=/gi) || []).length;
 }
 ok(html.length > 0, `${html.length} built pages scanned, ${hashes.size} distinct inline script(s)`);
 

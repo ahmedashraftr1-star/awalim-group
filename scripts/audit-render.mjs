@@ -154,6 +154,8 @@ const worker = async () => {
          serves the real _headers, so this measures the policy we actually ship. */
       await page.addInitScript(() => {
         window.__csp = [];
+        window.__cssFail = [];
+        addEventListener("error", (e) => { const t = e.target; if (t && t.tagName === "LINK") window.__cssFail.push(t.href); }, true);
         document.addEventListener("securitypolicyviolation", (e) => {
           window.__csp.push({ d: e.effectiveDirective || e.violatedDirective, b: e.blockedURI || "inline", s: e.sourceFile ? `${e.sourceFile.replace(/^https?:\/\/[^/]+/, "")}:${e.lineNumber}` : "", x: (e.sample || "").slice(0, 48) });
         });
@@ -172,6 +174,30 @@ const worker = async () => {
         document.querySelectorAll(".rv,[data-stagger]").forEach((e) => e.classList.add("in"));
         await document.fonts.ready;
       });
+      /* Every declared stylesheet must actually be APPLIED before anything is
+         measured. A sheet that never lands does not produce one finding, it
+         manufactures a page of them — a CSP that blocked the stylesheet swap
+         once made a 40×40 footer link measure 17×25 at its intrinsic size, and
+         reporting that as a target-size defect would have sent someone to fix
+         CSS that was already correct. */
+      const unstyled = await page.evaluate(async () => {
+        /* Three signals, because none alone is sufficient: a link whose href
+           404s still appears in document.styleSheets, and reading its cssRules
+           throws SecurityError rather than returning zero — so "it has rules"
+           cannot be the test. A load error is definitive; a link still sitting
+           at rel="preload" was never swapped; a rel="stylesheet" with a null
+           .sheet never landed. */
+        const css = () => [...document.querySelectorAll('link[as="style"],link[rel="stylesheet"]')];
+        const broken = () => {
+          const failed = new Set(window.__cssFail || []);
+          return css().filter((l) => failed.has(l.href) || l.rel === "preload" || !l.sheet);
+        };
+        for (let i = 0; i < 60; i++) {
+          if (!broken().length) return null;
+          await new Promise((res) => setTimeout(res, 50));
+        }
+        return broken().map((l) => `${l.href.replace(/^https?:\/\/[^/]+/, "")} (rel=${l.rel}${(window.__cssFail || []).includes(l.href) ? ", load error" : l.sheet ? "" : ", no sheet"})`);
+      });
       await page.addStyleTag({ content: "*,*::before,*::after{transition:none!important;animation-duration:0s!important;animation-delay:0s!important;}" });
       const settled = await page.evaluate(async () => {
         for (const a of document.getAnimations()) { try { a.finish(); } catch { a.cancel(); } }
@@ -182,6 +208,12 @@ const worker = async () => {
         return false;
       });
       if (!settled) all.push({ route: r, theme, width, kind: "unsettled", sel: "document", parent: "—", text: "animations still running after the freeze", got: "measurement not trustworthy" });
+      if (unstyled) {
+        for (const href of unstyled) all.push({ route: r, theme, width, kind: "stylesheet", sel: "link", parent: "head", text: href, got: "declared but never applied — measurement suppressed for this page" });
+        for (const v of await page.evaluate(() => window.__csp || []))
+          all.push({ route: r, theme, width, kind: "csp", sel: v.d, parent: v.s || "—", text: v.b, got: v.x ? `blocked · sample «${v.x}»` : "blocked" });
+        continue;
+      }
       /* Confirm every finding in a second pass. A defect in the resting state is
          stable; anything that measured once and not again was a transient, and a
          gate that reports those gets ignored on the day it is right. */
@@ -212,7 +244,7 @@ if (transients.length) {
   console.log(`\n· ${transients.length} transient measurement(s) dropped — seen once, gone on re-measure, so not reported:`);
   for (const t of transients) console.log("  " + t);
 }
-for (const kind of ["csp", "unsettled", "contrast", "clipped", "target"]) {
+for (const kind of ["stylesheet", "csp", "unsettled", "contrast", "clipped", "target"]) {
   const list = all.filter((f) => f.kind === kind);
   if (!list.length) continue;
   console.log(`\n✖ ${kind} — ${list.length} instances`);
