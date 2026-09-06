@@ -86,7 +86,7 @@
 .ftr__vitals { margin-block-start: var(--space-7); padding: var(--space-3) var(--space-4); border: 1px dashed var(--border); border-radius: var(--r-sm); display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-5); align-items: center; font-size: var(--fs-xs); color: var(--text-muted); }
 .ftr__vitals b { font-weight: var(--w-medium); color: var(--text); direction: ltr; unicode-bidi: isolate; }
 .ftr__vitals-l { font-family: var(--font-ar); }
-.ftr__vitals-a { margin-inline-start: auto; font-family: var(--font-ar); color: var(--accent-text); display: inline-flex; gap: 6px; align-items: center; }
+.ftr__vitals-a { margin-inline-start: auto; font-family: var(--font-ar); color: var(--accent-text); display: inline-flex; gap: 6px; align-items: center; min-block-size: 24px; }
 .ftr__vitals-a svg { inline-size: 12px; block-size: 12px; }
 .phero--verify .d-hero { max-width: 22ch; }
 
@@ -155,6 +155,9 @@
 .chero--article { padding-block-end: clamp(var(--space-6), 5vw, var(--space-9)); }
 .chero--article + .sec { padding-block-start: calc(var(--sec-y-tight) / 2); }
 .crumbs { display: flex; gap: var(--space-2); align-items: center; font-size: var(--fs-xs); color: var(--card-dim, var(--text-muted)); flex-wrap: wrap; }
+/* WCAG 2.2 target size (minimum): these small links sit on their own line,
+   so the inline-in-a-sentence exception does not cover them. */
+.crumbs a { display: inline-flex; align-items: center; min-block-size: 24px; }
 .crumbs a:hover { color: var(--card-fg, var(--text)); text-decoration: underline; text-underline-offset: 3px; }
 
 /* @/critical */
@@ -305,7 +308,7 @@
 .opt__check { inline-size: 22px; block-size: 22px; border-radius: 50%; border: 1px solid var(--border-2); display: grid; place-items: center; color: transparent; transition: background-color var(--d-fast) ease, color var(--d-fast) ease; }
 .opt__check svg { inline-size: 12px; block-size: 12px; }
 .opt:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
-.opt:has(input:checked) .opt__check { background: var(--accent-text); color: #fff; border-color: transparent; }
+.opt:has(input:checked) .opt__check { background: var(--accent-text); color: var(--accent-ink); border-color: transparent; }
 .opt:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
 .opt--pill { grid-template-columns: 1fr; padding: 10px 18px; border-radius: var(--r-pill); font-size: var(--fs-sm); }
 .opt--pill:has(input:checked) { background: var(--text); color: var(--bg); border-color: var(--text); }
@@ -366,7 +369,7 @@
 .asset__box--lockup img { inline-size: auto; block-size: 64px; }
 .asset figcaption { display: grid; gap: var(--space-1); font-size: var(--fs-sm); }
 .asset figcaption span { color: var(--text-muted); font-size: var(--fs-xs); }
-.asset figcaption .lnk { margin-block-start: var(--space-2); justify-self: start; }
+.asset figcaption .lnk { margin-block-start: var(--space-2); justify-self: start; display: inline-flex; align-items: center; min-block-size: 24px; }
 .swatches { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); margin-block-start: var(--space-6); }
 .swatch { display: grid; gap: var(--space-2); font-size: var(--fs-sm); }
 .swatch__chip { display: block; block-size: 64px; border-radius: var(--r-sm); border: 1px solid var(--border); }

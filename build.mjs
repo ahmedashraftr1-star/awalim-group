@@ -58,14 +58,32 @@ const DICT_ENTRIES = Object.entries(DICT).filter(([k]) => !k.startsWith("_")).so
 /** Deep merge an override onto a base. Arrays of objects that carry an
  *  identity key (slug / id / key / n) merge element-wise by it, so a
  *  translation file only repeats the fields it actually changes and never
- *  has to restate themes, icons or numbers. */
+ *  has to restate themes, icons or numbers.
+ *
+ *  Elements WITHOUT an identity key pair by position, and every override is
+ *  consumed at most once. Both rules matter: an array where only some elements
+ *  are keyed (a stat list of three numbers and one word) used to resolve every
+ *  unkeyed element to the same override — the English page then printed one
+ *  tile twice and lost the other, in valid English, where no test could see it. */
 const ID_KEYS = ["slug", "id", "key", "n"];
+const idKeyOf = (v) => (v && typeof v === "object" && !Array.isArray(v) ? ID_KEYS.find((k) => v[k] !== undefined) : undefined);
 const merge = (base, over) => {
   if (over === undefined) return base;
   if (Array.isArray(base) && Array.isArray(over)) {
-    const idKey = ID_KEYS.find((k) => base.length && base[0] && typeof base[0] === "object" && base[0][k] !== undefined && over.length && over[0] && over[0][k] !== undefined);
-    if (idKey) return base.map((b) => { const o = over.find((x) => x[idKey] === b[idKey]); return o ? merge(b, o) : b; });
-    return over;
+    if (!base.some(idKeyOf) && !over.some(idKeyOf)) return over;
+    const used = new Set();
+    return base.map((b, i) => {
+      const k = idKeyOf(b);
+      let j = k ? over.findIndex((o, oi) => !used.has(oi) && o && typeof o === "object" && o[k] === b[k]) : -1;
+      if (j < 0 && !used.has(i) && over[i] !== undefined) {
+        /* positional fallback, but never pair across a different identity */
+        const ok = idKeyOf(over[i]);
+        if (!k || !ok || over[i][k] === b[k]) j = i;
+      }
+      if (j < 0) return b;
+      used.add(j);
+      return merge(b, over[j]);
+    });
   }
   if (base && typeof base === "object" && over && typeof over === "object" && !Array.isArray(over))
     return Object.fromEntries([...new Set([...Object.keys(base), ...Object.keys(over)])].map((k) => [k, merge(base[k], over[k])]));

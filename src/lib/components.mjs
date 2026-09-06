@@ -18,7 +18,7 @@ export const eyebrow = (ar, latin = "", extra = "") =>
 export const sectionHead = ({ eyebrowAr, eyebrowEn = "", h, lede = "", level = 2, cls = "", wide = false }) => `
   <div class="sec-head rv${wide ? " sec-head--wide" : ""}${cls ? " " + cls : ""}">
     ${eyebrowAr ? eyebrow(eyebrowAr, eyebrowEn) : ""}
-    <h${level} class="d-1">${h}</h${level}>
+    <h${level} class="d-1 klh"><span class="klh__in">${h}</span></h${level}>
     ${lede ? `<p class="lede">${lede}</p>` : ""}
   </div>`;
 

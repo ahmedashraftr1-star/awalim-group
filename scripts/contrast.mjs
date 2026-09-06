@@ -29,7 +29,8 @@ const pairs = [
   ["accent", "bg", 3, "accent display type / graphics (large text)"],
   ["btn-fg", "btn-bg", 4.5, "primary button label"],
   ["ink-strip-fg", "ink-strip", 4.5, "tech strip"],
-  ["amber", "bg", 4.5, "beta status label"]
+  ["amber", "bg", 4.5, "beta status label"],
+  ["accent-ink", "accent-text", 4.5, "ink on an accent fill (skip link, checks, verify ticks)"]
 ];
 
 /* section themes: fg on bg, dim on bg (dim is rgba over bg → composite) */

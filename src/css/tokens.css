@@ -22,6 +22,7 @@
   --accent:        #189C8E;
   --accent-text:   #0E7A6F;
   --accent-strong: #0B6A60;
+  --accent-ink:    #FFFFFF;      /* ink that sits ON an --accent-text fill */
   --accent-soft:   rgba(24, 156, 142, .09);
   --accent-line:   rgba(24, 156, 142, .34);
   --accent-glow:   rgba(24, 156, 142, .22);
@@ -108,8 +109,11 @@
   --ease-in:    cubic-bezier(.64, 0, .78, 0);
   --ease-inout: cubic-bezier(.83, 0, .17, 1);
   --d-fast: 200ms; --d-base: 420ms; --d-slow: 700ms; --d-max: 900ms;
-  --stagger: 75ms;
-  --reveal-y: 24px;
+  /* Travel and rhythm. 24px over 700ms was polite enough to miss — an element
+     that moves a fifth of its own height while you scroll past reads as no
+     movement at all. */
+  --stagger: 90ms;
+  --reveal-y: 44px;
   --parallax: 40px;
 
   color-scheme: light;
@@ -132,6 +136,7 @@
   --accent:        #2FC4B4;      /* lighter step in the dark: 9.6:1 */
   --accent-text:   #6FE0D0;
   --accent-strong: #9FF0E4;
+  --accent-ink:    #0A1A18;      /* the accent inverts in the dark, so its ink must too */
   --accent-soft:   rgba(47, 196, 180, .12);
   --accent-line:   rgba(47, 196, 180, .38);
   --accent-glow:   rgba(47, 196, 180, .28);

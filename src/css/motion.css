@@ -22,8 +22,28 @@
 /* 4.2 kinetic hero — line-by-line mask reveal. Pure CSS: it plays on load,
    with or without JS. Padding keeps Arabic descenders from being clipped. */
 .kl { display: block; overflow: hidden; padding-block: .06em .14em; margin-block-end: -.14em; }
-.kl__in { display: inline-block; transform: translateY(112%); animation: kl-up .95s var(--ease-out) forwards; animation-delay: calc(var(--i, 0) * 120ms + 60ms); will-change: transform; }
+.kl > .kl__in { display: inline-block; transform: translateY(112%); animation: kl-up .95s var(--ease-out) forwards; animation-delay: calc(var(--i, 0) * 120ms + 60ms); will-change: transform; }
 @keyframes kl-up { to { transform: translateY(0); } }
+
+/* 4.2b the same wipe, for every section heading. The hero opened with a
+   line-mask reveal and then nothing did it again for eighteen screens, which
+   is what "the motion is weak" looks like from the reader's chair. A heading
+   is masked as one block rather than split into lines: splitting rendered
+   lines in JS would have to rebuild markup around the <em> accents and the
+   Latin bidi spans that live inside these headings, and a wipe that survives
+   the content is worth more than one that reads marginally better. It masks
+   with overflow + transform rather than an animated clip-path: clip-path
+   animates on the paint thread and cost 5 extra dropped frames per full-page
+   scroll on a 4× throttled CPU, while a transform is composited and costs
+   none. The padding-block, cancelled by an equal negative margin, is what
+   keeps Arabic descenders and tashkeel inside the mask — the same trick .kl
+   uses on the hero. The inner needs its OWN class: .kl__in carries the hero's
+   kl-up animation, and a filled animation beats a static transform, so reusing
+   that name silently ran the hero's load animation on every section heading
+   and settled it at zero — the reveal never fired at all. */
+.js .sec-head .klh { overflow: hidden; padding-block: .06em .16em; margin-block-end: -.16em; }
+.js .sec-head .klh .klh__in { display: inline-block; transform: translateY(110%); }
+.js .sec-head.in .klh .klh__in { transform: none; transition: transform var(--d-max) var(--ease-out) 60ms; }
 
 /* hero float + orb */
 .hero__dev { animation: float 7s ease-in-out infinite; }
@@ -113,6 +133,7 @@
   .js .rv, .js [data-stagger] > * { opacity: 1; transform: none; transition: none; }
   .kl__in { transform: none; animation: none; }
   .js :is(.hero, .phero, .chero) .rv { animation: none; }
+  .js .sec-head .klh .klh__in { transform: none; }
   .hero__dev, .hero__orb, .marq__track, .chip--pulse .dot { animation: none; }
   [data-parallax], .dev--tilt[data-parallax] { --py: 0px; }
   .dev--tilt { transform: none; }
