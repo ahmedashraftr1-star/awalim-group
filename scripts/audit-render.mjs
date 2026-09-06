@@ -151,6 +151,25 @@ const contexts = new Map();
 for (const [theme, width] of CONFIGS)
   contexts.set(`${theme}@${width}`, await browser.newContext({ viewport: { width, height: 900 }, colorScheme: theme, reducedMotion: "reduce" }));
 
+/* WHAT page.evaluate DOES AND DOES NOT INHERIT — measured against the real
+   policy, because getting this wrong invalidates a test silently.
+   CDP-initiated script execution is debugger-initiated, so ONLY the direct
+   script-execution path escapes the policy:
+       eval("1+1")            ran      ← bypassed, cannot be tested this way
+       new Function(...)      ran      ← bypassed
+       el.innerHTML = str     TypeError    (Trusted Types, enforced)
+       script.textContent     TypeError    (Trusted Types, enforced)
+       script.src = foreign   TypeError    (Trusted Types, enforced)
+       <style> element        blocked      (style-src, enforced)
+       style attribute        not applied  (style-src, enforced)
+       CSSOM adopted sheet    APPLIED      (not governed by style-src at all)
+       foreign <img>          blocked      (img-src, enforced)
+       foreign fetch()        blocked      (connect-src, enforced)
+   So the freeze above goes in through CSSOM by mechanism, not by privilege —
+   a <style> element from this very context is refused. And a probe of eval or
+   Function must be driven by the PAGE's own script, never evaluated into it,
+   which is why /security is exercised by clicking its button. */
+
 /* /security attacks itself and the browser refuses it, so the route produces
    CSP violations by design. Excluding it would leave the one page that proves
    the policy is ENFORCING rather than merely present permanently unchecked, so
