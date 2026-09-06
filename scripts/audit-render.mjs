@@ -141,15 +141,29 @@ try {
 }
 
 const browser = await chromium.launch();
-const CONFIGS = [["light", 1440], ["dark", 1440], ["light", 390]];
+/* The fourth and fifth are prefers-reduced-transparency, where the glass
+   surfaces turn OPAQUE --surface instead of translucent. That is a different
+   composite, not a thinner one, and it is the state most likely to hide a
+   contrast failure — text tuned against blurred page content sitting on a flat
+   panel instead. Playwright has no context option for it, so it is emulated per
+   page over CDP and then ASSERTED, because a media emulation that silently
+   fails gives a whole configuration that measures nothing. */
+const CONFIGS = [
+  { theme: "light", width: 1440 },
+  { theme: "dark", width: 1440 },
+  { theme: "light", width: 390 },
+  { theme: "light", width: 1440, rt: true },
+  { theme: "dark", width: 1440, rt: true },
+];
+const ckey = (c) => `${c.theme}@${c.width}${c.rt ? "+rt" : ""}`;
 const POOL = Number(process.env.POOL || 6);
 const all = [];
 
 /* one context per configuration, a pool of pages inside it — creating a context
    per page cost more than the measuring did */
 const contexts = new Map();
-for (const [theme, width] of CONFIGS)
-  contexts.set(`${theme}@${width}`, await browser.newContext({ viewport: { width, height: 900 }, colorScheme: theme, reducedMotion: "reduce" }));
+for (const c of CONFIGS)
+  contexts.set(ckey(c), await browser.newContext({ viewport: { width: c.width, height: 900 }, colorScheme: c.theme, reducedMotion: "reduce" }));
 
 /* WHAT page.evaluate DOES AND DOES NOT INHERIT — measured against the real
    policy, because getting this wrong invalidates a test silently.
@@ -179,13 +193,24 @@ const isSecurityRoute = (r) => /(^|\/)security$/.test(r);
 const EXPECTED_ON_SECURITY = /^(script-src|script-src-elem|script-src-attr|style-src|style-src-elem|require-trusted-types-for|trusted-types)/;
 
 const transients = [];
-const jobs = only.flatMap((r) => CONFIGS.map(([theme, width]) => ({ r, theme, width })));
+const jobs = only.flatMap((r) => CONFIGS.map((c) => ({ r, ...c })));
 let next = 0;
 const worker = async () => {
   while (next < jobs.length) {
-    const { r, theme, width } = jobs[next++];
-    const page = await contexts.get(`${theme}@${width}`).newPage();
+    const job = jobs[next++];
+    const { r, theme, width, rt } = job;
+    const page = await contexts.get(ckey(job)).newPage();
     try {
+      if (rt) {
+        /* setEmulatedMedia replaces the whole feature list, so the ones
+           Playwright already set have to be restated or they are dropped */
+        const cdp = await page.context().newCDPSession(page);
+        await cdp.send("Emulation.setEmulatedMedia", { features: [
+          { name: "prefers-color-scheme", value: theme },
+          { name: "prefers-reduced-motion", value: "reduce" },
+          { name: "prefers-reduced-transparency", value: "reduce" },
+        ] });
+      }
       /* attached before any page script runs, so a policy that blocks the site
          is a failing test rather than something a visitor finds. scripts/serve.mjs
          serves the real _headers, so this measures the policy we actually ship. */
@@ -199,6 +224,10 @@ const worker = async () => {
       });
       await page.goto(BASE + r, { waitUntil: "domcontentloaded" });
       await page.evaluate((t) => document.documentElement.setAttribute("data-theme", t), theme);
+      if (rt && !(await page.evaluate(() => matchMedia("(prefers-reduced-transparency: reduce)").matches))) {
+        all.push({ route: r, theme, width, rt, kind: "emulation", sel: "prefers-reduced-transparency", parent: "—", text: "the media emulation did not take", got: "this configuration measured nothing" });
+        continue;
+      }
       /* touch the length of the page so scroll-triggered content exists, settle
          every reveal, then FREEZE. A fixed delay is not a settle: under a busy
          pool a .btn's background-color transition was still in flight, and half
@@ -257,11 +286,11 @@ const worker = async () => {
         }
         return false;
       });
-      if (!settled) all.push({ route: r, theme, width, kind: "unsettled", sel: "document", parent: "—", text: "animations still running after the freeze", got: "measurement not trustworthy" });
+      if (!settled) all.push({ route: r, theme, width, rt, kind: "unsettled", sel: "document", parent: "—", text: "animations still running after the freeze", got: "measurement not trustworthy" });
       if (unstyled) {
-        for (const href of unstyled) all.push({ route: r, theme, width, kind: "stylesheet", sel: "link", parent: "head", text: href, got: "declared but never applied — measurement suppressed for this page" });
+        for (const href of unstyled) all.push({ route: r, theme, width, rt, kind: "stylesheet", sel: "link", parent: "head", text: href, got: "declared but never applied — measurement suppressed for this page" });
         for (const v of await page.evaluate(() => window.__csp || []))
-          all.push({ route: r, theme, width, kind: "csp", sel: v.d, parent: v.s || "—", text: v.b, got: v.x ? `blocked · sample «${v.x}»` : "blocked" });
+          all.push({ route: r, theme, width, rt, kind: "csp", sel: v.d, parent: v.s || "—", text: v.b, got: v.x ? `blocked · sample «${v.x}»` : "blocked" });
         continue;
       }
       if (isSecurityRoute(r)) {
@@ -285,13 +314,13 @@ const worker = async () => {
           }));
           return { items, summary: out ? out.className : "", settled: out ? /\bis-(ok|bad)\b/.test(out.className) : false };
         });
-        if (verdict.error) all.push({ route: r, theme, width, kind: "security", sel: "[data-sec]", parent: "—", text: verdict.error, got: "the self-attack page could not be driven" });
-        else if (!verdict.settled) all.push({ route: r, theme, width, kind: "security", sel: "[data-sec-out]", parent: "—", text: "probes never reported a verdict", got: `${verdict.items.filter((i) => i.ok || i.bad).length}/${verdict.items.length} settled` });
+        if (verdict.error) all.push({ route: r, theme, width, rt, kind: "security", sel: "[data-sec]", parent: "—", text: verdict.error, got: "the self-attack page could not be driven" });
+        else if (!verdict.settled) all.push({ route: r, theme, width, rt, kind: "security", sel: "[data-sec-out]", parent: "—", text: "probes never reported a verdict", got: `${verdict.items.filter((i) => i.ok || i.bad).length}/${verdict.items.length} settled` });
         else {
-          if (verdict.items.length < 5) all.push({ route: r, theme, width, kind: "security", sel: ".seccheck", parent: "—", text: "fewer probes than expected", got: `${verdict.items.length} (want 5)` });
+          if (verdict.items.length < 5) all.push({ route: r, theme, width, rt, kind: "security", sel: ".seccheck", parent: "—", text: "fewer probes than expected", got: `${verdict.items.length} (want 5)` });
           for (const it of verdict.items)
-            if (!it.ok) all.push({ route: r, theme, width, kind: "security", sel: "#" + it.id, parent: "—", text: it.label.trim(), got: `NOT REFUSED — ${it.detail.trim()}` });
-          if (!/\bis-ok\b/.test(verdict.summary)) all.push({ route: r, theme, width, kind: "security", sel: "[data-sec-out]", parent: "—", text: "summary does not report a clean sweep", got: verdict.summary });
+            if (!it.ok) all.push({ route: r, theme, width, rt, kind: "security", sel: "#" + it.id, parent: "—", text: it.label.trim(), got: `NOT REFUSED — ${it.detail.trim()}` });
+          if (!/\bis-ok\b/.test(verdict.summary)) all.push({ route: r, theme, width, rt, kind: "security", sel: "[data-sec-out]", parent: "—", text: "summary does not report a clean sweep", got: verdict.summary });
         }
       }
       /* Confirm every finding in a second pass. A defect in the resting state is
@@ -304,13 +333,13 @@ const worker = async () => {
         const key = (f) => `${f.kind}|${f.sel}|${f.text}`;
         const seen2 = new Set(second.map(key));
         for (const f of first) {
-          if (seen2.has(key(f))) all.push({ route: r, theme, width, ...f });
+          if (seen2.has(key(f))) all.push({ route: r, theme, width, rt, ...f });
           else transients.push(`${r} ${theme}@${width} ${f.kind} ${f.sel} «${f.text}» ${f.got}`);
         }
       }
       for (const v of await page.evaluate(() => window.__csp || [])) {
         if (isSecurityRoute(r) && EXPECTED_ON_SECURITY.test(v.d || "")) continue;   /* the page is supposed to trip these */
-        all.push({ route: r, theme, width, kind: "csp", sel: v.d, parent: v.s || "—", text: v.b, got: v.x ? `blocked · sample «${v.x}»` : "blocked" });
+        all.push({ route: r, theme, width, rt, kind: "csp", sel: v.d, parent: v.s || "—", text: v.b, got: v.x ? `blocked · sample «${v.x}»` : "blocked" });
       }
     } finally {
       await page.close();
@@ -326,7 +355,7 @@ if (transients.length) {
   console.log(`\n· ${transients.length} transient measurement(s) dropped — seen once, gone on re-measure, so not reported:`);
   for (const t of transients) console.log("  " + t);
 }
-for (const kind of ["security", "stylesheet", "csp", "unsettled", "contrast", "clipped", "target"]) {
+for (const kind of ["emulation", "security", "stylesheet", "csp", "unsettled", "contrast", "clipped", "target"]) {
   const list = all.filter((f) => f.kind === kind);
   if (!list.length) continue;
   console.log(`\n✖ ${kind} — ${list.length} instances`);
@@ -336,4 +365,4 @@ for (const kind of ["security", "stylesheet", "csp", "unsettled", "contrast", "c
     console.log(`  ${String(l.length).padStart(3)}×  ${key}  →  ${l[0].got}   [${l[0].route}]`);
 }
 if (all.length) { console.log(`\n✖ render audit: ${all.length} findings across ${only.length} routes`); process.exit(1); }
-console.log(`✔ render audit clean — ${only.length} routes × light/dark/mobile: CSP, contrast, clipped text, target size`);
+console.log(`✔ render audit clean — ${only.length} routes × light/dark/mobile/reduced-transparency: CSP, contrast, clipped text, target size`);
