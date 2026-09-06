@@ -130,6 +130,16 @@ const IN_PAGE = () => {
   return out;
 };
 
+/* A dead server surfaces as a networkidle timeout or ERR_CONNECTION_REFUSED
+   deep in a stack trace, which reads like a site failure and is not one. */
+try {
+  const res = await fetch(BASE + "/", { method: "HEAD" });
+  if (!res.ok && res.status !== 404) throw new Error("status " + res.status);
+} catch (e) {
+  console.error(`\n\u2716 no server at ${BASE} \u2014 start one with \`npm run serve\` (or \`npm run dev\` to build first).\n   ${e.message}`);
+  process.exit(1);
+}
+
 const browser = await chromium.launch();
 const CONFIGS = [["light", 1440], ["dark", 1440], ["light", 390]];
 const POOL = Number(process.env.POOL || 6);
