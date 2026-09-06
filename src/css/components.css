@@ -12,6 +12,8 @@
 .brand__txt { display: flex; flex-direction: column; line-height: 1.15; }
 .brand__name { font-weight: var(--w-bold); font-size: 1rem; white-space: nowrap; }
 .brand__sub { font-family: var(--font-latin); font-stretch: 112%; font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--text-muted); }
+/* the mirrored half of the lockup: neither tracking nor uppercase belongs on Arabic */
+.brand__sub--ar { font-family: var(--font-ar); font-stretch: normal; font-size: .72rem; letter-spacing: normal; text-transform: none; unicode-bidi: isolate; }
 
 /* The header is a set of floating pills over the page. The wordmark was the one
    member without a backdrop, so it collided with — and disappeared into — dark

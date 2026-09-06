@@ -11,6 +11,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash, generateKeyPairSync, sign as edSign, createPrivateKey, createPublicKey } from "node:crypto";
 import { fill, normalizeSearch } from "./src/lib/html.mjs";
+import { merge, findLoss } from "./src/lib/merge.mjs";
 import { setBuild } from "./src/lib/layout.mjs";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
@@ -55,46 +56,21 @@ const UI = {
 /* longest first: "كل الأعمال" must win over "الأعمال" */
 const DICT_ENTRIES = Object.entries(DICT).filter(([k]) => !k.startsWith("_")).sort((a, b) => b[0].length - a[0].length);
 
-/** Deep merge an override onto a base. Arrays of objects that carry an
- *  identity key (slug / id / key / n) merge element-wise by it, so a
- *  translation file only repeats the fields it actually changes and never
- *  has to restate themes, icons or numbers.
- *
- *  Elements WITHOUT an identity key pair by position, and every override is
- *  consumed at most once. Both rules matter: an array where only some elements
- *  are keyed (a stat list of three numbers and one word) used to resolve every
- *  unkeyed element to the same override — the English page then printed one
- *  tile twice and lost the other, in valid English, where no test could see it. */
-const ID_KEYS = ["slug", "id", "key", "n"];
-const idKeyOf = (v) => (v && typeof v === "object" && !Array.isArray(v) ? ID_KEYS.find((k) => v[k] !== undefined) : undefined);
-const merge = (base, over) => {
-  if (over === undefined) return base;
-  if (Array.isArray(base) && Array.isArray(over)) {
-    if (!base.some(idKeyOf) && !over.some(idKeyOf)) return over;
-    const used = new Set();
-    return base.map((b, i) => {
-      const k = idKeyOf(b);
-      let j = k ? over.findIndex((o, oi) => !used.has(oi) && o && typeof o === "object" && o[k] === b[k]) : -1;
-      if (j < 0 && !used.has(i) && over[i] !== undefined) {
-        /* positional fallback, but never pair across a different identity */
-        const ok = idKeyOf(over[i]);
-        if (!k || !ok || over[i][k] === b[k]) j = i;
-      }
-      if (j < 0) return b;
-      used.add(j);
-      return merge(b, over[j]);
-    });
-  }
-  if (base && typeof base === "object" && over && typeof over === "object" && !Array.isArray(over))
-    return Object.fromEntries([...new Set([...Object.keys(base), ...Object.keys(over)])].map((k) => [k, merge(base[k], over[k])]));
-  return over;
-};
-
 const readLocale = (file, locale) => {
   const base = read(`src/content/${file}`);
   if (locale === "ar") return base;
   const p = join(ROOT, `src/content/en/${file}`);
-  return existsSync(p) ? merge(base, JSON.parse(readFileSync(p, "utf8"))) : base;
+  if (!existsSync(p)) return base;
+  const merged = merge(base, JSON.parse(readFileSync(p, "utf8")));
+  const lost = [];
+  findLoss(base, merged, file.replace(/\.json$/, ""), lost);
+  if (lost.length) {
+    console.error(`\n✖ the ${locale} merge of ${file} loses content the Arabic has:`);
+    for (const l of lost.slice(0, 20)) console.error("   " + l);
+    if (lost.length > 20) console.error(`   … and ${lost.length - 20} more`);
+    process.exit(1);
+  }
+  return merged;
 };
 
 const site = read("src/content/site.json");
@@ -287,6 +263,17 @@ function localize(html, path, loc) {
       parked.push(ar);
       return m.replace(`<span class="eyebrow__latin" lang="en">${latin}</span>`,
         `<span class="eyebrow__latin eyebrow__ar" lang="ar">\u0000E${parked.length - 1}\u0000</span>`);
+    });
+
+    /* The header lockup is the same bilingual signature as the eyebrow: the
+       name in the page's own script, the name in the other one beneath it.
+       src/content/en/site.json overrides brand.name, so by the time the English
+       pass runs the pair has already collapsed — it printed "Awalim Group"
+       twice, stacked, on all 38 English pages. The mirror is taken from the
+       Arabic source and parked so the dictionary cannot translate it back. */
+    out = out.replace(/<span class="brand__sub" lang="en">[^<]*<\/span>/g, () => {
+      parked.push(site.brand.name);
+      return `<span class="brand__sub brand__sub--ar" lang="ar">\u0000E${parked.length - 1}\u0000</span>`;
     });
 
     /* chrome strings → English, longest match first */

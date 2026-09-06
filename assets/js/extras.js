@@ -52,14 +52,33 @@
         : pool.map(function (x) { return { x: x, s: score(x, qn, toks) }; }).filter(function (r) { return r.s > 0; }).sort(function (a, b) { return b.s - a.s; }).slice(0, 12).map(function (r) { return r.x; });
       sel = 0;
       if (!items.length) {
-        list.innerHTML = EN
-          ? '<li class="pal__empty">No results for “' + q.replace(/[<>&]/g, "") + '” — try another word, or <a class="lnk" href="/en/contact">ask us directly</a>.</li>'
-          : '<li class="pal__empty">لا نتائج لـ «' + q.replace(/[<>&]/g, "") + '» — جرّب كلمة أخرى، أو <a class="lnk" href="/contact">اسألنا مباشرة</a>.</li>';
+        /* the visitor's own words land here — built as nodes, never parsed as
+           markup, so there is no sanitiser to get wrong */
+        var empty = el("li", "pal__empty");
+        empty.appendChild(document.createTextNode(EN ? "No results for “" + q + "” — try another word, or " : "لا نتائج لـ «" + q + "» — جرّب كلمة أخرى، أو "));
+        var ask = el("a", "lnk", EN ? "ask us directly" : "اسألنا مباشرة");
+        ask.href = EN ? "/en/contact" : "/contact";
+        empty.appendChild(ask);
+        empty.appendChild(document.createTextNode("."));
+        list.replaceChildren(empty);
         return;
       }
-      list.innerHTML = items.map(function (x, i) {
-        return '<li class="pal__it" role="option" id="pal-' + i + '" aria-selected="' + (i === sel) + '" data-i="' + i + '"><span class="pal__k">' + x.k + '</span><span><span class="pal__t">' + x.t + '</span><span class="pal__d">' + (x.d || "") + '</span></span><span class="pal__go" aria-hidden="true">↵</span></li>';
-      }).join("");
+      list.replaceChildren.apply(list, items.map(function (x, i) {
+        var li = el("li", "pal__it");
+        li.setAttribute("role", "option");
+        li.id = "pal-" + i;
+        li.setAttribute("aria-selected", String(i === sel));
+        li.setAttribute("data-i", String(i));
+        var mid = el("span");
+        mid.appendChild(el("span", "pal__t", x.t));
+        mid.appendChild(el("span", "pal__d", x.d || ""));
+        var go = el("span", "pal__go", "↵");
+        go.setAttribute("aria-hidden", "true");
+        li.appendChild(el("span", "pal__k", x.k));
+        li.appendChild(mid);
+        li.appendChild(go);
+        return li;
+      }));
       input.setAttribute("aria-activedescendant", "pal-0");
     }
     function setSel(i) {
