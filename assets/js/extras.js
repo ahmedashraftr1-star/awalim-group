@@ -315,8 +315,13 @@
   /* ======================================================================
      7. BLUEPRINT — draws itself as it scrolls into view
      ====================================================================== */
+  /* Where the browser can run the draw off a view() timeline it does, and this
+     stands down entirely — two drivers on one custom property would fight, and
+     the declarative one is the better driver. */
+  var nativeDraw = CSS.supports && CSS.supports("animation-timeline: view()");
   $$("[data-blueprint]").forEach(function (bp) {
     if (reduced) { bp.style.setProperty("--draw", "1"); return; }
+    if (nativeDraw) return;
     if (window.AwalimScrub) {
       AwalimScrub.add(bp, 0.88, 0.45, function (p) { bp.style.setProperty("--draw", p.toFixed(3)); }, 0.5);
     } else {

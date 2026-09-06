@@ -127,6 +127,39 @@
 .tile:hover .tile__img img { transform: scale(1.03); }
 .tile__img img { transition: transform var(--d-max) var(--ease-out); }
 
+/* 4.9 the draw, run by the browser instead of by us ----------------------
+   The blueprint and the flow are scrub animations: their whole job is to track
+   scroll position, which is what a view() timeline is for. The rAF loop that
+   set --draw every frame becomes a declaration, and extras.js checks the same
+   @supports and stands down, so the two never drive one property. Browsers
+   without the feature keep the JS path.
+
+   This is NOT a performance win, and it was expected to be one. Measured
+   paired and interleaved over 17 rounds at 4× throttle, forcing the JS arm by
+   stubbing CSS.supports rather than comparing builds: dropped frames median 6
+   against 6, native worse in 8 of 13 differing rounds — no direction — and
+   long-task time 114ms against 115ms. An earlier 7-round run said +5 and was
+   noise.
+
+   The reason the hypothesis failed is worth keeping: --draw feeds opacity and
+   stroke geometry, so style and paint still run every frame. Moving the
+   TIMELINE off the main thread does not move the WORK off it. A native
+   timeline only pays when it drives a composited property.
+
+   It stays because it is less of our code doing something the platform does,
+   and it survives with JS disabled — not because it is faster. */
+@property --draw { syntax: "<number>"; initial-value: 0; inherits: false; }
+@keyframes draw-in { from { --draw: 0; } to { --draw: 1; } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :is(.blueprint, .flow) {
+      animation: draw-in linear both;
+      animation-timeline: view();
+      animation-range: entry 15% cover 55%;
+    }
+  }
+}
+
 /* ---------- reduced motion: stop everything decorative ---------- */
 @media (prefers-reduced-motion: reduce) {
   html:focus-within { scroll-behavior: auto; }
@@ -147,7 +180,7 @@
   .post__img img, .tile__img img, .founder__img img, .btn__arrow, .cap, .frow, .hcard, .card, .pcard { transition: none; }
   .hcard:hover, .cap:hover, .frow:hover, .card--hover:hover { transform: none; }
   .cockpit__bars i, .cockpit__tick svg path { transition: none; }
-  .blueprint { --draw: 1; } .bp__flow { animation: none; }
+  :is(.blueprint, .flow) { --draw: 1; } .bp__flow { animation: none; }
   .js body { transition: none; --tint: var(--bg); }
   .ledger__beam, .ledger__doc-l, .ledger__prop, .pal__box, .verify__checks li.is-run .verify__ic, .live:not(.is-static) b::before, .ff__beam, .ff__shutter, .ff__fields > div, .js .pillnav__links, .js .pillnav__act, .js .pillnav .brand { animation: none; }
   .ff__fields > div { opacity: 1; transform: none; }
