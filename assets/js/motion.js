@@ -253,13 +253,24 @@
     var glassEls = $$(".pillnav .brand, .pillnav__links, .subnav");
     if (glassEls.length) {
       var gPrev = scrollY, gPos = 0, gEnergy = 0, gRaf = null, gIdle = 0;
-      /* The material measures the machine it is running on. Ablation showed the
-         glass costs about nine dropped frames per full-page scroll on a 4×
-         throttled CPU, spread evenly across the rim, the gradient and the
-         sweep — no single part to blame. So rather than ship a cheaper glass to
-         everyone, the sweep watches its own first second and switches itself
-         off on a device that cannot hold the frame. The blur and the rim stay;
-         only the moving part, the expensive part, goes. */
+      /* The material measures the machine it is running on.
+
+         The cost is the sweep, and only the sweep. An earlier note here said it
+         was spread evenly across the rim, the gradient and the sweep; that was
+         wrong, and wrong in an instructive way — it came from one run per
+         condition, and dropped-frame counts on this page swing between 2 and 12
+         in the SAME condition. Comparing one run to another measures how busy
+         the machine was, not the code.
+
+         Re-measured paired and interleaved, two independent sets (9 rounds and
+         15): full versus still is +3 dropped and worse in 8 of 8 rounds here,
+         +2 and 13 of 15 there — small but real. Still versus off is a median of
+         zero in both. So the rim and the gradient are not distinguishable from
+         having no glass at all, and switching off the moving part is switching
+         off the whole measurable cost. Which is what this does: the sweep
+         watches its own first 48 frames and stands down on a device that is
+         already missing them. The blur and the rim stay, because they are
+         free. */
       var gSamples = [], gLast = 0, gGaveUp = false;
       var gDowngrade = function () {
         gGaveUp = true;
