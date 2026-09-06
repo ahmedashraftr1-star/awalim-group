@@ -165,6 +165,25 @@ const IN_PAGE = () => {
     if (!name) push({ kind: "no-name", sel: sel(el), parent: sel(el.parentElement), text: el.outerHTML.replace(/\s+/g, " ").slice(0, 58), got: "interactive element a screen reader cannot announce" });
   }
 
+  /* 6. a skipped heading level leaves a hole in the document outline that a
+     screen reader user navigating by heading falls straight through */
+  let prevLevel = 0;
+  for (const h of document.querySelectorAll("h1,h2,h3,h4,h5,h6")) {
+    if (!painted(h, getComputedStyle(h)) || h.closest("[aria-hidden=true],[hidden]")) continue;
+    const lvl = +h.tagName[1];
+    if (prevLevel && lvl > prevLevel + 1)
+      push({ kind: "heading-skip", sel: sel(h), parent: `after h${prevLevel}`, text: (h.textContent || "").trim().slice(0, 40), got: `h${prevLevel} is followed by h${lvl}` });
+    prevLevel = lvl;
+  }
+
+  /* 7. no alt ATTRIBUTE at all — alt="" is a valid mark of a decorative image,
+     its absence makes a screen reader read the file name instead */
+  for (const img of document.querySelectorAll("img")) {
+    if (img.closest("[aria-hidden=true],[hidden]")) continue;
+    if (!img.hasAttribute("alt"))
+      push({ kind: "img-alt", sel: sel(img), parent: sel(img.parentElement), text: (img.getAttribute("src") || "").slice(-46), got: 'no alt attribute (alt="" is how a decorative image is marked)' });
+  }
+
   /* an object, not the array with a property hung off it: page.evaluate
      serialises arrays by index and drops everything else, so `examined` never
      arrived — the check caught its own first draft. The count is returned so
@@ -407,7 +426,7 @@ if (transients.length) {
   console.log(`\n· ${transients.length} transient measurement(s) dropped — seen once, gone on re-measure, so not reported:`);
   for (const t of transients) console.log("  " + t);
 }
-for (const kind of ["instrumentation", "emulation", "security", "stylesheet", "csp", "unsettled", "duplicate-id", "dangling-ref", "no-name", "contrast", "clipped", "target"]) {
+for (const kind of ["instrumentation", "emulation", "security", "stylesheet", "csp", "unsettled", "duplicate-id", "dangling-ref", "no-name", "heading-skip", "img-alt", "contrast", "clipped", "target"]) {
   const list = all.filter((f) => f.kind === kind);
   if (!list.length) continue;
   console.log(`\n✖ ${kind} — ${list.length} instances`);
@@ -417,4 +436,4 @@ for (const kind of ["instrumentation", "emulation", "security", "stylesheet", "c
     console.log(`  ${String(l.length).padStart(3)}×  ${key}  →  ${l[0].got}   [${l[0].route}]`);
 }
 if (all.length) { console.log(`\n✖ render audit: ${all.length} findings across ${only.length} routes`); process.exit(1); }
-console.log(`✔ render audit clean — ${only.length} routes × light/dark/mobile/reduced-transparency: CSP, contrast, clipped text, target size, duplicate ids, dangling aria refs, accessible names`);
+console.log(`✔ render audit clean — ${only.length} routes × light/dark/mobile/reduced-transparency: CSP, contrast, clipped text, target size, duplicate ids, dangling aria refs, accessible names, heading order, image alt`);
