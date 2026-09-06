@@ -384,6 +384,7 @@ const worker = async () => {
           return { items, summary: out ? out.className : "", settled: out ? /\bis-(ok|bad)\b/.test(out.className) : false };
         });
         if (verdict.error) all.push({ route: r, theme, width, rt, kind: "security", sel: "[data-sec]", parent: "—", text: verdict.error, got: "the self-attack page could not be driven" });
+        else if (!verdict.items.length) all.push({ route: r, theme, width, rt, kind: "instrumentation", sel: "security.js", parent: "—", text: "the probe list was never built", got: "the page's own script did not run — check the server is still up, not the policy" });
         else if (!verdict.settled) all.push({ route: r, theme, width, rt, kind: "security", sel: "[data-sec-out]", parent: "—", text: "probes never reported a verdict", got: `${verdict.items.filter((i) => i.ok || i.bad).length}/${verdict.items.length} settled` });
         else {
           if (verdict.items.length < 5) all.push({ route: r, theme, width, rt, kind: "security", sel: ".seccheck", parent: "—", text: "fewer probes than expected", got: `${verdict.items.length} (want 5)` });
