@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة تحكّم عوالِم</title>
+<style>
+  :root{--bg:#0E0E10;--panel:#151518;--line:#26262C;--fg:#F2F2EF;--dim:#9A9AA4;--acc:#2FC4B4;--acc-ink:#0A1A18;--warn:#F0B84A;--bad:#F0736A;--r:12px}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.6 "IBM Plex Sans Arabic",system-ui,sans-serif;background:var(--bg);color:var(--fg);height:100vh;display:grid;grid-template-columns:280px 1fr}
+  aside{background:var(--panel);border-inline-end:1px solid var(--line);padding:18px;overflow:auto}
+  h1{font-size:15px;margin:0 0 4px;letter-spacing:.01em}
+  .sub{color:var(--dim);font-size:12px;margin-bottom:18px}
+  .grp{margin-block:16px 6px;font-size:11px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+  button,.b{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--fg);padding:8px 12px;transition:background .15s,border-color .15s}
+  button:hover{border-color:var(--acc);background:#ffffff08}
+  .nav button{display:block;width:100%;text-align:start;margin-bottom:4px;border-color:transparent}
+  .nav button.on{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:600}
+  .nav button .tag{float:inline-end;font-size:11px;opacity:.75}
+  main{display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
+  header{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;justify-content:space-between}
+  header h2{margin:0;font-size:16px}
+  .wrap{overflow:auto;padding:22px}
+  textarea{width:100%;height:100%;min-height:60vh;background:#0B0B0D;color:#DDE;border:1px solid var(--line);border-radius:var(--r);padding:14px;font:13px/1.7 "IBM Plex Mono",ui-monospace,monospace;direction:ltr;text-align:left;resize:vertical}
+  footer{padding:12px 22px;border-top:1px solid var(--line);display:flex;gap:12px;align-items:center;justify-content:space-between;font-size:13px}
+  .save{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:600}
+  .msg{color:var(--dim)}.msg.ok{color:var(--acc)}.msg.bad{color:var(--bad)}.msg.warn{color:var(--warn)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+  .card h3{margin:0 0 4px;font-size:14px}.card p{margin:0 0 12px;color:var(--dim);font-size:13px}
+  .row{display:grid;grid-template-columns:1fr 130px 120px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:0}
+  input[type=text],input[type=number]{font:inherit;background:#0B0B0D;color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;width:100%;direction:ltr;text-align:left}
+  .flag{font-size:12px;padding:3px 8px;border-radius:999px;border:1px solid}
+  .flag.no{color:var(--warn);border-color:#F0B84A55;background:#F0B84A12}
+  .flag.yes{color:var(--acc);border-color:#2FC4B455;background:#2FC4B412}
+  .empty{color:var(--warn);font-size:13px;padding:10px;border:1px dashed #F0B84A44;border-radius:10px;background:#F0B84A0A}
+</style>
+</head>
+<body>
+<aside>
+  <h1>لوحة تحكّم عوالِم</h1>
+  <div class="sub">محلّية · لا تُنشر · 127.0.0.1</div>
+  <div class="grp">يحتاج قرارك</div>
+  <div class="nav" id="navTask"></div>
+  <div class="grp">ملفات المحتوى</div>
+  <div class="nav" id="navFiles"></div>
+</aside>
+<main>
+  <header><h2 id="title">…</h2><button id="rebuild">أعد البناء</button></header>
+  <div class="wrap" id="wrap"></div>
+  <footer><span class="msg" id="msg">جاهز</span><button class="save" id="save">احفظ وابنِ</button></footer>
+</main>
+<script type="module">
+const $ = (s) => document.querySelector(s);
+const api = async (u, o) => (await fetch(u, o)).json();
+let current = null, mode = "file";
+
+const setMsg = (t, k = "") => { const m = $("#msg"); m.textContent = t; m.className = "msg " + k; };
+
+/* ── the five things that have been waiting on the owner ───────────────── */
+const TASKS = [
+  { id: "stats",  label: "الأرقام العامّة",     file: "site.json",    tag: "" },
+  { id: "proof",  label: "الدليل — شعارات وشهادات", file: "site.json", tag: "" },
+  { id: "arch",   label: "معماريّة المشاريع",   file: "cases.json",   tag: "" }
+];
+
+async function loadFile(rel) {
+  const d = await api("/api/file/" + encodeURIComponent(rel));
+  return { rel, text: d.text, data: JSON.parse(d.text) };
+}
+
+async function openFile(rel) {
+  mode = "file";
+  current = await loadFile(rel);
+  $("#title").textContent = rel;
+  $("#wrap").innerHTML = "";
+  const ta = document.createElement("textarea");
+  ta.id = "editor"; ta.value = current.text; ta.spellcheck = false;
+  $("#wrap").appendChild(ta);
+  setMsg("محرّر خام — يُتحقّق من صحّته قبل الحفظ");
+  paintNav();
+}
+
+/* stats view: the numbers, and which of them the owner has confirmed */
+async function openStats() {
+  mode = "stats";
+  current = await loadFile("site.json");
+  $("#title").textContent = "الأرقام العامّة — موقّعة تشفيريّاً عند البناء";
+  const stats = current.data.stats || {};
+  const w = $("#wrap"); w.innerHTML = "";
+  const card = document.createElement("div"); card.className = "card";
+  card.innerHTML = "<h3>كل رقم هنا يُوقَّع ويُنشر على /verify</h3><p>الرقم غير المؤكَّد يبقى منشوراً وموقَّعاً — التوقيع يُثبت أنه لم يُغيَّر، لا أنه صحيح. علّم ما تأكّدت منه بنفسك.</p>";
+  for (const [k, s] of Object.entries(stats)) {
+    if (!s || typeof s !== "object" || s.value === undefined) continue;
+    const row = document.createElement("div"); row.className = "row";
+    const lab = document.createElement("div"); lab.textContent = s.label || k;
+    const inp = document.createElement("input"); inp.type = "number"; inp.value = s.value; inp.dataset.k = k;
+    const flag = document.createElement("span");
+    const ok = s.confirmed === true;
+    flag.className = "flag " + (ok ? "yes" : "no");
+    flag.textContent = ok ? "مؤكَّد ✓" : "غير مؤكَّد";
+    flag.style.cursor = "pointer";
+    flag.onclick = () => { stats[k].confirmed = !(stats[k].confirmed === true); openStats(); };
+    inp.oninput = () => { stats[k].value = Number(inp.value); };
+    row.append(lab, inp, flag); card.appendChild(row);
+  }
+  w.appendChild(card);
+  setMsg("اضغط على الشارة لتبديل التأكيد");
+  paintNav();
+}
+
+/* proof view: the slots that are empty and have been all along */
+async function openProof() {
+  mode = "proof";
+  current = await loadFile("site.json");
+  const d = current.data;
+  d.proof = d.proof || { clients: [], testimonials: [] };
+  $("#title").textContent = "الدليل — شعارات العملاء والشهادات";
+  const w = $("#wrap"); w.innerHTML = "";
+
+  const mk = (title, note, arr, fields, adder) => {
+    const c = document.createElement("div"); c.className = "card";
+    const h = document.createElement("h3"); h.textContent = title;
+    const p = document.createElement("p"); p.textContent = note;
+    c.append(h, p);
+    if (!arr.length) { const e = document.createElement("div"); e.className = "empty";
+      e.textContent = "فارغ — ولن يُخترع. أضف ما هو حقيقي فقط."; c.appendChild(e); }
+    arr.forEach((item, i) => {
+      const row = document.createElement("div"); row.className = "row";
+      row.style.gridTemplateColumns = fields.map(() => "1fr").join(" ") + " 80px";
+      for (const f of fields) {
+        const inp = document.createElement("input"); inp.type = "text"; inp.placeholder = f.ph;
+        inp.value = item[f.k] || ""; inp.oninput = () => { item[f.k] = inp.value; };
+        row.appendChild(inp);
+      }
+      const del = document.createElement("button"); del.textContent = "احذف";
+      del.onclick = () => { arr.splice(i, 1); openProof(); };
+      row.appendChild(del); c.appendChild(row);
+    });
+    const add = document.createElement("button"); add.textContent = "+ أضف";
+    add.onclick = () => { arr.push(adder()); openProof(); };
+    c.appendChild(add);
+    return c;
+  };
+
+  w.appendChild(mk("شعارات العملاء", "الاسم كما يكتبه العميل، ومسار الشعار داخل assets/img.",
+    d.proof.clients, [{ k: "name", ph: "اسم العميل" }, { k: "logo", ph: "/assets/img/clients/x.svg" }],
+    () => ({ name: "", logo: "" })));
+  w.appendChild(mk("شهادات", "اقتباس واسم وصفة. لا تُنشر شهادة لم تُقَل.",
+    d.proof.testimonials, [{ k: "quote", ph: "الاقتباس" }, { k: "name", ph: "الاسم" }, { k: "role", ph: "الصفة" }],
+    () => ({ quote: "", name: "", role: "" })));
+  setMsg("الخانات الفارغة تبقى فارغة في الموقع — لا شيء يُخترع");
+  paintNav();
+}
+
+/* architecture: the data the drawn diagrams are waiting for */
+async function openArch() {
+  mode = "arch";
+  current = await loadFile("cases.json");
+  const cases = current.data.cases || current.data;
+  $("#title").textContent = "معماريّة المشاريع — تُرسم آليّاً حين تُملأ";
+  const w = $("#wrap"); w.innerHTML = "";
+  const intro = document.createElement("div"); intro.className = "card";
+  intro.innerHTML = "<h3>أداة الرسم جاهزة وتنتظر بيانات</h3><p>اكتب طبقات المشروع من الأعلى إلى الأسفل، واحدة في كل سطر: الاسم ثم شرطة ثم وصف قصير. تُرسم مخطّطاً على صفحة المشروع.</p>";
+  w.appendChild(intro);
+  for (const c of cases) {
+    const card = document.createElement("div"); card.className = "card";
+    const h = document.createElement("h3"); h.textContent = c.title || c.slug;
+    card.appendChild(h);
+    const ta = document.createElement("textarea");
+    ta.style.minHeight = "110px";
+    ta.placeholder = "الواجهة — Flutter، منصّة واحدة\nالخدمات — Node، عقود مشتركة\nالبيانات — PostgreSQL، هجرات قابلة للتراجع";
+    ta.value = (c.arch || []).map((l) => `${l.t} — ${l.d || ""}`.trim()).join("\n");
+    ta.oninput = () => {
+      c.arch = ta.value.split("\n").map((s) => s.trim()).filter(Boolean).map((s) => {
+        const [t, ...rest] = s.split("—"); return { t: t.trim(), d: rest.join("—").trim() };
+      });
+      if (!c.arch.length) delete c.arch;
+    };
+    card.appendChild(ta); w.appendChild(card);
+  }
+  setMsg("اترك المشروع فارغاً إن لم تكن معماريّته جاهزة");
+  paintNav();
+}
+
+function paintNav() {
+  const t = $("#navTask"); t.innerHTML = "";
+  for (const task of TASKS) {
+    const b = document.createElement("button");
+    b.textContent = task.label;
+    b.className = mode === task.id ? "on" : "";
+    b.onclick = { stats: openStats, proof: openProof, arch: openArch }[task.id];
+    t.appendChild(b);
+  }
+}
+
+async function save() {
+  if (!current) return;
+  const text = mode === "file" ? $("#editor").value : JSON.stringify(current.data, null, 2);
+  setMsg("يُحفظ ويُعاد البناء…", "warn");
+  const r = await api("/api/file/" + encodeURIComponent(current.rel), {
+    method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ text })
+  });
+  if (r.error) return setMsg("✖ " + r.error + (r.detail ? " — " + r.detail.split("\n")[0] : ""), "bad");
+  setMsg("✓ حُفظ وبُني · " + (r.built || "").split("\n").pop(), "ok");
+}
+
+$("#save").onclick = save;
+$("#rebuild").onclick = async () => { setMsg("يُبنى…", "warn"); const r = await api("/api/build", { method: "POST" });
+  setMsg(r.ok ? "✓ " + r.out.split("\n").pop() : "✖ " + r.err.split("\n")[0], r.ok ? "ok" : "bad"); };
+
+const files = (await api("/api/files")).files;
+const nf = $("#navFiles");
+for (const f of files) {
+  const b = document.createElement("button");
+  b.textContent = f;
+  b.onclick = () => openFile(f).then(paintNav);
+  nf.appendChild(b);
+}
+paintNav();
+openStats();
+</script>
+</body>
+</html>

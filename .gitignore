@@ -9,3 +9,4 @@ test-results/
 # Claude Code tooling — NOT part of the site.
 .claude/
 CLAUDE.md
+.panel-backups/
