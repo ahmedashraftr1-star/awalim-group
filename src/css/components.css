@@ -811,3 +811,12 @@ body.pal-open { overflow: hidden; }
   opacity: .85;
 }
 :root[data-theme="dark"] .hcard::after { background: radial-gradient(220px 180px at 100% 0%, color-mix(in srgb, var(--d-accent, var(--accent)) 18%, transparent), transparent 70%); }
+
+/* the drawn flow shares the blueprint's ink and its scroll-draw */
+.flow { margin: 0; --draw: 0; }
+.flow .bp__el { --n: inherit; }
+/* the index appears with its own box, not before it */
+.flow .flow__i { opacity: var(--p); }
+.flow svg { inline-size: 100%; block-size: auto; overflow: visible; }
+.flow__i { font-family: var(--font-mono); font-size: 11px; fill: var(--accent-text); letter-spacing: .08em; }
+@media (max-width: 760px) { .flow svg { min-inline-size: 620px; } .flow { overflow-x: auto; -webkit-mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent); } }

@@ -279,6 +279,47 @@ export const standardsGrid = (list, live = {}) => `
 export const live = (key, label) => `<span class="live" data-audit="${key}" title="${esc(label)}"><span class="live__l">${esc(label)}</span><b>—</b></span>`;
 
 /* ---------- system blueprint (drawn on scroll) ---------- */
+/** A drawn flow, scroll-revealed like the blueprint but driven by content.
+    The reference sites carry 137 and 231 SVG figures against this site's 27,
+    and for a company that sells system engineering a drawing is the native
+    language — but only where the thing drawn is true. This renders from data,
+    so a diagram cannot drift from the words beside it, and there is no
+    hand-drawn architecture anywhere claiming to be a client's. */
+export const flow = ({ steps, label = "" }) => {
+  const W = 880, H = 150, gap = W / steps.length;
+  const N = steps.length * 2;
+  const k = (i) => ` style="--k:${(i / N).toFixed(3)}"`;
+  const nodes = steps.map((st, i) => {
+    const cx = gap * i + gap / 2;
+    return `
+      <g class="bp__el flow__n"${k(i * 2)}>
+        <rect class="bp__box" x="${cx - gap / 2 + 12}" y="34" width="${gap - 24}" height="74" rx="16" pathLength="1"/>
+        <rect class="bp__fill" x="${cx - gap / 2 + 12}" y="34" width="${gap - 24}" height="74" rx="16"/>
+        <text class="flow__i" x="${cx}" y="26" text-anchor="middle">${esc(st.n || String(i + 1).padStart(2, "0"))}</text>
+        <text class="bp__t" x="${cx}" y="66" text-anchor="middle">${esc(st.t)}</text>
+        <text class="bp__d" x="${cx}" y="90" text-anchor="middle">${esc(st.d || "")}</text>
+      </g>`;
+  }).join("");
+  /* the connectors are drawn right-to-left so the flow reads with the language */
+  const links = steps.slice(1).map((_, i) => {
+    const x1 = gap * i + gap - 12, x2 = gap * (i + 1) + 12;
+    return `
+      <g class="bp__el"${k(i * 2 + 1)}>
+        <line class="bp__line" x1="${x1}" y1="71" x2="${x2}" y2="71" pathLength="1"/>
+        <line class="bp__flow" x1="${x1}" y1="71" x2="${x2}" y2="71" pathLength="1"/>
+      </g>`;
+  }).join("");
+  /* --n is the stage count the draw is divided into; .bp__el reads it to work
+     out when each element's turn comes, and it is not 9 here as it is for the
+     blueprint */
+  return `<figure class="flow rv" data-blueprint style="--n:${N}"${label ? ` aria-label="${esc(label)}"` : ""}>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label || steps.map((x) => x.t).join(" ← "))}" preserveAspectRatio="xMidYMid meet">
+      ${links}${nodes}
+    </svg>
+    <figcaption class="sr-only">${esc(steps.map((x, i) => `${i + 1}. ${x.t}${x.d ? ": " + x.d : ""}`).join(" "))}</figcaption>
+  </figure>`;
+};
+
 export const blueprint = () => {
   const layers = [
     { y: 24,  t: "الواجهة — عربية من الجذر",        d: "RTL أصلي · وصولية AA · ميزانية أداء" },

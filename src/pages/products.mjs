@@ -69,6 +69,15 @@ export function renderProduct(ctx, p) {
     p.film ? C.film(p.film) : "",
     p.moments ? C.moments(p.moments, stats) : "",
 
+    /* drawn only where the drawing is true — this flow is the live demo's own
+       sequence, not an illustration invented for the page */
+    p.flow ? `<section class="sec sec--alt" id="flow">
+      <div class="wrap wrap--wide">
+        ${C.sectionHead({ eyebrowAr: p.flow.eyebrow, eyebrowEn: "THE PATH", h: p.flow.h, lede: p.flow.lede })}
+        ${C.flow({ steps: p.flow.steps, label: p.flow.h })}
+      </div>
+    </section>` : "",
+
     `<section class="sec sec--tight">
       <div class="wrap wrap--wide">
         <div class="indexed">
