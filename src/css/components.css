@@ -770,3 +770,44 @@ body.pal-open { overflow: hidden; }
 /* set by motion.js when the device could not hold the frame — the sweep and its
    layer go, the glass itself stays */
 :root[data-glass="still"] :is(.pillnav .brand, .pillnav__links, .subnav)::after { display: none; }
+
+/* ---------- craft layer: edges, bloom, corner light ----------
+   Measured against linear.app, stripe.com/billing and apple.com/macbook-pro:
+   they carry 22, 3 and 7 masks and 53, 4 and 0 filters. This site carried none
+   of either. What those three actually do with them is narrow and cheap —
+   gradient masks so edges dissolve instead of being cut, and a coloured
+   drop-shadow bloom so an element sits in its own light. Both are static: no
+   per-frame cost, nothing for the compositor to redo while you scroll. */
+
+/* 1. Rails fade at their edges instead of being guillotined. The marquee
+      already did this; every other horizontal scroller was a hard cut. */
+@media (max-width: 899px) {
+  .pcards, .page-home .posts {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent);
+  }
+}
+.tbl-wrap {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent);
+}
+/* once it is scrolled to the end there is nothing left to hint at */
+.tbl-wrap:not(:hover) { mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent); }
+
+/* 2. The hero card's glow takes the card's OWN accent. The surface stays the
+      neutral --surface-2 it has always been — that restraint is deliberate and
+      is not being undone here. Only the light it sits in becomes its own. Four
+      products carried four accents and rendered one; this is the half of that
+      which does not cost the composition. */
+.hcard::before { background: radial-gradient(60% 50% at var(--gx, 85%) 0%, color-mix(in srgb, var(--l-accent, var(--card-accent)) 26%, transparent), transparent 70%); }
+:root[data-theme="dark"] .hcard::before { background: radial-gradient(60% 50% at var(--gx, 85%) 0%, color-mix(in srgb, var(--d-accent, var(--card-accent)) 22%, transparent), transparent 72%); }
+
+/* 3. Corner light — a soft radial at the leading corner so the card reads as
+      lit from somewhere rather than filled. Linear's signature move. */
+.hcard::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(220px 180px at 100% 0%, color-mix(in srgb, var(--l-accent, var(--accent)) 15%, transparent), transparent 70%);
+  opacity: .85;
+}
+:root[data-theme="dark"] .hcard::after { background: radial-gradient(220px 180px at 100% 0%, color-mix(in srgb, var(--d-accent, var(--accent)) 18%, transparent), transparent 70%); }
