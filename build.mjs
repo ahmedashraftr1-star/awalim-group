@@ -176,7 +176,9 @@ const criticalRaw = ["tokens.css", "base.css"].map((f) => readFileSync(join(cssD
 const css = "/* عوالِم قروب — built from src/css/*.css · do not edit by hand */\n" + minify(rawCss);
 const criticalCss = minify(criticalRaw);
 write("assets/css/awalim.css", css);
-const buildStamp = createHash("sha256").update(css + readFileSync(join(ROOT, "assets/js/awalim.js"), "utf8") + readFileSync(join(ROOT, "assets/js/motion.js"), "utf8") + readFileSync(join(ROOT, "assets/js/extras.js"), "utf8")).digest("hex").slice(0, 8);
+const jsForStamp = ["awalim.js", "motion.js", "extras.js"].map((f) => readFileSync(join(ROOT, "assets/js", f), "utf8")).join("");
+let buildStamp = createHash("sha256").update(css + jsForStamp).digest("hex").slice(0, 8);
+let cssBytes = css.length, criticalBytes = criticalCss.length;
 setBuild(criticalCss, buildStamp);
 
 /* ---------- templates ---------- */
@@ -320,6 +322,12 @@ function localize(html, path, loc) {
    application/ld+json is data, not executed, and is not hashed. */
 const inlineHashes = new Set();
 const INLINE_SCRIPT_RE = /<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/g;
+const inlineStyleHashes = new Set();
+const INLINE_STYLE_RE = /<style>([\s\S]*?)<\/style>/g;
+function collectInlineStyles(html) {
+  for (const [, body] of html.matchAll(INLINE_STYLE_RE))
+    inlineStyleHashes.add(`'sha256-${createHash("sha256").update(body, "utf8").digest("base64")}'`);
+}
 function collectInlineScripts(html) {
   for (const [, attrs, body] of html.matchAll(INLINE_SCRIPT_RE)) {
     if (/type\s*=\s*["']?application\/ld\+json/i.test(attrs)) continue;
@@ -329,7 +337,9 @@ function collectInlineScripts(html) {
 const cspPolicy = () => [
   "default-src 'self'",
   `script-src 'self' ${[...inlineHashes].sort().join(" ")}`,
-  "style-src 'self' 'unsafe-inline'",
+  /* no 'unsafe-inline': every former style="" attribute is a generated class
+     now, and the one inline <style> block is the critical CSS, hashed below */
+  `style-src 'self' ${[...inlineStyleHashes].sort().join(" ")}`,
   "img-src 'self' data:",
   "font-src 'self'",
   "connect-src 'self'",
@@ -346,17 +356,66 @@ const cspPolicy = () => [
   "upgrade-insecure-requests"
 ].join("; ");
 
+/* ---------- inline style attributes → generated classes ----------
+   Every style="" on this site is generated from our own content and draws from
+   a bounded set — 74 distinct values across all 72 pages: stagger indices, the
+   theme variable blocks, per-slug view-transition names, mock positions, bar
+   heights. Emitting them as classes is what lets the CSP drop
+   `style-src 'unsafe-inline'`, which was the last weakness in the policy.
+
+   It needs two passes because the dependency is circular: the class block has
+   to be inside the critical CSS that gets inlined into the very pages the
+   values are collected from. Pass one renders and is thrown away; pass two
+   renders again against the finished stylesheet and is what gets written.
+   Rendering is string templating, so the throwaway pass is cheap. */
+const styleValues = new Set();
+const styleClass = (v) => "s" + createHash("sha256").update(v).digest("hex").slice(0, 7);
+/* only ever rewrites a tag opening — a quoted attribute value can contain > */
+const TAG_WITH_STYLE = /<([a-z][a-z0-9-]*)((?:[^>"']|"[^"]*"|'[^']*')*?)\sstyle="([^"]*)"((?:[^>"']|"[^"]*"|'[^']*')*)>/gi;
+const collectStyles = (html) => { for (const [, , , v] of html.matchAll(TAG_WITH_STYLE)) styleValues.add(v); };
+const stylesToClasses = (html) => html.replace(TAG_WITH_STYLE, (m, tag, pre, val, post) => {
+  const cls = styleClass(val);
+  const rest = pre + post;
+  return /\sclass="/.test(rest)
+    ? `<${tag}${rest.replace(/\sclass="([^"]*)"/, (mm, c) => ` class="${c} ${cls}"`)}>`
+    : `<${tag} class="${cls}"${rest}>`;
+});
+
+function eachPage(fn) {
+  for (const loc of LOCALES) {
+    const c = loc.code === "ar" ? ctx : buildCtx(loc.code);
+    if (loc.code !== "ar") { c.signing = signing; c.routesCount = ctx.routesCount; }
+    for (const r of renderAll(c)) {
+      if (loc.code === "ar") recordEyebrows(r.html, r.path);
+      fn(localize(r.html, r.path, loc), r, loc);
+    }
+  }
+}
+
+/* pass one: discover the style values, keep nothing */
+eachPage((html) => collectStyles(html));
+
+/* fold the generated classes into both the full sheet and the critical inline
+   copy, then re-stamp — the stamp must cover what the page actually links to */
+{
+  const block = [...styleValues].sort().map((v) => `.${styleClass(v)}{${v}}`).join("");
+  const withClasses = css + "\n/* generated: former inline style attributes */\n" + block;
+  write("assets/css/awalim.css", withClasses);
+  buildStamp = createHash("sha256").update(withClasses + jsForStamp).digest("hex").slice(0, 8);
+  setBuild(criticalCss + block, buildStamp);
+  cssBytes = withClasses.length;
+  criticalBytes = (criticalCss + block).length;
+}
+
 /* ---------- write pages, per locale ---------- */
 let count = 0;
 const allRoutes = [];
 const leftovers = [];
-for (const loc of LOCALES) {
-  const c = loc.code === "ar" ? ctx : buildCtx(loc.code);
-  if (loc.code !== "ar") { c.signing = signing; c.routesCount = ctx.routesCount; }
-  for (const r of renderAll(c)) {
-    if (loc.code === "ar") recordEyebrows(r.html, r.path);
-    const html = localize(r.html, r.path, loc);
+{
+  eachPage((rendered, r, loc) => {
+    const html = stylesToClasses(rendered);
     collectInlineScripts(html);
+    collectInlineStyles(html);
     const full = `${loc.prefix}${r.path}`;
     const out = full === "/" ? "index.html" : full === "/404" ? "404.html" : `${full.replace(/^\//, "")}/index.html`;
     write(out, html);
@@ -372,7 +431,7 @@ for (const loc of LOCALES) {
       const hits = [...new Set((body.match(/[\u0600-\u06FF][\u0600-\u06FF\s،؛؟«»\-—·:,.\d]*/g) || []).map((x) => x.trim()).filter((x) => x.length > 1))];
       if (hits.length) leftovers.push(`${full}: ${hits.slice(0, 6).join(" | ")}`);
     }
-  }
+  });
 }
 if (leftovers.length) {
   console.warn(`⚠ ${leftovers.length} English page(s) still contain Arabic — add the strings to src/content/i18n.json or src/content/en/*.json:`);
@@ -517,4 +576,4 @@ write("_headers", [
 /* ---------- routes manifest (used by tests / OG generator) ---------- */
 write("src/routes.json", JSON.stringify(allRoutes, null, 2));
 
-console.log(`✔ built ${count} pages (${LOCALES.length} locales) · css ${(css.length / 1024).toFixed(1)}KB (critical ${(criticalCss.length / 1024).toFixed(1)}KB inline) · build ${buildStamp} · ${new Date().toLocaleTimeString("en-GB")}`);
+console.log(`✔ built ${count} pages (${LOCALES.length} locales) · css ${(cssBytes / 1024).toFixed(1)}KB (critical ${(criticalBytes / 1024).toFixed(1)}KB inline) · build ${buildStamp} · ${new Date().toLocaleTimeString("en-GB")}`);
