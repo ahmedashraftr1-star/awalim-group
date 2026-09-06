@@ -13,6 +13,21 @@
 .brand__name { font-weight: var(--w-bold); font-size: 1rem; white-space: nowrap; }
 .brand__sub { font-family: var(--font-latin); font-stretch: 112%; font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--text-muted); }
 
+/* The header is a set of floating pills over the page. The wordmark was the one
+   member without a backdrop, so it collided with — and disappeared into — dark
+   sections scrolling beneath it. It now carries the same glass as the links. */
+.pillnav .brand {
+  gap: var(--space-2);
+  padding-block: 5px; padding-inline: 5px var(--space-3);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  box-shadow: var(--shadow-pill);
+  transition: background-color var(--d-base) ease;
+}
+.pillnav[data-stuck="true"] .brand { background: color-mix(in srgb, var(--surface) 88%, transparent); }
+
 .pillnav__links {
   justify-self: center; display: flex; align-items: center; gap: 2px;
   padding: 8px; border-radius: var(--r-pill);
@@ -38,6 +53,7 @@
 /* compact nav between tablet-landscape and desktop: keep the mark, drop the wordmark and the ⌘K hint */
 @media (max-width: 1200px) and (min-width: 961px) {
   .pillnav .brand__txt { display: none; }
+  .pillnav .brand { padding-inline: 5px; }
   .pillnav__links a { padding: 8px 12px; font-size: var(--fs-xs); }
   .pal-btn kbd { display: none; }
   .pal-btn { inline-size: 42px; padding: 0; }
@@ -238,7 +254,7 @@
 .cockpit { padding: clamp(var(--space-4), 1.6vw, var(--space-5)); display: grid; gap: var(--space-3); background: var(--surface); }
 .cockpit__kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
 .cockpit__kpi { padding: var(--space-3); border-radius: var(--r-sm); background: var(--surface-2); border: 1px solid var(--border); min-width: 0; }
-.cockpit__kpi span { display: block; font-size: var(--fs-xs); color: var(--text-muted); }
+.cockpit__kpi > span { display: block; font-size: var(--fs-xs); color: var(--text-muted); }
 .cockpit__kpi b { display: block; font-size: clamp(.95rem, 1.3vw, 1.15rem); font-weight: var(--w-semibold); margin-block-start: var(--space-1); direction: ltr; text-align: end; white-space: nowrap; }
 .cockpit__kpi--acc b { color: var(--accent-text); }
 .cockpit__bars { display: flex; align-items: flex-end; gap: 5px; block-size: 64px; padding-block-start: var(--space-1); }

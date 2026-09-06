@@ -47,10 +47,20 @@
 
   /* scale (section 3.1). display-hero was specified at 9vw; Arabic lines of
      ~24 glyphs must still fit 1280px, so the fluid term is 7vw — max 7.5rem. */
-  --fs-hero:  clamp(2.5rem, 6.3vw, 6.75rem);   /* Alexandria runs ~12% wider than Plex */
-  --fs-d1:    clamp(2.25rem, 5vw, 5.25rem);
-  --fs-d2:    clamp(1.6rem, 3.2vw, 3rem);
-  --fs-h3:    clamp(1.25rem, 2vw, 1.75rem);
+  /* One scale, one ratio. The display steps sit a consistent √2 apart
+     (68 / 48 / 34 / 24 at a 1440 viewport) and the text steps ~1.2 apart, so
+     the jump from a heading to the words under it reads the same everywhere.
+     They also CAP: display used to grow on vw with nothing to stop it while
+     body stayed fixed, so a section heading ran 3.8× the body at 1280 and
+     5.6× at 1920 — the same page, a different typography. Each display step
+     now stops growing around 1530px and the ratio holds — mins, vw slopes and
+     caps are all one √2 step apart, or the scale would come apart again at
+     whichever width a cap happened to bite first. Mobile deliberately
+     compresses the hierarchy; a phone does not want a 4.7vw hero. */
+  --fs-hero:  clamp(2.25rem, 4.70vw, 4.5rem);  /* Alexandria runs ~12% wider than Plex */
+  --fs-d1:    clamp(1.90rem, 3.32vw, 3.2rem);
+  --fs-d2:    clamp(1.50rem, 2.35vw, 2.25rem);
+  --fs-h3:    clamp(1.20rem, 1.66vw, 1.6rem);
   --fs-lg:    1.25rem;
   --fs-body:  1.0625rem;
   --fs-sm:    .9375rem;
@@ -143,7 +153,10 @@
 }
 
 /* ---- wide screens: Apple-scale display ---- */
-@media (min-width: 1700px) { :root { --fs-hero: clamp(2.5rem, 6.3vw, 8rem); --fs-d1: clamp(2.25rem, 5vw, 6rem); } }
+/* Wide screens get a little more display, not a different page: every step
+   moves by the same factor so the ratio survives, and none of them returns to
+   the old 8rem that turned a section heading into a billboard. */
+@media (min-width: 1700px) { :root { --fs-hero: 5rem; --fs-d1: 3.55rem; --fs-d2: 2.5rem; --fs-h3: 1.78rem; } }
 
 /* ---- prefers-contrast: more — heavier hairlines and captions ---- */
 @media (prefers-contrast: more) {
