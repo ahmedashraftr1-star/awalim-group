@@ -362,7 +362,17 @@ const worker = async () => {
         }
       }, "*,*::before,*::after{transition:none!important;animation-duration:0s!important;animation-delay:0s!important;}");
       /* the freeze has to be proven, not attempted: if the injection stops
-         working the audit would measure a moving page and still report clean */
+         working the audit would measure a moving page and still report clean.
+         Note what it does NOT freeze: a scroll-driven animation is progress-
+         based, so animation-duration:0 does nothing to it and finish() throws.
+         Every context here sets reducedMotion, which suppresses the view()
+         timelines entirely, so the page really is still — measured: 0 running
+         animations at that point, against 25 with motion enabled. That leaves
+         the fully-drawn state unaudited, which was checked rather than assumed:
+         forcing --draw:1 across / and /products in both locales changes page
+         height by 1-2px, no overflow and no box changes, because --draw moves a
+         stroke and not a layout. If it ever drives geometry, this needs a
+         drawn-state configuration. */
       const frozen = await page.evaluate(() => {
         const el = document.querySelector(".btn, a, p") || document.body;
         return getComputedStyle(el).transitionDuration.split(",").every((d) => parseFloat(d) === 0);
