@@ -7,7 +7,7 @@
    The cache name carries the build stamp; activating a new build drops
    every older cache.
    ========================================================================== */
-const VERSION = "awalim-29ae6853";
+const VERSION = "awalim-7e8c6afc";
 const OFFLINE = "/offline";
 const OFFLINE_EN = "/en/offline";
 const PRECACHE = [OFFLINE, OFFLINE_EN, "/assets/css/awalim.css", "/assets/js/awalim.js", "/assets/js/motion.js", "/assets/js/extras.js", "/assets/vendor/lenis.min.js", "/assets/img/awalim-mark.webp"];

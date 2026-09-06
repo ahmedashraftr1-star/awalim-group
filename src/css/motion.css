@@ -55,7 +55,15 @@
 [data-count] { font-variant-numeric: tabular-nums; }
 
 /* 4.8 page transitions — native cross-document View Transitions where
-   supported; the .curtain element is the JS fallback (motion.js). */
+   supported; the .curtain element is the JS fallback (motion.js).
+
+   CRITICAL, and it has to be: the browser reads the opt-in on the incoming
+   document BEFORE its first render. Left in the async stylesheet it loses that
+   race on a cold cache, and every navigation throws "ViewTransition opt-in
+   disabled" and jumps with no transition at all — the curtain fallback having
+   already stood down because the browser does support the API. Inlined, the
+   opt-in is always there in time. */
+/* @critical */
 @view-transition { navigation: auto; }
 ::view-transition-old(root) { animation: vt-out .32s var(--ease-in) forwards; }
 ::view-transition-new(root) { animation: vt-in .5s var(--ease-out) forwards; }
@@ -68,6 +76,13 @@
 @keyframes vt-card-in { from { opacity: 0; } }
 @keyframes vt-out { to { opacity: 0; transform: translateY(-12px); } }
 @keyframes vt-in { from { opacity: 0; transform: translateY(18px); } }
+/* the reduced-motion guard rides along, or the first navigation of a session
+   would animate for someone who asked it not to */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root),
+  ::view-transition-group(.vt-card), ::view-transition-old(.vt-card), ::view-transition-new(.vt-card) { animation: none; }
+}
+/* @/critical */
 .curtain { position: fixed; inset: 0; z-index: 900; background: var(--text); display: grid; place-items: center; transform: translateY(101%); pointer-events: none; will-change: transform; }
 .curtain__mark { inline-size: 56px; block-size: 56px; border-radius: 14px; background: var(--bg); display: grid; place-items: center; opacity: 0; transition: opacity .2s ease .15s; }
 .curtain__mark img { inline-size: 36px; block-size: 36px; }

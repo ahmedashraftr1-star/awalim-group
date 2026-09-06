@@ -56,8 +56,17 @@
   --fs-sm:    .9375rem;
   --fs-xs:    .8125rem;
 
-  --lh-hero:  1.18;   /* Alexandria sits tighter than Plex; still clears tashkeel */
-  --lh-d:     1.24;
+  /* Arabic display leading. The previous 1.18/1.24 came from a Latin eye and
+     did NOT clear the script, whatever the old comment claimed: measured
+     glyph-to-glyph across every heading on the site, 39 of them had ink from
+     one line landing on the next — worst 37px on the home hero, where the ي of
+     «نبني» drops straight onto the أ of «الأنظمة» below it. Alexandria's ي
+     carries a long deep tail and its tashkeel rides high; at 91px neither fits
+     in a 1.18 line box. Swept: 1.18 → 39 collisions (37px), 1.42 → 8 (15px),
+     and past that the curve flattens while the type visibly loosens.
+     English keeps the tight values — see the [dir="ltr"] block. */
+  --lh-hero:  1.42;
+  --lh-d:     1.44;
   --lh-h3:    1.4;
   --lh-lg:    1.7;
   --lh-body:  1.75;
