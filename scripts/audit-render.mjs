@@ -165,6 +165,16 @@ const IN_PAGE = () => {
     if (!name) push({ kind: "no-name", sel: sel(el), parent: sel(el.parentElement), text: el.outerHTML.replace(/\s+/g, " ").slice(0, 58), got: "interactive element a screen reader cannot announce" });
   }
 
+  /* 8. the page itself must not overflow its viewport. In RTL the overflow
+     hangs off the LEFT, so a detector looking past the right edge sees nothing
+     — scrollWidth is the signal that works in both directions. Measured: the
+     pre-fix 320px nav shows up here as 3px and as nothing at all on the right. */
+  {
+    const de = document.documentElement;
+    const over = de.scrollWidth - de.clientWidth;
+    if (over > 1) push({ kind: "overflow", sel: "document", parent: `${innerWidth}px viewport`, text: "the page is wider than the window", got: `${over}px — in RTL this hangs off the left edge` });
+  }
+
   /* 6. a skipped heading level leaves a hole in the document outline that a
      screen reader user navigating by heading falls straight through */
   let prevLevel = 0;
@@ -214,6 +224,7 @@ const CONFIGS = [
   { theme: "light", width: 1440 },
   { theme: "dark", width: 1440 },
   { theme: "light", width: 390 },
+  { theme: "light", width: 320 },   /* the narrowest phones still in use — the nav ran out of room here and nowhere wider */
   { theme: "light", width: 1440, rt: true },
   { theme: "dark", width: 1440, rt: true },
 ];
@@ -427,7 +438,7 @@ if (transients.length) {
   console.log(`\n· ${transients.length} transient measurement(s) dropped — seen once, gone on re-measure, so not reported:`);
   for (const t of transients) console.log("  " + t);
 }
-for (const kind of ["instrumentation", "emulation", "security", "stylesheet", "csp", "unsettled", "duplicate-id", "dangling-ref", "no-name", "heading-skip", "img-alt", "contrast", "clipped", "target"]) {
+for (const kind of ["instrumentation", "emulation", "security", "stylesheet", "csp", "unsettled", "overflow", "duplicate-id", "dangling-ref", "no-name", "heading-skip", "img-alt", "contrast", "clipped", "target"]) {
   const list = all.filter((f) => f.kind === kind);
   if (!list.length) continue;
   console.log(`\n✖ ${kind} — ${list.length} instances`);
@@ -437,4 +448,4 @@ for (const kind of ["instrumentation", "emulation", "security", "stylesheet", "c
     console.log(`  ${String(l.length).padStart(3)}×  ${key}  →  ${l[0].got}   [${l[0].route}]`);
 }
 if (all.length) { console.log(`\n✖ render audit: ${all.length} findings across ${only.length} routes`); process.exit(1); }
-console.log(`✔ render audit clean — ${only.length} routes × light/dark/mobile/reduced-transparency: CSP, contrast, clipped text, target size, duplicate ids, dangling aria refs, accessible names, heading order, image alt`);
+console.log(`✔ render audit clean — ${only.length} routes × light/dark/mobile/320px/reduced-transparency: CSP, contrast, clipped text, target size, page overflow, duplicate ids, dangling aria refs, accessible names, heading order, image alt`);
