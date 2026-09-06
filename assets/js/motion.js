@@ -240,6 +240,71 @@
     addEventListener("pageshow", function (e) { if (e.persisted) curtain.classList.remove("is-leaving"); });
   } else if (curtain) curtain.remove();
 
+  /* ---------- glass: the specular sweep ----------
+     The blur is CSS. This is the half that makes it read as a material rather
+     than a filter: a highlight travels the surface in proportion to how fast
+     the page is moving under it, and fades out the moment you stop. Two custom
+     properties per frame on at most three elements, and the property they drive
+     is a transform, so the compositor does the work and nothing repaints.
+     Skipped entirely for reduced motion or reduced transparency — there is no
+     material to respond to when the surface is solid. */
+  var glassOff = reduced || matchMedia("(prefers-reduced-transparency: reduce)").matches;
+  if (!glassOff) {
+    var glassEls = $$(".pillnav .brand, .pillnav__links, .subnav");
+    if (glassEls.length) {
+      var gPrev = scrollY, gPos = 0, gEnergy = 0, gRaf = null, gIdle = 0;
+      /* The material measures the machine it is running on. Ablation showed the
+         glass costs about nine dropped frames per full-page scroll on a 4×
+         throttled CPU, spread evenly across the rim, the gradient and the
+         sweep — no single part to blame. So rather than ship a cheaper glass to
+         everyone, the sweep watches its own first second and switches itself
+         off on a device that cannot hold the frame. The blur and the rim stay;
+         only the moving part, the expensive part, goes. */
+      var gSamples = [], gLast = 0, gGaveUp = false;
+      var gDowngrade = function () {
+        gGaveUp = true;
+        for (var k = 0; k < glassEls.length; k++) {
+          glassEls[k].style.setProperty("--spec-o", "0");
+          glassEls[k].style.removeProperty("--spec");
+        }
+        document.documentElement.setAttribute("data-glass", "still");
+      };
+      var gTick = function () {
+        var now = performance.now();
+        if (gLast && gSamples.length < 48) {
+          gSamples.push(now - gLast);
+          if (gSamples.length === 48) {
+            var sorted = gSamples.slice().sort(function (a, b) { return a - b; });
+            /* p75 above 24ms means this device is already missing frames
+               without any help from us */
+            if (sorted[35] > 24) { gLast = now; gDowngrade(); return; }
+          }
+        }
+        gLast = now;
+        if (gGaveUp) return;
+        var y = scrollY, dv = y - gPrev; gPrev = y;
+        /* energy rises with speed and bleeds away on its own */
+        gEnergy += (Math.min(Math.abs(dv) / 46, 1) - gEnergy) * 0.16;
+        gPos = (gPos + dv * 0.0016) % 1;
+        if (gPos < 0) gPos += 1;
+        for (var i = 0; i < glassEls.length; i++) {
+          glassEls[i].style.setProperty("--spec", gPos.toFixed(4));
+          glassEls[i].style.setProperty("--spec-o", (gEnergy * 0.85).toFixed(3));
+        }
+        /* stop the loop once it has settled, restart on the next scroll */
+        if (gEnergy < 0.004 && Math.abs(dv) < 0.5) {
+          if (++gIdle > 12) { gRaf = null; return; }
+        } else gIdle = 0;
+        gRaf = requestAnimationFrame(gTick);
+      };
+      addEventListener("scroll", function () {
+        if (gGaveUp) return;
+        gIdle = 0;
+        if (gRaf === null) gRaf = requestAnimationFrame(gTick);
+      }, { passive: true });
+    }
+  }
+
   /* ---------- custom cursor (desktop only; native cursor stays) ---------- */
   var cur = $("[data-cursor-el]");
   if (cur && finePointer && !reduced) {

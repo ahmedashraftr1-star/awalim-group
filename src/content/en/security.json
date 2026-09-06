@@ -17,12 +17,30 @@
     "h": "What actually stops it",
     "lede": "These are not settings written once and forgotten — the build generates them from the code that ships, so they cannot drift away from the page.",
     "items": [
-      { "t": "A hash for every inline script", "d": "No <span class=\"mono\" dir=\"ltr\">unsafe-inline</span> in <span class=\"mono\" dir=\"ltr\">script-src</span>. The build computes a SHA-256 of every inline script and puts it in the policy; change one character and the hash changes with it." },
-      { "t": "None in the styles either", "d": "The site carried around 950 inline style attributes with only 74 distinct values between them. They are generated classes now, so <span class=\"mono\" dir=\"ltr\">unsafe-inline</span> left <span class=\"mono\" dir=\"ltr\">style-src</span> too." },
-      { "t": "Trusted Types enforced", "d": "Nine places that built HTML out of strings were removed — the worst of them passed your own typed words through. One named policy remains, and it can mint the service worker's URL and nothing else." },
-      { "t": "Nothing from anyone else's server", "d": "No fonts, scripts or images from a foreign origin. No tracking, no cookies, no analytics. What is never loaded can never be compromised." },
-      { "t": "Our numbers are signed", "d": "Every public number is signed with an Ed25519 key at build time, and your browser is what verifies it — not our server." },
-      { "t": "The contact form sends nothing", "d": "What you type never passes through our server at all; it opens WhatsApp or your mail client on your own device." }
+      {
+        "t": "A hash for every inline script",
+        "d": "No <span class=\"mono\" dir=\"ltr\">unsafe-inline</span> in <span class=\"mono\" dir=\"ltr\">script-src</span>. The build computes a SHA-256 of every inline script and puts it in the policy; change one character and the hash changes with it."
+      },
+      {
+        "t": "None in the styles either",
+        "d": "The site carried around 950 inline style attributes with only 74 distinct values between them. They are generated classes now, so <span class=\"mono\" dir=\"ltr\">unsafe-inline</span> left <span class=\"mono\" dir=\"ltr\">style-src</span> too."
+      },
+      {
+        "t": "Trusted Types enforced",
+        "d": "Nine places that built HTML out of strings were removed — the worst of them passed your own typed words through. One named policy remains, and it can mint the service worker's URL and nothing else."
+      },
+      {
+        "t": "Nothing from anyone else's server",
+        "d": "No fonts, scripts or images from a foreign origin. No tracking, no cookies, no analytics. What is never loaded can never be compromised."
+      },
+      {
+        "t": "Our numbers are signed",
+        "d": "Every public number is signed with an Ed25519 key at build time, and your browser is what verifies it — not our server."
+      },
+      {
+        "t": "The contact form sends nothing",
+        "d": "What you type never passes through our server at all; it opens WhatsApp or your mail client on your own device."
+      }
     ]
   },
   "honest": {
@@ -31,7 +49,9 @@
     "items": [
       "It does not protect you from a mistake in content we write and trust ourselves. It stops injection, not bad judgement.",
       "It does not protect a device that is already compromised — a malicious browser extension comes before any policy.",
-      "The site is static, with no database and no accounts, so there is nothing in it to steal. That is not a virtue of ours; it is the shape of the site."
+      "The site is static, with no database and no accounts, so there is nothing in it to steal. That is not a virtue of ours; it is the shape of the site.",
+      "This page proves the policy <em>you</em> were served, and nothing more. If our host ever sent a header that differs from the one we declare, these five checks would still come back green for you. The build verifies the other side — that what is declared matches what ships — and the two together cover both ends.",
+      "Trusted Types is what actually refuses the <span class=\"mono\" dir=\"ltr\">eval</span> and <span class=\"mono\" dir=\"ltr\">innerHTML</span> probes — measured: adding <span class=\"mono\" dir=\"ltr\">unsafe-eval</span> to the policy does not bring them back, because the platform refuses the sink before the content policy is consulted."
     ]
   },
   "contact": {

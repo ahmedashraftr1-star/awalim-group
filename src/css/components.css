@@ -695,3 +695,78 @@ body.pal-open { overflow: hidden; }
 .mk__ln.is-wait .k { color: #F0B84A; } .mk__ln.is-ok .k { color: #5ED47E; }
 .mk__cursor { display: inline-block; inline-size: 7px; block-size: 12px; background: var(--mk-acc); vertical-align: -2px; animation: blink 1s steps(2) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
+
+/* ---------- glass: the material, not just the blur ----------
+   Frost on its own reads as fog. What makes glass read as glass is the EDGE —
+   light entering the near rim brighter than the body and leaving the far rim
+   darker — plus the fact that the material answers to movement. Apple's Liquid
+   Glass is refraction, depth and motion response; blur is only its first
+   quarter. Four parts here, in that order of importance:
+
+   1. rim      — an inset light line on top and a dark one beneath, so the
+                 surface has a thickness instead of being a translucent hole
+   2. specular — a highlight band swept by scroll velocity via --spec. It is a
+                 transform on a pseudo-element, which the compositor handles, so
+                 the sweep costs no repaint
+   3. adaptive — the body picks up --tint, the colour extras.js already reads
+                 from the section behind it, so the glass takes on the room
+   4. honest   — prefers-reduced-transparency turns all of it off for a solid
+                 surface. Apple respects that setting; almost no site on the web
+                 does, and a material that ignores it is decoration, not design */
+:is(.pillnav .brand, .pillnav__links, .pillnav__act, .icon-btn, .subnav, .has-subnav .pillnav[data-stuck="true"]::before) {
+  --glass-rim-hi: color-mix(in srgb, #FFFFFF 62%, transparent);
+  --glass-rim-lo: color-mix(in srgb, var(--text) 9%, transparent);
+  position: relative;
+  isolation: isolate;
+  background-image: linear-gradient(160deg,
+    color-mix(in srgb, var(--tint, var(--surface)) 12%, transparent),
+    transparent 62%);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-rim-hi),
+    inset 0 -1px 0 0 var(--glass-rim-lo),
+    var(--shadow-pill);
+}
+:root[data-theme="dark"] :is(.pillnav .brand, .pillnav__links, .pillnav__act, .icon-btn, .subnav) {
+  /* in the dark the rim reverses: light no longer falls from above onto a pale
+     ground, it escapes from behind a dark one */
+  --glass-rim-hi: color-mix(in srgb, #FFFFFF 16%, transparent);
+  --glass-rim-lo: color-mix(in srgb, #000000 34%, transparent);
+}
+
+/* the specular sweep — one composited transform, nothing repaints */
+:is(.pillnav .brand, .pillnav__links, .subnav)::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: -60%;
+  inline-size: 60%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent, color-mix(in srgb, #FFFFFF 30%, transparent) 45%, transparent);
+  transform: translate3d(calc(var(--spec, 0) * 320%), 0, 0);
+  opacity: var(--spec-o, 0);
+  transition: opacity .5s ease;
+  will-change: transform;
+}
+:root[data-theme="dark"] :is(.pillnav .brand, .pillnav__links, .subnav)::after {
+  background: linear-gradient(105deg, transparent, color-mix(in srgb, #FFFFFF 12%, transparent) 45%, transparent);
+}
+
+/* Someone who asked their system to reduce transparency gets a solid surface —
+   not a thinner blur, an actual opaque one. */
+@media (prefers-reduced-transparency: reduce) {
+  :is(.pillnav .brand, .pillnav__links, .pillnav__act, .icon-btn, .subnav, .pal__scrim, .has-subnav .pillnav[data-stuck="true"]::before) {
+    -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+    background-color: var(--surface) !important;
+    background-image: none !important;
+  }
+  .pal__scrim { background-color: color-mix(in srgb, var(--text) 78%, transparent) !important; }
+  :is(.pillnav .brand, .pillnav__links, .subnav)::after { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.pillnav .brand, .pillnav__links, .subnav)::after { display: none; }
+}
+/* set by motion.js when the device could not hold the frame — the sweep and its
+   layer go, the glass itself stays */
+:root[data-glass="still"] :is(.pillnav .brand, .pillnav__links, .subnav)::after { display: none; }
