@@ -165,14 +165,24 @@ const IN_PAGE = () => {
     if (!name) push({ kind: "no-name", sel: sel(el), parent: sel(el.parentElement), text: el.outerHTML.replace(/\s+/g, " ").slice(0, 58), got: "interactive element a screen reader cannot announce" });
   }
 
-  /* 8. the page itself must not overflow its viewport. In RTL the overflow
-     hangs off the LEFT, so a detector looking past the right edge sees nothing
-     — scrollWidth is the signal that works in both directions. Measured: the
-     pre-fix 320px nav shows up here as 3px and as nothing at all on the right. */
+  /* 8. the page itself must not overflow its viewport. Two signals, because
+     ahmed-ashraf-7c saw scrollWidth read clean on a page that genuinely
+     scrolled — body is `overflow-x: clip` here, which is exactly the kind of
+     thing that makes one of these lie. I could not reproduce the divergence
+     (both agree on every case I could construct, including a wide child of
+     body and of html under that clip), so rather than decide whose observation
+     was right this reports if EITHER fires. In RTL the overflow hangs off the
+     left, so the scroll test has to try both directions. */
   {
     const de = document.documentElement;
-    const over = de.scrollWidth - de.clientWidth;
-    if (over > 1) push({ kind: "overflow", sel: "document", parent: `${innerWidth}px viewport`, text: "the page is wider than the window", got: `${over}px — in RTL this hangs off the left edge` });
+    const byWidth = de.scrollWidth - de.clientWidth;
+    const at = window.scrollX;
+    window.scrollTo(9999, window.scrollY); const right = window.scrollX;
+    window.scrollTo(-9999, window.scrollY); const left = window.scrollX;
+    window.scrollTo(at, window.scrollY);
+    const byScroll = Math.round(Math.max(Math.abs(right), Math.abs(left)));
+    if (byWidth > 1 || byScroll > 1)
+      push({ kind: "overflow", sel: "document", parent: `${innerWidth}px viewport`, text: "the page is wider than the window", got: `${Math.max(byWidth, byScroll)}px (scrollWidth ${byWidth}, actually scrolls ${byScroll})` });
   }
 
   /* 6. a skipped heading level leaves a hole in the document outline that a
