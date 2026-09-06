@@ -78,7 +78,9 @@ export const verifyPanel = (signing, { autorun = false } = {}) => `
 export const impactTile = (t, stats) => {
   if (t.stat) return statTile(stats[t.stat], { size: "lg" });
   if (t.text !== undefined)
-    return `<div class="stat stat--lg"><div class="stat__n"><span class="stat__txt">${esc(t.text)}</span></div><div class="stat__l">${esc(t.label)}</div></div>`;
+    /* a worded stat may wrap, so bind each separator to the word before it —
+       otherwise «CMYK · RGB» breaks into «CMYK» / «· RGB», orphaning the dot */
+    return `<div class="stat stat--lg"><div class="stat__n"><span class="stat__txt">${esc(t.text).replace(/ ([·—–]) /g, "\u00A0$1 ")}</span></div><div class="stat__l">${esc(t.label)}</div></div>`;
   return statTile({ value: t.n, prefix: t.prefix || "", suffix: t.suffix || "", label: t.label, count: true }, { size: "lg" });
 };
 

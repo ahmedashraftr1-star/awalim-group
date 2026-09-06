@@ -157,7 +157,7 @@
 .crumbs { display: flex; gap: var(--space-2); align-items: center; font-size: var(--fs-xs); color: var(--card-dim, var(--text-muted)); flex-wrap: wrap; }
 /* WCAG 2.2 target size (minimum): these small links sit on their own line,
    so the inline-in-a-sentence exception does not cover them. */
-.crumbs a { display: inline-flex; align-items: center; min-block-size: 24px; }
+.crumbs a { display: inline-flex; align-items: center; justify-content: center; min-block-size: 24px; min-inline-size: 24px; }
 .crumbs a:hover { color: var(--card-fg, var(--text)); text-decoration: underline; text-underline-offset: 3px; }
 
 /* @/critical */
