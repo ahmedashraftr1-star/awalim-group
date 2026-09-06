@@ -244,6 +244,10 @@
             "label": "تحقّق من أرقامنا"
           },
           {
+            "href": "/security",
+            "label": "الأمان"
+          },
+          {
             "href": "/group#founder",
             "label": "كلمة المؤسّس"
           },

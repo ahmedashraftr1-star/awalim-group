@@ -1,0 +1,42 @@
+{
+  "_note": "English overrides for security.json.",
+  "seo": {
+    "title": "Security — a policy your own browser verifies in front of you | Awalim Group",
+    "description": "We don't promise you security. We attack our own page five times while you watch and show you your browser refusing. A CSP with no unsafe-inline, enforced Trusted Types, and signed numbers."
+  },
+  "h": "We don't promise security. We attack ourselves in front of you.",
+  "lede": "Every security page you have ever read is a list of promises. This one runs five real attacks against itself in your browser right now and shows you the browser refusing each one. If our policy ever weakens, this page will be the first thing to tell you.",
+  "live": {
+    "eyebrow": "Live proof",
+    "h": "Five attacks, running now",
+    "lede": "Not a simulation: each probe is the hostile action itself, and each verdict is read from the browser's own violation event or the exception the platform threw.",
+    "cta": "Run the attacks again"
+  },
+  "posture": {
+    "eyebrow": "Posture",
+    "h": "What actually stops it",
+    "lede": "These are not settings written once and forgotten — the build generates them from the code that ships, so they cannot drift away from the page.",
+    "items": [
+      { "t": "A hash for every inline script", "d": "No <span class=\"mono\" dir=\"ltr\">unsafe-inline</span> in <span class=\"mono\" dir=\"ltr\">script-src</span>. The build computes a SHA-256 of every inline script and puts it in the policy; change one character and the hash changes with it." },
+      { "t": "None in the styles either", "d": "The site carried around 950 inline style attributes with only 74 distinct values between them. They are generated classes now, so <span class=\"mono\" dir=\"ltr\">unsafe-inline</span> left <span class=\"mono\" dir=\"ltr\">style-src</span> too." },
+      { "t": "Trusted Types enforced", "d": "Nine places that built HTML out of strings were removed — the worst of them passed your own typed words through. One named policy remains, and it can mint the service worker's URL and nothing else." },
+      { "t": "Nothing from anyone else's server", "d": "No fonts, scripts or images from a foreign origin. No tracking, no cookies, no analytics. What is never loaded can never be compromised." },
+      { "t": "Our numbers are signed", "d": "Every public number is signed with an Ed25519 key at build time, and your browser is what verifies it — not our server." },
+      { "t": "The contact form sends nothing", "d": "What you type never passes through our server at all; it opens WhatsApp or your mail client on your own device." }
+    ]
+  },
+  "honest": {
+    "eyebrow": "Honestly",
+    "h": "What this policy does not do",
+    "items": [
+      "It does not protect you from a mistake in content we write and trust ourselves. It stops injection, not bad judgement.",
+      "It does not protect a device that is already compromised — a malicious browser extension comes before any policy.",
+      "The site is static, with no database and no accounts, so there is nothing in it to steal. That is not a virtue of ours; it is the shape of the site."
+    ]
+  },
+  "contact": {
+    "eyebrow": "Disclosure",
+    "h": "Found a hole?",
+    "d": "Tell us directly and we answer within one working day. We have no bounty programme yet and will not pretend otherwise — but we credit whoever reports, if they want it."
+  }
+}

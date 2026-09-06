@@ -33,6 +33,7 @@
   "/privacy",
   "/terms",
   "/verify",
+  "/security",
   "/offline",
   "/404",
   "/en/",
@@ -69,6 +70,7 @@
   "/en/privacy",
   "/en/terms",
   "/en/verify",
+  "/en/security",
   "/en/offline",
   "/en/404"
 ]

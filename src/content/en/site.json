@@ -185,6 +185,10 @@
             "label": "Verify our numbers"
           },
           {
+            "href": "/security",
+            "label": "Security"
+          },
+          {
             "href": "/group#founder",
             "label": "Founder's note"
           },
