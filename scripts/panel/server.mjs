@@ -42,18 +42,47 @@ const PORT = Number(process.argv[2] || 8890);
 
 const listContent = () => {
   const files = [];
-  for (const f of readdirSync(CONTENT)) if (f.endsWith(".json") && f !== "signing.json") files.push(f);
+  for (const f of readdirSync(CONTENT)) if (f.endsWith(".json") && !GENERATED.has(f)) files.push(f);
   const en = join(CONTENT, "en");
   if (existsSync(en)) for (const f of readdirSync(en)) if (f.endsWith(".json")) files.push("en/" + f);
   return files.sort();
 };
 
+/* Generated, not authored — the build writes these and nobody edits them.
+   signing.json is the important one: it carries the public key and signature
+   that /verify checks, and the build only re-signs when the stats fingerprint
+   CHANGES. So a signing.json whose payload matches the current numbers is kept
+   exactly as found, public key included — which means anyone able to write this
+   file could substitute their own keypair and have /verify pass against it.
+   Hiding it from the file listing was not enough; it has to be unreachable. */
+const GENERATED = new Set(["signing.json"]);
+
 const safePath = (rel) => {
   /* only ever inside src/content, only ever .json */
   if (!/^(en\/)?[a-z0-9-]+\.json$/i.test(rel)) return null;
+  /* lower-cased because macOS and Windows filesystems are case-insensitive:
+     SIGNING.JSON opens the same bytes as signing.json, and a case-sensitive
+     denylist against a case-insensitive filesystem is not a denylist */
+  if (GENERATED.has(rel.replace(/^en\//i, "").toLowerCase())) return null;
   const p = join(CONTENT, rel);
   return p.startsWith(CONTENT) ? p : null;
 };
+
+/* A content file is data the build interpolates, never a place to put keys that
+   change how objects behave. __proto__ and friends are stripped before anything
+   is written — the merge in the build walks these objects deeply, and a content
+   file is exactly the wrong thing to have to trust. */
+const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+const scrub = (v) => {
+  if (Array.isArray(v)) return v.map(scrub);
+  if (v && typeof v === "object") {
+    const out = {};
+    for (const [k, val] of Object.entries(v)) if (!FORBIDDEN_KEYS.has(k)) out[k] = scrub(val);
+    return out;
+  }
+  return v;
+};
+const hasForbidden = (raw) => /"(__proto__|constructor|prototype)"\s*:/.test(raw);
 
 const build = () => new Promise((res) => {
   execFile(process.execPath, [join(ROOT, "build.mjs")], { cwd: ROOT, timeout: 120000 }, (err, stdout, stderr) =>
@@ -78,7 +107,20 @@ const isLocal = (req) => {
   return !site || site === "same-origin" || site === "none";
 };
 
-const server = createServer(async (req, res) => {
+/* One malformed request must never end the session. decodeURIComponent throws a
+   URIError on a lone "%", and an uncaught throw in a request handler takes the
+   whole process with it — a request that costs an attacker nothing and costs
+   the owner their admin tool. Every request is wrapped, and the handler that
+   follows is free to be direct. */
+const server = createServer((req, res) => {
+  handle(req, res).catch((e) => {
+    console.warn("request failed:", String(e && e.message).slice(0, 140));
+    if (!res.headersSent) { res.writeHead(400, { "content-type": "text/plain" }); res.end("bad request"); }
+    else res.end();
+  });
+});
+
+const handle = async (req, res) => {
   const url = new URL(req.url, "http://127.0.0.1");
   const path = url.pathname;
 
@@ -97,7 +139,9 @@ const server = createServer(async (req, res) => {
   if (path === "/api/files") return json(res, 200, { files: listContent() });
 
   if (path.startsWith("/api/file/")) {
-    const rel = decodeURIComponent(path.slice("/api/file/".length));
+    let rel;
+    try { rel = decodeURIComponent(path.slice("/api/file/".length)); }
+    catch { return json(res, 400, { error: "malformed path" }); }
     const p = safePath(rel);
     if (!p || !existsSync(p)) return json(res, 404, { error: "not found" });
 
@@ -106,9 +150,10 @@ const server = createServer(async (req, res) => {
     if (req.method === "PUT") {
       let body = "";
       for await (const chunk of req) { body += chunk; if (body.length > 4e6) return json(res, 413, { error: "too large" }); }
-      let parsed;
-      try { parsed = JSON.parse(JSON.parse(body).text); }
+      let raw, parsed;
+      try { raw = JSON.parse(body).text; parsed = scrub(JSON.parse(raw)); }
       catch (e) { return json(res, 400, { error: "not valid JSON — nothing was written", detail: String(e.message) }); }
+      if (hasForbidden(raw)) return json(res, 400, { error: "that file contains a key that changes how objects behave (__proto__, constructor, prototype) — nothing was written" });
 
       /* keep the old one before touching anything */
       if (!existsSync(BACKUPS)) mkdirSync(BACKUPS, { recursive: true });
@@ -131,6 +176,10 @@ const server = createServer(async (req, res) => {
 
   res.writeHead(404, { "content-type": "text/plain" });
   res.end("not found");
+};
+
+server.on("clientError", (err, socket) => {
+  if (socket.writable) socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
 });
 
 /* localhost only — this is an administration tool, not a service */
