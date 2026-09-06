@@ -141,6 +141,14 @@ const contexts = new Map();
 for (const [theme, width] of CONFIGS)
   contexts.set(`${theme}@${width}`, await browser.newContext({ viewport: { width, height: 900 }, colorScheme: theme, reducedMotion: "reduce" }));
 
+/* /security attacks itself and the browser refuses it, so the route produces
+   CSP violations by design. Excluding it would leave the one page that proves
+   the policy is ENFORCING rather than merely present permanently unchecked, so
+   the assertion is inverted there instead: run the probes, require every one to
+   be refused, and still fail on any violation outside the expected set. */
+const isSecurityRoute = (r) => /(^|\/)security$/.test(r);
+const EXPECTED_ON_SECURITY = /^(script-src|script-src-elem|script-src-attr|style-src|style-src-elem|require-trusted-types-for|trusted-types)/;
+
 const transients = [];
 const jobs = only.flatMap((r) => CONFIGS.map(([theme, width]) => ({ r, theme, width })));
 let next = 0;
@@ -227,6 +235,36 @@ const worker = async () => {
           all.push({ route: r, theme, width, kind: "csp", sel: v.d, parent: v.s || "—", text: v.b, got: v.x ? `blocked · sample «${v.x}»` : "blocked" });
         continue;
       }
+      if (isSecurityRoute(r)) {
+        /* the page auto-runs on an IntersectionObserver, but only when the
+           visitor has not asked for reduced motion — which this audit always
+           does — so drive it explicitly rather than depending on a scroll */
+        const verdict = await page.evaluate(async () => {
+          const root = document.querySelector("[data-sec]");
+          if (!root) return { error: "no [data-sec] root on the page" };
+          const btn = root.querySelector("[data-sec-run]");
+          if (!btn) return { error: "no [data-sec-run] control" };
+          btn.click();
+          const out = root.querySelector("[data-sec-out]");
+          for (let i = 0; i < 160; i++) {
+            if (out && /\bis-(ok|bad)\b/.test(out.className)) break;
+            await new Promise((res) => setTimeout(res, 50));
+          }
+          const items = [...root.querySelectorAll(".seccheck")].map((li) => ({
+            id: li.id, ok: li.classList.contains("is-ok"), bad: li.classList.contains("is-bad"),
+            label: (li.querySelector("b") || {}).textContent || "", detail: (li.querySelector(".seccheck__r") || {}).textContent || "",
+          }));
+          return { items, summary: out ? out.className : "", settled: out ? /\bis-(ok|bad)\b/.test(out.className) : false };
+        });
+        if (verdict.error) all.push({ route: r, theme, width, kind: "security", sel: "[data-sec]", parent: "—", text: verdict.error, got: "the self-attack page could not be driven" });
+        else if (!verdict.settled) all.push({ route: r, theme, width, kind: "security", sel: "[data-sec-out]", parent: "—", text: "probes never reported a verdict", got: `${verdict.items.filter((i) => i.ok || i.bad).length}/${verdict.items.length} settled` });
+        else {
+          if (verdict.items.length < 5) all.push({ route: r, theme, width, kind: "security", sel: ".seccheck", parent: "—", text: "fewer probes than expected", got: `${verdict.items.length} (want 5)` });
+          for (const it of verdict.items)
+            if (!it.ok) all.push({ route: r, theme, width, kind: "security", sel: "#" + it.id, parent: "—", text: it.label.trim(), got: `NOT REFUSED — ${it.detail.trim()}` });
+          if (!/\bis-ok\b/.test(verdict.summary)) all.push({ route: r, theme, width, kind: "security", sel: "[data-sec-out]", parent: "—", text: "summary does not report a clean sweep", got: verdict.summary });
+        }
+      }
       /* Confirm every finding in a second pass. A defect in the resting state is
          stable; anything that measured once and not again was a transient, and a
          gate that reports those gets ignored on the day it is right. */
@@ -241,8 +279,10 @@ const worker = async () => {
           else transients.push(`${r} ${theme}@${width} ${f.kind} ${f.sel} «${f.text}» ${f.got}`);
         }
       }
-      for (const v of await page.evaluate(() => window.__csp || []))
+      for (const v of await page.evaluate(() => window.__csp || [])) {
+        if (isSecurityRoute(r) && EXPECTED_ON_SECURITY.test(v.d || "")) continue;   /* the page is supposed to trip these */
         all.push({ route: r, theme, width, kind: "csp", sel: v.d, parent: v.s || "—", text: v.b, got: v.x ? `blocked · sample «${v.x}»` : "blocked" });
+      }
     } finally {
       await page.close();
       process.stdout.write(".");
@@ -257,7 +297,7 @@ if (transients.length) {
   console.log(`\n· ${transients.length} transient measurement(s) dropped — seen once, gone on re-measure, so not reported:`);
   for (const t of transients) console.log("  " + t);
 }
-for (const kind of ["stylesheet", "csp", "unsettled", "contrast", "clipped", "target"]) {
+for (const kind of ["security", "stylesheet", "csp", "unsettled", "contrast", "clipped", "target"]) {
   const list = all.filter((f) => f.kind === kind);
   if (!list.length) continue;
   console.log(`\n✖ ${kind} — ${list.length} instances`);
