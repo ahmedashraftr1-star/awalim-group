@@ -198,7 +198,20 @@ const worker = async () => {
         }
         return broken().map((l) => `${l.href.replace(/^https?:\/\/[^/]+/, "")} (rel=${l.rel}${(window.__cssFail || []).includes(l.href) ? ", load error" : l.sheet ? "" : ", no sheet"})`);
       });
-      await page.addStyleTag({ content: "*,*::before,*::after{transition:none!important;animation-duration:0s!important;animation-delay:0s!important;}" });
+      /* A constructed stylesheet, not addStyleTag: style-src carries no
+         'unsafe-inline' any more, so injecting a <style> element is refused by
+         the very policy this audit exists to verify. CSSOM is not governed by
+         style-src — only <style> elements, style attributes and @import are. */
+      await page.evaluate((css) => {
+        try {
+          const sheet = new CSSStyleSheet();
+          sheet.replaceSync(css);
+          document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+        } catch {
+          const sheet = document.styleSheets[0];
+          if (sheet) for (const rule of css.split("}").filter(Boolean)) { try { sheet.insertRule(rule + "}", sheet.cssRules.length); } catch {} }
+        }
+      }, "*,*::before,*::after{transition:none!important;animation-duration:0s!important;animation-delay:0s!important;}");
       const settled = await page.evaluate(async () => {
         for (const a of document.getAnimations()) { try { a.finish(); } catch { a.cancel(); } }
         for (let i = 0; i < 40; i++) {
