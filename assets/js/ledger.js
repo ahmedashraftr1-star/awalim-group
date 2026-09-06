@@ -7,6 +7,15 @@
    ========================================================================== */
 (function () {
   "use strict";
+  /* Build nodes, never markup. Every string that reaches the DOM goes in as a
+     text node, so no sanitiser stands between visitor input and a parser —
+     which is what lets the CSP set `require-trusted-types-for 'script'`. */
+  var el = function (tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
   var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
@@ -86,23 +95,71 @@
       var docLines = EN
         ? [["Document", d.ref], ["Party", d.vendor], ["Net", money(d.net)], ["VAT 15%", money(d.vat)], ["Total", money(d.net + d.vat)]]
         : [["المستند", d.ref], ["الطرف", d.vendor], ["الصافي", money(d.net)], ["الضريبة 15%", money(d.vat)], ["الإجمالي", money(d.net + d.vat)]];
-      prop.innerHTML = '<div class="ledger__doc" aria-hidden="true">' + (reduced ? "" : '<span class="ledger__beam"></span>') +
-        '<div class="ledger__doc-h" style="--i:0">' + (kind === "scan" ? T("يُستخرج من الصورة… ", "Extracting from the image… ") + d.src : T("فاتورة مبيعات… ", "Sales invoice… ") + d.src) + "</div>" +
-        docLines.map(function (l, i) { return '<div class="ledger__doc-l" style="--i:' + (i + 1) + '"><span>' + l[0] + '</span><b class="mono" dir="ltr">' + l[1] + "</b></div>"; }).join("") + "</div>";
+      var doc = el("div", "ledger__doc");
+      doc.setAttribute("aria-hidden", "true");
+      if (!reduced) doc.appendChild(el("span", "ledger__beam"));
+      var docH = el("div", "ledger__doc-h", kind === "scan" ? T("يُستخرج من الصورة… ", "Extracting from the image… ") + d.src : T("فاتورة مبيعات… ", "Sales invoice… ") + d.src);
+      docH.style.setProperty("--i", "0");
+      doc.appendChild(docH);
+      docLines.forEach(function (l, i) {
+        var row = el("div", "ledger__doc-l");
+        row.style.setProperty("--i", String(i + 1));
+        row.appendChild(el("span", "", l[0]));
+        var v = el("b", "mono", l[1]);
+        v.dir = "ltr";
+        row.appendChild(v);
+        doc.appendChild(row);
+      });
+      prop.replaceChildren(doc);
       say(T("جارٍ استخراج بيانات ", "Extracting data from ") + d.vendor);
       /* 2) then the proposed entry with a real balance check */
       var delay = reduced ? 0 : 300 + docLines.length * 260 + 500;
       timers.push(setTimeout(function () {
         var next = st.n + 1;
-        prop.innerHTML =
-          '<div class="ledger__je">' +
-            '<div class="ledger__je-hd"><span>' + T("قيد مقترح · ", "Proposed entry · ") + '<bdi class="mono">#' + next + "</bdi></span>" +
-            '<span class="chip ' + (j.balanced ? "chip--accent" : "") + '">' + (j.balanced ? T("متوازن ✓ ", "balanced ✓ ") : T("غير متوازن ✖ ", "unbalanced ✖ ")) + '<bdi class="mono">' + money(j.dr) + " = " + money(j.cr) + "</bdi></span></div>" +
-            '<table class="ledger__t"><thead><tr><th scope="col">' + T("الحساب", "Account") + '</th><th scope="col">' + T("مدين", "Debit") + '</th><th scope="col">' + T("دائن", "Credit") + "</th></tr></thead><tbody>" +
-            j.lines.map(function (l) { return "<tr><td>" + l.a + '</td><td class="num">' + (l.dr ? money(l.dr) : "") + '</td><td class="num">' + (l.cr ? money(l.cr) : "") + "</td></tr>"; }).join("") +
-            '</tbody><tfoot><tr><td>' + T("المجموع", "Total") + '</td><td class="num">' + money(j.dr) + '</td><td class="num">' + money(j.cr) + "</td></tr></tfoot></table>" +
-            '<div class="btn-row"><button class="btn btn--sm btn--primary" type="button" data-ledger-action="approve"><span>' + T("اعتمد ورحِّل", "Approve and post") + '</span></button><button class="btn btn--sm btn--ghost" type="button" data-ledger-action="discard"><span>' + T("تجاهل", "Discard") + '</span></button><span class="ledger__hint">' + T("القرار للإنسان — دائماً", "The decision stays human — always") + "</span></div>" +
-          "</div>";
+        var je = el("div", "ledger__je");
+        var hd = el("div", "ledger__je-hd");
+        var hdL = el("span", "", T("قيد مقترح · ", "Proposed entry · "));
+        var num = el("bdi", "mono", "#" + next);
+        hdL.appendChild(num);
+        var chip = el("span", "chip" + (j.balanced ? " chip--accent" : ""), j.balanced ? T("متوازن ✓ ", "balanced ✓ ") : T("غير متوازن ✖ ", "unbalanced ✖ "));
+        chip.appendChild(el("bdi", "mono", money(j.dr) + " = " + money(j.cr)));
+        hd.appendChild(hdL); hd.appendChild(chip);
+        je.appendChild(hd);
+
+        var table = el("table", "ledger__t");
+        var thead = el("thead"), htr = el("tr");
+        [T("الحساب", "Account"), T("مدين", "Debit"), T("دائن", "Credit")].forEach(function (t) {
+          var th = el("th", "", t); th.scope = "col"; htr.appendChild(th);
+        });
+        thead.appendChild(htr); table.appendChild(thead);
+        var tbody = el("tbody");
+        j.lines.forEach(function (l) {
+          var tr = el("tr");
+          tr.appendChild(el("td", "", l.a));
+          tr.appendChild(el("td", "num", l.dr ? money(l.dr) : ""));
+          tr.appendChild(el("td", "num", l.cr ? money(l.cr) : ""));
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        var tfoot = el("tfoot"), ftr = el("tr");
+        ftr.appendChild(el("td", "", T("المجموع", "Total")));
+        ftr.appendChild(el("td", "num", money(j.dr)));
+        ftr.appendChild(el("td", "num", money(j.cr)));
+        tfoot.appendChild(ftr); table.appendChild(tfoot);
+        je.appendChild(table);
+
+        var brow = el("div", "btn-row");
+        [["approve", "primary", T("اعتمد ورحِّل", "Approve and post")],
+         ["discard", "ghost", T("تجاهل", "Discard")]].forEach(function (a) {
+          var btn = el("button", "btn btn--sm btn--" + a[1]);
+          btn.type = "button";
+          btn.setAttribute("data-ledger-action", a[0]);
+          btn.appendChild(el("span", "", a[2]));
+          brow.appendChild(btn);
+        });
+        brow.appendChild(el("span", "ledger__hint", T("القرار للإنسان — دائماً", "The decision stays human — always")));
+        je.appendChild(brow);
+        prop.replaceChildren(je);
         say(T("قيد مقترح رقم ", "Proposed entry number ") + next + (j.balanced ? T(" متوازن: ", " balances: ") : T(" غير متوازن: ", " does not balance: ")) + money(j.dr) + T(" مقابل ", " against ") + money(j.cr));
         var b = $('[data-ledger-action="approve"]', prop); if (b) b.focus({ preventScroll: true });
         busy = false;
@@ -123,11 +180,22 @@
       /* rows: the first row is always «آخر قيد»; the posted document joins the history below it */
       var first = rows.firstElementChild;
       first.className = "cockpit__row is-new";
-      first.innerHTML = "<span>" + T("آخر قيد · ", "Last entry · ") + "<span class=\"mono\" lang=\"en\">#<span data-ledger-n>" + st.n + "</span></span> · " + d.vendor + "</span><b class=\"cockpit__ok\">" + T("متوازن ✓", "balanced ✓") + "</b>";
+      var fLabel = el("span", "", T("آخر قيد · ", "Last entry · "));
+      var fNum = el("span", "mono");
+      fNum.lang = "en";
+      fNum.appendChild(document.createTextNode("#"));
+      var fN = el("span", "", String(st.n));
+      fN.setAttribute("data-ledger-n", "");
+      fNum.appendChild(fN);
+      fLabel.appendChild(fNum);
+      fLabel.appendChild(document.createTextNode(" · " + d.vendor));
+      first.replaceChildren(fLabel, el("b", "cockpit__ok", T("متوازن ✓", "balanced ✓")));
       nEl = $("[data-ledger-n]", first);
       var hist = document.createElement("div");
       hist.className = "cockpit__row is-new";
-      hist.innerHTML = "<span>" + (kind === "scan" ? T("فاتورة ", "Invoice ") : T("مبيعة ", "Sale ")) + d.vendor + " — " + d.src + "</span><b class=\"mono\">" + money(d.net + d.vat) + "</b>";
+      hist.replaceChildren(
+        el("span", "", (kind === "scan" ? T("فاتورة ", "Invoice ") : T("مبيعة ", "Sale ")) + d.vendor + " — " + d.src),
+        el("b", "mono", money(d.net + d.vat)));
       rows.insertBefore(hist, first.nextElementSibling);
       while (rows.children.length > 3) rows.removeChild(rows.lastElementChild);
       say(EN
@@ -136,7 +204,7 @@
       document.dispatchEvent(new CustomEvent("awalim:notify", { detail: { text: T("قيد #" + st.n + " رُحِّل — متوازن ✓", "Entry #" + st.n + " posted — balanced ✓") } }));
       discard();
     }
-    function discard() { clearTimers(); pending = null; busy = false; prop.hidden = true; prop.innerHTML = ""; rows.hidden = false; var b = $('[data-ledger-action="scan"]', c); if (b) b.focus({ preventScroll: true }); }
+    function discard() { clearTimers(); pending = null; busy = false; prop.hidden = true; prop.replaceChildren(); rows.hidden = false; var b = $('[data-ledger-action="scan"]', c); if (b) b.focus({ preventScroll: true }); }
 
     c.addEventListener("click", function (e) {
       var b = e.target.closest("[data-ledger-action]"); if (!b) return;

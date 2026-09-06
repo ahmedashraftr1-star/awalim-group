@@ -175,11 +175,18 @@ export const page = ({ site, seo, active = "", body, schema = [], bodyClass = ""
 <link rel="manifest" href="/site.webmanifest">
 ${FONT_PRELOADS.map((f) => `<link rel="preload" href="${f}" as="font" type="font/woff2" crossorigin>`).join("\n")}
 <style>${criticalCss}</style>
-<link rel="preload" href="/assets/css/awalim.css?v=${buildStamp}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" id="css-main" href="/assets/css/awalim.css?v=${buildStamp}" as="style">
 <noscript><link rel="stylesheet" href="/assets/css/awalim.css?v=${buildStamp}"></noscript>
 <script>
 /* Theme before first paint: saved choice wins, otherwise follow the system. */
 (function(){try{var s=localStorage.getItem("awalim-theme");var d=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.setAttribute("data-theme",d?"dark":"light");if(s)document.documentElement.setAttribute("data-theme-saved","")}catch(e){}document.documentElement.classList.add("js")})();
+/* The full sheet used to be promoted by an inline load handler on the link.
+   script-src-attr blocks those and no hash can cover one: a hash authorises a
+   script element, never an event-handler attribute. So the swap moved in here,
+   where this block's own hash covers it. The listener keeps the load off the
+   render path; the DOMContentLoaded arm catches the race where the preload
+   finished before this script ran. */
+(function(){var l=document.getElementById("css-main");if(!l)return;var on=function(){l.rel="stylesheet"};l.addEventListener("load",on,{once:true});document.addEventListener("DOMContentLoaded",function(){if(l.rel!=="stylesheet")on()},{once:true})})();
 </script>
 ${schema.map(jsonld).join("\n")}
 </head>

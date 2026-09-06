@@ -6,6 +6,15 @@
    ========================================================================== */
 (function () {
   "use strict";
+  /* Build nodes, never markup. Every string that reaches the DOM goes in as a
+     text node, so no sanitiser stands between visitor input and a parser —
+     which is what lets the CSP set `require-trusted-types-for 'script'`. */
+  var el = function (tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
   var root = document.documentElement;
   var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   var $ = function (s, c) { return (c || document).querySelector(s); };
@@ -41,11 +50,28 @@
 
   /* ---------- dynamic island: one surface for every live notification ---------- */
   var island = $("[data-island]"), islandTimer = null;
-  var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+  var CHECK = "M20 6L9 17l-5-5";
+  /* icons are our own path data, built as SVG nodes rather than parsed from a
+     string, so this stays a sink-free file */
+  var svgNode = function (d) {
+    var NS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("stroke-width", "2.6");
+    svg.setAttribute("stroke-linecap", "round");
+    svg.setAttribute("stroke-linejoin", "round");
+    var path = document.createElementNS(NS, "path");
+    path.setAttribute("d", d);
+    svg.appendChild(path);
+    return svg;
+  };
   function say(text, icon, ms) {
     if (!island) return;
     $(".island__t", island).textContent = text;
-    $(".island__ic", island).innerHTML = icon || CHECK;
+    var ic = $(".island__ic", island);
+    ic.replaceChildren(svgNode(icon || CHECK));
     island.classList.remove("is-on"); void island.offsetWidth;
     island.classList.add("is-on");
     clearTimeout(islandTimer);
@@ -56,7 +82,22 @@
 
   /* ---------- service worker: instant repeat visits, offline fallback ---------- */
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
-    addEventListener("load", function () { navigator.serviceWorker.register("/sw.js").catch(function () {}); });
+    addEventListener("load", function () {
+      /* register() takes a TrustedScriptURL under require-trusted-types-for, and
+         `trusted-types 'none'` would leave no way to make one — so the policy is
+         named instead, and can mint exactly one URL and throw on everything
+         else. The guarantee an attacker faces is unchanged: no attacker-chosen
+         string can ever become a script URL. */
+      var url = "/sw.js";
+      try {
+        if (window.trustedTypes && window.trustedTypes.createPolicy) {
+          url = window.trustedTypes.createPolicy("awalim-sw", {
+            createScriptURL: function (u) { if (u !== "/sw.js") throw new TypeError("only /sw.js"); return u; }
+          }).createScriptURL("/sw.js");
+        }
+      } catch (e) { return; }
+      navigator.serviceWorker.register(url).catch(function () {});
+    });
   }
 
   /* ---------- pill nav shrink ---------- */
@@ -238,7 +279,14 @@
       var d = data(), rows = EN
         ? [["Project type", d.scope], ["Budget", d.budget], ["Start", d.timeline], ["Company", d.company], ["Details", d.message]]
         : [["نوع المشروع", d.scope], ["الميزانية", d.budget], ["البدء", d.timeline], ["الشركة", d.company], ["التفاصيل", d.message]];
-      summary.innerHTML = rows.map(function (r) { return "<div><dt>" + r[0] + "</dt><dd>" + String(r[1]).replace(/[<>&]/g, function (c) { return { "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]; }) + "</dd></div>"; }).join("");
+      /* what the visitor typed, as text nodes — the hand-rolled escape this
+         replaced was correct, but correct-by-construction beats correct-so-far */
+      summary.replaceChildren.apply(summary, rows.map(function (r) {
+        var wrap = el("div");
+        wrap.appendChild(el("dt", "", r[0]));
+        wrap.appendChild(el("dd", "", String(r[1])));
+        return wrap;
+      }));
       review.hidden = false;
     }
     function go(i, initial) {

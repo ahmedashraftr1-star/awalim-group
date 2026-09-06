@@ -14,6 +14,15 @@
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var EN = document.documentElement.lang === "en";
   var T = function (ar, en) { return EN ? en : ar; };
+  /* Build nodes, never markup. Every string that reaches the DOM goes in as a
+     text node, so no sanitiser stands between visitor input and a parser —
+     which is what lets the CSP set `require-trusted-types-for 'script'`. */
+  var el = function (tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
 
   /* ======================================================================
      1. COMMAND PALETTE
