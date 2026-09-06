@@ -33,9 +33,20 @@ const vercelRules = JSON.parse(readFileSync(join(ROOT, "vercel.json"), "utf8")).
 const applied = (rules, path) => { const h = {}; for (const r of rules) if (r.re.test(path)) for (const [k, v] of r.headers) h[k] = v; return h; };
 
 console.log("the two header declarations agree");
+/* Both files are matched by pattern, and a pattern syntax that stops matching
+   makes BOTH sides empty — which diffs clean. So each sample has to resolve
+   something before its diff means anything: a check that quietly measures
+   nothing is worse than one that fails. */
+ok(headersRules.length > 0, `_headers parsed into ${headersRules.length} rules`);
+ok(vercelRules.length > 0, `vercel.json parsed into ${vercelRules.length} rules`);
 const SAMPLES = ["/", "/work/rahmacare/", "/en/products/vibe-os/", "/assets/css/awalim.css", "/assets/js/awalim.js", "/assets/fonts/x.woff2", "/assets/img/x.webp", "/assets/vendor/lenis.min.js"];
 for (const p of SAMPLES) {
   const a = applied(headersRules, p), b = applied(vercelRules, p);
+  if (!Object.keys(a).length || !Object.keys(b).length) {
+    fail++;
+    console.log(`  ✖ ${p} matched no rule in ${!Object.keys(a).length ? "_headers" : ""}${!Object.keys(a).length && !Object.keys(b).length ? " and " : ""}${!Object.keys(b).length ? "vercel.json" : ""} — the comparison for this path proves nothing`);
+    continue;
+  }
   const keys = [...new Set([...Object.keys(a), ...Object.keys(b)])].sort();
   const diff = keys.filter((k) => a[k] !== b[k]).map((k) => `${k}: _headers «${a[k] ?? "—"}» vs vercel.json «${b[k] ?? "—"}»`);
   ok(!diff.length, `${p}`, diff.join("\n     "));
@@ -47,6 +58,12 @@ const csp = applied(headersRules, "/")["Content-Security-Policy"] || "";
 const directive = (name) => { const m = new RegExp(`(?:^|;)\\s*${name}\\s+([^;]*)`).exec(csp); return m ? m[1].trim().split(/\s+/) : null; };
 const scriptSrc = directive("script-src") || directive("default-src") || [];
 ok(csp.length > 0, "a Content-Security-Policy is declared");
+/* if the directive parser stops matching, scriptSrc goes empty and every check
+   below it silently passes — so the parse itself is asserted first */
+ok(scriptSrc.length > 0, `script-src parsed (${scriptSrc.length} sources)`);
+ok(scriptSrc.includes("'unsafe-inline'") || scriptSrc.some((x) => x.startsWith("'sha")) || scriptSrc.some((x) => x.startsWith("'nonce-")),
+  "script-src allows inline by SOME mechanism (hash, nonce or unsafe-inline)",
+  "neither found — either the policy blocks its own inline script, or this parser is no longer reading it");
 ok(!scriptSrc.includes("'unsafe-eval'"), "script-src does not allow 'unsafe-eval'");
 ok((directive("object-src") || []).includes("'none'"), "object-src is 'none'");
 
@@ -75,7 +92,8 @@ for (const f of html) {
   const markup = src.replace(/<!--[\s\S]*?-->/g, "").replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, "<$1></$1>");
   for (const tag of markup.matchAll(/<[a-zA-Z][^>]*>/g)) handlers += (tag[0].match(/\son[a-z]{2,12}\s*=/gi) || []).length;
 }
-ok(html.length > 0, `${html.length} built pages scanned, ${hashes.size} distinct inline script(s)`);
+ok(html.length > 20, `${html.length} built pages scanned, ${hashes.size} distinct inline script(s)`, "too few pages found — the walk is not reaching the build output");
+ok(hashes.size > 0, "at least one executable inline script was found to hash", "the inline-script pattern matched nothing, so the hash checks below are vacuous");
 
 const usesHashes = scriptSrc.some((s) => s.startsWith("'sha256-"));
 if (usesHashes) {

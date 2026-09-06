@@ -127,7 +127,12 @@ const IN_PAGE = () => {
     if (!r.width || !r.height) continue;
     if (r.width < 24 || r.height < 24) push({ kind: "target", sel: sel(el), parent: sel(el.parentElement), text: (el.textContent || el.getAttribute("aria-label") || "").trim().slice(0, 28), got: `${Math.round(r.width)}×${Math.round(r.height)} (min 24×24)` });
   }
-  return out;
+  /* an object, not the array with a property hung off it: page.evaluate
+     serialises arrays by index and drops everything else, so `examined` never
+     arrived — the check caught its own first draft. The count is returned so
+     the driver can tell a clean page from one that was never examined; a walk
+     that finds nothing reports exactly like a walk that finds nothing wrong. */
+  return { findings: out, examined: document.querySelectorAll("p,h1,h2,h3,li,span,a,b").length };
 };
 
 /* A dead server surfaces as a networkidle timeout or ERR_CONNECTION_REFUSED
@@ -278,6 +283,13 @@ const worker = async () => {
           if (sheet) for (const rule of css.split("}").filter(Boolean)) { try { sheet.insertRule(rule + "}", sheet.cssRules.length); } catch {} }
         }
       }, "*,*::before,*::after{transition:none!important;animation-duration:0s!important;animation-delay:0s!important;}");
+      /* the freeze has to be proven, not attempted: if the injection stops
+         working the audit would measure a moving page and still report clean */
+      const frozen = await page.evaluate(() => {
+        const el = document.querySelector(".btn, a, p") || document.body;
+        return getComputedStyle(el).transitionDuration.split(",").every((d) => parseFloat(d) === 0);
+      });
+      if (!frozen) all.push({ route: r, theme, width, rt, kind: "instrumentation", sel: "freeze", parent: "—", text: "transitions still running after the freeze", got: "the page was measured while moving" });
       const settled = await page.evaluate(async () => {
         for (const a of document.getAnimations()) { try { a.finish(); } catch { a.cancel(); } }
         for (let i = 0; i < 40; i++) {
@@ -326,10 +338,11 @@ const worker = async () => {
       /* Confirm every finding in a second pass. A defect in the resting state is
          stable; anything that measured once and not again was a transient, and a
          gate that reports those gets ignored on the day it is right. */
-      const first = await page.evaluate(IN_PAGE);
+      const { findings: first, examined } = await page.evaluate(IN_PAGE);
+      if (!(examined > 20)) all.push({ route: r, theme, width, rt, kind: "instrumentation", sel: "IN_PAGE", parent: "—", text: "almost nothing to examine on this page", got: `${examined || 0} text elements` });
       if (first.length) {
         await page.evaluate(async () => { for (const a of document.getAnimations()) { try { a.finish(); } catch { a.cancel(); } } await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res))); });
-        const second = await page.evaluate(IN_PAGE);
+        const { findings: second } = await page.evaluate(IN_PAGE);
         const key = (f) => `${f.kind}|${f.sel}|${f.text}`;
         const seen2 = new Set(second.map(key));
         for (const f of first) {
@@ -337,6 +350,7 @@ const worker = async () => {
           else transients.push(`${r} ${theme}@${width} ${f.kind} ${f.sel} «${f.text}» ${f.got}`);
         }
       }
+      if (!(await page.evaluate(() => Array.isArray(window.__csp)))) all.push({ route: r, theme, width, rt, kind: "instrumentation", sel: "window.__csp", parent: "—", text: "the violation listener was never installed", got: "CSP violations on this page went uncollected" });
       for (const v of await page.evaluate(() => window.__csp || [])) {
         if (isSecurityRoute(r) && EXPECTED_ON_SECURITY.test(v.d || "")) continue;   /* the page is supposed to trip these */
         all.push({ route: r, theme, width, rt, kind: "csp", sel: v.d, parent: v.s || "—", text: v.b, got: v.x ? `blocked · sample «${v.x}»` : "blocked" });
@@ -355,7 +369,7 @@ if (transients.length) {
   console.log(`\n· ${transients.length} transient measurement(s) dropped — seen once, gone on re-measure, so not reported:`);
   for (const t of transients) console.log("  " + t);
 }
-for (const kind of ["emulation", "security", "stylesheet", "csp", "unsettled", "contrast", "clipped", "target"]) {
+for (const kind of ["instrumentation", "emulation", "security", "stylesheet", "csp", "unsettled", "contrast", "clipped", "target"]) {
   const list = all.filter((f) => f.kind === kind);
   if (!list.length) continue;
   console.log(`\n✖ ${kind} — ${list.length} instances`);
