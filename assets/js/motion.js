@@ -278,7 +278,11 @@
           glassEls[k].style.setProperty("--spec-o", "0");
           glassEls[k].style.removeProperty("--spec");
         }
-        document.documentElement.setAttribute("data-glass", "still");
+        /* One signal for every optional motion on the site, not for the glass
+           alone: a device that cannot hold the frame for the sweep cannot hold
+           it for the stack wave either, and two independent downgrade
+           mechanisms would be two things to get out of step. */
+        document.documentElement.setAttribute("data-motion", "lite");
       };
       var gTick = function () {
         var now = performance.now();

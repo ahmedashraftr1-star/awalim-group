@@ -769,7 +769,7 @@ body.pal-open { overflow: hidden; }
 }
 /* set by motion.js when the device could not hold the frame — the sweep and its
    layer go, the glass itself stays */
-:root[data-glass="still"] :is(.pillnav .brand, .pillnav__links, .subnav)::after { display: none; }
+:root[data-motion="lite"] :is(.pillnav .brand, .pillnav__links, .subnav)::after { display: none; }
 
 /* ---------- craft layer: edges, bloom, corner light ----------
    Measured against linear.app, stripe.com/billing and apple.com/macbook-pro:
@@ -875,3 +875,70 @@ body.pal-open { overflow: hidden; }
 @media (max-width: 380px) {
   .statbar { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ---------- the stack wall, lit by the scroll ----------
+   601px of names with nothing happening under a lede that claims we know these
+   tools deeply. Measured against every other section on the home page it was
+   the only one scoring zero for motion, media and interaction.
+
+   A wave passes through the grid as it crosses the viewport: each cell lifts
+   and takes the accent as its turn arrives, ordered by --c. This runs on a
+   view() timeline and, unlike the blueprint draw, the timeline pays here —
+   there the animated custom property fed paint every frame, while these are
+   transform and opacity, which the compositor owns. No claim is added; the
+   section simply stops being dead. */
+/* Without a view timeline the cells fall back to the ordinary staggered
+   reveal, which is why the container keeps .rv. With one, the wave is the only
+   thing driving them — two systems on one property is how the first attempt
+   produced a perfectly still grid whose animation was demonstrably running. */
+@supports not (animation-timeline: view()) {
+  .js [data-wall] > * { opacity: 0; transform: translateY(var(--reveal-y)); }
+  .js [data-wall].in > * { opacity: 1; transform: none; transition: opacity var(--d-slow) var(--ease-out), transform var(--d-slow) var(--ease-out); transition-delay: calc(var(--c, 0) * var(--stagger)); }
+}
+/* The cells cannot use view() directly. .wall is overflow:hidden — it has to be,
+   the grid draws its 1px rules with a background showing through the gaps — and
+   an overflow container becomes the scrollport its descendants measure against.
+   .wall never scrolls, so every cell's timeline sat frozen at 7.97% forever
+   while getAnimations() cheerfully reported the animation as running. Naming the
+   timeline on .wall itself measures .wall against the page, and the cells refer
+   to it by name. */
+[data-wall] { view-timeline-name: --wall-view; }
+/* Measured paired and interleaved over 11 rounds at 4× throttle, the wave costs
+   a median of +2 dropped frames and was worse in 8 of the 11 differing rounds —
+   the same magnitude as the glass sweep, and the same answer: it stands down on
+   a device that is already missing frames, rather than being made cheaper for
+   everyone or kept because it was work to build. */
+:root[data-motion="lite"] .wall__c,
+:root[data-motion="lite"] .wall__c::after { animation: none; opacity: 1; transform: none; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .wall__c {
+      animation: cell-in linear both;
+      animation-timeline: --wall-view;
+      /* each cell's slice of the pass, so the wave travels rather than snapping */
+      /* the cover phase spans the whole crossing, so the wave has room to travel */
+      animation-range: cover calc(4% + (var(--c) / var(--cells, 12)) * 30%) cover calc(26% + (var(--c) / var(--cells, 12)) * 30%);
+    }
+  }
+}
+@keyframes cell-in {
+  from { opacity: .35; transform: translate3d(0, 10px, 0); }
+  to   { opacity: 1;   transform: none; }
+}
+/* the accent trails the wave: a cell that has just arrived still glows */
+.wall__c { position: relative; }
+.wall__c::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: -1;
+  background: radial-gradient(120% 90% at 50% 120%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%);
+  opacity: 0;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .wall__c::after {
+      animation: cell-glow linear both;
+      animation-timeline: --wall-view;
+      animation-range: cover calc(4% + (var(--c) / var(--cells, 12)) * 30%) cover calc(40% + (var(--c) / var(--cells, 12)) * 30%);
+    }
+  }
+}
+@keyframes cell-glow { 0% { opacity: 0; } 35% { opacity: 1; } 100% { opacity: 0; } }

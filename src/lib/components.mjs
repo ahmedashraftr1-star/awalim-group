@@ -363,8 +363,8 @@ export const blueprint = () => {
 
 /* ---------- tech wall ---------- */
 export const wall = (stack) => `
-  <div class="wall rv" data-stagger>
-    ${stack.map((s) => `<div class="wall__c"><b lang="en">${esc(s.name)}</b><span lang="en">${esc(s.role)}</span></div>`).join("")}
+  <div class="wall rv" data-wall style="--cells:${stack.length}">
+    ${stack.map((s, i) => `<div class="wall__c" style="--c:${i}"><b lang="en">${esc(s.name)}</b><span lang="en">${esc(s.role)}</span></div>`).join("")}
   </div>`;
 
 /* ---------- marquee strip ---------- */
