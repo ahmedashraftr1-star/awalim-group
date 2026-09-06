@@ -131,9 +131,13 @@
 @media (prefers-reduced-motion: reduce) {
   html:focus-within { scroll-behavior: auto; }
   .js .rv, .js [data-stagger] > * { opacity: 1; transform: none; transition: none; }
-  .kl__in { transform: none; animation: none; }
+  /* these must out-specify the rules they cancel: the hero's mask is scoped
+     `.kl > .kl__in` (0,2,0) and the settled heading is `.js .sec-head.in .klh
+     .klh__in` (0,5,0), so a bare `.kl__in` here silently lost the cascade and
+     both masks kept animating for a reader who asked for no motion. */
+  .kl > .kl__in { transform: none; animation: none; }
   .js :is(.hero, .phero, .chero) .rv { animation: none; }
-  .js .sec-head .klh .klh__in { transform: none; }
+  .js .sec-head .klh .klh__in, .js .sec-head.in .klh .klh__in { transform: none; transition: none; }
   .hero__dev, .hero__orb, .marq__track, .chip--pulse .dot { animation: none; }
   [data-parallax], .dev--tilt[data-parallax] { --py: 0px; }
   .dev--tilt { transform: none; }

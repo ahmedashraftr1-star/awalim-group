@@ -7,7 +7,8 @@
 ```
 npm run build      # يولّد كل الصفحات + assets/css/awalim.css + sitemap.xml
 npm run dev        # build ثم معاينة محلية على http://localhost:8899 (brotli + clean URLs زي Vercel)
-npm test           # تباين WCAG + روابط داخلية + اختبارات Playwright للمسارات
+npm test           # تباين WCAG + روابط داخلية + Playwright للمسارات + تدقيق الصفحة كما تُرسم
+npm run audit      # التدقيق وحده: كل مسار × فاتح/ليلي/موبايل — تباين فعلي، نص مقصوص، حجم الأهداف
 npm run og         # يولّد صور Open Graph لكل صفحة (assets/img/og/)
 npm run covers     # يولّد أغلفة المقالات التايبوغرافية (assets/img/journal/cover-*.webp)
 npm run shots      # لقطات شاشة لكل الصفحات (desktop · dark · mobile)
@@ -45,7 +46,7 @@ assets/img/journal/   أغلفة المقالات — تايبوغرافية م�
                       الغلاف يحمل «كلمة الغلاف» (`journal.json → coverWord`) لا العنوان: البطاقة تطبع العنوان
                       نصّاً تحته مباشرة، وصور OG وحدها هي التي تحمل العنوان لأنها تُرى منفردة.
 assets/img/og/        صور OG مولَّدة لكل صفحة
-scripts/              contrast · check-links · e2e · og · shots
+scripts/              contrast · check-links · e2e · audit-render · og · shots
 build.mjs             سكربت البناء
 ```
 
