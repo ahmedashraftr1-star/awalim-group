@@ -149,6 +149,15 @@ const worker = async () => {
     const { r, theme, width } = jobs[next++];
     const page = await contexts.get(`${theme}@${width}`).newPage();
     try {
+      /* attached before any page script runs, so a policy that blocks the site
+         is a failing test rather than something a visitor finds. scripts/serve.mjs
+         serves the real _headers, so this measures the policy we actually ship. */
+      await page.addInitScript(() => {
+        window.__csp = [];
+        document.addEventListener("securitypolicyviolation", (e) => {
+          window.__csp.push({ d: e.effectiveDirective || e.violatedDirective, b: e.blockedURI || "inline", s: e.sourceFile ? `${e.sourceFile.replace(/^https?:\/\/[^/]+/, "")}:${e.lineNumber}` : "", x: (e.sample || "").slice(0, 48) });
+        });
+      });
       await page.goto(BASE + r, { waitUntil: "domcontentloaded" });
       await page.evaluate((t) => document.documentElement.setAttribute("data-theme", t), theme);
       /* touch the length of the page so scroll-triggered content exists, settle
@@ -187,6 +196,8 @@ const worker = async () => {
           else transients.push(`${r} ${theme}@${width} ${f.kind} ${f.sel} «${f.text}» ${f.got}`);
         }
       }
+      for (const v of await page.evaluate(() => window.__csp || []))
+        all.push({ route: r, theme, width, kind: "csp", sel: v.d, parent: v.s || "—", text: v.b, got: v.x ? `blocked · sample «${v.x}»` : "blocked" });
     } finally {
       await page.close();
       process.stdout.write(".");
@@ -201,7 +212,7 @@ if (transients.length) {
   console.log(`\n· ${transients.length} transient measurement(s) dropped — seen once, gone on re-measure, so not reported:`);
   for (const t of transients) console.log("  " + t);
 }
-for (const kind of ["unsettled", "contrast", "clipped", "target"]) {
+for (const kind of ["csp", "unsettled", "contrast", "clipped", "target"]) {
   const list = all.filter((f) => f.kind === kind);
   if (!list.length) continue;
   console.log(`\n✖ ${kind} — ${list.length} instances`);
@@ -211,4 +222,4 @@ for (const kind of ["unsettled", "contrast", "clipped", "target"]) {
     console.log(`  ${String(l.length).padStart(3)}×  ${key}  →  ${l[0].got}   [${l[0].route}]`);
 }
 if (all.length) { console.log(`\n✖ render audit: ${all.length} findings across ${only.length} routes`); process.exit(1); }
-console.log(`✔ render audit clean — ${only.length} routes × light/dark/mobile: contrast, clipped text, target size`);
+console.log(`✔ render audit clean — ${only.length} routes × light/dark/mobile: CSP, contrast, clipped text, target size`);

@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node build.mjs",
     "dev": "node build.mjs && node scripts/serve.mjs 8899",
-    "test": "node scripts/merge-test.mjs && node scripts/contrast.mjs && node scripts/check-links.mjs && node scripts/e2e.mjs && node scripts/audit-render.mjs",
+    "test": "node scripts/merge-test.mjs && node scripts/headers-test.mjs && node scripts/contrast.mjs && node scripts/check-links.mjs && node scripts/e2e.mjs && node scripts/audit-render.mjs",
     "serve": "node scripts/serve.mjs 8899",
     "og": "node scripts/og.mjs",
     "covers": "node scripts/covers.mjs",
