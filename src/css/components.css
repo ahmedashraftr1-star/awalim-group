@@ -820,3 +820,58 @@ body.pal-open { overflow: hidden; }
 .flow svg { inline-size: 100%; block-size: auto; overflow: visible; }
 .flow__i { font-family: var(--font-mono); font-size: 11px; fill: var(--accent-text); letter-spacing: .08em; }
 @media (max-width: 760px) { .flow svg { min-inline-size: 620px; } .flow { overflow-x: auto; -webkit-mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent); } }
+
+/* ---------- the narrowest phones still in use ----------
+   At 320px the nav did not fit and overflowed 12px on every page: the wordmark
+   takes 104, four 42px controls take 192, and the gutter takes 40 — 336 in a
+   320 box. It went unseen because the site is RTL, so the overflow hangs off
+   the LEFT edge, and a detector looking for elements past the right edge finds
+   nothing. Nothing is dropped here; the controls and the gutter give back the
+   sixteen pixels between them. */
+@media (max-width: 380px) {
+  :root { --gutter: 16px; }
+  .pillnav__act { gap: 6px; }
+  .pillnav__act .icon-btn { inline-size: 38px; block-size: 38px; }
+  .pillnav .brand { padding-inline: 4px var(--space-2); }
+  .brand__name { font-size: .95rem; }
+  .brand__latin { font-size: .58rem; }
+}
+
+/* A chip is nowrap because chips are short — until English makes one a
+   sentence. "Drizzle or any ORM that emits reviewable SQL" is a real bonus
+   line on /en/careers and it was 325px wide in a 320px viewport. It keeps its
+   pill shape and wraps instead of pushing the page sideways. */
+.chip { max-inline-size: 100%; }
+@media (max-width: 560px) {
+  .chip { white-space: normal; overflow-wrap: anywhere; text-align: start; }
+}
+@media (max-width: 380px) {
+  /* the English wordmark is wider than the Arabic one, so the row needs a
+     little more than the Arabic fix gave it */
+  .brand__latin { display: none; }
+  .pillnav__act { gap: 4px; }
+  /* the orb is decorative bleed; at this width the bleed is the overflow */
+  .hero__orb { inset-inline-end: 0; inline-size: 46%; }
+}
+
+/* ---------- 320px: two defects the width itself exposed ----------
+   Neither suite rendered 320 until today, so both were invisible rather than
+   unchecked — a different failure from a missing assertion. */
+
+/* The live self-audit reads label-left, value-right on one line. In English
+   "This page's contrast, now" plus "18.1:1 · 6.6:1" is wider than a 320px
+   card, and the row pushed the whole document 14px sideways. It wraps now
+   rather than shoving. */
+.live { flex-wrap: wrap; }
+.live__l { min-inline-size: 0; }
+
+/* The stat bar is two columns at this width, giving each tile 143px. "+1,200"
+   needs 150 and .stat__n is deliberately nowrap, so the plus was sliced in half
+   and the label under it lost its last letter — «على أيدين» for «أيدينا» —
+   silently, because .statbar clips rather than scrolls. One column below 380
+   fits every locale and every four-digit value, and a phone this narrow wants
+   one column regardless. Shrinking the numeral was the alternative and it
+   would have cost the thing the tile exists to show. */
+@media (max-width: 380px) {
+  .statbar { grid-template-columns: minmax(0, 1fr); }
+}
