@@ -6,8 +6,10 @@
    ink on a white column, or #fff on an accent that inverts in the dark. Those
    only exist once the cascade has run, so this walks the live DOM instead:
    it composites each element's real background the way the browser does, and
-   also checks for text painted outside the box that clips it and for targets
-   under the WCAG 2.2 minimum.
+   also checks text painted outside the box that clips it, targets under the
+   WCAG 2.2 minimum, duplicate ids, aria references pointing at nothing, and
+   interactive elements a screen reader could not announce. Every check is
+   asserted to have actually run — see the instrumentation findings.
 
    Usage: node scripts/audit-render.mjs [routeFilter]   (expects a server at BASE) */
 import { chromium } from "playwright";
@@ -127,6 +129,42 @@ const IN_PAGE = () => {
     if (!r.width || !r.height) continue;
     if (r.width < 24 || r.height < 24) push({ kind: "target", sel: sel(el), parent: sel(el.parentElement), text: (el.textContent || el.getAttribute("aria-label") || "").trim().slice(0, 28), got: `${Math.round(r.width)}×${Math.round(r.height)} (min 24×24)` });
   }
+  /* 4. structural defects with no judgement in them: a duplicate id silently
+     redirects every fragment link and aria reference that points at it to the
+     first match, and a reference to an id that does not exist names nothing. */
+  const idCount = new Map();
+  for (const el of document.querySelectorAll("[id]")) idCount.set(el.id, (idCount.get(el.id) || 0) + 1);
+  for (const [id, n] of idCount)
+    if (n > 1) push({ kind: "duplicate-id", sel: "#" + id, parent: "document", text: `${n} elements share it`, got: "fragment links and aria references resolve to the first only" });
+
+  for (const attr of ["aria-labelledby", "aria-describedby", "aria-controls", "aria-owns", "for"]) {
+    for (const el of document.querySelectorAll(`[${attr}]`)) {
+      if (attr === "for" && el.tagName !== "LABEL") continue;
+      for (const ref of (el.getAttribute(attr) || "").split(/\s+/).filter(Boolean))
+        if (!document.getElementById(ref)) push({ kind: "dangling-ref", sel: sel(el), parent: attr, text: ref, got: "no element has this id" });
+    }
+  }
+
+  /* 5. an interactive element a screen reader cannot announce */
+  for (const el of document.querySelectorAll("a[href],button,[role=button],input:not([type=hidden]),select,textarea,summary")) {
+    const cs = getComputedStyle(el);
+    if (!painted(el, cs) || el.closest("[aria-hidden=true],[hidden]")) continue;
+    const byIds = (v) => (v || "").split(/\s+/).filter(Boolean).map((id) => ((document.getElementById(id) || {}).textContent || "")).join(" ");
+    const img = el.querySelector("img[alt]");
+    const wrapping = el.closest("label");
+    const name = [
+      el.getAttribute("aria-label"),
+      byIds(el.getAttribute("aria-labelledby")),
+      el.textContent,
+      img && img.alt,
+      el.getAttribute("title"),
+      el.getAttribute("placeholder"),
+      el.id ? ((document.querySelector(`label[for="${CSS.escape(el.id)}"]`) || {}).textContent || "") : "",
+      wrapping && wrapping !== el ? wrapping.textContent : "",
+    ].map((x) => (x || "").trim()).find(Boolean);
+    if (!name) push({ kind: "no-name", sel: sel(el), parent: sel(el.parentElement), text: el.outerHTML.replace(/\s+/g, " ").slice(0, 58), got: "interactive element a screen reader cannot announce" });
+  }
+
   /* an object, not the array with a property hung off it: page.evaluate
      serialises arrays by index and drops everything else, so `examined` never
      arrived — the check caught its own first draft. The count is returned so
@@ -369,7 +407,7 @@ if (transients.length) {
   console.log(`\n· ${transients.length} transient measurement(s) dropped — seen once, gone on re-measure, so not reported:`);
   for (const t of transients) console.log("  " + t);
 }
-for (const kind of ["instrumentation", "emulation", "security", "stylesheet", "csp", "unsettled", "contrast", "clipped", "target"]) {
+for (const kind of ["instrumentation", "emulation", "security", "stylesheet", "csp", "unsettled", "duplicate-id", "dangling-ref", "no-name", "contrast", "clipped", "target"]) {
   const list = all.filter((f) => f.kind === kind);
   if (!list.length) continue;
   console.log(`\n✖ ${kind} — ${list.length} instances`);
@@ -379,4 +417,4 @@ for (const kind of ["instrumentation", "emulation", "security", "stylesheet", "c
     console.log(`  ${String(l.length).padStart(3)}×  ${key}  →  ${l[0].got}   [${l[0].route}]`);
 }
 if (all.length) { console.log(`\n✖ render audit: ${all.length} findings across ${only.length} routes`); process.exit(1); }
-console.log(`✔ render audit clean — ${only.length} routes × light/dark/mobile/reduced-transparency: CSP, contrast, clipped text, target size`);
+console.log(`✔ render audit clean — ${only.length} routes × light/dark/mobile/reduced-transparency: CSP, contrast, clipped text, target size, duplicate ids, dangling aria refs, accessible names`);
