@@ -59,9 +59,12 @@ const setMsg = (t, k = "") => { const m = $("#msg"); m.textContent = t; m.classN
 
 /* ── the five things that have been waiting on the owner ───────────────── */
 const TASKS = [
+  { id: "todo",   label: "ما لم يكتمل",        file: "",             tag: "" },
   { id: "stats",  label: "الأرقام العامّة",     file: "site.json",    tag: "" },
   { id: "proof",  label: "الدليل — شعارات وشهادات", file: "site.json", tag: "" },
-  { id: "arch",   label: "معماريّة المشاريع",   file: "cases.json",   tag: "" }
+  { id: "arch",   label: "معماريّة المشاريع",   file: "cases.json",   tag: "" },
+  { id: "verify", label: "افحص الموقع",        file: "",             tag: "" },
+  { id: "history", label: "التاريخ والاستعادة",  file: "",             tag: "" }
 ];
 
 async function loadFile(rel) {
@@ -189,9 +192,107 @@ function paintNav() {
     const b = document.createElement("button");
     b.textContent = task.label;
     b.className = mode === task.id ? "on" : "";
-    b.onclick = { stats: openStats, proof: openProof, arch: openArch }[task.id];
+    b.onclick = { todo: openTodo, stats: openStats, proof: openProof, arch: openArch, verify: openVerify, history: openHistory }[task.id];
+    if (task.id === "todo" && todoCount != null) { const t2 = document.createElement("span"); t2.className = "tag"; t2.textContent = todoCount; b.appendChild(t2); }
     t.appendChild(b);
   }
+}
+
+let todoCount = null;
+
+/* Everything the site still promises and has not filled — read from the content
+   on every open, never from a list anyone maintains. A hand-kept list is wrong
+   the first time somebody edits around it. */
+async function openTodo() {
+  mode = "todo"; current = null;
+  $("#title").textContent = "ما لم يكتمل";
+  const w = $("#wrap"); w.innerHTML = "";
+  const r = await api("/api/unfinished");
+  todoCount = r.count;
+  if (!r.count) { w.innerHTML = '<div class="card"><p>لا شيء ناقص. كل رقم مؤكَّد، وكل حالة لها معماريّة، وخانات الدليل ممتلئة.</p></div>'; paintNav(); return; }
+  const groups = { stat: "أرقام غير مؤكَّدة", case: "حالات بلا معماريّة", proof: "خانات دليل فارغة" };
+  for (const [kind, heading] of Object.entries(groups)) {
+    const items = r.items.filter((i) => i.kind === kind);
+    if (!items.length) continue;
+    const card = document.createElement("div"); card.className = "card";
+    const h = document.createElement("h3"); h.textContent = heading + " — " + items.length; card.appendChild(h);
+    for (const it of items) {
+      const row = document.createElement("p");
+      row.textContent = it.label;
+      const go = document.createElement("button");
+      go.textContent = "افتح " + it.file;
+      go.style.marginInlineStart = "8px";
+      go.onclick = () => (it.kind === "stat" ? openStats() : it.kind === "case" ? openArch() : openProof());
+      row.appendChild(go); card.appendChild(row);
+    }
+    w.appendChild(card);
+  }
+  setMsg(r.count + " بندًا — محسوبة من المحتوى، لا من قائمة مكتوبة بيد");
+  paintNav();
+}
+
+/* The panel runs the project's OWN checks and shows what they found. A panel
+   that changes a site and cannot say whether the site still holds up is a text
+   editor with extra steps — and it is the one thing neither comparable admin
+   does. Deliberately a button and not part of save: the rollback on a failed
+   build has to stay fast, and a save that freezes for minutes is a save the
+   owner learns to avoid. */
+async function openVerify() {
+  mode = "verify"; current = null;
+  $("#title").textContent = "افحص الموقع";
+  const w = $("#wrap"); w.innerHTML = '<div class="card"><p>يفحص… أربعة فحوص من فحوص المشروع نفسه.</p></div>';
+  paintNav(); setMsg("يفحص…", "warn");
+  const r = await api("/api/verify", { method: "POST" });
+  w.innerHTML = "";
+  const card = document.createElement("div"); card.className = "card";
+  for (const c of r.checks) {
+    const row = document.createElement("p");
+    row.textContent = (c.ok ? "✔ " : "✖ ") + c.label + " · " + c.ms + "ms";
+    row.style.color = c.ok ? "" : "var(--bad, #b00)";
+    const d = document.createElement("small"); d.style.display = "block"; d.style.opacity = ".7";
+    d.textContent = c.detail; row.appendChild(d);
+    card.appendChild(row);
+  }
+  w.appendChild(card);
+  setMsg(r.allOk ? "✓ كل الفحوص تمرّ" : "✖ فحصٌ واحد على الأقل سقط — التفاصيل أعلاه", r.allOk ? "ok" : "bad");
+}
+
+/* Every save already kept a timestamped copy. Backups nobody can reach are not
+   backups, and a list you cannot restore from is a receipt rather than a safety
+   net — so both halves are here. Restoring runs the same build-and-roll-back
+   path as a save, and keeps a copy of what it replaced, so undoing an undo
+   works too. */
+async function openHistory() {
+  mode = "history"; current = null;
+  $("#title").textContent = "التاريخ والاستعادة";
+  const w = $("#wrap"); w.innerHTML = ""; paintNav();
+  const files = (await api("/api/files")).files;
+  let any = false;
+  for (const f of files) {
+    const r = await api("/api/history/" + encodeURIComponent(f));
+    if (!r.versions || !r.versions.length) continue;
+    any = true;
+    const card = document.createElement("div"); card.className = "card";
+    const h = document.createElement("h3"); h.textContent = f + " — " + r.versions.length + " نسخة"; card.appendChild(h);
+    for (const v of r.versions) {
+      const row = document.createElement("p");
+      row.textContent = v.when + "  ";
+      const b = document.createElement("button");
+      b.textContent = "استعد هذه";
+      b.onclick = async () => {
+        if (!confirm("استعادة " + f + " إلى " + v.when + "؟\nنسخة الحالية ستُحفظ قبل الاستبدال.")) return;
+        setMsg("يستعيد ويعيد البناء…", "warn");
+        const res = await api("/api/restore/" + encodeURIComponent(v.file), { method: "POST" });
+        if (res.error) return setMsg("✖ " + res.error, "bad");
+        setMsg("✓ استُعيد " + res.rel + " · يمكنك التراجع من نفس هذه الشاشة", "ok");
+        openHistory();
+      };
+      row.appendChild(b); card.appendChild(row);
+    }
+    w.appendChild(card);
+  }
+  if (!any) w.innerHTML = '<div class="card"><p>لا نسخ بعد. تُنشأ نسخة تلقائيًّا مع كل حفظ.</p></div>';
+  setMsg("كل استعادة تمرّ بنفس مسار البناء والتراجع — استعادةٌ تكسر الموقع تُرفض");
 }
 
 async function save() {

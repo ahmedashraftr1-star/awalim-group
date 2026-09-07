@@ -84,6 +84,14 @@ const scrub = (v) => {
 };
 const hasForbidden = (raw) => /"(__proto__|constructor|prototype)"\s*:/.test(raw);
 
+/* Run one of the project's own scripts and report what it said. Same shape as
+   build(): never throws, always resolves, so a failing check reports a failure
+   rather than taking the request down with it. */
+const run = (args) => new Promise((res) => {
+  execFile(process.execPath, args.map((a) => join(ROOT, a)), { cwd: ROOT, timeout: 300000 }, (err, stdout, stderr) =>
+    res({ ok: !err, out: (stdout || "").trim(), err: (stderr || String(err || "")).trim().slice(0, 900) }));
+});
+
 const build = () => new Promise((res) => {
   execFile(process.execPath, [join(ROOT, "build.mjs")], { cwd: ROOT, timeout: 120000 }, (err, stdout, stderr) =>
     res({ ok: !err, out: (stdout || "").trim().split("\n").slice(-3).join("\n"), err: (stderr || String(err || "")).trim().slice(0, 900) }));
@@ -173,6 +181,125 @@ const handle = async (req, res) => {
   }
 
   if (path === "/api/build" && req.method === "POST") return json(res, 200, await build());
+
+  /* ── verify ───────────────────────────────────────────────────────────────
+     A panel that changes a site and cannot say whether the site still holds up
+     is a text editor with extra steps. This runs the project's OWN checks — the
+     same six `npm test` runs — and returns what they found.
+
+     This is the capability the comparison turned on. Measured today: the
+     sibling platform's admin is 57 pages and 49 routes, none of which had ever
+     been swept; the first sweep found 3 WCAG violations, 13 console errors and
+     four undersized navigation targets repeated across every route. Size was
+     never the difference. Knowing is.
+
+     Kept OUT of the save path deliberately. The rollback on a failed build must
+     stay fast, and a full audit takes minutes; a save that hangs for three
+     minutes is a save the owner learns to avoid. Verification is a button. */
+  if (path === "/api/verify" && req.method === "POST") {
+    const checks = [
+      { id: "merge",    label: "دمج المحتوى",        cmd: ["scripts/merge-test.mjs"] },
+      { id: "headers",  label: "ترويسات الأمان",     cmd: ["scripts/headers-test.mjs"] },
+      { id: "contrast", label: "التباين اللوني",     cmd: ["scripts/contrast.mjs"] },
+      { id: "links",    label: "الروابط الداخلية",   cmd: ["scripts/check-links.mjs"] },
+    ];
+    const out = [];
+    for (const c of checks) {
+      const t0 = Date.now();
+      const r = await run(c.cmd);
+      out.push({ ...c, cmd: undefined, ok: r.ok, ms: Date.now() - t0,
+                 detail: (r.ok ? r.out : r.err).split("\n").filter(Boolean).slice(-3).join(" · ").slice(0, 300) });
+    }
+    return json(res, 200, { checks: out, allOk: out.every((c) => c.ok) });
+  }
+
+  /* ── what is still unfinished ─────────────────────────────────────────────
+     Computed from the content, never a list somebody maintains by hand — a
+     hand-kept list is wrong the first time anyone edits around it. Reports the
+     three things this site keeps promising and has not filled: a public number
+     with no confirmation, a proof slot standing empty, and a case with no
+     architecture to draw. */
+  if (path === "/api/unfinished") {
+    const read = (rel) => { try { return JSON.parse(readFileSync(join(CONTENT, rel), "utf8")); } catch { return null; } };
+    const items = [];
+    const site = read("site.json");
+    for (const [k, v] of Object.entries(site?.stats ?? {})) {
+      if (v && typeof v === "object" && v.confirmed !== true)
+        items.push({ kind: "stat", file: "site.json", key: k,
+                     label: `الرقم «${v.label ?? k}» = ${v.value ?? "—"} غير مؤكَّد` });
+    }
+    const cases = read("cases.json");
+    for (const c of cases?.cases ?? []) {
+      if (!c.flow && !c.architecture)
+        items.push({ kind: "case", file: "cases.json", key: c.slug ?? c.id ?? c.title,
+                     label: `الحالة «${c.title ?? c.slug}» بلا معماريّة — مخطّط التدفّق لا يُرسم` });
+    }
+    const press = read("press.json");
+    if (!(press?.assets?.logos ?? []).length)
+      items.push({ kind: "proof", file: "press.json", key: "assets.logos", label: "لا شعارات عملاء — خانة الإثبات فارغة" });
+    if (!(press?.testimonials ?? []).length)
+      items.push({ kind: "proof", file: "press.json", key: "testimonials", label: "لا شهادات — خانة الإثبات فارغة" });
+    return json(res, 200, { items, count: items.length });
+  }
+
+  /* ── history ──────────────────────────────────────────────────────────────
+     Every save already keeps a timestamped copy. Backups nobody can reach are
+     not backups, so they are listed and restorable — and a restore goes through
+     the same build-and-roll-back path as any other write, because a restore
+     that breaks the site is not a rescue. */
+  /* Restoring is the other half. A list of versions nobody can go back to is a
+     receipt, not a safety net — and the restore takes the SAME path as any
+     other write: back up what is there now (so undoing an undo is possible),
+     write, build, and roll back if the build fails. A restore that breaks the
+     site is not a rescue. */
+  if (path.startsWith("/api/restore/") && req.method === "POST") {
+    let name;
+    try { name = decodeURIComponent(path.slice("/api/restore/".length)); }
+    catch { return json(res, 400, { error: "malformed path" }); }
+    /* The backup filename is "<rel with / as __>.<ISO stamp>.json" — so the
+       target is everything BEFORE the stamp, not the first dot-segment.
+       Splitting on the first dot turned "site.json.<stamp>.json" into "site",
+       which safePath then rejected for having no .json, and every restore
+       failed with a message about the version not belonging to an editable
+       file. Caught by trying a restore rather than reasoning about one. */
+    const m = /^(.+)\.(\d{4}-\d{2}-\d{2}T[\dZ-]+)\.json$/.exec(name);
+    if (!m || name.includes("..")) return json(res, 400, { error: "bad version name" });
+    const src = join(BACKUPS, name);
+    if (!existsSync(src)) return json(res, 404, { error: "no such version" });
+    const rel = m[1].replace("__", "/");
+    const p = safePath(rel);
+    if (!p || !existsSync(p)) return json(res, 404, { error: "that version does not belong to an editable file" });
+
+    let restored;
+    try { restored = scrub(JSON.parse(readFileSync(src, "utf8"))); }
+    catch (e) { return json(res, 422, { error: "that saved version is not valid JSON — nothing was written", detail: String(e.message) }); }
+
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const undo = join(BACKUPS, `${rel.replace("/", "__")}.${stamp}.json`);
+    copyFileSync(p, undo);
+    writeFileSync(p, JSON.stringify(restored, null, 2) + "\n", "utf8");
+    const b = await build();
+    if (!b.ok) {
+      copyFileSync(undo, p);
+      await build();
+      return json(res, 422, { error: "that version no longer builds — nothing was changed", detail: b.err });
+    }
+    return json(res, 200, { ok: true, rel, built: b.out, undo: undo.replace(ROOT + "/", "") });
+  }
+
+  if (path.startsWith("/api/history/")) {
+    let rel;
+    try { rel = decodeURIComponent(path.slice("/api/history/".length)); }
+    catch { return json(res, 400, { error: "malformed path" }); }
+    if (!safePath(rel)) return json(res, 404, { error: "not found" });
+    if (!existsSync(BACKUPS)) return json(res, 200, { versions: [] });
+    const prefix = rel.replace("/", "__") + ".";
+    const versions = readdirSync(BACKUPS).filter((f) => f.startsWith(prefix))
+      .map((f) => ({ file: f, when: f.slice(prefix.length).replace(/\.json$/, "").replace(/-/g, ":").replace("T", " ").slice(0, 19) }))
+      .sort((a, b) => b.file.localeCompare(a.file)).slice(0, 25);
+    return json(res, 200, { versions });
+  }
+
 
   res.writeHead(404, { "content-type": "text/plain" });
   res.end("not found");
