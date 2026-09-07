@@ -118,6 +118,16 @@ export function renderCase(ctx, c, i) {
             <div class="case__sec" id="solution">
               ${C.sectionHead({ eyebrowAr: "الحل", eyebrowEn: "SOLUTION", h: "ما الذي سُلِّم فعلاً" })}
               <p class="lede rv">${c.solution}</p>
+              ${/* The architecture, drawn from the case's own data — the same
+                    flow() the product pages use. It sits directly under the
+                    solution paragraph so the drawing and the sentence it draws
+                    are read together; the component's contract is that a
+                    diagram is worth having "only where the thing drawn is
+                    true", and rendering it from the case's own steps is what
+                    keeps it from drifting from the words beside it.
+                    Cases with no `flow` render nothing at all rather than an
+                    invented architecture. */""}
+              ${c.flow ? `<div class="rv">${C.flow({ steps: c.flow.steps, label: c.flow.h || c.flow.label || `معماريّة ${c.title}` })}</div>` : ""}
               ${c.device === "cockpit" ? `<div class="rv" data-parallax data-parallax-amount="16">${C.cockpit({ tilt: true, live: true })}</div>` : c.mock ? `<div class="rv" data-parallax data-parallax-amount="16">${C.device({ kind: c.device === "laptop" ? "laptop" : "browser", inner: C.mockScreen(c.mock), alt: c.heroAlt, tilt: true, label: c.title })}</div>` : C.gallery(c.gallery)}
             </div>
 

@@ -23,84 +23,108 @@
       "label": "سنة التأسيس",
       "prefix": "",
       "suffix": "",
-      "count": false
+      "count": false,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     },
     "systemsDelivered": {
       "value": 50,
       "label": "نظام ومنتج سُلِّم",
       "prefix": "+",
       "suffix": "",
-      "count": true
+      "count": true,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     },
     "engineersTrained": {
       "value": 1200,
       "label": "مهندس تدرّب على أيدينا",
       "prefix": "+",
       "suffix": "",
-      "count": true
+      "count": true,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     },
     "certifiedGraduates": {
       "value": 682,
       "label": "خرّيج معتمد أنهى المسار كاملاً",
       "prefix": "+",
       "suffix": "",
-      "count": true
+      "count": true,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     },
     "clientCountries": {
       "value": 10,
       "label": "دولة نخدم عملاءها",
       "prefix": "+",
       "suffix": "",
-      "count": true
+      "count": true,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     },
     "graduateCountries": {
       "value": 6,
       "label": "دول يعمل فيها خرّيجونا",
       "prefix": "+",
       "suffix": "",
-      "count": true
+      "count": true,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     },
     "yearsBuilding": {
       "value": 8,
       "label": "سنوات من البناء منذ 2018",
       "prefix": "+",
       "suffix": "",
-      "count": true
+      "count": true,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     },
     "tracks": {
       "value": 4,
       "label": "مسارات هندسية",
       "prefix": "",
       "suffix": "",
-      "count": true
+      "count": true,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     },
     "accountingModules": {
       "value": 10,
       "label": "وحدات جاهزة",
       "prefix": "",
       "suffix": "",
-      "count": true
+      "count": true,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     },
     "countryPacks": {
       "value": 7,
       "label": "حزم دول",
       "prefix": "",
       "suffix": "",
-      "count": true
+      "count": true,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     },
     "isolationLayers": {
       "value": 3,
       "label": "طبقات عزل بيانات",
       "prefix": "",
       "suffix": "",
-      "count": true
+      "count": true,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     },
     "standards": {
       "value": 8,
       "label": "شروط لا نسلّم بدونها",
       "prefix": "",
       "suffix": "",
-      "count": true
+      "count": true,
+      "confirmed": true,
+      "confirmedOn": "2026-09-07"
     }
   },
   "contact": {
