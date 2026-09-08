@@ -64,7 +64,8 @@ const TASKS = [
   { id: "proof",  label: "الدليل — شعارات وشهادات", file: "site.json", tag: "" },
   { id: "arch",   label: "معماريّة المشاريع",   file: "cases.json",   tag: "" },
   { id: "verify", label: "افحص الموقع",        file: "",             tag: "" },
-  { id: "history", label: "التاريخ والاستعادة",  file: "",             tag: "" }
+  { id: "history", label: "التاريخ والاستعادة",  file: "",             tag: "" },
+  { id: "tokens", label: "الألوان والمقاسات",   file: "",             tag: "" }
 ];
 
 async function loadFile(rel) {
@@ -192,7 +193,7 @@ function paintNav() {
     const b = document.createElement("button");
     b.textContent = task.label;
     b.className = mode === task.id ? "on" : "";
-    b.onclick = { todo: openTodo, stats: openStats, proof: openProof, arch: openArch, verify: openVerify, history: openHistory }[task.id];
+    b.onclick = { todo: openTodo, stats: openStats, proof: openProof, arch: openArch, verify: openVerify, history: openHistory, tokens: openTokens }[task.id];
     if (task.id === "todo" && todoCount != null) { const t2 = document.createElement("span"); t2.className = "tag"; t2.textContent = todoCount; b.appendChild(t2); }
     t.appendChild(b);
   }
@@ -295,7 +296,65 @@ async function openHistory() {
   setMsg("كل استعادة تمرّ بنفس مسار البناء والتراجع — استعادةٌ تكسر الموقع تُرفض");
 }
 
+/* The 105 design tokens every page inherits — the largest thing the panel did
+   not reach. Control is total; so is the guarantee. A save runs the project's
+   contrast audit BEFORE the build, and a colour that breaks a WCAG pairing is
+   refused and never reaches disk. The token file's own comments record that
+   someone already fixed a 2.3:1 caption once; nothing here lets an afternoon
+   undo that. */
+let tokenEdits = {};
+async function openTokens() {
+  mode = "tokens"; current = null; tokenEdits = {};
+  $("#title").textContent = "الألوان والمقاسات";
+  const w = $("#wrap"); w.innerHTML = ""; paintNav();
+  const r = await api("/api/tokens");
+  for (const g of r.groups) {
+    const card = document.createElement("div"); card.className = "card";
+    if (g.title) { const h = document.createElement("h3"); h.textContent = g.title; card.appendChild(h); }
+    for (const t of g.tokens) {
+      const row = document.createElement("p");
+      row.style.cssText = "display:flex;align-items:center;gap:10px;flex-wrap:wrap";
+      const name = document.createElement("code"); name.textContent = "--" + t.name;
+      name.style.cssText = "min-width:170px;font-size:12px";
+      row.appendChild(name);
+      if (t.colour && /^#[0-9a-f]{3,8}$/i.test(t.value)) {
+        const sw = document.createElement("input"); sw.type = "color"; sw.value = t.value.length === 4
+          ? "#" + t.value.slice(1).split("").map((c) => c + c).join("") : t.value.slice(0, 7);
+        sw.style.cssText = "width:44px;height:32px;padding:0;border:1px solid var(--line);border-radius:6px";
+        const txt = document.createElement("input"); txt.value = t.value; txt.style.cssText = "width:120px;font-family:monospace";
+        sw.oninput = () => { txt.value = sw.value; tokenEdits[t.name] = sw.value; markDirty(); };
+        txt.oninput = () => { tokenEdits[t.name] = txt.value; markDirty(); };
+        row.appendChild(sw); row.appendChild(txt);
+      } else {
+        const txt = document.createElement("input"); txt.value = t.value;
+        txt.style.cssText = "width:220px;font-family:monospace";
+        txt.oninput = () => { tokenEdits[t.name] = txt.value; markDirty(); };
+        row.appendChild(txt);
+      }
+      if (t.note) { const n = document.createElement("small"); n.textContent = t.note; n.style.opacity = ".65"; row.appendChild(n); }
+      card.appendChild(row);
+    }
+    w.appendChild(card);
+  }
+  setMsg("غيّر ما شئت — التغيير الذي يكسر التباين يُرفض قبل أن يُكتب");
+}
+function markDirty() {
+  const n = Object.keys(tokenEdits).length;
+  setMsg(n ? `${n} تغيير غير محفوظ — اضغط «احفظ وابنِ»` : "جاهز", n ? "warn" : "");
+}
+
 async function save() {
+  if (mode === "tokens") {
+    const n = Object.keys(tokenEdits).length;
+    if (!n) return setMsg("لا تغييرات");
+    setMsg("يفحص التباين ثم يبني…", "warn");
+    const r = await api("/api/tokens/save", { method: "PUT", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ changes: tokenEdits }) });
+    if (r.error) return setMsg("✖ " + r.error + (r.detail ? " — " + r.detail : ""), "bad");
+    tokenEdits = {};
+    setMsg("✓ " + r.changed.length + " تغيير · " + (r.built || "").split("\n").pop(), "ok");
+    return;
+  }
   if (!current) return;
   const text = mode === "file" ? $("#editor").value : JSON.stringify(current.data, null, 2);
   setMsg("يُحفظ ويُعاد البناء…", "warn");

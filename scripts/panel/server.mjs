@@ -38,6 +38,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..", "..");
 const CONTENT = join(ROOT, "src", "content");
 const BACKUPS = join(ROOT, ".panel-backups");
+const TOKENS = join(ROOT, "src", "css", "tokens.css");
 const PORT = Number(process.argv[2] || 8890);
 
 const listContent = () => {
@@ -103,12 +104,30 @@ const json = (res, code, body) => {
 };
 
 const LOCAL_HOSTS = new Set([`127.0.0.1:${PORT}`, `localhost:${PORT}`, `[::1]:${PORT}`]);
+const LOOPBACK = new Set(["127.0.0.1", "localhost", "[::1]", "::1"]);
+
 const isLocal = (req) => {
-  /* a forged Host is the precondition for DNS rebinding — refuse anything we
-     did not name ourselves */
+  /* The Host header is the one that must be exact: a forged Host is the
+     precondition for DNS rebinding, and it is the thing this refuses. The port
+     is pinned here, so the origin check below does not need to pin it again. */
   if (!LOCAL_HOSTS.has(req.headers.host || "")) return false;
+
   const origin = req.headers.origin;
-  if (origin) { try { if (!LOCAL_HOSTS.has(new URL(origin).host)) return false; } catch { return false; } }
+  if (origin) {
+    /* Compare the HOSTNAME, not host:port. Browsers do not all send the port in
+       Origin — an origin of "http://127.0.0.1" for a page served from
+       127.0.0.1:8890 is a normal, same-origin request, and matching it against
+       a set that always carries ":8890" refused the owner's own browser. That
+       is what happened: the shell loaded, every API call came back 403, and the
+       panel rendered blank. A guard that refuses the person it is protecting is
+       not a stricter guard, it is a broken one — and it fails in the direction
+       that looks like the tool is broken rather than like the guard is working.
+       Nothing is loosened: Host above still pins the exact port, so a page on
+       another local port cannot reach this one. */
+    try { if (!LOOPBACK.has(new URL(origin).hostname)) return false; }
+    catch { return false; }
+  }
+
   /* a cross-site POST with a simple content-type gets no preflight, so CORS
      never sees it; the browser still tells us where it came from */
   const site = req.headers["sec-fetch-site"];
@@ -181,6 +200,82 @@ const handle = async (req, res) => {
   }
 
   if (path === "/api/build" && req.method === "POST") return json(res, 200, await build());
+
+  /* ── design tokens ────────────────────────────────────────────────────────
+     The colours, spacing and type scale the whole site is drawn from. Asked for
+     a panel that controls every detail: this is the largest thing it did not
+     touch — 188 lines that every one of the 82 pages inherits.
+
+     It is also the most dangerous thing to expose. The token file carries
+     measured ratios in its own comments ("captions — 6.5:1, was #A7A7A7 ·
+     2.3:1"), which is the record of someone having fixed exactly this once
+     already. A free colour picker over these values would let one afternoon
+     undo it, and the site's whole argument is that its accessibility is
+     measured rather than claimed.
+
+     So the control is total and the guarantee is too: a token write runs the
+     project's own contrast audit BEFORE the build, and a change that breaks a
+     WCAG pairing is refused and never reaches disk. You can set any colour you
+     like; you cannot ship one that fails. */
+  if (path === "/api/tokens") {
+    const css = readFileSync(TOKENS, "utf8");
+    const groups = [];
+    let current = null;
+    for (const line of css.split("\n")) {
+      const sec = /^\s*\/\*\s*(.+?)\s*\*\/\s*$/.exec(line);
+      const tok = /^\s*--([\w-]+):\s*([^;]+);\s*(?:\/\*\s*(.*?)\s*\*\/)?/.exec(line);
+      if (sec && !tok) { current = { title: sec[1], tokens: [] }; groups.push(current); continue; }
+      if (tok) {
+        if (!current) { current = { title: "", tokens: [] }; groups.push(current); }
+        current.tokens.push({ name: tok[1], value: tok[2].trim(), note: tok[3] || "",
+                              colour: /^#|^rgb|^hsl|^oklch/i.test(tok[2].trim()) });
+      }
+    }
+    return json(res, 200, { groups: groups.filter((g) => g.tokens.length) });
+  }
+
+  if (path === "/api/tokens/save" && req.method === "PUT") {
+    let body = "";
+    for await (const chunk of req) { body += chunk; if (body.length > 2e6) return json(res, 413, { error: "too large" }); }
+    let changes;
+    try { changes = JSON.parse(body).changes; } catch { return json(res, 400, { error: "bad request" }); }
+    if (!changes || typeof changes !== "object") return json(res, 400, { error: "nothing to change" });
+
+    const before = readFileSync(TOKENS, "utf8");
+    let next = before;
+    for (const [name, value] of Object.entries(changes)) {
+      if (!/^[\w-]+$/.test(name)) return json(res, 400, { error: `not a token name: ${name}` });
+      /* a value must be a plain declaration — no braces, no semicolons, no
+         comment terminators, so a token cannot smuggle in a rule of its own */
+      if (typeof value !== "string" || /[{};]|\*\//.test(value) || value.length > 120)
+        return json(res, 400, { error: `not a usable value for --${name}` });
+      const re = new RegExp(`(--${name}:\\s*)([^;]+)(;)`);
+      if (!re.test(next)) return json(res, 404, { error: `no such token: --${name}` });
+      next = next.replace(re, `$1${value}$3`);
+    }
+
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    if (!existsSync(BACKUPS)) mkdirSync(BACKUPS, { recursive: true });
+    const backup = join(BACKUPS, `tokens.css.${stamp}.css`);
+    writeFileSync(backup, before, "utf8");
+    writeFileSync(TOKENS, next, "utf8");
+
+    /* the contrast audit runs FIRST — it reads the token file directly, so it
+       can refuse a change before a single page is rebuilt with it */
+    const c = await run(["scripts/contrast.mjs"]);
+    if (!c.ok) {
+      writeFileSync(TOKENS, before, "utf8");
+      return json(res, 422, { error: "that colour fails WCAG AA — nothing was changed",
+                              detail: (c.out + "\n" + c.err).split("\n").filter((l) => /✖|fail|:1/.test(l)).slice(0, 4).join(" · ").slice(0, 400) });
+    }
+    const b = await build();
+    if (!b.ok) {
+      writeFileSync(TOKENS, before, "utf8");
+      await build();
+      return json(res, 422, { error: "the build failed — your change was rolled back", detail: b.err });
+    }
+    return json(res, 200, { ok: true, changed: Object.keys(changes), built: b.out, backup: backup.replace(ROOT + "/", "") });
+  }
 
   /* ── verify ───────────────────────────────────────────────────────────────
      A panel that changes a site and cannot say whether the site still holds up
