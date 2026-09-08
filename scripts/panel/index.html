@@ -116,48 +116,79 @@ async function openStats() {
 /* proof view: the slots that are empty and have been all along */
 async function openProof() {
   mode = "proof";
-  current = await loadFile("site.json");
+  current = await loadFile("press.json");
   const d = current.data;
-  d.proof = d.proof || { clients: [], testimonials: [] };
+  d.clients = d.clients || { items: [] };
+  d.testimonials = d.testimonials || { items: [] };
   $("#title").textContent = "الدليل — شعارات العملاء والشهادات";
   const w = $("#wrap"); w.innerHTML = "";
 
-  const mk = (title, note, arr, fields, adder) => {
+  /* Every entry carries a draft flag. A drafted entry is stripped at build and
+     never reaches a visitor, so the placeholders here are a shape to work in
+     rather than a claim. Clearing the flag is the deliberate act that publishes
+     a client — one per real, permitted name. */
+  const mk = (title, note, holder, fields, blank) => {
     const c = document.createElement("div"); c.className = "card";
     const h = document.createElement("h3"); h.textContent = title;
-    const p = document.createElement("p"); p.textContent = note;
+    const p = document.createElement("p"); p.className = "small"; p.textContent = note;
     c.append(h, p);
-    if (!arr.length) { const e = document.createElement("div"); e.className = "empty";
-      e.textContent = "فارغ — ولن يُخترع. أضف ما هو حقيقي فقط."; c.appendChild(e); }
-    arr.forEach((item, i) => {
+    const live = holder.items.filter((x) => !x.draft).length;
+    const badge = document.createElement("p"); badge.className = "small";
+    badge.textContent = live
+      ? `${live} منشور للزائر · ${holder.items.length - live} مسوّدة`
+      : `لا شيء منشور — كل العناصر مسوّدات، ولا يراها الزائر`;
+    badge.style.opacity = ".75"; c.appendChild(badge);
+
+    holder.items.forEach((item) => {
       const row = document.createElement("div"); row.className = "row";
-      row.style.gridTemplateColumns = fields.map(() => "1fr").join(" ") + " 80px";
+      row.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px";
+      const flag = document.createElement("button");
+      const paint = () => {
+        flag.textContent = item.draft ? "مسوّدة" : "منشور";
+        flag.style.cssText = "min-width:76px;" + (item.draft
+          ? "opacity:.7"
+          : "background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:600");
+      };
+      flag.onclick = () => { item.draft = !item.draft; paint(); openProofBadge(); };
+      paint(); row.appendChild(flag);
       for (const f of fields) {
         const inp = document.createElement("input"); inp.type = "text"; inp.placeholder = f.ph;
-        inp.value = item[f.k] || ""; inp.oninput = () => { item[f.k] = inp.value; };
+        inp.value = item[f.k] || ""; inp.style.flex = f.wide ? "3" : "1";
+        inp.oninput = () => { item[f.k] = inp.value; };
         row.appendChild(inp);
       }
       const del = document.createElement("button"); del.textContent = "احذف";
-      del.onclick = () => { arr.splice(i, 1); openProof(); };
-      row.appendChild(del); c.appendChild(row);
+      del.onclick = () => { holder.items.splice(holder.items.indexOf(item), 1); openProof(); };
+      row.appendChild(del);
+      c.appendChild(row);
     });
-    const add = document.createElement("button"); add.textContent = "+ أضف";
-    add.onclick = () => { arr.push(adder()); openProof(); };
+
+    const add = document.createElement("button");
+    add.textContent = "أضف";
+    add.onclick = () => { holder.items.push({ ...blank, draft: true }); openProof(); };
     c.appendChild(add);
-    return c;
+    w.appendChild(c);
   };
 
-  w.appendChild(mk("شعارات العملاء", "الاسم كما يكتبه العميل، ومسار الشعار داخل assets/img.",
-    d.proof.clients, [{ k: "name", ph: "اسم العميل" }, { k: "logo", ph: "/assets/img/clients/x.svg" }],
-    () => ({ name: "", logo: "" })));
-  w.appendChild(mk("شهادات", "اقتباس واسم وصفة. لا تُنشر شهادة لم تُقَل.",
-    d.proof.testimonials, [{ k: "quote", ph: "الاقتباس" }, { k: "name", ph: "الاسم" }, { k: "role", ph: "الصفة" }],
-    () => ({ quote: "", name: "", role: "" })));
-  setMsg("الخانات الفارغة تبقى فارغة في الموقع — لا شيء يُخترع");
+  mk("شعارات العملاء", "الاسم كما يكتبه العميل، ومسار ملف الشعار، ورابطه. لا تنشر اسماً بلا إذن.",
+     d.clients, [{ k: "name", ph: "اسم العميل", wide: true }, { k: "logo", ph: "/assets/img/clients/x.svg" }, { k: "url", ph: "https://" }],
+     { name: "", logo: "", url: "" });
+
+  mk("الشهادات", "النص كما قاله صاحبه. لا تُنشر شهادة لم يقلها إنسان ويأذن بنشرها باسمه.",
+     d.testimonials, [{ k: "text", ph: "نص الشهادة", wide: true }, { k: "name", ph: "الاسم" }, { k: "role", ph: "المنصب" }, { k: "org", ph: "الجهة" }],
+     { text: "", name: "", role: "", org: "" });
+
+  setMsg("المسوّدات لا تصل للزائر — البناء يحذفها. اضغط «مسوّدة» لتنشر عنصراً حقيقياً.");
   paintNav();
 }
 
-/* architecture: the data the drawn diagrams are waiting for */
+function openProofBadge() {
+  if (!current || !current.data) return;
+  const d = current.data;
+  const n = (d.clients?.items || []).filter((x) => !x.draft).length + (d.testimonials?.items || []).filter((x) => !x.draft).length;
+  setMsg(n ? `${n} عنصراً سيُنشر للزائر عند الحفظ` : "كل العناصر مسوّدات — لن يظهر شيء للزائر", n ? "warn" : "");
+}
+
 async function openArch() {
   mode = "arch";
   current = await loadFile("cases.json");

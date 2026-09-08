@@ -93,12 +93,25 @@ const buildCtx = (locale) => {
   const productsJson = hydrate(readLocale("products.json", locale));
   const journalJson = hydrate(readLocale("journal.json", locale));
   const pages = hydrate(readLocale("pages.json", locale));
+
+  /* Anything carrying draft:true never reaches a built page.
+     The proof slots — client logos and testimonials — are scaffolded with
+     placeholder entries so the owner has a shape to edit in the panel. A
+     placeholder that a visitor could see is a fabricated client, which is the
+     one thing this site cannot afford: its whole argument is that its claims
+     are checkable. So the placeholders exist in the content and are stripped
+     here, and the sections stay absent until a real, permitted entry replaces
+     them. Removing the flag is a deliberate act, done once per real client. */
+  const undraft = (v) => Array.isArray(v) ? v.filter((x) => !(x && x.draft)).map(undraft)
+    : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, undraft(x)]))
+    : v;
+
   return {
     locale,
     t: UI[locale],
     careers: hydrate(readLocale("careers.json", locale)),
     legal: hydrate(readLocale("legal.json", locale)),
-    press: hydrate(readLocale("press.json", locale)),
+    press: undraft(hydrate(readLocale("press.json", locale))),
     security: hydrate(readLocale("security.json", locale)),
     site: s,
     stats: s.stats,
