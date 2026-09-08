@@ -166,7 +166,7 @@ if (!signing || prevFingerprint !== statsFingerprint) {
   }
 }
 ctx.signing = signing;
-ctx.routesCount = 1 + 1 + ctx.cases.length + 1 + ctx.products.length + 1 + 1 + 1 + 1 + ctx.articles.length + 1 + 1 + 1;
+ctx.routesCount = 1 + 1 + ctx.cases.length + 1 + ctx.products.length + 1 + ctx.pages.services.items.length + 1 + 1 + 1 + 1 + ctx.articles.length + 1 + 1 + 1;
 
 /* ---------- CSS: concatenate layers, extract the critical fences, minify ---------- */
 const cssDir = join(ROOT, "src/css");
@@ -188,7 +188,7 @@ setBuild(criticalCss, buildStamp);
 const home = (await import("./src/pages/home.mjs")).default;
 const work = await import("./src/pages/work.mjs");
 const products = await import("./src/pages/products.mjs");
-const services = (await import("./src/pages/services.mjs")).default;
+const services = await import("./src/pages/services.mjs");
 const academy = (await import("./src/pages/academy.mjs")).default;
 const group = (await import("./src/pages/group.mjs")).default;
 const journal = await import("./src/pages/journal.mjs");
@@ -207,7 +207,8 @@ const renderAll = (c) => [
   ...c.cases.map((x, i) => work.renderCase(c, x, i)),
   products.renderIndex(c),
   ...c.products.map((p) => products.renderProduct(c, p)),
-  services(c),
+  services.renderIndex(c),
+  ...c.pages.services.items.map((it, i) => services.renderService(c, it, i)),
   academy(c),
   group(c),
   journal.renderIndex(c),
