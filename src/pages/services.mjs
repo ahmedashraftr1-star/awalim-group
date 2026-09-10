@@ -1,4 +1,4 @@
-import { esc, fill, join } from "../lib/html.mjs";
+import { esc, fill, join, seoTitle} from "../lib/html.mjs";
 import { page, breadcrumbSchema } from "../lib/layout.mjs";
 import * as C from "../lib/components.mjs";
 
@@ -155,7 +155,7 @@ export function renderService(ctx, it, i) {
     path: `/services/${it.id}`,
     html: page({
       site,
-      seo: { title: `${it.t} — ${it.h} | خدمات · عوالِم قروب`, description: it.d.slice(0, 155), path: `/services/${it.id}` },
+      seo: { title: seoTitle(it.t, it.h, "عوالِم قروب"), description: it.d.slice(0, 155), path: `/services/${it.id}` },
       active: "services",
       body,
       schema: [breadcrumbSchema(site, [{ name: "الرئيسية", path: "/" }, { name: "الخدمات", path: "/services" }, { name: it.t, path: `/services/${it.id}` }])],

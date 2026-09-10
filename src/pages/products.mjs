@@ -1,4 +1,4 @@
-import { esc, fill, join } from "../lib/html.mjs";
+import { esc, fill, join, seoTitle} from "../lib/html.mjs";
 import { page, breadcrumbSchema } from "../lib/layout.mjs";
 import * as C from "../lib/components.mjs";
 
@@ -147,7 +147,7 @@ export function renderProduct(ctx, p) {
     path: `/products/${p.slug}`,
     html: page({
       site,
-      seo: { title: `${p.title} — ${p.headline} | ${p.code} · عوالِم قروب`, description: p.summary, path: `/products/${p.slug}`, ogImage: `/assets/img/og/products-${p.slug}.png`, type: "product" },
+      seo: { title: seoTitle(p.title, p.headline, "عوالِم قروب"), description: p.summary, path: `/products/${p.slug}`, ogImage: `/assets/img/og/products-${p.slug}.png`, type: "product" },
       active: "products",
       body,
       schema: [productSchema, breadcrumbSchema(site, [{ name: "الرئيسية", path: "/" }, { name: "المنتجات", path: "/products" }, { name: p.title, path: `/products/${p.slug}` }])],

@@ -1,4 +1,4 @@
-import { esc, join, slug as slugify } from "../lib/html.mjs";
+import { esc, join, slug as slugify, seoTitle} from "../lib/html.mjs";
 import { page, breadcrumbSchema } from "../lib/layout.mjs";
 import * as C from "../lib/components.mjs";
 
@@ -110,7 +110,7 @@ export function renderArticle(ctx, a, i) {
     path: `/journal/${a.slug}`,
     html: page({
       site,
-      seo: { title: `${a.title} | رؤى · عوالِم قروب`, description: a.excerpt, path: `/journal/${a.slug}`, ogImage: `/assets/img/og/journal-${a.slug}.png`, type: "article" },
+      seo: { title: seoTitle(a.title, "", "عوالِم قروب"), description: a.excerpt, path: `/journal/${a.slug}`, ogImage: `/assets/img/og/journal-${a.slug}.png`, type: "article" },
       active: "journal",
       body,
       schema: [articleSchema, breadcrumbSchema(site, [{ name: "الرئيسية", path: "/" }, { name: "رؤى", path: "/journal" }, { name: a.title, path: `/journal/${a.slug}` }])],

@@ -1,4 +1,4 @@
-import { esc, fill, join } from "../lib/html.mjs";
+import { esc, fill, join, seoTitle} from "../lib/html.mjs";
 import { page, breadcrumbSchema } from "../lib/layout.mjs";
 import * as C from "../lib/components.mjs";
 
@@ -157,7 +157,7 @@ export function renderCase(ctx, c, i) {
     path: `/work/${c.slug}`,
     html: page({
       site,
-      seo: { title: `${c.title} — ${c.headline} | دراسة حالة · عوالِم قروب`, description: c.summary, path: `/work/${c.slug}`, ogImage: `/assets/img/og/work-${c.slug}.png`, type: "article" },
+      seo: { title: seoTitle(c.title, c.headline, "دراسة حالة · عوالِم قروب"), description: c.summary, path: `/work/${c.slug}`, ogImage: `/assets/img/og/work-${c.slug}.png`, type: "article" },
       active: "work",
       body,
       schema: [breadcrumbSchema(site, [{ name: "الرئيسية", path: "/" }, { name: "الأعمال", path: "/work" }, { name: c.title, path: `/work/${c.slug}` }])],

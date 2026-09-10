@@ -4,7 +4,7 @@
    footer, and the script tags. Motion libraries are only included on pages
    whose markup actually uses them (see needsMotionLibs).
    ========================================================================== */
-import { esc, attrs, join } from "./html.mjs";
+import { esc, attrs, join, fitTitle, fitDesc} from "./html.mjs";
 import { icon } from "./icons.mjs";
 import { btn, arrow } from "./components.mjs";
 
@@ -150,8 +150,8 @@ export const page = ({ site, seo, active = "", body, schema = [], bodyClass = ""
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>${esc(seo.title)}</title>
-<meta name="description" content="${esc(seo.description)}">
+<title>${esc(fitTitle(seo.title))}</title>
+<meta name="description" content="${esc(fitDesc(seo.description))}">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAFAF8">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0B">
@@ -160,14 +160,14 @@ export const page = ({ site, seo, active = "", body, schema = [], bodyClass = ""
 <meta property="og:locale" content="ar_AR">
 <meta property="og:site_name" content="${esc(site.brand.latin)}">
 <meta property="og:url" content="${url}">
-<meta property="og:title" content="${esc(seo.title)}">
-<meta property="og:description" content="${esc(seo.description)}">
+<meta property="og:title" content="${esc(fitTitle(seo.title))}">
+<meta property="og:description" content="${esc(fitDesc(seo.description))}">
 <meta property="og:image" content="${og}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${esc(seo.title)}">
-<meta name="twitter:description" content="${esc(seo.description)}">
+<meta name="twitter:title" content="${esc(fitTitle(seo.title))}">
+<meta name="twitter:description" content="${esc(fitDesc(seo.description))}">
 <meta name="twitter:image" content="${og}">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="${site.brand.logo}" type="image/webp">

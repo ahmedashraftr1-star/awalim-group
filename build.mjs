@@ -10,7 +10,7 @@ import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from "node
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash, generateKeyPairSync, sign as edSign, createPrivateKey, createPublicKey } from "node:crypto";
-import { fill, normalizeSearch } from "./src/lib/html.mjs";
+import { fill, normalizeSearch, fitTitle, fitDesc } from "./src/lib/html.mjs";
 import { merge, findLoss } from "./src/lib/merge.mjs";
 import { setBuild } from "./src/lib/layout.mjs";
 
@@ -301,6 +301,17 @@ function localize(html, path, loc) {
 
     /* chrome strings → English, longest match first */
     for (const [ar, en] of DICT_ENTRIES) out = out.split(ar).join(en);
+
+    /* العنوان يُقصّ بعد الترجمة لا قبلها: عنوان عربي يتّسع في نتيجة البحث قد
+       يصير بالإنجليزية أعرض بالثلث، والقصّ في القالب جرى على النصّ العربي
+       فمرّ الإنجليزي بلا فحص. آخر لحظة يوجد فيها العنوان النهائي هي هنا. */
+    out = out.replace(/<title>([\s\S]*?)<\/title>/, (m, t) => `<title>${fitTitle(t)}</title>`);
+    for (const k of ["og:title", "twitter:title"])
+      out = out.replace(new RegExp(`(<meta[^>]*(?:property|name)="${k}"[^>]*content=")([^"]*)(")`),
+        (m, a, t, b) => a + fitTitle(t) + b);
+    for (const k of ["description", "og:description", "twitter:description"])
+      out = out.replace(new RegExp(`(<meta[^>]*(?:property|name)="${k}"[^>]*content=")([^"]*)(")`),
+        (m, a, t, b) => a + fitDesc(t) + b);
     out = out.replace('<html lang="ar" dir="rtl">', `<html lang="${loc.code}" dir="${loc.dir}">`);
     /* internal links move under the locale prefix; assets never do */
     out = out.replace(/(href|src)="(\/[^"#]*)"/g, (m, attr, p) => (ASSET_RE.test(p) ? m : `${attr}="${loc.prefix}${p}"`));
