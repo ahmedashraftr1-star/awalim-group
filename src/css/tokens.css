@@ -47,7 +47,7 @@
   --font-ar:      "IBM Plex Sans Arabic", "Noto Sans Arabic", ui-sans-serif, system-ui, sans-serif;
   --font-display-ar: "Alexandria", "IBM Plex Sans Arabic", "Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif;
   --font-latin:   "Archivo", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
-  --font-mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono:    "IBM Plex Mono", "IBM Plex Sans Arabic", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* scale (section 3.1). display-hero was specified at 9vw; Arabic lines of
      ~24 glyphs must still fit 1280px, so the fluid term is 7vw — max 7.5rem. */

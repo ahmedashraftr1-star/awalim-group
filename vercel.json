@@ -103,7 +103,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'sha256-i+36hKQh4YH6qO0lqzUJyh4yySGd3R7jeg8/cg+mTv8='; style-src 'self' 'sha256-4eDErlP7gjUbSHifJguimJkoUEfk37UL++wecbz1f/I=' 'sha256-6twiTG1SQs94zqnzbq+rPsIoXAk6a37da/bDi34PoV4='; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self' https://wa.me; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; require-trusted-types-for 'script'; trusted-types awalim-sw; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'sha256-i+36hKQh4YH6qO0lqzUJyh4yySGd3R7jeg8/cg+mTv8='; style-src 'self' 'sha256-eh7MbWg9FS6S1+FfYpexyJHLuiF0xHRBmHHz+wXHUmk=' 'sha256-iSB1ej0ii1O9iPk2vkAKEdLQafRZKLpOjxEFe2LNpOc='; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self' https://wa.me; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; require-trusted-types-for 'script'; trusted-types awalim-sw; upgrade-insecure-requests"
         }
       ]
     },

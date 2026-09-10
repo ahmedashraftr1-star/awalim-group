@@ -252,18 +252,32 @@ export const timeline = (items) => `
 export const processPinned = (steps, { id = "process" } = {}) => `
   <div class="proc" id="${id}" data-process>
     <div class="proc__stage">
-      <div class="proc__side">
-        <span class="proc__count" aria-hidden="true"><span data-proc-cur>01</span><span class="proc__of">/ 0${steps.length}</span></span>
-        <div class="proc__progress" aria-hidden="true"><span data-proc-bar></span></div>
-        <ol class="proc__dots" aria-hidden="true">${steps.map((s, i) => `<li data-proc-dot${i === 0 ? ' class="is-on"' : ""}>${esc(s.n)}</li>`).join("")}</ol>
+      <div class="proc__side" aria-hidden="true">
+        <span class="proc__label">مسار العمل</span>
+        <ol class="proc__dots">${steps.map((s, i) => `
+          <li data-proc-dot${i === 0 ? ' class="is-on"' : ""}>
+            <span class="proc__dn mono">${esc(s.n)}</span>
+            <span class="proc__dt">${esc(s.t)}</span>
+            ${s.dur ? `<span class="proc__dd">${esc(s.dur)}</span>` : ""}
+          </li>`).join("")}
+        </ol>
+        <div class="proc__progress"><span data-proc-bar></span></div>
+        <span class="proc__count"><span data-proc-cur>01</span><span class="proc__of">/ 0${steps.length}</span></span>
       </div>
       <div class="proc__panels">
         ${steps.map((s, i) => `
           <article class="proc__p${i === 0 ? " is-on" : ""}" data-proc-panel aria-label="المرحلة ${esc(s.n)}: ${esc(s.t)}">
-            <span class="proc__n mono">${esc(s.n)}</span>
+            <div class="proc__head">
+              <span class="proc__n mono">${esc(s.n)}</span>
+              ${s.dur ? `<span class="proc__dur">${esc(s.dur)}</span>` : ""}
+            </div>
             <h3 class="d-2">${s.t}</h3>
             <p>${s.d}</p>
-            ${chips(s.tags)}
+            ${s.out ? `<div class="proc__out">
+              <h4 class="proc__oh">تخرج بـ</h4>
+              <ul class="proc__ol">${s.out.map((o) => `<li>${o}</li>`).join("")}</ul>
+            </div>` : chips(s.tags || [])}
+            ${s.keep ? `<p class="proc__keep"><b>إن توقّفنا هنا:</b> ${s.keep}</p>` : ""}
           </article>`).join("")}
       </div>
     </div>

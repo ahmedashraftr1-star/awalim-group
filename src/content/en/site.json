@@ -263,41 +263,51 @@
       "n": "01",
       "t": "Diagnosis",
       "d": "We sit with your real process before a line of code: who does what, with which tool, and how long it takes. We come out with a scope, risk and honest timeline document — yours to keep even if we never continue together.",
-      "tags": [
-        "Workshop",
-        "Scope document",
-        "Estimate"
-      ]
+      "dur": "5 working days",
+      "out": [
+        "Scope & risk document",
+        "A map of your current process",
+        "Timeline and cost estimate in ranges"
+      ],
+      "keep": "The document and the map are yours — build with us or with anyone else."
     },
     {
       "n": "02",
       "t": "Design & architecture",
       "d": "Data model, API contracts and a permissions model — reviewed and approved before we build. Fixing an architectural mistake here costs an hour; three months in it costs a rebuild.",
-      "tags": [
+      "dur": "10–15 working days",
+      "out": [
         "Database schema",
-        "API contracts",
-        "Permissions"
-      ]
+        "Documented API contracts",
+        "Permissions matrix",
+        "Clickable screen prototypes"
+      ],
+      "keep": "Schemas and contracts are open files — any team can build on them."
     },
     {
       "n": "03",
       "t": "Build & ship",
       "d": "Weekly increments on a live environment you can see yourself — not slide decks. Automated tests stop regressions, and every release passes a performance and accessibility budget.",
-      "tags": [
-        "Weekly increments",
-        "Live environment",
-        "Automated tests"
-      ]
+      "dur": "A release every week",
+      "out": [
+        "A live environment updated weekly",
+        "Automated tests that block regressions",
+        "A performance and accessibility report per release"
+      ],
+      "keep": "The code is in your repository from day one — not from handover day."
     },
     {
       "n": "04",
       "t": "Handover & care",
       "d": "Full handover of the code, the docs, the deployment accounts and the database. An agreed care period, then an optional maintenance contract — we never make your system's survival depend on it.",
-      "tags": [
-        "Full handover",
-        "Documentation",
-        "Care period"
-      ]
+      "dur": "30 days of care",
+      "out": [
+        "Full code and documentation",
+        "Deploy accounts and the database",
+        "A training session for your team",
+        "A runbook"
+      ],
+      "keep": "The system runs without us — the maintenance contract is a choice, not a condition."
     }
   ],
   "faq": [

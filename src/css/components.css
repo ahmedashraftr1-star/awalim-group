@@ -233,7 +233,7 @@
 .dev__bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #1B1B1F; color: #B9B9C0; }
 .dev__bar i { inline-size: 9px; block-size: 9px; border-radius: 50%; background: #3B3B44; }
 .dev__bar i:nth-child(1) { background: #FF5F57; } .dev__bar i:nth-child(2) { background: #FEBC2E; } .dev__bar i:nth-child(3) { background: #28C840; }
-.dev__url, .dev__tab { margin-inline-start: auto; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em; padding: 3px 10px; border-radius: var(--r-pill); background: #26262C; direction: ltr; }
+.dev__url, .dev__tab { margin-inline-start: auto; font-family: var(--font-mono); font-size: .68rem; padding: 3px 10px; border-radius: var(--r-pill); background: #26262C; direction: ltr; }
 .dev--browser, .dev--figma, .dev--cockpit { border-radius: var(--r-md); overflow: hidden; box-shadow: var(--shadow-dev); border: 1px solid rgba(0,0,0,.25); background: #1B1B1F; }
 .dev--frame .dev__screen--frame { border-radius: var(--r-md); box-shadow: var(--shadow-dev); }
 .dev--frame .dev__screen--frame img { aspect-ratio: 3 / 2; }
@@ -639,6 +639,23 @@ body.pal-open { overflow: hidden; }
 }
 
 /* pages with a local bar: the global nav gains a ground so the two read as one header */
+/* حجاب متدرّج تحت الحبّات الطافية.
+   الحبّات معزولة ببعضها، والفجوة بينها كانت تُظهر النصّ المارّ تحتها مقصوصاً:
+   عنوان عرضي كبير يدخل من فجوة ويخرج من أخرى فيبدو مكسوراً لا مُمرَّراً.
+   التدرّج يُذيب ما يمرّ بدل أن يشرّحه، ويُبقي مظهر الطفو — بلا backdrop-filter
+   حتى يظلّ صادقاً مع prefers-reduced-transparency. */
+body:not(.has-subnav) .pillnav::after {
+  content: ""; position: absolute; inset-block-start: 0; inset-inline: 0;
+  block-size: calc(var(--nav-h) + var(--space-6));
+  background: linear-gradient(to bottom,
+    var(--bg) 12%,
+    color-mix(in srgb, var(--bg) 62%, transparent) 52%,
+    transparent);
+  z-index: -1; opacity: 0; pointer-events: none;
+  transition: opacity var(--d-mid, .3s) ease;
+}
+body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; }
+
 .has-subnav .pillnav[data-stuck="true"]::before { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--bg) 84%, transparent); -webkit-backdrop-filter: blur(16px) saturate(150%); backdrop-filter: blur(16px) saturate(150%); z-index: -1; }
 .has-subnav .pillnav { position: sticky; }
 .has-subnav .film__stage { padding-block-start: calc(var(--nav-h) + 56px + var(--space-3)); }
