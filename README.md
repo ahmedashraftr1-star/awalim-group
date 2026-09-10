@@ -8,9 +8,12 @@
 npm run build      # يولّد كل الصفحات + assets/css/awalim.css + sitemap.xml
 npm run dev        # build ثم معاينة محلية على http://localhost:8899 (brotli + clean URLs زي Vercel)
 npm test           # الدمج ثنائي اللغة + لغة المحتوى + ترويسات الاستجابة + تباين WCAG + روابط داخلية + Playwright
-                   #   + الطباعة العربية كما تُرسم + اتجاه المقاطع المركّبة + الأدوات الميتة + تدقيق الصفحة كما تُرسم
+                   #   + رأس الصفحة والمراسي والخريطة + الطباعة العربية كما تُرسم + اتجاه المقاطع المركّبة
+                   #   + الأدوات الميتة + لوحة المفاتيح والتركيز + تدقيق الصفحة كما تُرسم
 npm run arabic     # العربية وحدها: الطباعة المرسومة، اتجاه الأرقام، لينتر النثر
 npm run interact   # كل أداة على كل صفحة: هل يتغيّر شيء عند النقر؟
+npm run keyboard   # جدولة فعلية بـTab: مؤشّر مرئي، بلا حجب، بلا مصيدة، رابط تخطٍّ يعمل
+npm run head       # العنوان والوصف بعرضهما في نتيجة البحث · canonical · og · hreflang · المراسي · الخريطة
 npm run audit      # التدقيق وحده: كل مسار × فاتح/ليلي/موبايل — تباين فعلي، نص مقصوص، حجم الأهداف
 npm run og         # يولّد صور Open Graph لكل صفحة (assets/img/og/)
 npm run covers     # يولّد أغلفة المقالات التايبوغرافية (assets/img/journal/cover-*.webp)
@@ -50,7 +53,7 @@ assets/img/journal/   أغلفة المقالات — تايبوغرافية م�
                       نصّاً تحته مباشرة، وصور OG وحدها هي التي تحمل العنوان لأنها تُرى منفردة.
 assets/img/og/        صور OG مولَّدة لكل صفحة
 scripts/              merge-test · copy-lint · headers-test · contrast · check-links · e2e
-                      arabic-type · bidi · interact · audit-render · og · shots
+                      head-lint · arabic-type · bidi · interact · keyboard · audit-render · og · shots
                       serve.mjs يقرأ `_headers` ويرسل ترويسات الإنتاج نفسها محلياً — فكل الاختبارات تجري تحت الـ CSP الحقيقي
 build.mjs             سكربت البناء
 ```

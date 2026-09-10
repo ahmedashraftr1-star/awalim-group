@@ -619,8 +619,11 @@ body.pal-open { overflow: hidden; }
 .moment__l { color: var(--text-muted); font-size: var(--fs-sm); max-width: 22ch; }
 
 /* ---------- STICKY PRODUCT BAR ---------- */
-.subnav { position: sticky; inset-block-start: var(--nav-h); z-index: 95; block-size: 56px; margin-block-end: -56px; background: color-mix(in srgb, var(--bg) 84%, transparent); -webkit-backdrop-filter: blur(16px) saturate(150%); backdrop-filter: blur(16px) saturate(150%); border-block-end: 1px solid var(--border); opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity .3s ease, transform .4s var(--ease-out); }
-.subnav.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.subnav { position: sticky; inset-block-start: var(--nav-h); z-index: 95; block-size: 56px; margin-block-end: -56px; background: color-mix(in srgb, var(--bg) 84%, transparent); -webkit-backdrop-filter: blur(16px) saturate(150%); backdrop-filter: blur(16px) saturate(150%); border-block-end: 1px solid var(--border); opacity: 0; visibility: hidden; transform: translateY(-8px); pointer-events: none; transition: opacity .3s ease, transform .4s var(--ease-out), visibility 0s linear .3s; }
+/* visibility لا opacity وحدها: العنصر الشفّاف يبقى في ترتيب الجدولة، فكان
+   الزائر بلوحة المفاتيح يقف على روابط لا يراها أحد. visibility تُخرجه من
+   الترتيب، وتأخيرها إلى نهاية الانتقال يُبقي الاختفاء ناعماً. */
+.subnav.is-on { opacity: 1; visibility: visible; transform: none; pointer-events: auto; transition: opacity .3s ease, transform .4s var(--ease-out), visibility 0s; }
 .subnav__in { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); block-size: 100%; }
 .subnav__id { display: flex; align-items: center; gap: var(--space-3); font-size: var(--fs-sm); }
 .subnav__id b { font-weight: var(--w-semibold); }
