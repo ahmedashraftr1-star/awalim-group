@@ -7,7 +7,11 @@
     },
     "hero": {
       "eyebrow": "From Palestine to the world · Founded 2021",
-      "lines": ["We don't build websites.", "We build the <em>systems</em>", "that run companies."],
+      "lines": [
+        "We don't build websites.",
+        "We build the <em>systems</em>",
+        "that run companies."
+      ],
       "lede": "Awalim Group is a digital engineering house building enterprise products that hold under real pressure: double-entry accounting on IFRS, AI agents that execute rather than chat, Flutter apps with native performance, and web platforms measured in milliseconds."
     },
     "story": {
@@ -19,9 +23,48 @@
       "h": "The difference between a website and a system is the difference between a pitch and a product.",
       "p1": "Most of what is sold in this region as a «platform» is a pretty interface over a spreadsheet. We build the layer nobody sees: balanced journal entries, multi-tenant data isolation, reversible migrations, tests that stop regressions, and an audit log that cannot be erased.",
       "p2": "The beautiful interface comes after that — and it comes because the structure underneath has earned it."
+    },
+    "why": {
+      "eyebrow": "Why us",
+      "h": "Every reason here is one you can check",
+      "lede": "We will not ask you to take our word. Under each reason is a link to where you verify it — on this site, now.",
+      "reasons": [
+        {
+          "k": "own",
+          "t": "The code is yours from day one",
+          "d": "In your repository, not ours, with the documentation, deploy accounts and database. If we stop tomorrow the system runs without us — and we never tie it to a maintenance contract.",
+          "href": "#process",
+          "cta": "See how we work"
+        },
+        {
+          "k": "signed",
+          "t": "Every number on this site is signed",
+          "d": "The figures you read here are signed with an Ed25519 key, and verification runs in your browser, not on our server. An unsigned number is a claim, not a measurement.",
+          "href": "/verify",
+          "cta": "Check the signature"
+        },
+        {
+          "k": "attack",
+          "t": "The security page attacks itself in front of you",
+          "d": "Five real attacks run in your browser and show you the browser refusing them one by one. If our policy ever weakens, that page is the first to tell you.",
+          "href": "/security",
+          "cta": "Watch the attacks"
+        },
+        {
+          "k": "measure",
+          "t": "We measure ourselves the way we measure others",
+          "d": "One browser, one session, one viewport, interleaved so a slow minute cannot favour anyone. And where we lose, it shows that we lost.",
+          "href": "#compare",
+          "cta": "Read the measurement"
+        }
+      ],
+      "cmp": {
+        "note": "Median of {repeats} runs — one browser, one viewport, one session, loaded interleaved so a slow minute cannot favour one site over another. Measured {measured}.",
+        "caveat": "It measures weight and speed only",
+        "caveatRest": "it says nothing about which page is doing the harder job: a product homepage carries video and a store; this one carries an argument."
+      }
     }
   },
-
   "work": {
     "seo": {
       "title": "Work — systems, apps and identities delivered to real clients | Awalim Group",
@@ -30,7 +73,6 @@
     "h": "Work",
     "lede": "Systems, apps and identities delivered to real clients. Not a grid of images without context — every project is explained the way it was built: what the problem was, what we decided, and why."
   },
-
   "products": {
     "seo": {
       "title": "Products — systems we build and run as standalone products | Awalim Group",
@@ -39,7 +81,6 @@
     "h": "Products",
     "lede": "Systems we build and develop as standalone products — each one built to solve a specific problem completely, not an extended prototype."
   },
-
   "services": {
     "seo": {
       "title": "Services — four disciplines we work in deeply | Awalim Group",
@@ -129,13 +170,24 @@
       "eyebrow": "How we price",
       "h": "A written scope, then a price — not the other way round",
       "models": [
-        { "t": "Fixed scope", "d": "An approved scope document with a stated price and schedule. Fits clearly defined projects.", "tag": "Most common" },
-        { "t": "Weekly increments", "d": "A team working in weekly increments on a live environment, with a report and an invoice each week. Fits products that evolve.", "tag": "For products" },
-        { "t": "Care & maintenance", "d": "An optional contract after handover for defects and updates. Your system's survival never depends on it.", "tag": "Optional" }
+        {
+          "t": "Fixed scope",
+          "d": "An approved scope document with a stated price and schedule. Fits clearly defined projects.",
+          "tag": "Most common"
+        },
+        {
+          "t": "Weekly increments",
+          "d": "A team working in weekly increments on a live environment, with a report and an invoice each week. Fits products that evolve.",
+          "tag": "For products"
+        },
+        {
+          "t": "Care & maintenance",
+          "d": "An optional contract after handover for defects and updates. Your system's survival never depends on it.",
+          "tag": "Optional"
+        }
       ]
     }
   },
-
   "academy": {
     "seo": {
       "title": "Awalim Academy — engineering tracks taught the way we work | SYS-ACAD-03",
@@ -144,19 +196,107 @@
     "h": "Awalim Academy",
     "lede": "Engineering tracks taught the way we actually work — a real project, code review and tests — not a video series.",
     "tracks": [
-      { "n": "01", "t": "Systems & database engineering", "d": "From data modelling to migrations, indexes and transactions. You leave able to design a database that survives growth, not just to run a query.", "tags": ["PostgreSQL", "Drizzle", "Transactions", "Indexing"], "duration": "12 weeks", "project": "A multi-tenant invoicing system", "syllabus": ["Data modelling and normalisation", "Migrations and indexes", "Transactions and isolation", "Performance and query measurement", "Row-level security"] },
-      { "n": "02", "t": "Applied AI and agents", "d": "Building agents that carry out real tasks: task definition, permission boundaries, knowledge systems, and accuracy evaluation before release.", "tags": ["Agents", "RAG", "Evaluation", "Governance"], "duration": "10 weeks", "project": "A document-extraction agent with a human in the loop", "syllabus": ["Task definition and permission limits", "Tools and memory", "Knowledge systems and citation", "Evaluation before release", "Governance and logging"] },
-      { "n": "03", "t": "Flutter product development", "d": "From Figma to the app store: clean state management, offline work, full Arabic support, and measured performance.", "tags": ["Flutter", "State management", "RTL", "Release"], "duration": "12 weeks", "project": "An offline-capable app published to both stores", "syllabus": ["Figma to components", "State management", "Local storage and sync", "Arabic and direction", "Release and review"] },
-      { "n": "04", "t": "Design and Arabic design systems", "d": "Design tokens, Arabic typography, contrast and accessibility — and how an identity reaches the code instead of staying in a slide deck.", "tags": ["Design tokens", "Arabic typography", "WCAG", "Components"], "duration": "8 weeks", "project": "An Arabic design system exported to code", "syllabus": ["Design tokens", "Arabic typography", "Contrast and accessibility", "Components", "Exporting to code"] }
+      {
+        "n": "01",
+        "t": "Systems & database engineering",
+        "d": "From data modelling to migrations, indexes and transactions. You leave able to design a database that survives growth, not just to run a query.",
+        "tags": [
+          "PostgreSQL",
+          "Drizzle",
+          "Transactions",
+          "Indexing"
+        ],
+        "duration": "12 weeks",
+        "project": "A multi-tenant invoicing system",
+        "syllabus": [
+          "Data modelling and normalisation",
+          "Migrations and indexes",
+          "Transactions and isolation",
+          "Performance and query measurement",
+          "Row-level security"
+        ]
+      },
+      {
+        "n": "02",
+        "t": "Applied AI and agents",
+        "d": "Building agents that carry out real tasks: task definition, permission boundaries, knowledge systems, and accuracy evaluation before release.",
+        "tags": [
+          "Agents",
+          "RAG",
+          "Evaluation",
+          "Governance"
+        ],
+        "duration": "10 weeks",
+        "project": "A document-extraction agent with a human in the loop",
+        "syllabus": [
+          "Task definition and permission limits",
+          "Tools and memory",
+          "Knowledge systems and citation",
+          "Evaluation before release",
+          "Governance and logging"
+        ]
+      },
+      {
+        "n": "03",
+        "t": "Flutter product development",
+        "d": "From Figma to the app store: clean state management, offline work, full Arabic support, and measured performance.",
+        "tags": [
+          "Flutter",
+          "State management",
+          "RTL",
+          "Release"
+        ],
+        "duration": "12 weeks",
+        "project": "An offline-capable app published to both stores",
+        "syllabus": [
+          "Figma to components",
+          "State management",
+          "Local storage and sync",
+          "Arabic and direction",
+          "Release and review"
+        ]
+      },
+      {
+        "n": "04",
+        "t": "Design and Arabic design systems",
+        "d": "Design tokens, Arabic typography, contrast and accessibility — and how an identity reaches the code instead of staying in a slide deck.",
+        "tags": [
+          "Design tokens",
+          "Arabic typography",
+          "WCAG",
+          "Components"
+        ],
+        "duration": "8 weeks",
+        "project": "An Arabic design system exported to code",
+        "syllabus": [
+          "Design tokens",
+          "Arabic typography",
+          "Contrast and accessibility",
+          "Components",
+          "Exporting to code"
+        ]
+      }
     ],
     "philosophy": {
       "h": "Not just recorded lectures",
       "p": "We start from a problem, not a topic. You write the code, we review it with you line by line, then you fix it and resubmit — exactly as it goes in a real team.",
       "pillars": [
-        { "t": "One project that runs through", "d": "You build a single product across the whole track instead of scattered exercises." },
-        { "t": "Real code review", "d": "Written notes on your own code, not a model answer." },
-        { "t": "Tests from day one", "d": "You learn to write the test before you learn to write the feature." },
-        { "t": "Something you can show", "d": "You leave with a published project for your portfolio." }
+        {
+          "t": "One project that runs through",
+          "d": "You build a single product across the whole track instead of scattered exercises."
+        },
+        {
+          "t": "Real code review",
+          "d": "Written notes on your own code, not a model answer."
+        },
+        {
+          "t": "Tests from day one",
+          "d": "You learn to write the test before you learn to write the feature."
+        },
+        {
+          "t": "Something you can show",
+          "d": "You leave with a published project for your portfolio."
+        }
       ]
     },
     "why": {
@@ -165,7 +305,6 @@
       "p2": "A large part of the Awalim team today came out of the Academy."
     }
   },
-
   "group": {
     "seo": {
       "title": "The Group — from a room in Gaza to systems running in ten countries | Awalim Group",
@@ -174,20 +313,68 @@
     "h": "The Group",
     "lede": "Awalim Group is a digital engineering house founded in 2021 in Palestine. We build enterprise products to a global standard — and we measure ourselves by that standard and no other.",
     "timeline": [
-      { "y": "2018", "t": "First line of code, from Gaza", "d": "A mobile phone and a slow connection. Starting from zero, and building the first iOS and Android apps to strict performance standards." },
-      { "y": "2020", "t": "First paying client", "d": "Fifty dollars that were less a fee than a proof that skill outruns geography." },
-      { "y": "2021", "t": "Awalim Group is founded", "d": "Turning solo work into an engineering house with institutional standards: documentation, code review, and contractual responsibility." },
-      { "y": "2022", "t": "First complete enterprise system", "d": "The move from apps to systems: databases, permissions, and audit logs." },
-      { "y": "2023", "t": "The Academy passes 100 graduates", "d": "Engineering tracks begin — and a large part of today's team came from them." },
-      { "y": "2024", "t": "Agents reach production", "d": "The first agentic AI systems running inside real products at real clients." },
-      { "y": "2025", "t": "More than 50 systems in 10 countries", "d": "Expanding from local clients to a regional and international network." },
-      { "y": "2026", "t": "Smart Accountant", "d": "Our most mature product ships: an enterprise accounting system, Arabic from the root, on IFRS." }
+      {
+        "y": "2018",
+        "t": "First line of code, from Gaza",
+        "d": "A mobile phone and a slow connection. Starting from zero, and building the first iOS and Android apps to strict performance standards."
+      },
+      {
+        "y": "2020",
+        "t": "First paying client",
+        "d": "Fifty dollars that were less a fee than a proof that skill outruns geography."
+      },
+      {
+        "y": "2021",
+        "t": "Awalim Group is founded",
+        "d": "Turning solo work into an engineering house with institutional standards: documentation, code review, and contractual responsibility."
+      },
+      {
+        "y": "2022",
+        "t": "First complete enterprise system",
+        "d": "The move from apps to systems: databases, permissions, and audit logs."
+      },
+      {
+        "y": "2023",
+        "t": "The Academy passes 100 graduates",
+        "d": "Engineering tracks begin — and a large part of today's team came from them."
+      },
+      {
+        "y": "2024",
+        "t": "Agents reach production",
+        "d": "The first agentic AI systems running inside real products at real clients."
+      },
+      {
+        "y": "2025",
+        "t": "More than 50 systems in 10 countries",
+        "d": "Expanding from local clients to a regional and international network."
+      },
+      {
+        "y": "2026",
+        "t": "Smart Accountant",
+        "d": "Our most mature product ships: an enterprise accounting system, Arabic from the root, on IFRS."
+      }
     ],
     "values": [
-      { "n": "01", "t": "Honesty before marketing", "d": "We publish no number we cannot prove, and no compliance badge we have not earned. If a feature is still in development, we write that." },
-      { "n": "02", "t": "The client owns it", "d": "Code, data and deployment accounts are handed over in full. We keep no key that makes staying with us compulsory." },
-      { "n": "03", "t": "Arabic is not a translation", "d": "We design right-to-left from the start: the typography, the numerals, the dates, and the whole visual flow." },
-      { "n": "04", "t": "Accessibility is a condition, not a feature", "d": "Everything we build is tested with a keyboard and a screen reader. Someone who cannot use the product was not built for." }
+      {
+        "n": "01",
+        "t": "Honesty before marketing",
+        "d": "We publish no number we cannot prove, and no compliance badge we have not earned. If a feature is still in development, we write that."
+      },
+      {
+        "n": "02",
+        "t": "The client owns it",
+        "d": "Code, data and deployment accounts are handed over in full. We keep no key that makes staying with us compulsory."
+      },
+      {
+        "n": "03",
+        "t": "Arabic is not a translation",
+        "d": "We design right-to-left from the start: the typography, the numerals, the dates, and the whole visual flow."
+      },
+      {
+        "n": "04",
+        "t": "Accessibility is a condition, not a feature",
+        "d": "Everything we build is tested with a keyboard and a screen reader. Someone who cannot use the product was not built for."
+      }
     ],
     "founder": {
       "lede": "He started in 2018 from Gaza with a mobile phone. He learned to program under siege, then turned individual skill into an engineering company in 2021.",
@@ -198,7 +385,6 @@
       ]
     }
   },
-
   "journal": {
     "seo": {
       "title": "Journal — engineering notes from real projects | Awalim Group",
@@ -207,7 +393,6 @@
     "h": "Journal",
     "lede": "Engineering notes from real projects — not marketing content. What we learn while shipping, written down while it is still fresh."
   },
-
   "contact": {
     "seo": {
       "title": "Start your project — tell us about the problem, not the solution | Awalim Group",
@@ -216,32 +401,110 @@
     "h": "Start your project",
     "lede": "Tell us about the problem, not the solution. The best projects began with a call where the process was described honestly — and we come back with a first diagnosis.",
     "steps": [
-      { "id": "type",    "t": "Project type",  "q": "What do you want to build?" },
-      { "id": "scope",   "t": "Scope & budget","q": "Roughly how big is the project?" },
-      { "id": "details", "t": "Details",       "q": "Describe the process you want solved" },
-      { "id": "you",     "t": "Your details",  "q": "How do we get back to you?" }
+      {
+        "id": "type",
+        "t": "Project type",
+        "q": "What do you want to build?"
+      },
+      {
+        "id": "scope",
+        "t": "Scope & budget",
+        "q": "Roughly how big is the project?"
+      },
+      {
+        "id": "details",
+        "t": "Details",
+        "q": "Describe the process you want solved"
+      },
+      {
+        "id": "you",
+        "t": "Your details",
+        "q": "How do we get back to you?"
+      }
     ],
     "types": [
-      { "v": "Enterprise system (accounting / HR / operations)", "t": "Enterprise system", "d": "Accounting, HR, operations", "icon": "ledger" },
-      { "v": "Agentic AI and automation", "t": "Agentic AI", "d": "Extraction, automation, knowledge systems", "icon": "spark" },
-      { "v": "Mobile app", "t": "Mobile app", "d": "Flutter — iOS and Android", "icon": "phone" },
-      { "v": "Brand identity and design system", "t": "Identity & design system", "d": "Mark, colour, type, components", "icon": "tokens" },
-      { "v": "Web platform or dashboard", "t": "Web platform", "d": "A site or a dashboard that is measured", "icon": "browser" },
-      { "v": "Audit of an existing project", "t": "Audit an existing project", "d": "What works, and what must be rebuilt", "icon": "search" },
-      { "v": "Team training / the Academy", "t": "Team training", "d": "Academy tracks for your team", "icon": "book" }
+      {
+        "v": "Enterprise system (accounting / HR / operations)",
+        "t": "Enterprise system",
+        "d": "Accounting, HR, operations",
+        "icon": "ledger"
+      },
+      {
+        "v": "Agentic AI and automation",
+        "t": "Agentic AI",
+        "d": "Extraction, automation, knowledge systems",
+        "icon": "spark"
+      },
+      {
+        "v": "Mobile app",
+        "t": "Mobile app",
+        "d": "Flutter — iOS and Android",
+        "icon": "phone"
+      },
+      {
+        "v": "Brand identity and design system",
+        "t": "Identity & design system",
+        "d": "Mark, colour, type, components",
+        "icon": "tokens"
+      },
+      {
+        "v": "Web platform or dashboard",
+        "t": "Web platform",
+        "d": "A site or a dashboard that is measured",
+        "icon": "browser"
+      },
+      {
+        "v": "Audit of an existing project",
+        "t": "Audit an existing project",
+        "d": "What works, and what must be rebuilt",
+        "icon": "search"
+      },
+      {
+        "v": "Team training / the Academy",
+        "t": "Team training",
+        "d": "Academy tracks for your team",
+        "icon": "book"
+      }
     ],
-    "budgets": ["Not decided yet", "Under $5,000", "$5,000 — $15,000", "$15,000 — $50,000", "Over $50,000"],
-    "timelines": ["As soon as possible", "Within a month", "Within three months", "Not fixed"],
-    "after": ["We read the brief and reply within two working days", "A 30-minute diagnosis call — no commitment", "An initial scope document with a candid time and price estimate", "You decide: we start, or you take the document and go"],
+    "budgets": [
+      "Not decided yet",
+      "Under $5,000",
+      "$5,000 — $15,000",
+      "$15,000 — $50,000",
+      "Over $50,000"
+    ],
+    "timelines": [
+      "As soon as possible",
+      "Within a month",
+      "Within three months",
+      "Not fixed"
+    ],
+    "after": [
+      "We read the brief and reply within two working days",
+      "A 30-minute diagnosis call — no commitment",
+      "An initial scope document with a candid time and price estimate",
+      "You decide: we start, or you take the document and go"
+    ],
     "faq": [
-      { "q": "Is anything I write here stored?", "a": "No. The button opens a WhatsApp chat (or an email) pre-filled with your request on your own device — nothing is sent to any server from this site." },
-      { "q": "What if I don't know the budget?", "a": "Choose «Not decided yet». The first diagnosis produces a scope and a candid price you can then decide on." },
-      { "q": "Is the first call paid?", "a": "No. Thirty minutes of diagnosis, no commitment. If we are not the right people we say so and point you to someone who is." }
+      {
+        "q": "Is anything I write here stored?",
+        "a": "No. The button opens a WhatsApp chat (or an email) pre-filled with your request on your own device — nothing is sent to any server from this site."
+      },
+      {
+        "q": "What if I don't know the budget?",
+        "a": "Choose «Not decided yet». The first diagnosis produces a scope and a candid price you can then decide on."
+      },
+      {
+        "q": "Is the first call paid?",
+        "a": "No. Thirty minutes of diagnosis, no commitment. If we are not the right people we say so and point you to someone who is."
+      }
     ]
   },
-
   "notFound": {
-    "seo": { "title": "Page not found — 404 | Awalim Group", "description": "The page you asked for does not exist." },
+    "seo": {
+      "title": "Page not found — 404 | Awalim Group",
+      "description": "The page you asked for does not exist."
+    },
     "h": "This page doesn't work. Everything else does.",
     "lede": "The link you came from is old or wrong. Pick a destination from the list, or start from the home page."
   }

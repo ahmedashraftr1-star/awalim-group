@@ -283,6 +283,62 @@ export const processPinned = (steps, { id = "process" } = {}) => `
     </div>
   </div>`;
 
+/* ---------- why us: a claim is only as good as the place you can check it ---------- */
+export const whyGrid = (reasons) => `
+  <ol class="why rv" data-stagger>
+    ${reasons.map((r, i) => `
+      <li class="why__i">
+        <span class="why__n mono" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
+        <h3 class="why__t">${r.t}</h3>
+        <p class="why__d">${r.d}</p>
+        <a class="lnk why__a" href="${esc(r.href)}"><span>${esc(r.cta)}</span>${arrow()}</a>
+      </li>`).join("")}
+  </ol>`;
+
+/* ---------- measured comparison ----------
+   scripts/compare.mjs produced this and nothing rendered it. The numbers are
+   medians of interleaved runs, and one column is one we lose — which is the
+   only reason the other three are worth reading. Best-in-column is marked with
+   a word as well as a colour: 1.4.1 does not accept colour alone. */
+export const compareStrip = (cmp, copy = {}) => {
+  const cols = [
+    { k: "kb",       h: "الوزن",         u: "ك.ب" },
+    { k: "requests", h: "الطلبات",       u: "" },
+    { k: "fcp",      h: "أوّل رسم",       u: "م.ث" },
+    { k: "load",     h: "اكتمال التحميل", u: "م.ث" },
+  ];
+  const rows = (cmp.rows || []).filter((r) => r.ok);
+  if (!rows.length) return "";
+  const best = Object.fromEntries(cols.map((c) => [c.k, Math.min(...rows.map((r) => r[c.k]))]));
+  return `
+  <figure class="cmp rv">
+    <div class="cmp__scroll">
+      <table class="cmp__t">
+        <caption class="sr-only">قياس وزن الصفحة وسرعتها: عوالِم مقابل مواقع أخرى</caption>
+        <thead><tr>
+          <th scope="col">الموقع</th>
+          ${cols.map((c) => `<th scope="col">${c.h}${c.u ? ` <span class="cmp__u">${c.u}</span>` : ""}</th>`).join("")}
+        </tr></thead>
+        <tbody>
+          ${rows.map((r) => `<tr${r.ours ? ' class="is-ours"' : ""}>
+            <th scope="row">${esc(r.name)}${r.ours ? ` <span class="cmp__us">نحن</span>` : ""}</th>
+            ${cols.map((c) => `<td${r[c.k] === best[c.k] ? ' class="is-best"' : ""}>${num(r[c.k])}${r[c.k] === best[c.k] ? `<span class="sr-only"> — الأفضل في هذا العمود</span>` : ""}</td>`).join("")}
+          </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+    <figcaption class="cmp__note">
+      ${esc(copy.note || "")
+        .replace("{repeats}", num(cmp.repeats))
+        /* التاريخ ISO داخل فقرة عربية: الشرطات محايدة والأرقام ضعيفة، فيقلبه
+           خوارزمي الاتجاه إلى 07-09-2026. <bdi> يعزل ولا يوجّه — الأرقام ليست
+           محرفاً قويّاً — فالاتجاه يُصرَّح به. */
+        .replace("{measured}", `<bdi dir="ltr" lang="en">${esc(cmp.measured)}</bdi>`)}
+      <b>${esc(copy.caveat || "")}</b>${copy.caveatRest ? ` — ${esc(copy.caveatRest)}` : ""}
+    </figcaption>
+  </figure>`;
+};
+
 /* ---------- standards / capabilities ---------- */
 export const standardsGrid = (list, live = {}) => `
   <div class="caps rv" data-stagger>

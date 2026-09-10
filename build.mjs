@@ -113,6 +113,8 @@ const buildCtx = (locale) => {
     legal: hydrate(readLocale("legal.json", locale)),
     press: undraft(hydrate(readLocale("press.json", locale))),
     security: hydrate(readLocale("security.json", locale)),
+    /* أرقام لا نصّ: القياس واحد للّغتين، وما حوله من كلام يعيش في القالب والقاموس */
+    compare: read("src/content/compare.json"),
     site: s,
     stats: s.stats,
     themes: s.themes,
@@ -306,6 +308,21 @@ function localize(html, path, loc) {
     out = out.replace(new RegExp(site.brand.url.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(/[^\"']*)?", "g"),
       (m, p) => (p && ASSET_RE.test(p) ? m : site.brand.url + loc.prefix + (p || "/")));
     out = out.replace(/\u0000E(\d+)\u0000/g, (m, i) => parked[+i]);
+  }
+
+  /* ---------- bidi isolation for numeric ranges ----------
+     في فقرة عربية تكون الأرقام محارف ضعيفة والشرطة والشرطة المائلة محايدة،
+     فيقلب خوارزمي يونيكود ترتيبها بصرياً: «الأسابيع 1–2» تُرسم «الأسابيع 2–1»
+     و«الأسبوع 07 / 12» تُرسم «12 / 07». المصدر سليم والمرسوم مقلوب، فلا تكشفه
+     قراءة الملفّات — كشفه قياسُ مواضع الأجزاء بـ Range (shots/bidi.mjs).
+     العلاج محرفان غير مرئيّين: LRI قبل المقطع و PDI بعده. يمرّان عبر esc دون
+     أثر، ويعملان في كل مكان يظهر فيه النصّ. تُطبَّق على الاتجاه من اليمين فقط،
+     ولا تُطبَّق داخل script/style/pre/code. */
+  if (loc.dir === "rtl") {
+    const LRI = "\u2066", PDI = "\u2069";
+    const RANGE = /(?<![0-9A-Za-z\u2066])[0-9]+(?:\s?[-–—/:.]\s?[0-9]+)+[A-Za-z]{0,4}(?![0-9A-Za-z])/g;
+    out = out.replace(/<(script|style|pre|code)\b[\s\S]*?<\/\1>|>([^<]+)(?=<)/gi,
+      (m, tag, text) => (tag ? m : ">" + text.replace(RANGE, (r) => LRI + r + PDI)));
   }
 
   /* hreflang: both locales, on every page, plus x-default on the Arabic original */

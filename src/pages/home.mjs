@@ -83,6 +83,19 @@ export default function render(ctx) {
       </div>
     </section>`,
 
+    /* 5b — WHY US
+       The competitor answers this with adjectives. Adjectives are free, so
+       they are worth nothing. Every reason here ends in a link to the place on
+       this site where the visitor checks it — and the last one opens onto a
+       measurement with a column we lose. */
+    `<section class="sec" id="why">
+      <div class="wrap wrap--wide">
+        ${C.sectionHead({ eyebrowAr: h.why.eyebrow, eyebrowEn: "WHY US", h: h.why.h, lede: h.why.lede })}
+        ${C.whyGrid(h.why.reasons)}
+        <div class="why__cmp" id="compare">${C.compareStrip(ctx.compare, h.why.cmp)}</div>
+      </div>
+    </section>`,
+
     /* 6 — SELECTED WORK */
     `<section class="sec" id="work">
       <div class="wrap wrap--wide">

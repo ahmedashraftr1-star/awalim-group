@@ -987,3 +987,40 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; }
   border-block-start: 1px dashed var(--border);
   font-size: var(--fs-sm); color: var(--text-muted); max-width: 74ch; line-height: 1.7;
 }
+
+/* ---------- WHY US ---------- */
+/* لا بطاقات هنا: قسم المعايير يستعمل البطاقة، وتكرارها يجعل القسمين يبدوان
+   واحداً. سطر علوي يشتدّ عند التحويم — أقرب إلى بند في دفتر منه إلى بطاقة. */
+.why { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6) var(--space-7); margin-block-start: var(--space-7); }
+/* أربعة أسباب في auto-fit تصير ثلاثة وواحداً يتيماً على 1440. 2×2 متوازنة. */
+@media (min-width: 860px) { .why { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.why__i { display: grid; gap: var(--space-3); align-content: start; padding-block-start: var(--space-5); border-block-start: 2px solid var(--border); transition: border-color var(--d-mid) var(--ease-out); }
+.why__i:hover, .why__i:focus-within { border-block-start-color: var(--accent); }
+.why__n { font-size: var(--fs-xs); color: var(--accent-text); }
+.why__t { font-size: var(--fs-xl); font-weight: var(--w-bold); line-height: 1.32; }
+.why__d { color: var(--text-2); line-height: 1.75; max-width: 46ch; }
+.why__a { justify-self: start; }
+
+/* ---------- MEASURED COMPARISON ---------- */
+.why__cmp { margin-block-start: var(--space-8); }
+.cmp { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+/* position:relative ليس زينة: في مستند RTL يفيض المحتوى إلى اليسار، وحاوية
+   تمرير بلا كتلة احتواء تُسرّب فيضها إلى عرض تمرير المستند كلّه — 522px من
+   الجدول صارت 83px فائضاً في نافذة 390. الفحص أمسكها، والقياس رجّح هذا الحلّ
+   على contain:paint لأنّه لا يغيّر شيئاً آخر. */
+.cmp__scroll { position: relative; min-inline-size: 0; overflow-x: auto; border: 1px solid var(--border); border-radius: var(--r-lg); }
+.cmp__t { inline-size: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.cmp__t th, .cmp__t td { padding: var(--space-3) var(--space-4); text-align: start; white-space: nowrap; }
+.cmp__t tbody tr + tr th, .cmp__t tbody tr + tr td { border-block-start: 1px solid var(--border); }
+.cmp__t thead th { font-size: var(--fs-xs); color: var(--text-2); font-weight: var(--w-semibold); border-block-end: 1px solid var(--border); }
+.cmp__u { font-family: var(--font-mono); font-size: .92em; color: var(--text-muted); }
+.cmp__t tbody th { font-weight: var(--w-semibold); color: var(--text); }
+.cmp__t td { font-family: var(--font-mono); color: var(--text-2); }
+.cmp__t tr.is-ours { background: var(--accent-soft); }
+.cmp__us { font-family: var(--font-ar); font-size: var(--fs-xs); font-weight: var(--w-semibold); padding: 2px 9px; margin-inline-start: var(--space-2); border-radius: var(--r-pill); background: var(--accent-text); color: var(--accent-ink); }
+/* الأفضل في العمود يُعلَّم بسهم كما يُعلَّم بلون — 1.4.1 لا يقبل اللون وحده،
+   والسهم لأسفل يقول أيضاً لماذا هو الأفضل: الأقلّ أفضل في الأعمدة الأربعة. */
+.cmp__t td.is-best { color: var(--accent-text); font-weight: var(--w-semibold); }
+.cmp__t td.is-best::after { content: " ↓"; font-size: .9em; }
+.cmp__note { font-size: var(--fs-sm); color: var(--text-2); line-height: 1.75; max-width: 76ch; }
+.cmp__note b { color: var(--text); font-weight: var(--w-semibold); }
