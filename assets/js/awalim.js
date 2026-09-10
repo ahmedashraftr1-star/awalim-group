@@ -329,8 +329,20 @@
       var old = label.textContent; label.textContent = T("نُسخ ✓", "Copied ✓");
       setTimeout(function () { label.textContent = old; }, 1600);
     };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(function () {});
-    else { var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); done(); } catch (_) {} document.body.removeChild(ta); }
+    /* الاحتياطي يعمل حين يرفض الـAPI، لا حين يغيب فقط: على اتصال غير آمن أو
+       بصلاحية حافظة مرفوضة، كان الوعد يُرفض ويبتلعه catch فارغ — فيُنقر الزرّ
+       ولا يحدث شيء ولا تُقال كلمة. والفشل الصامت أسوأ من الفشل. */
+    var legacy = function () {
+      var ta = document.createElement("textarea");
+      ta.value = txt; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.insetBlockStart = "-9999px"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      var ok = false; try { ok = document.execCommand("copy"); } catch (_) {}
+      document.body.removeChild(ta);
+      if (ok) done(); else say(T("تعذّر النسخ — حدّد النصّ وانسخه يدوياً", "Copy failed — select the text and copy it"));
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(legacy);
+    else legacy();
   });
 
   /* ---------- misc ---------- */
