@@ -432,10 +432,19 @@ export const blueprint = () => {
 };
 
 /* ---------- tech wall ---------- */
-export const wall = (stack) => `
-  <div class="wall rv" data-wall style="--cells:${stack.length}">
-    ${stack.map((s, i) => `<div class="wall__c" style="--c:${i}"><b lang="en">${esc(s.name)}</b><span lang="en">${esc(s.role)}</span></div>`).join("")}
+/* جدار الأدوات. الاسم وحده يقوله كل مكتب؛ الحدّ المعروف هو الادّعاء الوحيد
+   الذي لا يُنسَخ بلا معرفة. حين يوجد حدّ تتحوّل الخلية من بطاقة شعار إلى بند. */
+export const wall = (stack) => {
+  const deep = stack.some((s) => s.limit);
+  return `
+  <div class="wall rv${deep ? " wall--deep" : ""}" data-wall style="--cells:${stack.length}">
+    ${stack.map((s, i) => `<div class="wall__c" style="--c:${i}">
+      <b lang="en">${esc(s.name)}</b>
+      <span lang="en">${esc(s.role)}</span>
+      ${s.limit ? `<p class="wall__lim">${esc(s.limit)}</p>` : ""}
+    </div>`).join("")}
   </div>`;
+};
 
 /* ---------- marquee strip ---------- */
 export const marquee = (items) => `

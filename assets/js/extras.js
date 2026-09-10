@@ -13,7 +13,11 @@
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var EN = document.documentElement.lang === "en";
-  var T = function (ar, en) { return EN ? en : ar; };
+  /* تاريخ ISO داخل جملة عربية ينقلبه خوارزمي الاتجاه إلى 05-09-2026: الأرقام
+   محارف ضعيفة والشرطات محايدة. البناء يعزل ما يُصدِره، وهذا نصّ يُولَّد وقت
+   التشغيل فلا يمرّ به — فيُعزَل هنا بالمحرفين نفسيهما. */
+var ltr = function (s) { return "\u2066" + s + "\u2069"; };
+var T = function (ar, en) { return EN ? en : ar; };
   /* Build nodes, never markup. Every string that reaches the DOM goes in as a
      text node, so no sanitiser stands between visitor input and a parser —
      which is what lets the CSP set `require-trusted-types-for 'script'`. */
@@ -174,7 +178,7 @@
         });
         mark("dom", mism.length ? "fail" : "ok", mism.length ? mism.join(" · ") : seen + T(" أرقام مطابقة", " numbers match"));
         out.textContent = valid && !mism.length
-          ? T("✓ كل الفحوص نجحت — الأرقام التي تراها هي الأرقام الموقّعة بتاريخ ", "✓ All checks passed — what you see is what was signed on ") + manifest.issued + "."
+          ? T("✓ كل الفحوص نجحت — الأرقام التي تراها هي الأرقام الموقّعة بتاريخ ", "✓ All checks passed — what you see is what was signed on ") + ltr(manifest.issued) + "."
           : T("✖ فشل فحص — انظر أعلاه.", "✖ A check failed — see above.");
         if (valid && !mism.length) document.dispatchEvent(new CustomEvent("awalim:notify", { detail: { text: T("الأرقام موقّعة — تحقّق تمّ في متصفّحك", "Numbers verified — checked in your browser") } }));
       }).catch(function (e) {

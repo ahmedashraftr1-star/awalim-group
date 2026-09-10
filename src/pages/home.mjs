@@ -133,7 +133,7 @@ export default function render(ctx) {
     /* 9 — STACK */
     `<section class="sec sec--alt" id="stack">
       <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: "المنظومة التقنية", eyebrowEn: "STACK", h: "أدوات نعرفها عن ظهر قلب", lede: "لا نطارد كل جديد. نتعمّق في مجموعة محدودة حتى نعرف حدودها لا واجهتها فقط." })}
+        ${C.sectionHead({ eyebrowAr: "المنظومة التقنية", eyebrowEn: "STACK", h: "أدوات نعرفها عن ظهر قلب", lede: "لا نطارد كل جديد. مع كل أداة هنا الحدّ الذي اصطدمنا به فيها — ومعرفة الحدّ هي الفرق بين استعمال الأداة وإتقانها." })}
         ${C.wall(site.stack)}
       </div>
     </section>`,

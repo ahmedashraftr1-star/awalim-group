@@ -458,52 +458,76 @@
   },
   "stack": [
     {
+      "key": "typescript",
       "name": "TypeScript",
-      "role": "Language"
+      "role": "Language",
+      "limit": "أنواعه تختفي وقت التشغيل. أي بيانات تعبر حدّ النظام تُتحقَّق مرّة ثانية بـ zod، لا بالثقة في التوقيع."
     },
     {
+      "key": "react",
       "name": "React",
-      "role": "Frontend"
+      "role": "Frontend",
+      "limit": "افتراضه إعادة الرسم عند كل تغيير. القوائم الطويلة تحتاج نافذة افتراضية — لا مزيداً من memo."
     },
     {
+      "key": "flutter",
       "name": "Flutter",
-      "role": "Mobile"
+      "role": "Mobile",
+      "limit": "لا يعطي إحساس iOS افتراضياً. المنحنى والارتداد وحجم اللمس قرارات تُتَّخذ يدوياً وإلا شعر المستخدم بالفرق."
     },
     {
+      "key": "node",
       "name": "Node · Express",
-      "role": "Backend"
+      "role": "Backend",
+      "limit": "خيط واحد: أي عمل حسابي ثقيل يوقف كل الطلبات معه. مكانه طابور أو عامل منفصل."
     },
     {
+      "key": "postgres",
       "name": "PostgreSQL",
-      "role": "Database"
+      "role": "Database",
+      "limit": "الفهرس لا يُستعمل إذا لُفّ العمود بدالّة. وVACUUM ليس تفصيلاً في جدول كثير التحديث."
     },
     {
+      "key": "drizzle",
       "name": "Drizzle",
-      "role": "ORM"
+      "role": "ORM",
+      "limit": "لا يخفي SQL — وهذا سبب اختيارنا له. ما لا تعرف كتابته بـSQL لن تكتبه هنا أيضاً."
     },
     {
+      "key": "models",
       "name": "OpenAI · Claude",
-      "role": "Models"
+      "role": "Models",
+      "limit": "يخطئ بثقة تامّة. لذلك لا يملك قراراً نهائياً: أداة واحدة، صلاحية واحدة، ومخرج يُتحقَّق منه قبل أن يُكتب."
     },
     {
+      "key": "playwright",
       "name": "Playwright",
-      "role": "Testing"
+      "role": "Testing",
+      "limit": "يمسك ما تراه الشاشة لا ما يقوله الكود. واختبار متذبذب أسوأ من غياب الاختبار لأنه يعلّم الفريق التجاهل."
     },
     {
+      "key": "firebase",
       "name": "Firebase",
-      "role": "Cloud"
+      "role": "Cloud",
+      "limit": "سريع في البداية، وقواعد الأمان فيه هي التطبيق كلّه. تُكتب وتُختبر، ولا تُترك مفتوحة «مؤقّتاً»."
     },
     {
+      "key": "edge",
       "name": "Vercel Edge",
-      "role": "Delivery"
+      "role": "Delivery",
+      "limit": "الحافّة بلا حالة: لا اتصال قاعدة بيانات طويل، ولا ملفّ على القرص، ولا ذاكرة تبقى بين طلبين."
     },
     {
+      "key": "figma",
       "name": "Figma",
-      "role": "Design"
+      "role": "Design",
+      "limit": "ملف التصميم ليس مصدر الحقيقة. الرموز في الكود هي المصدر، وإلا انحرف الاثنان بصمت."
     },
     {
+      "key": "ifrs",
       "name": "IFRS · IAS",
-      "role": "Standards"
+      "role": "Standards",
+      "limit": "المعيار يقول ماذا لا كيف. العزل والتقريب وسعر الصرف قرارات نتّخذها ونوثّقها — ونُسأل عنها."
     }
   ],
   "marquee": [

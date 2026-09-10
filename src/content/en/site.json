@@ -369,5 +369,55 @@
       }
     ],
     "note": "The names above are packs we built — you can open them and check. Client names are not published without their permission: the count here is cryptographically signed, and the names are not ours to display."
-  }
+  },
+  "stack": [
+    {
+      "key": "typescript",
+      "limit": "Its types vanish at runtime. Anything crossing a system boundary is validated again with zod, not trusted because it type-checked."
+    },
+    {
+      "key": "react",
+      "limit": "It re-renders by default. Long lists need virtualisation, not more memo."
+    },
+    {
+      "key": "flutter",
+      "limit": "It does not feel like iOS by default. Curves, overscroll and touch targets are decisions you make by hand, or the user feels the difference."
+    },
+    {
+      "key": "node",
+      "limit": "Single-threaded: heavy computation stalls every request behind it. It belongs in a queue or a worker."
+    },
+    {
+      "key": "postgres",
+      "limit": "An index is skipped once you wrap its column in a function. And VACUUM is not a detail on a heavily-updated table."
+    },
+    {
+      "key": "drizzle",
+      "limit": "It does not hide SQL — which is why we chose it. What you cannot write in SQL you will not write here either."
+    },
+    {
+      "key": "models",
+      "limit": "It is wrong with total confidence. So it never holds a final decision: one tool, one permission, one output checked before anything is written."
+    },
+    {
+      "key": "playwright",
+      "limit": "It catches what the screen shows, not what the code claims. A flaky test is worse than no test: it teaches the team to ignore red."
+    },
+    {
+      "key": "firebase",
+      "limit": "Fast to start, and its security rules are the whole application. They get written and tested, never left open \"for now\"."
+    },
+    {
+      "key": "edge",
+      "limit": "The edge is stateless: no long-lived database connection, no file on disk, no memory that survives two requests."
+    },
+    {
+      "key": "figma",
+      "limit": "The design file is not the source of truth. The tokens in code are, or the two drift apart in silence."
+    },
+    {
+      "key": "ifrs",
+      "limit": "The standard says what, not how. Isolation, rounding and exchange rates are decisions we make, document, and answer for."
+    }
+  ]
 }
