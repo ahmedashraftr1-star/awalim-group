@@ -357,7 +357,10 @@
 /* a bare `grid` track is `auto`: an English role card's min-content grew past
    the container instead of wrapping. minmax(0,1fr) pins it to the column. */
 .roles { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
-.role, .role__body, .role__hd > div { min-width: 0; }
+/* min-width الافتراضي للعنصر داخل الشبكة هو auto — أي «لا تصغر عن محتواك».
+   كلمة إنجليزية واحدة عند تكبير النصّ 200% كانت تدفع البطاقة والصفحة معها. */
+.role, .role__body, .role__body > *, .role__hd > div { min-width: 0; }
+.role__body li, .role__body p { overflow-wrap: break-word; }
 .role { border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); padding: clamp(var(--space-5), 3vw, var(--space-7)); display: grid; gap: var(--space-5); scroll-margin-top: calc(var(--nav-h) + var(--space-4)); transition: border-color var(--d-base) ease, box-shadow var(--d-base) ease; }
 .role:hover { border-color: var(--accent-line); box-shadow: var(--shadow-card); }
 /* minmax(0,1fr), not 1fr: an English role title with a long word pushed the

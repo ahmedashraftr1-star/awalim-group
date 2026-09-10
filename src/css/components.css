@@ -5,9 +5,20 @@
 /* @critical */
 /* ---------- 1. PILL NAV ---------- */
 .pillnav { position: sticky; inset-block-start: 0; z-index: 100; padding-block: var(--space-3); pointer-events: none; }
-.pillnav__in { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-4); min-block-size: calc(var(--nav-h) - var(--space-3) * 2); }
+/* شبكة الصفّ الواحد لا تلتفّ: حين يرفع الزائر حجم الخطّ الافتراضي تتضاعف
+   الحبّات بالـrem ويفيض الصفّ عن النافذة — 139px على كل صفحة عند 200%.
+   flex-wrap يُنزل الحبّة الوسطى سطراً بدل أن يدفع الصفحة، فلا يضيع شيء.
+   لا يتغيّر شيء عند الأحجام المعتادة: الصفّ يتّسع فلا يلتفّ. */
+.pillnav__in { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); min-block-size: calc(var(--nav-h) - var(--space-3) * 2); }
+.pillnav__in > .brand { flex: 0 1 auto; order: 1; }
+.pillnav__in > .pillnav__links { order: 2; margin-inline: auto; min-inline-size: 0; flex-wrap: wrap; justify-content: center; }
+.pillnav__in > .pillnav__act { flex: 0 0 auto; order: 3; }
 .pillnav > .wrap > * { pointer-events: auto; }
-.brand { display: inline-flex; align-items: center; gap: var(--space-3); flex: none; }
+/* min-inline-size:0 حتى تنكمش الكتلة بدل أن تدفع الصفحة حين يفرض الزائر
+   تباعد حروف أوسع (1.4.12) — الشبكة السابقة كانت تعصرها، والصفّ المرن لا يعصر. */
+.brand { display: inline-flex; align-items: center; gap: var(--space-3); flex: 0 1 auto; min-inline-size: 0; }
+/* لا overflow:hidden هنا: القصّ يبتر الاسم. الانكماش يكون بالالتفاف. */
+.brand__txt { min-inline-size: 0; }
 .brand img { inline-size: 34px; block-size: 34px; border-radius: 9px; }
 .brand__txt { display: flex; flex-direction: column; line-height: 1.15; }
 .brand__name { font-weight: var(--w-bold); font-size: 1rem; white-space: nowrap; }
@@ -53,15 +64,19 @@
 :root[data-theme="dark"] .i-moon { display: none; }
 :root[data-theme="light"] .i-sun { display: none; }
 /* compact nav between tablet-landscape and desktop: keep the mark, drop the wordmark and the ⌘K hint */
-@media (max-width: 1200px) and (min-width: 961px) {
+@media (max-width: 75em) and (min-width: 60.0625em) {
   .pillnav .brand__txt { display: none; }
   .pillnav .brand { padding-inline: 5px; }
   .pillnav__links a { padding: 8px 12px; font-size: var(--fs-xs); }
   .pal-btn kbd { display: none; }
   .pal-btn { inline-size: 42px; padding: 0; }
 }
-@media (max-width: 960px) {
-  .pillnav__in { grid-template-columns: auto auto; justify-content: space-between; }
+@media (max-width: 60em) {
+  /* تحت تباعد الحروف الذي يفرضه الزائر يتجاوز الاسم الصفَّ؛ يلتفّ سطرين ولا يُقصّ. */
+  .brand__name { white-space: normal; overflow-wrap: anywhere; }
+  /* الحبّة الوسطى مخفيّة هنا والصفّ قصير، فلا داعي للالتفاف — والالتفاف بلا
+     داعٍ ينزل بأزرار الأدوات سطراً تحت الشعار. */
+  .pillnav__in { flex-wrap: nowrap; justify-content: space-between; }
   .pillnav__links, .pillnav__act .pillnav__cta { display: none; }
   .burger { display: inline-grid; }
 }
@@ -107,7 +122,10 @@
 .lnk:hover::after { transform: scaleX(1); }
 
 /* ---------- 4. SYSTEM CODE CHIP / 8. TAGS ---------- */
-.chip { display: inline-flex; align-items: center; gap: var(--space-2); padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid var(--border); background: var(--surface-2); font-size: var(--fs-xs); font-weight: var(--w-medium); color: var(--text-2); white-space: nowrap; line-height: 1.2; }
+.chip { display: inline-flex; align-items: center; gap: var(--space-2); padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid var(--border); background: var(--surface-2); font-size: var(--fs-xs); font-weight: var(--w-medium); color: var(--text-2); line-height: 1.35; max-inline-size: 100%; overflow-wrap: break-word; }
+/* nowrap كان مناسباً حين كانت الشريحة كلمة. بعضها الآن جملة كاملة («Drizzle or
+   any ORM that emits exported migrations»)، فصارت 597px عند تكبير النصّ ودفعت
+   الصفحة 108px. الشريحة القصيرة لا تلتفّ لأنها تتّسع، والطويلة تلتفّ بدل أن تدفع. */
 .chip--accent { border-color: var(--accent-line); color: var(--accent-text); background: var(--accent-soft); }
 .chip--card { border-color: color-mix(in srgb, currentColor 22%, transparent); background: color-mix(in srgb, currentColor 8%, transparent); color: inherit; }
 .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
@@ -123,15 +141,24 @@
 
 /* ---------- 7. STAT TILE ---------- */
 .stat { display: grid; gap: var(--space-2); align-content: start; }
-.stat__n { font-family: var(--font-latin); font-weight: var(--w-black); letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; font-size: clamp(2rem, 3.5vw, 3rem); display: inline-flex; align-items: baseline; white-space: nowrap; direction: ltr; }
+.stat__n { font-family: var(--font-latin); font-weight: var(--w-black); letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; font-size: clamp(2rem, 3.5vw, 3rem); display: inline-flex; align-items: baseline; white-space: nowrap; direction: ltr; max-inline-size: 100%; }
 .stat__pre, .stat__suf { font-size: .55em; color: var(--accent-text); font-weight: var(--w-bold); align-self: center; }
 /* A numeral must never break, but a worded stat («CMYK · RGB», «Ed25519»)
    is a phrase — it wraps instead of running out of its tile. */
 .stat__txt { font-size: .78em; white-space: normal; text-wrap: balance; }
-.stat__l { font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.5; max-width: 22ch; }
+/* 22ch مقاس يكبر مع تباعد الحروف الذي يفرضه الزائر (1.4.12)، فيتجاوز عمودَه
+   داخل حاوية تقصّ. min() يجعله سقفاً لا التزاماً. */
+.stat__l { font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.5; max-width: min(22ch, 100%); overflow-wrap: anywhere; }
 .stat--md .stat__n { font-size: clamp(1.6rem, 2.4vw, 2.2rem); }
 .stat--lg .stat__n { font-size: clamp(2.4rem, 4.5vw, 4rem); }
 .stat--xl .stat__n { font-size: clamp(2.8rem, 6vw, 5.5rem); }
+/* عمودان في نافذة 390 يتركان نحو 143px داخل الخليّة. الحدّ الأدنى 2.8rem كان
+   يكفي للرقم وحده، ولا يكفيه حين يفرض الزائر تباعد حروف (1.4.12) فيُقصّ جزء
+   من الرقم — وفقدان جزء من رقم أسوأ من صغره. الحدّ ينزل تحت 30em وحدها. */
+@media (max-width: 30em) {
+  .stat--xl .stat__n { font-size: clamp(2.2rem, 9vw, 3rem); }
+  .stat--lg .stat__n { font-size: clamp(2rem, 8vw, 2.6rem); }
+}
 .statbar { display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .statbar .stat { background: var(--surface); padding: clamp(var(--space-5), 3vw, var(--space-7)) clamp(var(--space-4), 2vw, var(--space-6)); }
 @media (min-width: 800px) { .statbar { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
@@ -408,6 +435,8 @@
 
 /* ---------- FACTS (case) ---------- */
 .facts { display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* الحاوية تقصّ لتُدوّر زواياها، فكل نصّ فيها ملزم بأن يلتفّ */
+.facts dt, .facts dd { overflow-wrap: anywhere; }
 @media (min-width: 700px) { .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (min-width: 1100px) { .facts { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 .fact { background: var(--bg); padding: var(--space-4) var(--space-5); }
@@ -441,7 +470,7 @@
 .lang-btn[lang="ar"] { font-family: var(--font-ar); font-size: .95rem; letter-spacing: 0; }
 .pal-btn { display: inline-flex; align-items: center; justify-content: center; inline-size: auto; padding-inline: 12px 10px; gap: var(--space-2); border-radius: var(--r-pill); }
 .pal-btn kbd { font-family: var(--font-mono); font-size: .62rem; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--border-2); color: var(--text-muted); }
-@media (max-width: 960px) { .pal-btn kbd { display: none; } .pal-btn { inline-size: 42px; padding: 0; } }
+@media (max-width: 60em) { .pal-btn kbd { display: none; } .pal-btn { inline-size: 42px; padding: 0; } }
 .pal { position: fixed; inset: 0; z-index: 800; display: grid; place-items: start center; padding: clamp(8vh, 12vh, 140px) var(--gutter) var(--space-6); }
 .pal[hidden] { display: none; }
 .pal__scrim { position: absolute; inset: 0; background: color-mix(in srgb, var(--text) 42%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
