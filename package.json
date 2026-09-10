@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node build.mjs",
     "dev": "node build.mjs && node scripts/serve.mjs 8899",
-    "test": "node scripts/merge-test.mjs && node scripts/copy-lint.mjs && node scripts/headers-test.mjs && node scripts/contrast.mjs && node scripts/check-links.mjs && node scripts/head-lint.mjs && node scripts/e2e.mjs && node scripts/arabic-type.mjs && node scripts/bidi.mjs && node scripts/interact.mjs && node scripts/keyboard.mjs && node scripts/forms.mjs && node scripts/text-spacing.mjs && node scripts/audit-render.mjs",
+    "test": "node scripts/merge-test.mjs && node scripts/copy-lint.mjs && node scripts/headers-test.mjs && node scripts/contrast.mjs && node scripts/check-links.mjs && node scripts/head-lint.mjs && node scripts/e2e.mjs && node scripts/arabic-type.mjs && node scripts/bidi.mjs && node scripts/interact.mjs && node scripts/keyboard.mjs && node scripts/forms.mjs && node scripts/text-spacing.mjs && node scripts/cross-engine.mjs && node scripts/audit-render.mjs",
     "serve": "node scripts/serve.mjs 8899",
     "og": "node scripts/og.mjs",
     "covers": "node scripts/covers.mjs",
@@ -20,7 +20,8 @@
     "head": "node scripts/head-lint.mjs",
     "keyboard": "node scripts/keyboard.mjs",
     "forms": "node scripts/forms.mjs",
-    "spacing": "node scripts/text-spacing.mjs"
+    "spacing": "node scripts/text-spacing.mjs",
+    "engines": "node scripts/cross-engine.mjs"
   },
   "devDependencies": {
     "axe-core": "^4.13.0",
