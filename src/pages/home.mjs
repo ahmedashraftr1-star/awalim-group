@@ -125,6 +125,30 @@ export default function render(ctx) {
       </div>
     </section>`,
 
+    /* 9b — WHERE WE OPERATE
+       A competitor answers this with a wall of client flags. We cannot: the
+       client names are not ours to publish. So the section is split — what we
+       can NAME (country packs we built, each openable and checkable) sits above
+       what we can only COUNT (signed numbers), and the note says which is which
+       and why. Stating the boundary is the claim; a flag we cannot back is not. */
+    `<section class="sec" id="reach">
+      <div class="wrap wrap--wide">
+        ${C.sectionHead({ eyebrowAr: site.reach.eyebrowAr, eyebrowEn: site.reach.eyebrowEn, h: site.reach.h, lede: site.reach.lede })}
+        <div class="reach rv" data-stagger>
+          <div class="reach__named">
+            <p class="reach__label">${site.reach.namedLabel}</p>
+            <ul class="reach__packs">
+              ${site.reach.named.map((n) => `<li class="reach__pack">${n}</li>`).join("")}
+            </ul>
+          </div>
+          <div class="reach__counted">
+            ${site.reach.counted.map((c) => C.statTile({ ...stats[c.stat], label: c.label }, { size: "md" })).join("")}
+          </div>
+        </div>
+        <p class="reach__note rv">${site.reach.note}</p>
+      </div>
+    </section>`,
+
     /* 10 — PROCESS (pinned) */
     `<section class="sec sec--ink" id="process">
       <div class="wrap wrap--wide">

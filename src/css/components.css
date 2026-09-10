@@ -942,3 +942,31 @@ body.pal-open { overflow: hidden; }
   }
 }
 @keyframes cell-glow { 0% { opacity: 0; } 35% { opacity: 1; } 100% { opacity: 0; } }
+
+/* ---------- WHERE WE OPERATE ----------
+   Two halves, and the split is the argument: names we can back on the left,
+   numbers we can only sign on the right, and a note saying which is which.
+   The packs are set as chips because each is a real, openable thing; the
+   counts stay stat tiles because that is all they are. */
+.reach { display: grid; gap: clamp(var(--space-5), 3vw, var(--space-7)); margin-block-start: var(--space-6); }
+@media (min-width: 900px) { .reach { grid-template-columns: 1.6fr 1fr; align-items: start; } }
+.reach__label { font-size: var(--fs-sm); color: var(--text-2); max-width: 46ch; margin-block-end: var(--space-4); }
+.reach__packs { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; padding: 0; margin: 0; }
+.reach__pack {
+  padding: 9px 16px; border-radius: var(--r-pill);
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: var(--fs-sm); font-weight: var(--w-medium); color: var(--text);
+  box-shadow: var(--shadow-card);
+}
+.reach__counted { display: grid; gap: var(--space-5); align-content: start; padding-inline-start: clamp(0px, 2vw, var(--space-6)); }
+/* .stat__n is direction:ltr so its digits read left-to-right, and as a grid
+   item it stretches — which parks the number at the far end of a wide column
+   while its label sits at the other. Narrow stat bars hide this; this column
+   is wide enough to show it. */
+.reach__counted .stat__n { justify-self: start; }
+@media (min-width: 900px) { .reach__counted { border-inline-start: 1px solid var(--border); } }
+.reach__note {
+  margin-block-start: var(--space-6); padding-block-start: var(--space-4);
+  border-block-start: 1px dashed var(--border);
+  font-size: var(--fs-sm); color: var(--text-muted); max-width: 74ch; line-height: 1.7;
+}

@@ -333,5 +333,31 @@
     "Clients in {clientCountries} countries",
     "AI agents in production since 2024",
     "Smart Accountant — an IFRS accounting system"
-  ]
+  ],
+  "reach": {
+    "eyebrowAr": "Where we operate",
+    "h": "Where our systems actually run",
+    "lede": "One rule here: we name what we can name, count what we can only count, and say which is which — because a flag we cannot back is not proof.",
+    "namedLabel": "Country packs in Smart Accountant — tax, invoicing and compliance built per country",
+    "named": [
+      "Saudi Arabia",
+      "UAE",
+      "Egypt",
+      "Kuwait",
+      "Qatar",
+      "Jordan",
+      "International"
+    ],
+    "counted": [
+      {
+        "stat": "clientCountries",
+        "label": "countries our team serves today"
+      },
+      {
+        "stat": "graduateCountries",
+        "label": "countries our academy graduates work in"
+      }
+    ],
+    "note": "The names above are packs we built — you can open them and check. Client names are not published without their permission: the count here is cryptographically signed, and the names are not ours to display."
+  }
 }
