@@ -427,13 +427,24 @@
 .sec__out.is-bad { color: var(--bad); font-weight: var(--w-semibold); }
 
 /* the emitted policy, one directive per line, always LTR */
-.policy { list-style: none; display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
+/* لا overflow: hidden هنا. القصّ كان لغرض واحد — تدوير الزوايا فوق حيلة
+   الفاصل بفجوة 1px — وثمنه أنّ أي سطر يتجاوز الصندوق يُمحى من الشاشة بدل أن
+   يدفعه. رأيتُ آخر سطر في القائمة يقع 43px تحت قاع حاويته فيُقصّ نصفه.
+   الزوايا تُدوَّر على أوّل عنصر وآخره بدل أن تُقصّ الحاوية، فلا يبقى شيء
+   يستطيع أن يمحو محتوىً. */
+.policy { list-style: none; display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--r-md); }
+.policy > li:first-child { border-start-start-radius: calc(var(--r-md) - 1px); border-start-end-radius: calc(var(--r-md) - 1px); }
+.policy > li:last-child { border-end-start-radius: calc(var(--r-md) - 1px); border-end-end-radius: calc(var(--r-md) - 1px); }
 .policy li { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: var(--space-4); padding: var(--space-3) var(--space-4); background: var(--surface); font-size: var(--fs-sm); }
 /* the directive name is a single unbreakable token — `upgrade-insecure-requests`
    is 25 characters with nowhere to break — and its column is capped at 15rem,
    so on a narrow phone it ran 27px past the list's own overflow:hidden. The
    value beside it already had this; the name did not. */
-.policy li b { color: var(--accent-text); overflow-wrap: anywhere; }
+/* توجيه سياسة مثل upgrade-insecure-requests مقطع آليّ لا كلمة: كسره في أي
+   موضع مقروء. overflow-wrap: anywhere وحده يترك المقطع على حافّة العمود،
+   فيتّسع مرّة ويُقصّ أخرى بحسب فروق تخطيط لا يتحكّم بها أحد — والحالة
+   الحدّية تُزال، لا يُنتظر حظّها. */
+.policy li b { color: var(--accent-text); overflow-wrap: anywhere; word-break: break-all; min-inline-size: 0; }
 /* below this the two columns are too narrow to be columns at all */
 @media (max-width: 560px) { .policy li { grid-template-columns: 1fr; gap: var(--space-1); } }
 .policy li span { color: var(--text-2); overflow-wrap: anywhere; }
