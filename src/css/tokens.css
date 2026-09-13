@@ -61,10 +61,10 @@
      caps are all one √2 step apart, or the scale would come apart again at
      whichever width a cap happened to bite first. Mobile deliberately
      compresses the hierarchy; a phone does not want a 4.7vw hero. */
-  --fs-hero:  clamp(2.25rem, 4.70vw, 4.5rem);  /* Alexandria runs ~12% wider than Plex */
-  --fs-d1:    clamp(1.90rem, 3.32vw, 3.2rem);
-  --fs-d2:    clamp(1.50rem, 2.35vw, 2.25rem);
-  --fs-h3:    clamp(1.20rem, 1.66vw, 1.6rem);
+  --fs-hero:  clamp(2.5rem, 5.6vw, 5.2rem);  /* Alexandria runs ~12% wider than Plex */
+  --fs-d1:    clamp(2.1rem, 3.8vw, 3.6rem);
+  --fs-d2:    clamp(1.65rem, 2.7vw, 2.5rem);
+  --fs-h3:    clamp(1.3rem, 1.9vw, 1.8rem);
   --fs-lg:    1.25rem;
   --fs-body:  1.0625rem;
   --fs-sm:    .9375rem;
@@ -79,8 +79,8 @@
      in a 1.18 line box. Swept: 1.18 → 39 collisions (37px), 1.42 → 8 (15px),
      and past that the curve flattens while the type visibly loosens.
      English keeps the tight values — see the [dir="ltr"] block. */
-  --lh-hero:  1.42;
-  --lh-d:     1.44;
+  --lh-hero:  1.32;
+  --lh-d:     1.34;
   --lh-h3:    1.4;
   --lh-lg:    1.7;
   --lh-body:  1.75;

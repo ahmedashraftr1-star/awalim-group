@@ -194,7 +194,7 @@ const criticalRaw = ["tokens.css", "base.css"].map((f) => readFileSync(join(cssD
 const css = "/* عوالِم قروب — built from src/css/*.css · do not edit by hand */\n" + minify(rawCss);
 const criticalCss = minify(criticalRaw);
 write("assets/css/awalim.css", css);
-const jsForStamp = ["awalim.js", "motion.js", "extras.js"].map((f) => readFileSync(join(ROOT, "assets/js", f), "utf8")).join("");
+const jsForStamp = ["awalim.js", "motion.js", "extras.js", "ledger.js"].map((f) => readFileSync(join(ROOT, "assets/js", f), "utf8")).join("");
 let buildStamp = createHash("sha256").update(css + jsForStamp).digest("hex").slice(0, 8);
 let cssBytes = css.length, criticalBytes = criticalCss.length;
 setBuild(criticalCss, buildStamp);
@@ -210,6 +210,7 @@ const journal = await import("./src/pages/journal.mjs");
 const contact = (await import("./src/pages/contact.mjs")).default;
 const verify = (await import("./src/pages/verify.mjs")).default;
 const security = (await import("./src/pages/security.mjs")).default;
+const dashboard = (await import("./src/pages/dashboard.mjs")).default;
 const offline = (await import("./src/pages/offline.mjs")).default;
 const notfound = (await import("./src/pages/notfound.mjs")).default;
 const careers = (await import("./src/pages/careers.mjs")).default;
@@ -234,13 +235,14 @@ const renderAll = (c) => [
   ...c.legal.pages.map((d) => legal(c, d)),
   verify(c),
   security(c),
+  dashboard(c),
   offline(c),
   notfound(c)
 ];
 const routes = renderAll(ctx);
 
 /* ---------- clean previous output (only what we own) ---------- */
-const OWNED_DIRS = ["work", "products", "services", "academy", "group", "journal", "contact", "about", "insights", "verify", "security", "offline", "careers", "press", "privacy", "terms", "en"];
+const OWNED_DIRS = ["work", "products", "services", "academy", "group", "journal", "contact", "about", "insights", "verify", "security", "dashboard", "offline", "careers", "press", "privacy", "terms", "en"];
 for (const d of OWNED_DIRS) if (existsSync(join(ROOT, d))) rmSync(join(ROOT, d), { recursive: true, force: true });
 for (const f of ["index.html", "404.html", "work.html", "products.html", "services.html", "academy.html", "about.html", "insights.html", "contact.html"])
   if (existsSync(join(ROOT, f))) rmSync(join(ROOT, f));

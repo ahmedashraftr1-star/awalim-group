@@ -169,6 +169,11 @@
       "href": "/contact",
       "label": "تواصل",
       "key": "contact"
+    },
+    {
+      "href": "/dashboard",
+      "label": "لوحة التحكم",
+      "key": "dashboard"
     }
   ],
   "footer": {
@@ -251,6 +256,10 @@
       {
         "title": "المجموعة",
         "links": [
+          {
+            "href": "/dashboard",
+            "label": "لوحة التحكم والعمليات"
+          },
           {
             "href": "/group",
             "label": "عن عوالِم"
@@ -532,18 +541,17 @@
   ],
   "marquee": [
     "TypeScript",
-    "Flutter",
+    "Flutter Engine",
     "PostgreSQL",
-    "React",
-    "Node · Express",
-    "Drizzle ORM",
-    "OpenAI · Claude",
-    "Firebase",
-    "Vercel Edge",
+    "Web Standards (Zero-Dep)",
+    "Node · Native",
+    "Rust & Go",
+    "WebCrypto · Ed25519",
+    "Offline PWA · Service Workers",
     "Playwright",
-    "Figma",
     "IFRS · IAS",
-    "PEPPOL · UBL"
+    "PEPPOL · UBL",
+    "Autonomous AI · Claude & GPT"
   ],
   "standards": [
     {

@@ -204,7 +204,7 @@ ${footer(site)}
 <script src="/assets/js/awalim.js?v=${buildStamp}" defer></script>
 <script src="/assets/js/motion.js?v=${buildStamp}" defer></script>
 <script src="/assets/js/extras.js?v=${buildStamp}" defer></script>
-${/data-ledger/.test(body) ? '<script src="/assets/js/ledger.js" defer></script>' : ""}
+${/data-ledger/.test(body) ? `<script src="/assets/js/ledger.js?v=${buildStamp}" defer></script>` : ""}
 ${/data-sec\b/.test(body) ? `<script src="/assets/js/security.js?v=${buildStamp}" defer></script>` : ""}
 </body>
 </html>`;

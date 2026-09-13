@@ -38,6 +38,7 @@
   "/terms",
   "/verify",
   "/security",
+  "/dashboard",
   "/offline",
   "/404",
   "/en/",
@@ -79,6 +80,7 @@
   "/en/terms",
   "/en/verify",
   "/en/security",
+  "/en/dashboard",
   "/en/offline",
   "/en/404"
 ]

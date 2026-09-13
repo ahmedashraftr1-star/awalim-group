@@ -86,6 +86,11 @@
       "href": "/contact",
       "label": "Contact",
       "key": "contact"
+    },
+    {
+      "href": "/dashboard",
+      "label": "Dashboard",
+      "key": "dashboard"
     }
   ],
   "footer": {
@@ -168,6 +173,10 @@
       {
         "title": "Group",
         "links": [
+          {
+            "href": "/dashboard",
+            "label": "Operations Dashboard"
+          },
           {
             "href": "/group",
             "label": "About Awalim"

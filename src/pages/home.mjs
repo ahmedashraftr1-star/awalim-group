@@ -40,6 +40,24 @@ export default function render(ctx) {
           <span class="hero__orb" aria-hidden="true"></span>
         </div>
       </div>
+      <div class="wrap wrap--wide hero__pods-wrap">
+        <div class="hero__brief-pods rv" style="--i:6">
+          <div class="brief-pod brief-pod--primary">
+            <div class="brief-pod__main">
+              <span class="brief-pod__tag">مشروع جديد</span>
+              <p class="brief-pod__p">عندك فكرة نظام مؤسسي أو أتمتة بالذكاء الاصطناعي؟ احكِ لنا عنها ونحن نتولى الباقي من النواة إلى الإنتاج.</p>
+            </div>
+            ${C.btn({ href: "/contact", label: "ابدأ مشروعك الآن", kind: "primary", arrow: true })}
+          </div>
+          <div class="brief-pod brief-pod--glass">
+            <div class="brief-pod__main">
+              <span class="brief-pod__tag">هندسة سيادية</span>
+              <p class="brief-pod__p">أنظمة مبنية بصفر مكتبات خارجية، تدقيق تشفيري لحظي، ومطابقة معايير الحوسبة المؤسسية العالمية.</p>
+            </div>
+            ${C.btn({ href: "#highlights", label: "استكشف المنظومة", kind: "ghost", arrow: true })}
+          </div>
+        </div>
+      </div>
     </section>`,
 
     /* 2 — STAT BAR (four equal tiles, no empty cell) */
@@ -47,25 +65,22 @@ export default function render(ctx) {
       <div class="wrap wrap--wide">${C.statBar(h.statBar, stats, { size: "xl", cls: "statbar--hero", verify: true, signing: ctx.signing })}</div>
     </section>`,
 
+    /* 2b — TRUST ACCREDITATIONS STRIP */
+    C.trustAccreditationStrip(ctx),
+
     /* 3 — TECH STRIP (dark, visually separated from the hero) */
     `<div class="marq-band">${C.marquee(site.marquee)}</div>`,
 
-    /* 4 — STORY SPLIT */
-    `<section class="sec">
+    /* 4 — STORY SPLIT (BENTO HIGHLIGHTS) */
+    `<section class="sec" id="highlights">
       <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: "أبرز المحطّات", eyebrowEn: "HIGHLIGHTS", h: "خمس سنوات من الشحن" })}
-        <div class="story rv" data-stagger>
-          <div class="story__card themed" style="${C.themeStyle(themes.rahmacare)}">
-            <p class="story__big d-2">${h.story.big}</p>
-            <p class="story__p">${h.story.p}</p>
-            ${C.btn({ href: "/group", label: "القصّة الكاملة", kind: "light", arrow: true })}
-          </div>
-          <ul class="story__list">
-            ${site.highlights.map((x, i) => `<li class="story__it" style="--i:${i}"><span class="story__n mono">0${i + 1}</span><span>${fill(x, stats)}</span></li>`).join("")}
-          </ul>
-        </div>
+        ${C.sectionHead({ eyebrowAr: "أبرز المحطّات", eyebrowEn: "HIGHLIGHTS", h: "خمس سنوات من الشحن السيادي" })}
+        ${C.bentoHighlights(ctx)}
       </div>
     </section>`,
+
+    /* 4b — SOVEREIGN ARCHITECTURE (Apple Silicon Style) */
+    C.sovereignArchitecture(ctx),
 
     /* 5 — MANIFESTO */
     `<section class="sec sec--alt">
@@ -96,6 +111,12 @@ export default function render(ctx) {
       </div>
     </section>`,
 
+    /* 5c — SOVEREIGN VS BIG TECH MATRIX */
+    C.sovereignVsBigTech(ctx),
+
+    /* 5d — SOVEREIGN VALUES */
+    C.sovereignValues(ctx),
+
     /* 6 — SELECTED WORK */
     `<section class="sec" id="work">
       <div class="wrap wrap--wide">
@@ -107,6 +128,9 @@ export default function render(ctx) {
       </div>
     </section>`,
 
+    /* 6b — EXECUTIVE ENDORSEMENTS (VERIFIED PARTNER PROOF) */
+    C.executiveEndorsements(ctx),
+
     /* 7 — PRODUCT GRID 3×2 */
     `<section class="sec sec--alt" id="ecosystem">
       <div class="wrap wrap--wide">
@@ -114,6 +138,12 @@ export default function render(ctx) {
         <div class="pcards" data-stagger>${gridProducts.map((p) => C.pcard(p, themes)).join("")}</div>
       </div>
     </section>`,
+
+    /* 7b — VIBE OS CAPABILITIES (6 SOVEREIGN ENGINES) */
+    C.vibeOsCapabilities(ctx),
+
+    /* 7c — SOVEREIGN DISCIPLINES */
+    C.sovereignDisciplines(ctx),
 
     /* 8 — ENGINEERING STANDARDS */
     `<section class="sec" id="standards">
@@ -206,6 +236,15 @@ export default function render(ctx) {
       <div class="wrap wrap--wide">${C.founder({ site, quote: site.founderQuote })}</div>
     </section>`,
 
+    /* 13-II — SOVEREIGN JOURNEY MILESTONES */
+    C.sovereignJourneyMilestones(ctx),
+
+    /* 13b — ESTIMATOR */
+    C.scopeEstimator(site),
+
+    /* 13c — ENTERPRISE ENGAGEMENT PATHWAYS */
+    C.enterprisePathways(ctx),
+
     /* 14 — FAQ */
     `<section class="sec" id="faq">
       <div class="wrap wrap--wide">
@@ -222,7 +261,10 @@ export default function render(ctx) {
     </section>`,
 
     /* 15 — CTA */
-    C.ctaBand({ h: "عندك عملية تستحقّ نظاماً؟", lede: "احكِ لنا عن العملية التي تستهلك وقت فريقك اليوم. نعود إليك بتشخيص أوّلي وتقدير نطاق — دون التزام منك.", primary: { href: "/contact", label: "ابدأ محادثة", kind: "primary" }, site })
+    C.ctaBand({ h: "عندك عملية تستحقّ نظاماً؟", lede: "احكِ لنا عن العملية التي تستهلك وقت فريقك اليوم. نعود إليك بتشخيص أوّلي وتقدير نطاق — دون التزام منك.", primary: { href: "/contact", label: "ابدأ محادثة", kind: "primary" }, site }),
+
+    /* 16 — SOVEREIGN FLOATING DOCK */
+    C.sovereignDock(ctx)
   ]);
 
   return {
