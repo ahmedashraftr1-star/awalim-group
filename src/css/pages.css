@@ -501,7 +501,8 @@
 .dash-kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-5);
+  gap: var(--space-4);
+  margin-block-end: var(--space-6);
 }
 @media (max-width: 1024px) {
   .dash-kpi-grid { grid-template-columns: repeat(2, 1fr); }
@@ -509,42 +510,84 @@
 @media (max-width: 600px) {
   .dash-kpi-grid { grid-template-columns: 1fr; }
 }
+.dash-kpi-card,
 .kpi-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  padding: 24px;
-  background: var(--surface-1);
-  border: 1px solid var(--border);
+  justify-content: space-between;
+  padding: 22px 24px;
+  background: rgba(13, 16, 23, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: var(--r-md);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 24px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 14px 36px rgba(0, 0, 0, 0.4);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
 }
+.dash-kpi-card::before,
+.kpi-card::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  inline-size: 100%;
+  block-size: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.6), transparent);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.dash-kpi-card:hover,
 .kpi-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--border-focus);
+  transform: translateY(-4px);
+  border-color: rgba(0, 240, 255, 0.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 20px 48px -12px rgba(0, 240, 255, 0.18), 0 16px 40px rgba(0, 0, 0, 0.6);
 }
-.kpi-card--gold {
-  border-color: rgba(234, 179, 8, 0.3);
-  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
+.dash-kpi-card:hover::before,
+.kpi-card:hover::before {
+  opacity: 1;
 }
+[data-theme="light"] .dash-kpi-card,
+[data-theme="light"] .kpi-card {
+  background: #ffffff;
+  border-color: var(--border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 10px 26px rgba(0, 0, 0, 0.05);
+}
+.dash-kpi-label,
 .kpi-label {
-  font-size: var(--fs-xs);
+  font-size: 0.8rem;
+  font-weight: var(--w-semibold);
   color: var(--text-2);
-  font-weight: var(--w-medium);
-  margin-bottom: 8px;
+  letter-spacing: 0;
+  margin-block-end: 10px;
+  text-transform: none;
 }
+[dir="ltr"] .dash-kpi-label,
+[dir="ltr"] .kpi-label {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.dash-kpi-val,
 .kpi-val {
-  font-size: clamp(1.8rem, 2.8vw, 2.4rem);
+  font-size: clamp(2rem, 3.2vw, 2.6rem);
   font-weight: 800;
-  color: var(--text-1);
-  margin-bottom: 8px;
+  color: var(--text);
+  line-height: 1.15;
+  margin-block-end: 10px;
   letter-spacing: 0;
   font-family: var(--font-display-ar), var(--font-mono);
 }
+.dash-kpi-meta,
+.dash-kpi-meta .badge,
 .kpi-sub {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
   line-height: 1.45;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 /* Flagship Systems Grid */

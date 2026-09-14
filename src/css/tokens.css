@@ -38,6 +38,13 @@
   --btn-fg:        #FFFFFF;
   --btn-bg-h:      #2A2A2E;
 
+  --text-primary:   var(--text);
+  --text-secondary: var(--text-2);
+  --nav-height:     var(--nav-h);
+  --surface-1:      var(--surface);
+  --border-focus:   var(--accent);
+  --radius-pill:    var(--r-pill);
+
   --shadow-card:   0 20px 60px -20px rgba(0, 0, 0, .12);
   --shadow-card-h: 0 34px 80px -24px rgba(0, 0, 0, .20);
   --shadow-pill:   0 1px 2px rgba(0,0,0,.06), 0 10px 30px -14px rgba(0,0,0,.18);
@@ -124,35 +131,36 @@
 
 /* ---- dark (designed, not inverted) ---- */
 :root[data-theme="dark"] {
-  --bg:            #0A0A0B;
-  --surface:       #141416;
-  --surface-2:     #1C1C1F;
-  --surface-3:     #26262A;
-  --text:          #F5F5F3;
-  --text-2:        #C9C9CD;
-  --text-muted:    #A6A6AB;      /* 8.2:1 on --bg */
-  --border:        #26262A;
-  --border-2:      #3A3A40;
-  --ink-strip:     #1C1C1F;
-  --ink-strip-fg:  #F5F5F3;
+  --bg:            #060709;
+  --surface:       #0c0e14;
+  --surface-2:     #131722;
+  --surface-3:     #1a202e;
+  --surface-1:     #0c0e14;
+  --text:          #F8FAFC;
+  --text-2:        #CBD5E1;
+  --text-muted:    #94A3B8;      /* 8.8:1 on Obsidian void */
+  --border:        rgba(255, 255, 255, 0.09);
+  --border-2:      rgba(255, 255, 255, 0.16);
+  --ink-strip:     #0c0e14;
+  --ink-strip-fg:  #F8FAFC;
 
-  --accent:        #2FC4B4;      /* lighter step in the dark: 9.6:1 */
-  --accent-text:   #6FE0D0;
-  --accent-strong: #9FF0E4;
-  --accent-ink:    #0A1A18;      /* the accent inverts in the dark, so its ink must too */
-  --accent-soft:   rgba(47, 196, 180, .12);
-  --accent-line:   rgba(47, 196, 180, .38);
-  --accent-glow:   rgba(47, 196, 180, .28);
-  --amber:         #F0B84A;
-  --amber-soft:    rgba(240, 184, 74, .14);
-  --amber-line:    rgba(240, 184, 74, .38);
-  --bad:           #F0736A;      /* the red inverts in the dark like the amber does */
-  --bad-soft:      rgba(240, 115, 106, .14);
-  --bad-line:      rgba(240, 115, 106, .38);
-  --live:          #5ED47E;
+  --accent:        #00F0FF;      /* electric cyan highlight */
+  --accent-text:   #2DD4BF;      /* luminous emerald/mint */
+  --accent-strong: #10B981;
+  --accent-ink:    #030e12;
+  --accent-soft:   rgba(0, 240, 255, 0.10);
+  --accent-line:   rgba(0, 240, 255, 0.40);
+  --accent-glow:   rgba(0, 240, 255, 0.32);
+  --amber:         #F59E0B;
+  --amber-soft:    rgba(245, 158, 11, .15);
+  --amber-line:    rgba(245, 158, 11, .40);
+  --bad:           #EF4444;
+  --bad-soft:      rgba(239, 68, 68, .15);
+  --bad-line:      rgba(239, 68, 68, .40);
+  --live:          #10B981;
 
-  --btn-bg:        #F5F5F3;
-  --btn-fg:        #0A0A0B;
+  --btn-bg:        #F8FAFC;
+  --btn-fg:        #060709;
   --btn-bg-h:      #FFFFFF;
 
   --shadow-card:   0 20px 60px -20px rgba(0, 0, 0, .6);

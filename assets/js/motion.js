@@ -55,7 +55,7 @@
   /* ---------- smooth scroll (Lenis) ---------- */
   var lenis = null;
   if (!reduced && typeof window.Lenis === "function") {
-    lenis = new Lenis({ lerp: 0.18, wheelMultiplier: 1.2, smoothWheel: true, syncTouch: false });
+    lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1.0, smoothWheel: false, syncTouch: false });
     var loop = function (t) { lenis.raf(t); requestAnimationFrame(loop); };
     requestAnimationFrame(loop);
     lenis.on("scroll", onScroll);

@@ -179,7 +179,7 @@ ${FONT_PRELOADS.map((f) => `<link rel="preload" href="${f}" as="font" type="font
 <noscript><link rel="stylesheet" href="/assets/css/awalim.css?v=${buildStamp}"></noscript>
 <script>
 /* Theme before first paint: saved choice wins, otherwise follow the system. */
-(function(){try{var s=localStorage.getItem("awalim-theme");var d=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.setAttribute("data-theme",d?"dark":"light");if(s)document.documentElement.setAttribute("data-theme-saved","")}catch(e){}document.documentElement.classList.add("js")})();
+(function(){try{var s=localStorage.getItem("awalim-theme");var d=s?s==="dark":true;document.documentElement.setAttribute("data-theme",d?"dark":"light");if(s)document.documentElement.setAttribute("data-theme-saved","")}catch(e){}document.documentElement.classList.add("js")})();
 /* The full sheet used to be promoted by an inline load handler on the link.
    script-src-attr blocks those and no hash can cover one: a hash authorises a
    script element, never an event-handler attribute. So the swap moved in here,
