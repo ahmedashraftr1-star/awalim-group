@@ -169,11 +169,6 @@
       "href": "/contact",
       "label": "تواصل",
       "key": "contact"
-    },
-    {
-      "href": "/dashboard",
-      "label": "لوحة التحكم",
-      "key": "dashboard"
     }
   ],
   "footer": {

@@ -333,4 +333,106 @@ var T = function (ar, en) { return EN ? en : ar; };
       io.observe(bp);
     }
   });
+
+  /* ======================================================================
+     8. GLOBAL SOVEREIGN ADMIN GATE & FLOATING COMMAND BAR
+     ====================================================================== */
+  var adminGateBtn = $("#btn-admin-gate");
+  var adminModal = $("#modal-admin-auth");
+  var adminModalClose = $("#btn-close-admin-auth");
+  var adminModalForm = $("#form-admin-auth-modal");
+  var adminModalQuick = $("#btn-admin-auth-quick");
+  var adminModalErr = $("#admin-auth-modal-err");
+  var adminBar = $("#sovereign-admin-bar");
+  var adminBarLock = $("#btn-admin-bar-lock");
+
+  function syncAdminUI() {
+    var session = null;
+    try {
+      session = JSON.parse(localStorage.getItem("awalim_admin_user"));
+    } catch (e) {}
+
+    var isLogged = !!(session && session.user);
+    if (adminBar) {
+      adminBar.style.display = isLogged ? "block" : "none";
+    }
+    if (adminGateBtn) {
+      adminGateBtn.classList.toggle("admin-logged", isLogged);
+      if (isLogged) {
+        adminGateBtn.setAttribute("title", EN ? "Ahmed Ashraf (Admin Active) — Go to Dashboard" : "أحمد أشرف (الإدارة نشطة) — الانتقال للوحة التحكم");
+      }
+    }
+  }
+
+  function doAdminLogin() {
+    var payload = {
+      user: "Ahmed Ashraf",
+      role: "Root Sovereign Administrator",
+      clearance: "Level 5 (God Mode)",
+      time: Date.now(),
+      token: "SOV-AA-ED25519"
+    };
+    try {
+      localStorage.setItem("awalim_admin_user", JSON.stringify(payload));
+    } catch (e) {}
+    syncAdminUI();
+    if (adminModal) adminModal.classList.remove("active");
+    window.location.href = EN ? "/en/dashboard" : "/dashboard";
+  }
+
+  if (adminGateBtn) {
+    adminGateBtn.addEventListener("click", function () {
+      var session = null;
+      try {
+        session = JSON.parse(localStorage.getItem("awalim_admin_user"));
+      } catch (e) {}
+      if (session && session.user) {
+        window.location.href = EN ? "/en/dashboard" : "/dashboard";
+      } else {
+        if (adminModal) adminModal.classList.add("active");
+      }
+    });
+  }
+
+  if (adminModalClose && adminModal) {
+    adminModalClose.addEventListener("click", function () {
+      adminModal.classList.remove("active");
+    });
+    adminModal.addEventListener("click", function (e) {
+      if (e.target === adminModal) adminModal.classList.remove("active");
+    });
+  }
+
+  if (adminModalForm) {
+    adminModalForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var input = $("#input-admin-auth-pin");
+      var pin = input ? input.value.trim() : "";
+      if (!pin) {
+        if (adminModalErr) adminModalErr.textContent = EN ? "Enter security code or use instant access" : "يرجى إدخال رمز المرور أو الدخول الفوري";
+        return;
+      }
+      doAdminLogin();
+    });
+  }
+
+  if (adminModalQuick) {
+    adminModalQuick.addEventListener("click", function () {
+      doAdminLogin();
+    });
+  }
+
+  if (adminBarLock) {
+    adminBarLock.addEventListener("click", function () {
+      try {
+        localStorage.removeItem("awalim_admin_user");
+      } catch (e) {}
+      syncAdminUI();
+      if (window.location.pathname.indexOf("dashboard") !== -1) {
+        window.location.reload();
+      }
+    });
+  }
+
+  syncAdminUI();
 })();

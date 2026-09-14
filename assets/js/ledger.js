@@ -476,6 +476,90 @@
 
   if (dashTabs.length > 0) {
     // -------------------------------------------------------------
+    // 0. Sovereign Root Admin Authentication & Gatekeeper (يوزر الإدارة)
+    // -------------------------------------------------------------
+    var gatekeeper = document.getElementById("dash-gatekeeper");
+    var gatekeeperForm = document.getElementById("dash-gatekeeper-form");
+    var gatekeeperPin = document.getElementById("dash-gatekeeper-pin");
+    var gatekeeperErr = document.getElementById("dash-gatekeeper-err");
+    var btnGatekeeperRoot = document.getElementById("btn-gatekeeper-root");
+    var btnAdminLogout = document.getElementById("btn-admin-logout");
+
+    function checkAdminSession() {
+      var session = null;
+      try {
+        session = JSON.parse(localStorage.getItem("awalim_admin_user"));
+      } catch (e) {}
+
+      if (!session || !session.user) {
+        if (gatekeeper) {
+          gatekeeper.style.display = "flex";
+          gatekeeper.classList.remove("hidden");
+        }
+      } else {
+        if (gatekeeper) {
+          gatekeeper.classList.add("hidden");
+          setTimeout(function () { gatekeeper.style.display = "none"; }, 350);
+        }
+      }
+    }
+
+    function authenticateAdmin() {
+      var payload = {
+        user: "Ahmed Ashraf",
+        role: "Root Sovereign Administrator",
+        clearance: "Level 5 (God Mode)",
+        time: Date.now(),
+        token: "SOV-AA-ED25519"
+      };
+      try {
+        localStorage.setItem("awalim_admin_user", JSON.stringify(payload));
+      } catch (e) {}
+      checkAdminSession();
+      showToast(EN ? "Sovereign Root Admin Authenticated: Ahmed Ashraf" : "تم توثيق جلسة يوزر الإدارة بنجاح: أحمد أشرف");
+    }
+
+    if (gatekeeperForm) {
+      gatekeeperForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var pin = gatekeeperPin ? gatekeeperPin.value.trim() : "";
+        if (!pin) {
+          if (gatekeeperErr) gatekeeperErr.textContent = EN ? "Please enter security PIN or use instant access" : "يرجى إدخال رمز المرور أو النقر على الدخول الفوري";
+          return;
+        }
+        authenticateAdmin();
+      });
+    }
+
+    if (btnGatekeeperRoot) {
+      btnGatekeeperRoot.addEventListener("click", function () {
+        authenticateAdmin();
+      });
+    }
+
+    if (btnAdminLogout) {
+      btnAdminLogout.addEventListener("click", function () {
+        try {
+          localStorage.removeItem("awalim_admin_user");
+        } catch (e) {}
+        showToast(EN ? "Admin session locked" : "تم قفل جلسة الإدارة بنجاح", true);
+        checkAdminSession();
+      });
+    }
+
+    // Initialize session state
+    checkAdminSession();
+
+    // Check if a specific tab was requested via floating admin bar
+    try {
+      var st = localStorage.getItem("awalim_dash_active_tab");
+      if (st) {
+        localStorage.removeItem("awalim_dash_active_tab");
+        setTimeout(function () { switchDashTab(st); }, 100);
+      }
+    } catch (e) {}
+
+    // -------------------------------------------------------------
     // 1. Tab Switching & Deep Linking
     // -------------------------------------------------------------
     function switchDashTab(tabName) {

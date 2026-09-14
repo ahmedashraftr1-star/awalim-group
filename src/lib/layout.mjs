@@ -68,6 +68,10 @@ const header = (site, active) => `
       <button class="icon-btn" data-theme-toggle type="button" aria-label="تبديل الوضع الليلي والنهاري" aria-pressed="false">
         ${icon("moon", "i-moon")}${icon("sun", "i-sun")}
       </button>
+      <button class="icon-btn admin-gate-btn" id="btn-admin-gate" type="button" aria-label="بوابة يوزر الإدارة — أحمد أشرف" title="بوابة يوزر الإدارة — أحمد أشرف" data-admin-gate>
+        ${icon("lock", "i-admin-lock")}
+        <span class="admin-gate-dot" aria-hidden="true"></span>
+      </button>
       ${btn({ href: "/contact", label: "ابدأ مشروعك", kind: "primary", size: "sm", arrow: true, attrs: { class: "btn btn--primary btn--sm pillnav__cta" } })}
       <button class="icon-btn burger" type="button" data-drawer-open aria-expanded="false" aria-controls="drawer" aria-label="فتح القائمة">${icon("menu")}</button>
     </div>
@@ -81,6 +85,7 @@ const header = (site, active) => `
   </div>
   <nav class="drawer__nav" aria-label="التنقل للجوال">
     ${site.nav.map((n, i) => `<a href="${n.href}" style="--i:${i}"${active === n.key ? ' aria-current="page"' : ""}>${esc(n.label)}</a>`).join("")}
+    <a href="/dashboard" class="drawer__admin-link" data-admin-gate style="--i:${site.nav.length};color:var(--acc);">${icon("lock")} <span>بوابة يوزر الإدارة (أحمد أشرف)</span></a>
   </nav>
   <div class="btn-row">
     ${btn({ href: "/contact", label: "ابدأ مشروعك", kind: "primary", arrow: true })}
@@ -200,6 +205,55 @@ ${header(site, active)}
 ${body}
 </main>
 ${footer(site)}
+
+<!-- Global Floating Sovereign Admin Bar (Visible when Admin User is active) -->
+<aside class="sovereign-admin-bar" id="sovereign-admin-bar" style="display: none;" aria-label="شريط تحكم يوزر الإدارة">
+  <div class="sovereign-admin-bar__inner">
+    <div class="sovereign-admin-bar__brand">
+      <span class="admin-bar-crown">👑</span>
+      <span class="admin-bar-name">${esc(site.brand.founder.name)}</span>
+      <span class="chip chip--accent" style="padding:2px 8px;font-size:0.7rem;"><span class="dot dot--live"></span>يوزر الإدارة</span>
+    </div>
+    <nav class="sovereign-admin-bar__nav" aria-label="روابط سريعة للإدارة">
+      <a href="/dashboard" class="admin-bar-link"><span>📊 لوحة التحكم</span></a>
+      <a href="/dashboard" onclick="try{localStorage.setItem('awalim_dash_active_tab','tasks')}catch(e){}" class="admin-bar-link"><span>📋 مهام Island Haven</span></a>
+      <a href="/dashboard" onclick="try{localStorage.setItem('awalim_dash_active_tab','field')}catch(e){}" class="admin-bar-link"><span>🚑 طوارئ RahmaCare</span></a>
+      <a href="/dashboard" onclick="try{localStorage.setItem('awalim_dash_active_tab','security')}catch(e){}" class="admin-bar-link"><span>🛡️ الخزنة</span></a>
+    </nav>
+    <div class="sovereign-admin-bar__act">
+      <button type="button" class="btn btn--danger btn--xs" id="btn-admin-bar-lock" title="قفل جلسة الإدارة">🔒 قفل</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Global Sovereign Admin Auth Modal -->
+<div class="dash-modal-overlay" id="modal-admin-auth" role="dialog" aria-modal="true" aria-labelledby="modal-admin-title">
+  <div class="dash-modal dash-modal--auth" style="max-width:440px;">
+    <div class="dash-modal-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 1.3rem;">👑</span>
+        <h3 class="dash-modal-title" id="modal-admin-title">بوابة يوزر الإدارة السيادية</h3>
+      </div>
+      <button type="button" class="dash-modal-close" id="btn-close-admin-auth" aria-label="إغلاق">&times;</button>
+    </div>
+    <div class="dash-modal-body" style="text-align: center; padding: 1.5rem 1.2rem;">
+      <div class="dash-admin-avatar-wrap" style="margin: 0 auto 0.8rem; width: 68px; height: 68px;">
+        <img src="/assets/img/ahmed-personal.webp" alt="Ahmed Ashraf" class="dash-admin-avatar" width="68" height="68">
+      </div>
+      <h4 style="margin: 0.2rem 0; font-size: 1.15rem; color: #fff;">${esc(site.brand.founder.name)}</h4>
+      <p style="color: var(--mut, #94A3B8); font-size: 0.82rem; margin-bottom: 1.2rem;">${esc(site.brand.founder.role)} · وصول مطلق للمنظومة</p>
+
+      <form id="form-admin-auth-modal">
+        <div style="max-width: 320px; margin: 0 auto;">
+          <input type="password" class="dash-input" id="input-admin-auth-pin" placeholder="رمز المرور أو الدخول الفوري" style="text-align: center; font-size: 1rem; margin-bottom: 0.8rem;" autocomplete="current-password">
+          <div id="admin-auth-modal-err" style="color: #EF4444; font-size: 0.8rem; min-height: 1.2rem; margin-bottom: 0.6rem;"></div>
+          <button type="submit" class="btn btn--primary btn--sm" style="width: 100%; justify-content: center; margin-bottom: 0.6rem;">دخول لوحة التحكم ↗</button>
+          <button type="button" class="btn btn--gold btn--sm" id="btn-admin-auth-quick" style="width: 100%; justify-content: center;">⚡ دخول فوري للمؤسس أحمد أشرف</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 <script src="/assets/vendor/lenis.min.js" defer></script>
 <script src="/assets/js/awalim.js?v=${buildStamp}" defer></script>
 <script src="/assets/js/motion.js?v=${buildStamp}" defer></script>

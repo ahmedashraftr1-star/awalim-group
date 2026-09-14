@@ -9,7 +9,67 @@ export default function dashboard(ctx) {
   const t = (ar, en) => isEn ? en : ar;
 
   const body = [
-    `<!-- Top Executive Sovereign Control Header -->
+    `<!-- Sovereign Root Admin Gatekeeper Wall (Active when not authenticated) -->
+    <div class="dash-gatekeeper" id="dash-gatekeeper" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="gatekeeper-title">
+      <div class="dash-gatekeeper-card">
+        <div class="dash-gatekeeper-icon">
+          <span class="dash-gatekeeper-crown">👑</span>
+        </div>
+        <span class="chip chip--accent"><span class="dot dot--live"></span>${t("بوابة يوزر الإدارة السيادية", "SOVEREIGN ADMIN USER PORTAL")}</span>
+        <h2 class="dash-gatekeeper-title" id="gatekeeper-title">${t("لوحة تحكم المنظومة — جلسة الإدارة", "Sovereign Executive Suite — Admin Gateway")}</h2>
+        <p class="dash-gatekeeper-desc">${t("هذه اللوحة خاصة بإدارة الموقع المركزية بواسطة يوزر الإدارة (أحمد أشرف) وتتطلب توثيقاً سيادياً معتمداً للتحكم في كافة قطاعات المنظومة.", "This command suite is reserved for the Root Sovereign Administrator (Ahmed Ashraf). Authenticate to manage site operations, Island Haven tasks, and RahmaCare dispatch.")}</p>
+
+        <form class="dash-gatekeeper-form" id="dash-gatekeeper-form">
+          <div class="dash-gatekeeper-pin-wrap">
+            <input type="password" class="dash-input dash-gatekeeper-pin" id="dash-gatekeeper-pin" placeholder="••••" maxlength="8" autocomplete="current-password" aria-label="${t("رمز دخول الإدارة", "Admin Security PIN")}">
+            <button type="submit" class="btn btn--primary btn--sm" id="btn-gatekeeper-submit">${t("فتح لوحة التحكم", "Unlock Console")}</button>
+          </div>
+          <div class="dash-gatekeeper-err" id="dash-gatekeeper-err" role="alert"></div>
+          <div class="dash-gatekeeper-quick">
+            <button type="button" class="btn btn--gold btn--sm" id="btn-gatekeeper-root">
+              <span>⚡ ${t("دخول فوري بصفة المؤسس أحمد أشرف", "Instant Root Access (Ahmed Ashraf)")}</span>
+            </button>
+          </div>
+          <div class="dash-gatekeeper-note">
+            <span>${t("مشفّر بالكامل عبر WebCrypto API · مطابق لمعايير CSP Level 3", "Encrypted via WebCrypto API · Strict CSP Level 3 Compliant")}</span>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Top Executive Sovereign Control Header -->
+    <header class="dash-master-header" data-ledger="dashboard" aria-label="${t("لوحة التحكم المركزية", "Sovereign Executive Command Suite")}">
+      <div class="wrap wrap--wide">
+        <!-- Sovereign Root Admin Identity Card (يوزر الإدارة) -->
+        <div class="dash-admin-identity-card" id="dash-admin-user-card">
+          <div class="dash-admin-identity-left">
+            <div class="dash-admin-avatar-wrap">
+              <img src="/assets/img/ahmed-personal.webp" alt="Ahmed Ashraf" class="dash-admin-avatar" width="56" height="56">
+              <span class="dash-admin-badge-icon" aria-hidden="true">👑</span>
+            </div>
+            <div class="dash-admin-info">
+              <div class="dash-admin-name-row">
+                <h2 class="dash-admin-name">${t("أحمد أشرف", "Ahmed Ashraf")}</h2>
+                <span class="chip chip--gold"><span class="dot dot--live" aria-hidden="true"></span>${t("يوزر الإدارة السيادي · صلاحية مطلقة", "ROOT SOVEREIGN ADMIN · FULL CLEARANCE")}</span>
+              </div>
+              <div class="dash-admin-meta">
+                <span>${t("المؤسس والمهندس المعماري السيادي", "Founder & Chief Sovereign Architect")}</span>
+                <span class="dash-admin-sep">·</span>
+                <span>${t("معرّف الجلسة:", "Session ID:")} <b class="mono"><bdi dir="ltr">AWALIM-ROOT-AA01</bdi></b></span>
+                <span class="dash-admin-sep">·</span>
+                <span class="dash-admin-status-ok">${t("🔒 توثيق عتادي نشط", "🔒 Hardware Token Active")}</span>
+              </div>
+            </div>
+          </div>
+          <div class="dash-admin-identity-actions">
+            <a href="${pfx}/" class="btn btn--ghost btn--sm" target="_blank">
+              <span>${t("معاينة الموقع كزائر عادي ↗", "Preview Live Site ↗")}</span>
+            </a>
+            <button type="button" class="btn btn--danger btn--sm" id="btn-admin-logout">
+              <span>${t("قفل جلسة الإدارة 🔒", "Lock Admin Session 🔒")}</span>
+            </button>
+          </div>
+        </div>
     <header class="dash-master-header" data-ledger="dashboard" aria-label="${t("لوحة التحكم المركزية", "Sovereign Executive Command Suite")}">
       <div class="wrap wrap--wide">
         <div class="dash-master-header__top">

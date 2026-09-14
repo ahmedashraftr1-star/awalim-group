@@ -1745,3 +1745,278 @@ html[lang="ar"] .dash-table th {
   margin-top: 2px;
   line-height: 1.4;
 }
+
+/* ==========================================================================
+   SOVEREIGN ROOT ADMIN USER IDENTITY & GATEKEEPER SUITE
+   ========================================================================== */
+.dash-admin-identity-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, rgba(20, 26, 38, 0.85), rgba(12, 15, 22, 0.95));
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  border-radius: var(--r-lg);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.dash-admin-identity-left {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.dash-admin-avatar-wrap {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  padding: 2px;
+  background: linear-gradient(135deg, #00F0FF, #10B981, #F59E0B);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+  flex-shrink: 0;
+}
+.dash-admin-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  background: #111;
+  display: block;
+}
+.dash-admin-badge-icon {
+  position: absolute;
+  bottom: -4px;
+  inset-inline-end: -4px;
+  background: #0B0E14;
+  border: 1px solid rgba(245, 158, 11, 0.6);
+  border-radius: 50%;
+  font-size: 0.85rem;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+}
+.dash-admin-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.25rem;
+}
+.dash-admin-name {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+.dash-admin-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  color: var(--mut, #94A3B8);
+}
+.dash-admin-sep {
+  opacity: 0.4;
+}
+.dash-admin-status-ok {
+  color: #10B981;
+  font-weight: 600;
+}
+.dash-admin-identity-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Gold chip & button */
+.chip--gold {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
+}
+.btn--gold {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(217, 119, 6, 0.95));
+  color: #060709;
+  border: none;
+  font-weight: 800;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+}
+.btn--gold:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+}
+
+/* Gatekeeper Wall */
+.dash-gatekeeper {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(4, 6, 9, 0.94);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  transition: opacity 0.4s var(--ease-out), visibility 0.4s;
+}
+.dash-gatekeeper.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.dash-gatekeeper-card {
+  background: linear-gradient(180deg, rgba(22, 28, 38, 0.96), rgba(11, 14, 20, 0.98));
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: var(--r-xl);
+  padding: clamp(2rem, 4vw, 3rem);
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+.dash-gatekeeper-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1.2rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(16, 185, 129, 0.15));
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
+}
+.dash-gatekeeper-title {
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  font-weight: 800;
+  color: #fff;
+  margin: 0.8rem 0 0.5rem;
+}
+.dash-gatekeeper-desc {
+  font-size: 0.88rem;
+  color: var(--mut, #94A3B8);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+.dash-gatekeeper-pin-wrap {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+}
+.dash-gatekeeper-pin {
+  text-align: center;
+  letter-spacing: 0.2em;
+  font-size: 1.1rem;
+}
+.dash-gatekeeper-err {
+  min-height: 1.2rem;
+  font-size: 0.82rem;
+  color: #EF4444;
+  margin-bottom: 0.8rem;
+}
+.dash-gatekeeper-quick {
+  margin-bottom: 1.2rem;
+}
+.dash-gatekeeper-quick button {
+  width: 100%;
+  justify-content: center;
+  padding: 0.8rem;
+}
+.dash-gatekeeper-note {
+  font-size: 0.74rem;
+  color: rgba(148, 163, 184, 0.7);
+}
+
+/* Public Header Admin Gate Trigger Button */
+.admin-gate-btn {
+  position: relative;
+  color: var(--acc, #00F0FF) !important;
+  border-color: rgba(0, 240, 255, 0.25) !important;
+  transition: all 0.25s var(--ease-out);
+}
+.admin-gate-btn:hover {
+  border-color: var(--acc, #00F0FF) !important;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
+}
+.admin-gate-dot {
+  position: absolute;
+  top: 4px;
+  inset-inline-end: 4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+}
+
+/* Global Floating Sovereign Admin Bar */
+.sovereign-admin-bar {
+  position: fixed;
+  bottom: 24px;
+  inset-inline: 0;
+  margin: 0 auto;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  z-index: 9990;
+  background: rgba(10, 14, 20, 0.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--r-pill);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 240, 255, 0.2);
+  padding: 6px 12px;
+  animation: adminBarSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes adminBarSlideUp {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.sovereign-admin-bar__inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.sovereign-admin-bar__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline-end: 0.8rem;
+  border-inline-end: 1px solid rgba(255, 255, 255, 0.12);
+}
+.admin-bar-name {
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
+}
+.sovereign-admin-bar__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.admin-bar-link {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--mut, #94A3B8);
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  transition: all 0.2s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.admin-bar-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+.btn--xs {
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  border-radius: var(--r-pill);
+}
