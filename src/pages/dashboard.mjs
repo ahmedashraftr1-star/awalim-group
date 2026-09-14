@@ -78,6 +78,10 @@ export default function dashboard(ctx) {
             <p class="dash-master-sub">${t("تحكم كامل وفوري في كافة أقسام وصفحات وأنظمة عوالِم قروب، مع مركز فحص شامل وتدقيق لحظي.", "Full real-time administration of all site sections, flagship systems, content, and forensic integrity verification.")}</p>
           </div>
           <div class="dash-master-actions">
+            <button type="button" class="btn btn--primary btn--sm" id="btn-rebuild-site">
+              <span class="dot dot--live" aria-hidden="true"></span>
+              <span>${t("⚡ إعادة بناء وتحديث الموقع حياً", "⚡ Rebuild & Deploy Live Site")}</span>
+            </button>
             <button type="button" class="btn btn--primary btn--sm" id="btn-run-master-audit">
               <span class="dot dot--live" aria-hidden="true"></span>
               <span>${t("تشغيل الفحص الشامل للموقع", "Run Site-Wide Master Audit")}</span>
@@ -220,6 +224,49 @@ export default function dashboard(ctx) {
               <span class="dash-kpi-label">${t("اعتمادية الصمود (SLA)", "Sovereign Uptime")}</span>
               <div class="dash-kpi-val"><bdi dir="ltr">99.99%</bdi></div>
               <div class="dash-kpi-meta"><span class="badge badge--ok">P2P Mesh</span> ${t("صمود 100% في غزة وبيروت", "Offline resilience in blackouts")}</div>
+            </div>
+          </div>
+
+          <!-- Verified Live Public Stats & Performance (Controls site.json stats directly) -->
+          <div class="dash-card" style="margin-top: 1.5rem;">
+            <div class="dash-panel-head" style="margin-bottom: 1rem;">
+              <div>
+                <span class="chip chip--gold" style="margin-bottom:6px;"><span class="dot dot--live"></span>${t("إدارة إحصائيات الموقع الرسمية الموثقة", "LIVE VERIFIED METRICS & GLOBAL STATS")}</span>
+                <h3 class="dash-card-title">${t("الأرقام القياسية والمؤشرات العامة لكامل صفحات الموقع (Live Site Metrics)", "Public Proof & Global Key Metrics")}</h3>
+                <p class="dash-panel-desc">${t("تحكم حقيقي في أرقام الموقع (site.json). عند الحفظ يتم تحديث الأرقام فورياً وإعادة بناء كافة صفحات الموقع (84 صفحة) حياً.", "Direct live control over site.json metrics. Saving triggers an immediate static rebuild across all 84 pages.")}</p>
+              </div>
+              <div class="dash-panel-tools">
+                <button type="button" class="btn btn--primary btn--sm" id="btn-save-stats">
+                  <span>${t("حفظ وتحديث الإحصائيات حياً", "Save & Deploy Metrics Live")}</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="dash-editor-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+              <div class="dash-field-group">
+                <label class="dash-label">${t("الأنظمة المسلّمة (Systems Delivered)", "Systems Delivered")}</label>
+                <input type="number" class="dash-input mono" id="stat-input-systems" value="50">
+              </div>
+              <div class="dash-field-group">
+                <label class="dash-label">${t("المهندسون المتدربون (Engineers Trained)", "Engineers Trained")}</label>
+                <input type="number" class="dash-input mono" id="stat-input-engineers" value="1200">
+              </div>
+              <div class="dash-field-group">
+                <label class="dash-label">${t("الخريجون المعتمدون (Certified Graduates)", "Certified Graduates")}</label>
+                <input type="number" class="dash-input mono" id="stat-input-graduates" value="682">
+              </div>
+              <div class="dash-field-group">
+                <label class="dash-label">${t("الدول المخدومة (Client Countries)", "Client Countries")}</label>
+                <input type="number" class="dash-input mono" id="stat-input-countries" value="10">
+              </div>
+              <div class="dash-field-group">
+                <label class="dash-label">${t("سنوات البناء (Years Building)", "Years Building")}</label>
+                <input type="number" class="dash-input mono" id="stat-input-years" value="8">
+              </div>
+              <div class="dash-field-group">
+                <label class="dash-label">${t("شارة التوفر للتعاقد (Availability Badge)", "Availability Badge")}</label>
+                <input type="text" class="dash-input" id="stat-input-availability" value="${t("متاحون لمشاريع الربع القادم", "Available for next quarter deployments")}">
+              </div>
             </div>
           </div>
 

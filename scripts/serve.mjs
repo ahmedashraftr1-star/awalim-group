@@ -9,6 +9,8 @@ import { readFileSync, existsSync, statSync } from "node:fs";
 import { join, extname, normalize, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { brotliCompressSync, gzipSync, constants } from "node:zlib";
+import { execSync } from "node:child_process";
+import { writeFileSync as fsWriteFileSync } from "node:fs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PORT = +(process.argv[2] || process.env.PORT || 8899);
@@ -55,7 +57,90 @@ function resolve(urlPath) {
   return null;
 }
 
-createServer((req, res) => {
+createServer(async (req, res) => {
+  const urlObj = new URL(req.url, "http://" + (req.headers.host || "localhost"));
+  const pathname = decodeURIComponent(urlObj.pathname);
+
+  // ═════════════════════════════════════════════════════════
+  // 🎛️ SOVEREIGN ADMIN API — التحكم الفعلي المباشر في الموقع
+  // ═════════════════════════════════════════════════════════
+  if (pathname.startsWith("/api/admin/")) {
+    const ALLOWED_FILES = new Set(["site.json", "cases.json", "products.json", "pages.json", "careers.json", "journal.json", "i18n.json"]);
+
+    // GET /api/admin/content?file=site.json
+    if (pathname === "/api/admin/content" && req.method === "GET") {
+      const targetFile = urlObj.searchParams.get("file") || "site.json";
+      if (!ALLOWED_FILES.has(targetFile)) {
+        res.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+        return res.end(JSON.stringify({ error: "Invalid target file" }));
+      }
+      const targetPath = join(ROOT, "src", "content", targetFile);
+      try {
+        const data = readFileSync(targetPath, "utf8");
+        res.writeHead(200, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
+        return res.end(data);
+      } catch (err) {
+        res.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+        return res.end(JSON.stringify({ error: err.message }));
+      }
+    }
+
+    // POST /api/admin/save-content
+    if (pathname === "/api/admin/save-content" && req.method === "POST") {
+      let bodyData = "";
+      req.on("data", chunk => { bodyData += chunk; });
+      req.on("end", () => {
+        try {
+          const { file: targetFile, data } = JSON.parse(bodyData);
+          if (!ALLOWED_FILES.has(targetFile)) {
+            res.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+            return res.end(JSON.stringify({ error: "Invalid target file" }));
+          }
+          const targetPath = join(ROOT, "src", "content", targetFile);
+          fsWriteFileSync(targetPath, JSON.stringify(data, null, 2), "utf8");
+
+          // Clear in-memory server cache
+          cache.clear();
+
+          // Trigger site rebuild
+          const buildOut = execSync("export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\" && node build.mjs", {
+            cwd: ROOT,
+            encoding: "utf8"
+          });
+
+          res.writeHead(200, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
+          return res.end(JSON.stringify({
+            ok: true,
+            file: targetFile,
+            message: "تم حفظ التعديلات وإعادة بناء صفحات الموقع الـ 84 بنجاح",
+            buildOutput: buildOut.trim(),
+            timestamp: Date.now()
+          }));
+        } catch (err) {
+          res.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+          return res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return;
+    }
+
+    // POST /api/admin/rebuild
+    if (pathname === "/api/admin/rebuild" && req.method === "POST") {
+      try {
+        cache.clear();
+        const buildOut = execSync("export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\" && node build.mjs", {
+          cwd: ROOT,
+          encoding: "utf8"
+        });
+        res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+        return res.end(JSON.stringify({ ok: true, buildOutput: buildOut.trim() }));
+      } catch (err) {
+        res.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+        return res.end(JSON.stringify({ error: err.message }));
+      }
+    }
+  }
+
   let file = resolve(req.url);
   let status = 200;
   if (!file) { file = join(ROOT, "404.html"); status = 404; }

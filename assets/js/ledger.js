@@ -647,6 +647,11 @@
       pod2: document.getElementById("hero-input-pod2")
     };
 
+    // Live Backend State Bridges (Real-time Site Control via /api/admin/*)
+    var livePagesData = null;
+    var liveSiteData = null;
+    var liveCasesData = null;
+
     var heroPreviews = {
       eyebrow: document.getElementById("preview-hero-eyebrow"),
       line1: document.getElementById("preview-line1"),
@@ -687,23 +692,197 @@
       }
     } catch (e) {}
 
-    var btnSaveHero = document.getElementById("btn-save-hero");
-    if (btnSaveHero) {
-      btnSaveHero.addEventListener("click", function () {
-        var hObj = {};
-        Object.keys(heroInputs).forEach(function (k) {
-          if (heroInputs[k]) hObj[k] = heroInputs[k].value;
-        });
-        try {
-          localStorage.setItem("awalim_hero_copy", JSON.stringify(hObj));
-          showToast("✔ تم حفظ تعديلات الهيرو بنجاح وتحديث النواة في الذاكرة.");
-        } catch (e) {
-          showToast("✖ تعذر الحفظ في الذاكرة المحلية.", true);
+    // Live Data Loader from Node Server (/api/admin/content)
+    function loadLiveSiteContent() {
+      Promise.all([
+        fetch("/api/admin/content?file=pages.json").then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }),
+        fetch("/api/admin/content?file=site.json").then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }),
+        fetch("/api/admin/content?file=cases.json").then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
+      ]).then(function(results) {
+        var pData = results[0];
+        var sData = results[1];
+        var cData = results[2];
+
+        if (pData && pData.home && pData.home.hero) {
+          livePagesData = pData;
+          var h = pData.home.hero;
+          if (heroInputs.eyebrow) heroInputs.eyebrow.value = h.eyebrow || "";
+          if (heroInputs.line1 && h.lines && h.lines[0]) heroInputs.line1.value = h.lines[0];
+          if (heroInputs.accent && h.lines && h.lines[1]) heroInputs.accent.value = h.lines[1].replace(/<\/?em>/g, "");
+          if (heroInputs.line3 && h.lines && h.lines[2]) heroInputs.line3.value = h.lines[2];
+          if (heroInputs.lede) heroInputs.lede.value = h.lede || "";
         }
+
+        if (sData) {
+          liveSiteData = sData;
+          var avail = (sData.contact && sData.contact.availability) ? sData.contact.availability : "";
+          if (heroInputs.badge) heroInputs.badge.value = avail;
+          var statAvail = document.getElementById("stat-input-availability");
+          if (statAvail) statAvail.value = avail;
+
+          if (sData.stats) {
+            var sSys = document.getElementById("stat-input-systems");
+            var sEng = document.getElementById("stat-input-engineers");
+            var sGrad = document.getElementById("stat-input-graduates");
+            var sCtry = document.getElementById("stat-input-countries");
+            var sYrs = document.getElementById("stat-input-years");
+            if (sSys && sData.stats.systemsDelivered) sSys.value = sData.stats.systemsDelivered.value;
+            if (sEng && sData.stats.engineersTrained) sEng.value = sData.stats.engineersTrained.value;
+            if (sGrad && sData.stats.certifiedGraduates) sGrad.value = sData.stats.certifiedGraduates.value;
+            if (sCtry && sData.stats.clientCountries) sCtry.value = sData.stats.clientCountries.value;
+            if (sYrs && sData.stats.yearsBuilding) sYrs.value = sData.stats.yearsBuilding.value;
+          }
+        }
+
+        if (cData && cData.cases && Array.isArray(cData.cases)) {
+          liveCasesData = cData;
+          projects = cData.cases.map(function(c) {
+            return {
+              title: c.title || c.slug,
+              slug: c.slug,
+              domain: c.kind || (c.cat === "apps" ? "Apps & Platforms" : "Systems"),
+              metric: (c.metric && c.metric.honor) ? c.metric.honor : (c.headline || "Active System"),
+              status: "ACTIVE",
+              route: "/work/" + c.slug,
+              desc: c.summary || c.headline || ""
+            };
+          });
+          renderProjectsTable();
+        }
+
+        updateHeroPreview();
       });
     }
 
-    // -------------------------------------------------------------
+    // Trigger immediate load
+    loadLiveSiteContent();
+
+    var btnSaveHero = document.getElementById("btn-save-hero");
+    if (btnSaveHero) {
+      btnSaveHero.addEventListener("click", function () {
+        if (!livePagesData) livePagesData = { home: { hero: {} } };
+        if (!livePagesData.home) livePagesData.home = { hero: {} };
+        if (!livePagesData.home.hero) livePagesData.home.hero = {};
+
+        livePagesData.home.hero.eyebrow = heroInputs.eyebrow ? heroInputs.eyebrow.value.trim() : "";
+        var l1 = heroInputs.line1 ? heroInputs.line1.value.trim() : "";
+        var l2 = heroInputs.accent ? heroInputs.accent.value.trim() : "";
+        var l3 = heroInputs.line3 ? heroInputs.line3.value.trim() : "";
+        if (l2 && !l2.includes("<em>")) l2 = "<em>" + l2 + "</em>";
+        livePagesData.home.hero.lines = [l1, l2, l3];
+        livePagesData.home.hero.lede = heroInputs.lede ? heroInputs.lede.value.trim() : "";
+
+        var origText = btnSaveHero.textContent;
+        btnSaveHero.disabled = true;
+        btnSaveHero.textContent = "⏳ جارٍ حفظ التعديلات وبناء 84 صفحة حياً...";
+
+        fetch("/api/admin/save-content", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ file: "pages.json", data: livePagesData })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(resData) {
+          if (liveSiteData && heroInputs.badge) {
+            if (!liveSiteData.contact) liveSiteData.contact = {};
+            liveSiteData.contact.availability = heroInputs.badge.value.trim();
+            fetch("/api/admin/save-content", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ file: "site.json", data: liveSiteData })
+            });
+          }
+
+          btnSaveHero.disabled = false;
+          btnSaveHero.textContent = "✔ تم الحفظ وإعادة بناء الموقع حياً";
+          setTimeout(function() { btnSaveHero.textContent = origText; }, 3500);
+
+          if (window.AwalimAudio) window.AwalimAudio.chime();
+          showToast("✔ تم حفظ تعديلات الهيرو وإعادة بناء صفحات الموقع الـ 84 حياً!");
+        })
+        .catch(function(err) {
+          btnSaveHero.disabled = false;
+          btnSaveHero.textContent = origText;
+          showToast("✖ تعذر حفظ التعديلات: " + err.message, true);
+        });
+      });
+    }
+
+    // 4.1 Master Rebuild Site Button Handler
+    var btnRebuildSite = document.getElementById("btn-rebuild-site");
+    if (btnRebuildSite) {
+      btnRebuildSite.addEventListener("click", function () {
+        btnRebuildSite.disabled = true;
+        var origText = btnRebuildSite.textContent;
+        btnRebuildSite.textContent = "⏳ جارٍ إعادة بناء كامل صفحات الموقع...";
+
+        fetch("/api/admin/rebuild", { method: "POST" })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          btnRebuildSite.disabled = false;
+          btnRebuildSite.textContent = "✔ تم اكتمال البناء (84 صفحة)";
+          setTimeout(function() { btnRebuildSite.textContent = origText; }, 3500);
+          if (window.AwalimAudio) window.AwalimAudio.chime();
+          showToast("✔ تم إعادة بناء وتحديث الموقع كاملاً (84 صفحة) حياً على الخادم!");
+        })
+        .catch(function(err) {
+          btnRebuildSite.disabled = false;
+          btnRebuildSite.textContent = origText;
+          showToast("✖ خطأ أثناء إعادة البناء: " + err.message, true);
+        });
+      });
+    }
+
+    // 4.2 Verified Stats & Site Metrics Live Save Handler
+    var btnSaveStats = document.getElementById("btn-save-stats");
+    if (btnSaveStats) {
+      btnSaveStats.addEventListener("click", function () {
+        if (!liveSiteData) liveSiteData = { stats: {}, contact: {} };
+        if (!liveSiteData.stats) liveSiteData.stats = {};
+
+        var sSys = document.getElementById("stat-input-systems");
+        var sEng = document.getElementById("stat-input-engineers");
+        var sGrad = document.getElementById("stat-input-graduates");
+        var sCtry = document.getElementById("stat-input-countries");
+        var sYrs = document.getElementById("stat-input-years");
+        var statAvail = document.getElementById("stat-input-availability");
+
+        if (sSys && liveSiteData.stats.systemsDelivered) liveSiteData.stats.systemsDelivered.value = Number(sSys.value) || 0;
+        if (sEng && liveSiteData.stats.engineersTrained) liveSiteData.stats.engineersTrained.value = Number(sEng.value) || 0;
+        if (sGrad && liveSiteData.stats.certifiedGraduates) liveSiteData.stats.certifiedGraduates.value = Number(sGrad.value) || 0;
+        if (sCtry && liveSiteData.stats.clientCountries) liveSiteData.stats.clientCountries.value = Number(sCtry.value) || 0;
+        if (sYrs && liveSiteData.stats.yearsBuilding) liveSiteData.stats.yearsBuilding.value = Number(sYrs.value) || 0;
+        if (statAvail) {
+          if (!liveSiteData.contact) liveSiteData.contact = {};
+          liveSiteData.contact.availability = statAvail.value.trim();
+        }
+
+        btnSaveStats.disabled = true;
+        var origText = btnSaveStats.textContent;
+        btnSaveStats.textContent = "⏳ جارٍ حفظ الأرقام وبناء الموقع...";
+
+        fetch("/api/admin/save-content", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ file: "site.json", data: liveSiteData })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          btnSaveStats.disabled = false;
+          btnSaveStats.textContent = "✔ تم تحديث الإحصائيات (84 صفحة)";
+          setTimeout(function() { btnSaveStats.textContent = origText; }, 3500);
+          if (window.AwalimAudio) window.AwalimAudio.chime();
+          showToast("✔ تم حفظ الإحصائيات الموثقة وإعادة بناء كافة صفحات الموقع حياً!");
+        })
+        .catch(function(err) {
+          btnSaveStats.disabled = false;
+          btnSaveStats.textContent = origText;
+          showToast("✖ تعذر حفظ الإحصائيات: " + err.message, true);
+        });
+      });
+    }
+
+        // -------------------------------------------------------------
     // 5. Portfolio & Cases Studio (Full Add/Edit/Delete & Filter)
     // -------------------------------------------------------------
     var defaultProjects = [
@@ -909,11 +1088,20 @@
     function deleteProject(idx) {
       var p = projects[idx];
       if (!p) return;
-      if (confirm("هل أنت متأكد من رغبتك في حذف دراسة الحالة (" + p.title + ") من السجل؟")) {
+      if (confirm("هل أنت متأكد من رغبتك في حذف دراسة الحالة (" + p.title + ") من الموقع؟ سيتم إعادة بناء كافة الصفحات.")) {
         projects.splice(idx, 1);
+        if (liveCasesData && liveCasesData.cases) {
+          liveCasesData.cases.splice(idx, 1);
+          fetch("/api/admin/save-content", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ file: "cases.json", data: liveCasesData })
+          }).then(function() {
+            showToast("✔ تم حذف دراسة الحالة وتحديث الموقع كاملاً حياً.");
+          });
+        }
         saveProjectsState();
         renderProjectsTable();
-        showToast("✔ تم حذف دراسة الحالة بنجاح.");
       }
     }
 
@@ -964,17 +1152,74 @@
           desc: desc
         };
 
+        if (!liveCasesData) liveCasesData = { cases: [] };
+        if (!liveCasesData.cases) liveCasesData.cases = [];
+
         if (idx >= 0 && idx < projects.length) {
           projects[idx] = item;
-          showToast("✔ تم تحديث دراسة الحالة بنجاح.");
+          if (liveCasesData.cases[idx]) {
+            liveCasesData.cases[idx].title = title;
+            liveCasesData.cases[idx].slug = slug;
+            liveCasesData.cases[idx].headline = metric || title;
+            liveCasesData.cases[idx].summary = desc || title;
+            if (!liveCasesData.cases[idx].metric) liveCasesData.cases[idx].metric = {};
+            liveCasesData.cases[idx].metric.honor = metric;
+          }
         } else {
           projects.unshift(item);
-          showToast("✔ تمت إضافة دراسة الحالة الجديدة بنجاح.");
+          var newCase = {
+            slug: slug,
+            code: "SYS-" + slug.toUpperCase().slice(0, 4) + "-01",
+            kind: domain || "نظام مؤسسي",
+            cat: "systems",
+            theme: slug,
+            device: "desktop",
+            title: title,
+            headline: metric || title,
+            summary: desc || title,
+            image: "/assets/img/work/" + slug + ".webp",
+            hero: "/assets/img/work/" + slug + "-hero.webp",
+            gallery: [],
+            facts: [
+              { k: "العميل", v: "عميل مؤسسي" },
+              { k: "السنة", v: "2026" },
+              { k: "الحالة", v: status || "يعمل" }
+            ],
+            tech: ["Node.js", "Web Standards"],
+            metric: {
+              platform: "Web · Native",
+              standard: "WCAG 2.1 AA",
+              honor: metric || "يعمل في الإنتاج"
+            },
+            flow: { label: title, steps: [] }
+          };
+          liveCasesData.cases.unshift(newCase);
         }
 
-        saveProjectsState();
-        renderProjectsTable();
-        closeModal("modal-project");
+        btnSaveProj.disabled = true;
+        btnSaveProj.textContent = "⏳ جارٍ الحفظ وبناء الموقع...";
+
+        fetch("/api/admin/save-content", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ file: "cases.json", data: liveCasesData })
+        })
+        .then(function(res){ return res.json(); })
+        .then(function(resData) {
+          btnSaveProj.disabled = false;
+          btnSaveProj.textContent = "✔ تم الحفظ";
+          setTimeout(function() { btnSaveProj.textContent = "حفظ دراسة الحالة"; }, 2500);
+          saveProjectsState();
+          renderProjectsTable();
+          closeModal("modal-project");
+          if (window.AwalimAudio) window.AwalimAudio.chime();
+          showToast("✔ تم حفظ دراسة الحالة وتحديث كافة صفحات الموقع حياً!");
+        })
+        .catch(function(err) {
+          btnSaveProj.disabled = false;
+          btnSaveProj.textContent = "حفظ دراسة الحالة";
+          showToast("✖ خطأ أثناء حفظ دراسة الحالة: " + err.message, true);
+        });
       });
     }
 
