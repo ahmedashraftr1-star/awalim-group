@@ -1,5 +1,6 @@
 import { page, breadcrumbSchema } from "../lib/layout.mjs";
 import * as C from "../lib/components.mjs";
+import { icon } from "../lib/icons.mjs";
 
 export default function dashboard(ctx) {
   const isEn = ctx.locale === "en";
@@ -13,7 +14,7 @@ export default function dashboard(ctx) {
     <div class="dash-gatekeeper" id="dash-gatekeeper" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="gatekeeper-title">
       <div class="dash-gatekeeper-card">
         <div class="dash-gatekeeper-icon">
-          <span class="dash-gatekeeper-crown">👑</span>
+          <span class="dash-gatekeeper-crown">${icon("crown", "dash-gatekeeper-crown-svg")}</span>
         </div>
         <span class="chip chip--accent"><span class="dot dot--live"></span>${t("بوابة يوزر الإدارة السيادية", "SOVEREIGN ADMIN USER PORTAL")}</span>
         <h2 class="dash-gatekeeper-title" id="gatekeeper-title">${t("لوحة تحكم المنظومة — جلسة الإدارة", "Sovereign Executive Suite — Admin Gateway")}</h2>
@@ -27,7 +28,7 @@ export default function dashboard(ctx) {
           <div class="dash-gatekeeper-err" id="dash-gatekeeper-err" role="alert"></div>
           <div class="dash-gatekeeper-quick">
             <button type="button" class="btn btn--gold btn--sm" id="btn-gatekeeper-root">
-              <span>⚡ ${t("دخول فوري بصفة المؤسس أحمد أشرف", "Instant Root Access (Ahmed Ashraf)")}</span>
+              <span>${icon("bolt", "dash-btn-svg")} ${t("دخول فوري بصفة المؤسس أحمد أشرف", "Instant Root Access (Ahmed Ashraf)")}</span>
             </button>
           </div>
           <div class="dash-gatekeeper-note">
@@ -45,7 +46,7 @@ export default function dashboard(ctx) {
           <div class="dash-admin-identity-left">
             <div class="dash-admin-avatar-wrap">
               <img src="/assets/img/ahmed-personal.webp" alt="Ahmed Ashraf" class="dash-admin-avatar" width="56" height="56">
-              <span class="dash-admin-badge-icon" aria-hidden="true">👑</span>
+              <span class="dash-admin-badge-icon" aria-hidden="true">${icon("crown", "dash-admin-crown-svg")}</span>
             </div>
             <div class="dash-admin-info">
               <div class="dash-admin-name-row">
@@ -57,7 +58,7 @@ export default function dashboard(ctx) {
                 <span class="dash-admin-sep">·</span>
                 <span>${t("معرّف الجلسة:", "Session ID:")} <b class="mono"><bdi dir="ltr">AWALIM-ROOT-AA01</bdi></b></span>
                 <span class="dash-admin-sep">·</span>
-                <span class="dash-admin-status-ok">${t("🔒 توثيق عتادي نشط", "🔒 Hardware Token Active")}</span>
+                <span class="dash-admin-status-ok">${icon("shield", "dash-meta-svg")} ${t("توثيق عتادي نشط", "Hardware Token Active")}</span>
               </div>
             </div>
           </div>
@@ -66,12 +67,10 @@ export default function dashboard(ctx) {
               <span>${t("معاينة الموقع كزائر عادي ↗", "Preview Live Site ↗")}</span>
             </a>
             <button type="button" class="btn btn--danger btn--sm" id="btn-admin-logout">
-              <span>${t("قفل جلسة الإدارة 🔒", "Lock Admin Session 🔒")}</span>
+              <span>${t("قفل جلسة الإدارة", "Lock Admin Session")} ${icon("lock", "dash-btn-svg")}</span>
             </button>
           </div>
         </div>
-    <header class="dash-master-header" data-ledger="dashboard" aria-label="${t("لوحة التحكم المركزية", "Sovereign Executive Command Suite")}">
-      <div class="wrap wrap--wide">
         <div class="dash-master-header__top">
           <div class="dash-master-brand">
             <span class="chip chip--accent"><span class="dot dot--live" aria-hidden="true"></span>${t("المنظومة السيادية الفائقة", "SOVEREIGN WEB OS · APEX CONTROL")}</span>
@@ -120,64 +119,64 @@ export default function dashboard(ctx) {
         <!-- Navigation Tabs Rail (11 Dedicated Panels for Everything) -->
         <nav class="dash-nav-rail" aria-label="${t("أقسام لوحة التحكم", "Dashboard Sections Navigation")}">
           <button type="button" class="dash-tab-btn active" data-dash-tab="overview">
-            <span class="dash-tab-icon">📊</span>
+            <span class="dash-tab-icon">${icon("gauge", "dash-tab-svg")}</span>
             <span>${t("نظرة عامة والتحليلات", "Overview & Analytics")}</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="landing">
-            <span class="dash-tab-icon">🏛️</span>
+            <span class="dash-tab-icon">${icon("building", "dash-tab-svg")}</span>
             <span>${t("الهوية والواجهة (Hero)", "Brand & Hero")}</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="projects">
-            <span class="dash-tab-icon">💼</span>
+            <span class="dash-tab-icon">${icon("briefcase", "dash-tab-svg")}</span>
             <span>${t("المشاريع ودراسات الحالة", "Portfolio & Cases")}</span>
             <span class="dash-tab-badge" id="badge-projects-count">8</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="services">
-            <span class="dash-tab-icon">⚙️</span>
+            <span class="dash-tab-icon">${icon("card", "dash-tab-svg")}</span>
             <span>${t("الخدمات وباقات التعاقد", "Services & Pricing")}</span>
             <span class="dash-tab-badge">3</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="products">
-            <span class="dash-tab-icon">🚀</span>
+            <span class="dash-tab-icon">${icon("rocket", "dash-tab-svg")}</span>
             <span>${t("الأنظمة والمنتجات", "Flagship Products")}</span>
             <span class="dash-tab-badge">4</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="academy">
-            <span class="dash-tab-icon">🎓</span>
+            <span class="dash-tab-icon">${icon("book", "dash-tab-svg")}</span>
             <span>${t("الأكاديمية والمسارات", "Academy Tracks")}</span>
             <span class="dash-tab-badge">3</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="articles">
-            <span class="dash-tab-icon">📰</span>
+            <span class="dash-tab-icon">${icon("newspaper", "dash-tab-svg")}</span>
             <span>${t("المقالات والبحوث", "Articles & Research")}</span>
             <span class="dash-tab-badge">4</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="messages">
-            <span class="dash-tab-icon">📬</span>
+            <span class="dash-tab-icon">${icon("mail", "dash-tab-svg")}</span>
             <span>${t("الرسائل والاستفسارات", "Inquiries Hub")}</span>
             <span class="dash-tab-badge dash-tab-badge--alert" id="badge-unread-count">3 ${t("جديد", "New")}</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="testing">
-            <span class="dash-tab-icon">🧪</span>
+            <span class="dash-tab-icon">${icon("flask", "dash-tab-svg")}</span>
             <span>${t("مركز الفحص الشامل الحي", "Master Test Suite")}</span>
             <span class="dash-tab-badge dash-tab-badge--pass">84 ${t("ناجح", "PASS")}</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="security">
-            <span class="dash-tab-icon">🛡️</span>
+            <span class="dash-tab-icon">${icon("shield", "dash-tab-svg")}</span>
             <span>${t("الأمان والتدقيق الجنائي", "Security & Forensics")}</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="tasks">
-            <span class="dash-tab-icon">📋</span>
+            <span class="dash-tab-icon">${icon("kanban", "dash-tab-svg")}</span>
             <span>${t("إدارة المهام والعمليات (Island Haven)", "Tasks & Sprints (Island Haven)")}</span>
             <span class="dash-tab-badge" id="badge-tasks-count">6</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="field">
-            <span class="dash-tab-icon">🚑</span>
+            <span class="dash-tab-icon">${icon("ambulance", "dash-tab-svg")}</span>
             <span>${t("عمليات رحمة كير الميدانية (RahmaCare Dispatch)", "RahmaCare Field Dispatch")}</span>
             <span class="dash-tab-badge dash-tab-badge--pass">14 LIVE</span>
           </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="settings">
-            <span class="dash-tab-icon">💾</span>
+            <span class="dash-tab-icon">${icon("settings", "dash-tab-svg")}</span>
             <span>${t("الإعدادات والنسخ الاحتياطي", "Settings & Backups")}</span>
           </button>
         </nav>
@@ -228,11 +227,11 @@ export default function dashboard(ctx) {
           <div class="dash-card" style="margin-top: 1.5rem;">
             <h3 class="dash-card-title">${t("منصة العمليات السريعة (Quick Sovereign Operations)", "Quick Sovereign Operations Launchpad")}</h3>
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.75rem;">
-              <button type="button" class="btn btn--primary btn--sm" onclick="document.querySelector('[data-dash-tab=\'testing\']').click()">${t("🧪 بدء فحص شامل للمنظومة", "🧪 Run Master Site Audit")}</button>
-              <button type="button" class="btn btn--ghost btn--sm" onclick="document.querySelector('[data-dash-tab=\'landing\']').click()">${t("🏛️ تعديل نصوص واجهة الهيرو", "🏛️ Edit Hero Headlines")}</button>
-              <button type="button" class="btn btn--ghost btn--sm" id="btn-quick-add-project">${t("💼 إضافة دراسة حالة جديدة", "💼 Add New Case Study")}</button>
-              <button type="button" class="btn btn--ghost btn--sm" onclick="document.querySelector('[data-dash-tab=\'messages\']').click()">${t("📬 فحص رسائل التعاقد الواردة", "📬 Review Enterprise RFPs")}</button>
-              <button type="button" class="btn btn--ghost btn--sm" onclick="document.querySelector('[data-dash-tab=\'security\']').click()">${t("🛡️ فحص التوقيع التشفيري", "🛡️ Verify Crypto Keys")}</button>
+              <button type="button" class="btn btn--primary btn--sm" onclick="document.querySelector('[data-dash-tab=\'testing\']').click()">${icon("flask", "dash-btn-svg")} ${t("بدء فحص شامل للمنظومة", "Run Master Site Audit")}</button>
+              <button type="button" class="btn btn--ghost btn--sm" onclick="document.querySelector('[data-dash-tab=\'landing\']').click()">${icon("building", "dash-btn-svg")} ${t("تعديل نصوص واجهة الهيرو", "Edit Hero Headlines")}</button>
+              <button type="button" class="btn btn--ghost btn--sm" id="btn-quick-add-project">${icon("plus", "dash-btn-svg")} ${t("إضافة دراسة حالة جديدة", "Add New Case Study")}</button>
+              <button type="button" class="btn btn--ghost btn--sm" onclick="document.querySelector('[data-dash-tab=\'messages\']').click()">${icon("mail", "dash-btn-svg")} ${t("فحص رسائل التعاقد الواردة", "Review Enterprise RFPs")}</button>
+              <button type="button" class="btn btn--ghost btn--sm" onclick="document.querySelector('[data-dash-tab=\'security\']').click()">${icon("shield", "dash-btn-svg")} ${t("فحص التوقيع التشفيري", "Verify Crypto Keys")}</button>
             </div>
           </div>
 
@@ -730,37 +729,37 @@ export default function dashboard(ctx) {
           <!-- 6 Verification Engines Summary Cards -->
           <div class="dash-six-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
             <div class="dash-test-badge-card pass">
-              <span class="test-icon">🏗️</span>
+              <span class="test-icon">${icon("layers", "test-svg")}</span>
               <b>${t("البناء واللغات", "Static Build")}</b>
               <small>${t("84 صفحة (عربي/إنجليزي)", "84 Pages (AR & EN)")}</small>
               <span class="badge badge--ok">✔ PASS (0 warn)</span>
             </div>
             <div class="dash-test-badge-card pass">
-              <span class="test-icon">✍️</span>
+              <span class="test-icon">${icon("feather", "test-svg")}</span>
               <b>${t("التدقيق اللغوي", "Linguistics")}</b>
               <small>${t("5,731 نص مفحوص", "5,731 Nodes Checked")}</small>
               <span class="badge badge--ok">✔ PASS (0 typo)</span>
             </div>
             <div class="dash-test-badge-card pass">
-              <span class="test-icon">✒️</span>
+              <span class="test-icon">${icon("rtl", "test-svg")}</span>
               <b>${t("الخطوط والوصل", "Typography")}</b>
               <small>${t("خط الإسكندرية 900", "Alexandria 900 & Ligatures")}</small>
               <span class="badge badge--ok">✔ PASS (0 break)</span>
             </div>
             <div class="dash-test-badge-card pass">
-              <span class="test-icon">↔️</span>
+              <span class="test-icon">${icon("swap", "test-svg")}</span>
               <b>${t("عزل النصوص (BiDi)", "BiDi Isolation")}</b>
               <small>${t("41 مساراً مركباً", "41 Compound Routes")}</small>
               <span class="badge badge--ok">✔ PASS (0 reversed)</span>
             </div>
             <div class="dash-test-badge-card pass">
-              <span class="test-icon">👁️</span>
+              <span class="test-icon">${icon("eye", "test-svg")}</span>
               <b>${t("التباين والوصولية", "WCAG Contrast")}</b>
               <small>${t("النمط الليلي والنهاري", "Dark & Light Surfaces")}</small>
               <span class="badge badge--ok">✔ PASS (2.2 AA)</span>
             </div>
             <div class="dash-test-badge-card pass">
-              <span class="test-icon">🌐</span>
+              <span class="test-icon">${icon("globe", "test-svg")}</span>
               <b>${t("المتصفح الحي (E2E)", "Headless Browser")}</b>
               <small>${t("11 مساراً قيادياً", "11 Flagship Routes")}</small>
               <span class="badge badge--ok">✔ PASS (0 console err)</span>
@@ -866,13 +865,13 @@ export default function dashboard(ctx) {
             <div class="dash-panel-tools">
               <div class="dash-view-switcher" role="group" aria-label="${t("طريقة العرض", "View Switcher")}">
                 <button type="button" class="dash-view-btn active" data-task-view="kanban" aria-pressed="true">
-                  <span>🗂️ ${t("لوحة كانبان", "Kanban Board")}</span>
+                  <span>${icon("kanban", "view-svg")} ${t("لوحة كانبان", "Kanban Board")}</span>
                 </button>
                 <button type="button" class="dash-view-btn" data-task-view="table" aria-pressed="false">
-                  <span>📑 ${t("جدول مفصل", "List Table")}</span>
+                  <span>${icon("table", "view-svg")} ${t("جدول مفصل", "List Table")}</span>
                 </button>
                 <button type="button" class="dash-view-btn" data-task-view="feed" aria-pressed="false">
-                  <span>📡 ${t("نبض العمليات", "Live Feed")}</span>
+                  <span>${icon("feed", "view-svg")} ${t("نبض العمليات", "Live Feed")}</span>
                 </button>
               </div>
               <button type="button" class="btn btn--primary btn--sm" id="btn-add-task">
@@ -884,7 +883,7 @@ export default function dashboard(ctx) {
           <!-- Tasks Filter Bar -->
           <div class="dash-task-filter-bar">
             <div class="dash-search-box">
-              <span aria-hidden="true">🔍</span>
+              <span aria-hidden="true" class="dash-search-icon">${icon("search", "dash-search-svg")}</span>
               <input type="search" class="dash-input" id="task-search-input" placeholder="${t("ابحث في المهام، المسؤول، أو الوسم...", "Search tasks, assignee, or tag...")}">
             </div>
             <div class="dash-filter-pills" id="task-category-filters">
@@ -1012,10 +1011,10 @@ export default function dashboard(ctx) {
             </div>
             <div class="dash-panel-tools">
               <button type="button" class="btn btn--primary btn--sm" id="btn-simulate-triage">
-                <span>⚡ ${t("محاكاة فرز طبي عاجل", "Simulate Urgent Triage")}</span>
+                <span>${icon("bolt", "dash-btn-svg")} ${t("محاكاة فرز طبي عاجل", "Simulate Urgent Triage")}</span>
               </button>
               <button type="button" class="btn btn--ghost btn--sm" id="btn-sync-merkle">
-                <span>🔄 ${t("مزامنة أشجار ميركل (P2P)", "P2P Merkle Sync")}</span>
+                <span>${icon("refresh", "dash-btn-svg")} ${t("مزامنة أشجار ميركل (P2P)", "P2P Merkle Sync")}</span>
               </button>
             </div>
           </div>
@@ -1256,7 +1255,7 @@ export default function dashboard(ctx) {
           </div>
         </div>
         <div class="dash-modal-footer">
-          <button type="button" class="btn btn--ghost btn--sm" id="btn-copy-proposal">${t("نسخ مسودة العرض المقترح 📋", "Copy Proposal Draft 📋")}</button>
+          <button type="button" class="btn btn--ghost btn--sm" id="btn-copy-proposal">${t("نسخ مسودة العرض المقترح", "Copy Proposal Draft")} ${icon("copy", "dash-btn-svg")}</button>
           <button type="button" class="btn btn--primary btn--sm" id="btn-mark-inquiry-done">${t("تأكيد التواصل والمتابعة", "Confirm Coordination")}</button>
         </div>
       </div>

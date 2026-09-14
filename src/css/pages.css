@@ -2151,3 +2151,84 @@ html[lang="ar"] .dash-table th {
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.3),
     0 0 40px rgba(0, 240, 255, 0.15) !important;
 }
+
+/* --- Sovereign Crisp SVG Icon Styling (Council of Experts standard) --- */
+.dash-tab-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.dash-tab-svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.75;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.25s ease;
+}
+.dash-tab-btn:hover .dash-tab-svg {
+  transform: scale(1.12);
+}
+.dash-tab-btn.active .dash-tab-svg {
+  stroke: #5eead4;
+  filter: drop-shadow(0 0 6px rgba(94, 234, 212, 0.5));
+}
+.dash-btn-svg {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  stroke-width: 2;
+  vertical-align: -2px;
+  margin-inline-end: 6px;
+  flex-shrink: 0;
+}
+.dash-search-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.dash-search-svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--text-tertiary);
+  stroke-width: 2;
+}
+.dash-gatekeeper-crown-svg {
+  width: 36px;
+  height: 36px;
+  stroke: #fbbf24;
+  fill: rgba(251, 191, 36, 0.15);
+  stroke-width: 1.75;
+  filter: drop-shadow(0 4px 12px rgba(251, 191, 36, 0.4));
+}
+.dash-admin-crown-svg {
+  width: 14px;
+  height: 14px;
+  stroke: #fbbf24;
+  fill: rgba(251, 191, 36, 0.2);
+  stroke-width: 2;
+}
+.dash-meta-svg {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  stroke-width: 2;
+  vertical-align: -1.5px;
+  margin-inline-end: 4px;
+}
+.test-svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 1.75;
+  stroke: #5eead4;
+  margin-bottom: 6px;
+}
+.view-svg {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.75;
+  vertical-align: -2px;
+  margin-inline-end: 5px;
+}
