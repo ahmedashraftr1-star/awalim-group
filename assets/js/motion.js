@@ -340,6 +340,33 @@
     document.addEventListener("mouseleave", function () { cur.classList.remove("is-on"); shown = false; cancelAnimationFrame(rafId); });
   } else if (cur) cur.remove();
 
+  /* ---------- Apple Vision Pro Hyper-Glass Ray-Traced Spotlight Tracker ---------- */
+  if (finePointer && !reduced) {
+    var glassCards = $$(".dash-kpi-card, .kpi-card, .dash-kanban-card, .dash-admin-identity-card, .dash-panel, .arch-card, .hcard, .sovereign-admin-bar");
+    if (glassCards.length > 0) {
+      addEventListener("pointermove", function (e) {
+        for (var i = 0; i < glassCards.length; i++) {
+          var card = glassCards[i];
+          var rect = card.getBoundingClientRect();
+          if (
+            e.clientX >= rect.left - 40 &&
+            e.clientX <= rect.right + 40 &&
+            e.clientY >= rect.top - 40 &&
+            e.clientY <= rect.bottom + 40
+          ) {
+            var rx = e.clientX - rect.left;
+            var ry = e.clientY - rect.top;
+            card.style.setProperty("--mouse-x", rx.toFixed(1) + "px");
+            card.style.setProperty("--mouse-y", ry.toFixed(1) + "px");
+            card.style.setProperty("--spotlight-opacity", "1");
+          } else if (card.style.getPropertyValue("--spotlight-opacity") === "1") {
+            card.style.setProperty("--spotlight-opacity", "0");
+          }
+        }
+      }, { passive: true });
+    }
+  }
+
   /* ---------- cleanup on navigation ---------- */
   addEventListener("pagehide", function () { items = []; if (raf) cancelAnimationFrame(raf); if (lenis) lenis.destroy(); });
 })();
