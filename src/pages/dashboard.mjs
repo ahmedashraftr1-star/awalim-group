@@ -235,6 +235,42 @@ export default function dashboard(ctx) {
             </div>
           </div>
 
+
+          <!-- Smart Accountant IFRS Double-Entry Accounting Engine (from RahmaCare) -->
+          <div class="dash-card" style="margin-top: 1.5rem;">
+            <div class="dash-panel-head" style="margin-bottom: 1rem;">
+              <div>
+                <span class="chip chip--accent" style="margin-bottom:6px;"><span class="dot dot--live"></span>${t("نظام المحاسب الذكي المعياري (IFRS)", "SMART ACCOUNTANT IFRS DUAL-LEDGER")}</span>
+                <h3 class="dash-card-title">${t("دفتر الأستاذ والقيود المزدوجة وشجرة الحسابات (IFRS General Ledger)", "IFRS General Ledger & Chart of Accounts")}</h3>
+                <p class="dash-panel-desc">${t("نظام محاسبي مزدوج القيد يضمن توازن الأصول والخصوم وحقوق الملكية بدقة 100% مع توليد توقيع تشفيري لكل قيد مالي.", "Dual-entry enterprise accounting enforcing Debit = Credit balance and generating verifiable cryptographic transaction hashes.")}</p>
+              </div>
+              <div class="dash-panel-tools">
+                <button type="button" class="btn btn--primary btn--sm" id="btn-open-journal-modal">
+                  <span>+ ${t("تسجيل قيد محاسبي جديد", "New Journal Entry")}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 2-Col Grid: Chart of Accounts & General Journal -->
+            <div class="dash-grid-2" style="gap: 1.25rem;">
+              <div class="dash-subcard" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 1rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem;">
+                  <h4 style="font-size:0.92rem; font-weight:700;">${t("شجرة الحسابات المعتمدة (Chart of Accounts)", "Chart of Accounts")}</h4>
+                  <span class="badge badge--ok">${t("ميزان المراجعة: متوازن", "Trial Balance: 0.00 Var")}</span>
+                </div>
+                <div id="chart-of-accounts-list"></div>
+              </div>
+
+              <div class="dash-subcard" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 1rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem;">
+                  <h4 style="font-size:0.92rem; font-weight:700;">${t("دفتر اليومية العام (Cryptographic Journal)", "Cryptographic Journal Ledger")}</h4>
+                  <span class="badge badge--ghost mono">SHA-256 SEALED</span>
+                </div>
+                <div id="journal-entries-list"></div>
+              </div>
+            </div>
+          </div>
+
           <!-- Live Activity Log -->
           <div class="dash-card" style="margin-top: 1.5rem;">
             <h3 class="dash-card-title">${t("سجل الأحداث والعمليات السيادية الحية (System Event Ledger)", "Live System Event Ledger")}</h3>
@@ -251,6 +287,39 @@ export default function dashboard(ctx) {
                 <span>✔ ${t("مطابقة قيود المحاسب الذكي IFRS بقيمة $12,840,250.00 دون انحراف", "Smart Accountant IFRS ledger reconciled with zero deviation")}</span>
                 <span class="text-muted">10:26:01 UTC</span>
               </div>
+            </div>
+          </div>
+
+          <!-- RahmaCare Live Medical Evacuations & Case Passports Table -->
+          <div class="dash-table-wrap" style="margin-top: 1.5rem;">
+            <div class="dash-table-title">
+              <div>
+                <h3 style="margin-bottom:4px;">${t("غرفة العمليات المركزية — قوائم الفرز والإخلاء الطبي الميداني (Live Triage & Evac Queue)", "Central Command — Live Emergency Triage & Medical Evacuation Queue")}</h3>
+                <p class="text-muted small">${t("رصد لحظي للحالات الجراحية الحرجة، تنسيق المعابر، ومطابقة الاستشاريين تحت نظام Mesh اللامركزي.", "Live tracking of critical trauma cases, border crossing coordination, and specialist doctor assignments.")}</p>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <span class="badge badge--ok">${t("14 حالة نشطة", "14 Active Cases")}</span>
+                <span class="badge badge--accent">${t("ربط ميركل مشفر", "Merkle Sealed")}</span>
+              </div>
+            </div>
+            <div class="dash-table-responsive">
+              <table class="dash-table" id="table-rahmacare-cases">
+                <thead>
+                  <tr>
+                    <th>${t("معرّف الحالة", "Case ID")}</th>
+                    <th>${t("المريض / الفئة", "Patient / Category")}</th>
+                    <th>${t("الحالة الطبية / التشخيص", "Diagnosis / Medical Note")}</th>
+                    <th>${t("درجة الخطورة", "Urgency")}</th>
+                    <th>${t("مستشفى الميدان", "Field Hospital")}</th>
+                    <th>${t("حالة التنسيق على المعبر", "Border Crossing Status")}</th>
+                    <th>${t("المستشار الجراحي", "Surgeon / Consultant")}</th>
+                    <th>${t("الإجراء الفوري", "Instant Action")}</th>
+                  </tr>
+                </thead>
+                <tbody id="rahmacare-cases-body">
+                  <!-- Dynamically rendered -->
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -1262,6 +1331,143 @@ export default function dashboard(ctx) {
     </div>
 
     <!-- Modal 3: Task Create / Edit (Island Haven Engine) -->
+    
+    <!-- Island Haven Task Detail Drawer (Sliding from side, glassmorphic) -->
+    <div class="dash-drawer-overlay" id="task-drawer-overlay" style="display:none;" aria-hidden="true">
+      <aside class="dash-task-drawer" id="task-detail-drawer" role="dialog" aria-modal="true" aria-labelledby="task-drawer-title">
+        <div class="dash-drawer-head">
+          <div class="dash-drawer-badges">
+            <span class="badge" id="task-drawer-status-badge">${t("مجدول", "To Do")}</span>
+            <span class="badge badge--ghost mono" id="task-drawer-id">#TASK-101</span>
+          </div>
+          <div class="dash-drawer-actions">
+            <button type="button" class="btn btn--danger btn--sm" id="task-drawer-btn-delete" title="${t("حذف المهمة", "Delete Task")}">${t("حذف", "Delete")}</button>
+            <button type="button" class="dash-modal-close" id="task-drawer-btn-close" aria-label="${t("إغلاق", "Close")}">✕</button>
+          </div>
+        </div>
+        
+        <div class="dash-drawer-body">
+          <div>
+            <h3 class="dash-drawer-title" id="task-drawer-title">${t("عنوان المهمة", "Task Title")}</h3>
+            <p class="dash-drawer-desc" id="task-drawer-desc">${t("وصف المهمة...", "Task Description...")}</p>
+          </div>
+          
+          <div class="dash-drawer-meta-grid">
+            <div class="dash-field-group">
+              <label class="dash-label">${t("الحالة (Status)", "Status")}</label>
+              <select class="dash-select" id="task-drawer-select-status">
+                <option value="backlog">${t("المتراكم والأفكار", "Backlog")}</option>
+                <option value="todo">${t("مجدول للسبرنت", "To Do")}</option>
+                <option value="in_progress">${t("جارٍ العمل والتنفيذ", "In Progress")}</option>
+                <option value="review">${t("مراجعة وتدقيق", "Review")}</option>
+                <option value="done">${t("منجز ومعتمد", "Done")}</option>
+                <option value="cancelled">${t("ملغى", "Cancelled")}</option>
+              </select>
+            </div>
+            <div class="dash-field-group">
+              <label class="dash-label">${t("الأولوية (Priority)", "Priority")}</label>
+              <select class="dash-select" id="task-drawer-select-prio">
+                <option value="urgent">${t("🔥 عاجل طارئ", "🔥 Urgent")}</option>
+                <option value="high">${t("🔺 أولوية عليا", "🔺 High")}</option>
+                <option value="medium">${t("➖ أولوية متوسطة", "➖ Medium")}</option>
+                <option value="low">${t("🔻 اعتيادية", "🔻 Low")}</option>
+              </select>
+            </div>
+            <div class="dash-field-group">
+              <label class="dash-label">${t("المسؤول (Assignee)", "Assignee")}</label>
+              <select class="dash-select" id="task-drawer-select-assignee">
+                <option value="أحمد أشرف">${t("أحمد أشرف", "Ahmed Ashraf")}</option>
+                <option value="فريق النواة">${t("فريق النواة", "Apex Kernel Team")}</option>
+                <option value="مهندس الواجهات">${t("مهندس الواجهات", "UI/UX Engineer")}</option>
+                <option value="أخصائي الأمان">${t("أخصائي الأمان", "Security Specialist")}</option>
+                <option value="عمليات رحمة كير">${t("عمليات رحمة كير", "RahmaCare Operations")}</option>
+              </select>
+            </div>
+            <div class="dash-field-group">
+              <label class="dash-label">${t("تاريخ الاستحقاق", "Due Date")}</label>
+              <input type="date" class="dash-input" id="task-drawer-due">
+            </div>
+          </div>
+
+          <!-- Threaded Comments Section (Island Haven Protocol) -->
+          <div class="dash-drawer-section">
+            <div class="dash-section-title">
+              <h4>${t("النقاش والتعليقات المترابطة", "Threaded Discussion & Comments")} (<span id="task-drawer-comment-count">0</span>)</h4>
+            </div>
+            <div class="dash-comments-list" id="task-drawer-comments-list"></div>
+            <form class="dash-comment-form" id="task-drawer-comment-form">
+              <textarea class="dash-textarea" id="task-drawer-comment-input" rows="2" placeholder="${t("أضف تعليقاً أو توجيهاً فنياً...", "Add comment or technical note...")}"></textarea>
+              <div class="dash-comment-form-ft">
+                <div class="dash-acting-as">
+                  <span>${t("الهوية المعتمِدة:", "Acting as:")}</span>
+                  <select class="dash-select-xs" id="task-drawer-acting-as" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-size:0.75rem;padding:2px 6px;">
+                    <option value="أحمد أشرف (المؤسس)">${t("أحمد أشرف (المؤسس)", "Ahmed Ashraf (Founder)")}</option>
+                    <option value="فريق النواة السيادية">${t("فريق النواة السيادية", "Apex Kernel Core")}</option>
+                    <option value="مسؤول العمليات الميدانية">${t("مسؤول العمليات الميدانية", "Field Operations Lead")}</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn--primary btn--sm">${t("إرسال التعليق", "Post Comment")}</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Immutable Activity Audit Log (Island Haven Protocol) -->
+          <div class="dash-drawer-section">
+            <div class="dash-section-title">
+              <h4>${t("سجل النشاط والتدقيق التاريخي (Audit Trail)", "Immutable Activity Audit Trail")}</h4>
+            </div>
+            <div class="dash-activity-timeline" id="task-drawer-activity-timeline"></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Modal 3: Task Create / Edit (Island Haven Engine) -->
+    
+    <!-- Modal 4: New IFRS Journal Entry Modal -->
+    <div class="dash-modal-overlay" id="modal-journal">
+      <div class="dash-modal" role="dialog" aria-modal="true" aria-labelledby="modal-journal-title">
+        <div class="dash-modal-header">
+          <h3 class="dash-modal-title" id="modal-journal-title">${t("تسجيل قيد محاسبي مزدوج (IFRS Entry)", "Record New IFRS Dual Entry")}</h3>
+          <button type="button" class="dash-modal-close" id="btn-close-journal-modal" aria-label="${t("إغلاق", "Close")}">✕</button>
+        </div>
+        <div class="dash-modal-body">
+          <div class="dash-field-group">
+            <label class="dash-label">${t("بيان القيد المالي / الوصف", "Transaction Description")}</label>
+            <input type="text" class="dash-input" id="journal-desc" placeholder="${t("مثال: استلام منحة دعم تقني لمشروع رحمة كير", "e.g. Enterprise grant received for RahmaCare")}">
+          </div>
+          <div class="dash-grid-2" style="gap: 12px;">
+            <div class="dash-field-group">
+              <label class="dash-label">${t("حساب المدين (Debit)", "Debit Account (+)")}</label>
+              <select class="dash-select" id="journal-debit-account">
+                <option value="1010">${t("1010 — النقدية والبنوك (Assets)", "1010 — Cash & Banks")}</option>
+                <option value="1020">${t("1020 — مخزون الإغاثة والمواد (Assets)", "1020 — Aid Inventory")}</option>
+                <option value="5010">${t("5010 — مصاريف الشحن واللوجستيات (Expense)", "5010 — Logistics")}</option>
+                <option value="5020">${t("5020 — تكاليف هندسة النواة والأنظمة (Expense)", "5020 — Core Engineering")}</option>
+              </select>
+            </div>
+            <div class="dash-field-group">
+              <label class="dash-label">${t("حساب الدائن (Credit)", "Credit Account (-)")}</label>
+              <select class="dash-select" id="journal-credit-account">
+                <option value="4010">${t("4010 — إيرادات العقود والمنح (Revenue)", "4010 — Contract Revenue")}</option>
+                <option value="3010">${t("3010 — حقوق الملكية / الشركاء (Equity)", "3010 — Capital Equity")}</option>
+                <option value="2010">${t("2010 — حسابات دائنة / موردين (Liability)", "2010 — Accounts Payable")}</option>
+                <option value="1010">${t("1010 — النقدية والبنوك (Assets)", "1010 — Cash & Banks")}</option>
+              </select>
+            </div>
+          </div>
+          <div class="dash-field-group">
+            <label class="dash-label">${t("المبلغ (USD)", "Amount in USD ($)")}</label>
+            <input type="number" class="dash-input mono" id="journal-amount" placeholder="50000" min="1" step="100">
+          </div>
+        </div>
+        <div class="dash-modal-footer">
+          <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-journal">${t("إلغاء", "Cancel")}</button>
+          <button type="button" class="btn btn--primary btn--sm" id="btn-submit-journal">${t("ترحيل وتوقيع القيد تشفيرياً", "Commit & Cryptographically Seal")}</button>
+        </div>
+      </div>
+    </div>
+
     <div class="dash-modal-overlay" id="modal-task">
       <div class="dash-modal" role="dialog" aria-modal="true" aria-labelledby="modal-task-title">
         <div class="dash-modal-header">

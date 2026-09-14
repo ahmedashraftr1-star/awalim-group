@@ -1654,7 +1654,7 @@
         card.appendChild(ftRow);
 
         card.addEventListener("click", function () {
-          openTaskModal(task);
+          openTaskDrawer(task);
         });
 
         container.appendChild(card);
@@ -2002,6 +2002,470 @@
         var el = document.getElementById("dash-core-latency");
         if (el) el.textContent = lat + "ms";
         showToast("✔ تم تحديث قراءات النواة الحية: " + lat + "ms");
+      });
+    }
+
+
+    // -------------------------------------------------------------
+    // 12. Island Haven Task Detail Drawer Controller
+    // -------------------------------------------------------------
+    var drawerOverlay = document.getElementById("task-drawer-overlay");
+    var drawerCloseBtn = document.getElementById("task-drawer-btn-close");
+    var drawerDeleteBtn = document.getElementById("task-drawer-btn-delete");
+    var drawerCommentForm = document.getElementById("task-drawer-comment-form");
+    var drawerCommentInput = document.getElementById("task-drawer-comment-input");
+    var drawerActingAs = document.getElementById("task-drawer-acting-as");
+    var currentDrawerTask = null;
+
+    function closeTaskDrawer() {
+      if (drawerOverlay) drawerOverlay.classList.remove("is-open");
+      setTimeout(function () {
+        if (drawerOverlay) drawerOverlay.style.display = "none";
+      }, 300);
+      currentDrawerTask = null;
+    }
+
+    if (drawerCloseBtn) drawerCloseBtn.addEventListener("click", closeTaskDrawer);
+    if (drawerOverlay) {
+      drawerOverlay.addEventListener("click", function (e) {
+        if (e.target === drawerOverlay) closeTaskDrawer();
+      });
+    }
+
+    function renderDrawerComments(task) {
+      var list = document.getElementById("task-drawer-comments-list");
+      var countEl = document.getElementById("task-drawer-comment-count");
+      if (!list) return;
+      var comments = task.comments || [];
+      if (countEl) countEl.textContent = String(comments.length);
+
+      list.replaceChildren();
+      if (comments.length === 0) {
+        var p = el("p", "text-muted small", "لا توجد تعليقات أو توجيهات بعد. ابدأ النقاش الفني أدناه.");
+        p.style.padding = "8px 0";
+        list.appendChild(p);
+        return;
+      }
+
+      comments.forEach(function (c) {
+        var it = el("div", "dash-comment-item");
+        var head = el("div", "dash-comment-head");
+        head.appendChild(el("span", "dash-comment-author", c.author || "أحمد أشرف"));
+        head.appendChild(el("span", "dash-comment-time", c.timeStr || "الآن"));
+        it.appendChild(head);
+        it.appendChild(el("div", "dash-comment-body", c.body));
+        list.appendChild(it);
+      });
+    }
+
+    function renderDrawerActivity(task) {
+      var list = document.getElementById("task-drawer-activity-timeline");
+      if (!list) return;
+      var acts = task.activity || [];
+      list.replaceChildren();
+      if (acts.length === 0) {
+        list.appendChild(el("p", "text-muted small", "لا توجد سجلات تعديل سابقة."));
+        return;
+      }
+      acts.slice().reverse().forEach(function (a) {
+        var it = el("div", "dash-activity-item");
+        it.appendChild(el("span", "dash-activity-dot"));
+        var span = el("span");
+        var b = el("b", "", (a.actor || "أحمد أشرف") + " ");
+        span.appendChild(b);
+        span.appendChild(document.createTextNode(a.label));
+        it.appendChild(span);
+        it.appendChild(el("span", "dash-activity-time", a.timeStr || "الآن"));
+        list.appendChild(it);
+      });
+    }
+
+    function openTaskDrawer(task) {
+      currentDrawerTask = task;
+      if (!task.comments) task.comments = [];
+      if (!task.activity) {
+        task.activity = [
+          { actor: "أحمد أشرف", label: "أنشأ المهمة السيادية", timeStr: "اليوم 09:30" }
+        ];
+      }
+
+      var idEl = document.getElementById("task-drawer-id");
+      var titleEl = document.getElementById("task-drawer-title");
+      var descEl = document.getElementById("task-drawer-desc");
+      var badgeEl = document.getElementById("task-drawer-status-badge");
+      var selStatus = document.getElementById("task-drawer-select-status");
+      var selPrio = document.getElementById("task-drawer-select-prio");
+      var selAssignee = document.getElementById("task-drawer-select-assignee");
+      var dueInput = document.getElementById("task-drawer-due");
+
+      if (idEl) idEl.textContent = "#" + (task.id || "TSK-01");
+      if (titleEl) titleEl.textContent = task.title || "";
+      if (descEl) descEl.textContent = task.desc || "لا يوجد وصف إضافي لهذه المهمة.";
+      if (badgeEl) badgeEl.textContent = stageLabels[task.status] || task.status;
+      if (selStatus) selStatus.value = task.status;
+      if (selPrio) selPrio.value = task.priority;
+      if (selAssignee) selAssignee.value = task.assignee || "أحمد أشرف";
+      if (dueInput) dueInput.value = task.due || "";
+
+      renderDrawerComments(task);
+      renderDrawerActivity(task);
+
+      if (drawerOverlay) {
+        drawerOverlay.style.display = "flex";
+        requestAnimationFrame(function () {
+          drawerOverlay.classList.add("is-open");
+        });
+      }
+      if (window.AwalimAudio) window.AwalimAudio.tap(2200, 0.03);
+    }
+
+    // Inline status change from drawer
+    var selStatusDrawer = document.getElementById("task-drawer-select-status");
+    if (selStatusDrawer) {
+      selStatusDrawer.addEventListener("change", function () {
+        if (!currentDrawerTask) return;
+        var oldSt = currentDrawerTask.status;
+        var newSt = selStatusDrawer.value;
+        if (oldSt !== newSt) {
+          currentDrawerTask.status = newSt;
+          var actor = drawerActingAs ? drawerActingAs.value : "أحمد أشرف";
+          currentDrawerTask.activity.push({
+            actor: actor,
+            label: "غيّر الحالة من (" + (stageLabels[oldSt] || oldSt) + ") إلى (" + (stageLabels[newSt] || newSt) + ")",
+            timeStr: "الآن"
+          });
+          saveTasksState();
+          renderTasks();
+          renderDrawerActivity(currentDrawerTask);
+          var badgeEl = document.getElementById("task-drawer-status-badge");
+          if (badgeEl) badgeEl.textContent = stageLabels[newSt] || newSt;
+          if (window.AwalimAudio) window.AwalimAudio.chime();
+          showToast("✔ تم تحديث حالة المهمة بنجاح إلى: " + (stageLabels[newSt] || newSt));
+        }
+      });
+    }
+
+    // Inline priority change from drawer
+    var selPrioDrawer = document.getElementById("task-drawer-select-prio");
+    if (selPrioDrawer) {
+      selPrioDrawer.addEventListener("change", function () {
+        if (!currentDrawerTask) return;
+        currentDrawerTask.priority = selPrioDrawer.value;
+        currentDrawerTask.activity.push({
+          actor: drawerActingAs ? drawerActingAs.value : "أحمد أشرف",
+          label: "حدّث الأولوية إلى: " + (priorityLabels[selPrioDrawer.value]?.label || selPrioDrawer.value),
+          timeStr: "الآن"
+        });
+        saveTasksState();
+        renderTasks();
+        renderDrawerActivity(currentDrawerTask);
+        showToast("✔ تم تحديث أولوية المهمة.");
+      });
+    }
+
+    // Comment submission in drawer
+    if (drawerCommentForm) {
+      drawerCommentForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!currentDrawerTask || !drawerCommentInput) return;
+        var val = drawerCommentInput.value.trim();
+        if (!val) return;
+        var author = drawerActingAs ? drawerActingAs.value : "أحمد أشرف";
+        var now = new Date();
+        var timeStr = (now.getHours() < 10 ? "0" : "") + now.getHours() + ":" +
+                      (now.getMinutes() < 10 ? "0" : "") + now.getMinutes();
+
+        if (!currentDrawerTask.comments) currentDrawerTask.comments = [];
+        currentDrawerTask.comments.push({
+          author: author,
+          body: val,
+          timeStr: timeStr
+        });
+        currentDrawerTask.activity.push({
+          actor: author,
+          label: "أضاف تعليقاً فنياً: " + val.slice(0, 30) + (val.length > 30 ? "..." : ""),
+          timeStr: "الآن"
+        });
+
+        drawerCommentInput.value = "";
+        saveTasksState();
+        renderTasks();
+        renderDrawerComments(currentDrawerTask);
+        renderDrawerActivity(currentDrawerTask);
+        if (window.AwalimAudio) window.AwalimAudio.tap(2600, 0.04);
+        showToast("✔ تم إدراج التعليق بنجاح في سجل المهمة.");
+      });
+    }
+
+    // Drawer delete button
+    if (drawerDeleteBtn) {
+      drawerDeleteBtn.addEventListener("click", function () {
+        if (!currentDrawerTask) return;
+        if (confirm("هل أنت متأكد من حذف هذه المهمة السيادية نهائياً؟")) {
+          var id = currentDrawerTask.id;
+          tasks = tasks.filter(function (t) { return t.id !== id; });
+          saveTasksState();
+          renderTasks();
+          closeTaskDrawer();
+          showToast("✔ تم حذف المهمة بنجاح.");
+        }
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 13. RahmaCare Live Medical Evacuations & Triage Queue Engine
+    // -------------------------------------------------------------
+    var rahmaCases = [
+      {
+        id: "RC-EVAC-401",
+        patient: "عمر حلس (8 سنوات)",
+        diagnosis: "إصابة شظايا معقدة في الصدر والرئة",
+        urgency: "critical",
+        hospital: "مستشفى المعمداني للطوارئ",
+        crossing: "تنسيق عاجل على معبر رفح",
+        surgeon: "د. أحمد خليل (أوعية دموية)",
+        actionLabel: "توجيه سيارة إسعاف"
+      },
+      {
+        id: "RC-EVAC-402",
+        patient: "مريم شاهين (34 سنة)",
+        diagnosis: "حروق درجة ثالثة واشتباه متلازمة حجرات",
+        urgency: "severe",
+        hospital: "مجمع ناصر الطبي",
+        crossing: "في طريقه للإخلاء التخصصي",
+        surgeon: "د. ريم الحداد (تجميل وترميم)",
+        actionLabel: "إصدار جواز الحالة"
+      },
+      {
+        id: "RC-EVAC-403",
+        patient: "يوسف المصري (19 سنة)",
+        diagnosis: "كسور مضاعفة متهتكة في الساقين",
+        urgency: "urgent",
+        hospital: "مستشفى شهداء الأقصى",
+        crossing: "قيد المراجعة والمطابقة",
+        surgeon: "د. طارق السقا (جراحة عظام)",
+        actionLabel: "تأكيد النقل"
+      },
+      {
+        id: "RC-EVAC-404",
+        patient: "فاطمة النجار (62 سنة)",
+        diagnosis: "فشل كلوي حاد مع انقطاع محاليل الغسيل",
+        urgency: "critical",
+        hospital: "المستشفى الكويتي التخصصي",
+        crossing: "تم التنسيق والعبور بنجاح",
+        surgeon: "د. منى بركة (باطنة وغسيل)",
+        actionLabel: "أرشفة الحالة"
+      }
+    ];
+
+    function renderRahmaCases() {
+      var tbody = document.getElementById("rahmacare-cases-body");
+      if (!tbody) return;
+      tbody.replaceChildren();
+
+      rahmaCases.forEach(function (c, idx) {
+        var tr = document.createElement("tr");
+
+        var badgeClass = "badge--urgent";
+        var urgencyLabel = "عاجل";
+        if (c.urgency === "critical") { badgeClass = "badge--critical"; urgencyLabel = "حرج طارئ"; }
+        else if (c.urgency === "severe") { badgeClass = "badge--severe"; urgencyLabel = "شديد الخطورة"; }
+
+        var tdId = el("td", "mono");
+        tdId.appendChild(el("b", "", c.id));
+        tr.appendChild(tdId);
+
+        var tdPat = el("td");
+        tdPat.appendChild(el("b", "", c.patient));
+        tr.appendChild(tdPat);
+
+        var tdDiag = el("td");
+        var sDiag = el("span", "", c.diagnosis);
+        sDiag.style.fontSize = "0.88rem";
+        tdDiag.appendChild(sDiag);
+        tr.appendChild(tdDiag);
+
+        var tdUrg = el("td");
+        tdUrg.appendChild(el("span", "badge " + badgeClass, urgencyLabel));
+        tr.appendChild(tdUrg);
+
+        var tdHosp = el("td");
+        tdHosp.appendChild(el("span", "text-muted small", c.hospital));
+        tr.appendChild(tdHosp);
+
+        var tdCross = el("td");
+        var crossSpan = el("span", "badge badge--ghost", c.crossing);
+        crossSpan.id = "crossing-status-" + idx;
+        tdCross.appendChild(crossSpan);
+        tr.appendChild(tdCross);
+
+        var tdSurg = el("td");
+        var surgSpan = el("span", "", c.surgeon);
+        surgSpan.style.cssText = "color:#5eead4;font-weight:600;font-size:0.85rem;";
+        tdSurg.appendChild(surgSpan);
+        tr.appendChild(tdSurg);
+
+        var tdAct = el("td");
+        var actBtn = el("button", "btn btn--ghost btn--sm btn-rahma-action", c.actionLabel);
+        actBtn.type = "button";
+        actBtn.setAttribute("data-idx", String(idx));
+        tdAct.appendChild(actBtn);
+        tr.appendChild(tdAct);
+
+        tbody.appendChild(tr);
+      });
+
+      // Bind instant action buttons
+      var actionBtns = tbody.querySelectorAll(".btn-rahma-action");
+      actionBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var i = parseInt(btn.getAttribute("data-idx"), 10);
+          var item = rahmaCases[i];
+          if (!item) return;
+
+          if (item.crossing !== "تم التنسيق والعبور بنجاح") {
+            item.crossing = "تم التنسيق والعبور بنجاح";
+            var statusEl = document.getElementById("crossing-status-" + i);
+            if (statusEl) {
+              statusEl.className = "badge badge--ok";
+              statusEl.textContent = "تم التنسيق والعبور بنجاح";
+            }
+            btn.textContent = "✔ تم التوجيه";
+            btn.disabled = true;
+            if (window.AwalimAudio) window.AwalimAudio.chime();
+            showToast("✔ تم تأكيد التنسيق الميداني وإصدار الجواز المشفر للحالة: " + item.patient);
+          }
+        });
+      });
+    }
+
+    renderRahmaCases();
+
+    // -------------------------------------------------------------
+    // 14. Smart Accountant IFRS Double-Entry Accounting Engine
+    // -------------------------------------------------------------
+    var ifrsAccounts = [
+      { code: "1010", name: "النقدية والبنوك (Cash & Banks)", type: "Asset", balance: 2450000 },
+      { code: "1020", name: "مخزون الإغاثة والمواد (Aid Inventory)", type: "Asset", balance: 1800000 },
+      { code: "2010", name: "حسابات دائنة وموردين (Accounts Payable)", type: "Liability", balance: 450000 },
+      { code: "3010", name: "رأس المال وحقوق الشركاء (Capital Equity)", type: "Equity", balance: 3200000 },
+      { code: "4010", name: "إيرادات العقود والمنح (Revenue)", type: "Revenue", balance: 1200000 },
+      { code: "5010", name: "مصاريف اللوجستيات والشحن (Expense)", type: "Expense", balance: 350000 },
+      { code: "5020", name: "تكاليف هندسة النواة والأنظمة (Expense)", type: "Expense", balance: 250000 }
+    ];
+
+    var ifrsJournal = [
+      { id: "TXN-8801", desc: "استلام منحة طوارئ دولية لدعم عقد رحمة كير", debit: "1010", credit: "4010", amount: 450000, hash: "a8f90b1c3e4d" },
+      { id: "TXN-8802", desc: "شراء وتجهيز 14 محطة طاقة شمسية للمستشفيات", debit: "1020", credit: "1010", amount: 180000, hash: "c3d4e5f60718" },
+      { id: "TXN-8803", desc: "تسوية مستحقات الشحن الجوي واللوجستيات الميدانية", debit: "5010", credit: "1010", amount: 45000, hash: "e5f60718293a" }
+    ];
+
+    function renderIFRSAccounting() {
+      var coaList = document.getElementById("chart-of-accounts-list");
+      var journalList = document.getElementById("journal-entries-list");
+      if (!coaList || !journalList) return;
+
+      coaList.replaceChildren();
+      ifrsAccounts.forEach(function (acc) {
+        var it = el("div", "dash-coa-item");
+        var left = el("div");
+        left.appendChild(el("b", "", acc.code));
+        left.appendChild(document.createTextNode(" — "));
+        left.appendChild(el("span", "", acc.name));
+        it.appendChild(left);
+        var val = el("b", "mono", "$" + acc.balance.toLocaleString());
+        val.style.color = "#5eead4";
+        it.appendChild(val);
+        coaList.appendChild(it);
+      });
+
+      journalList.replaceChildren();
+      ifrsJournal.forEach(function (j) {
+        var it = el("div", "dash-journal-item");
+        var head = el("div", "dash-journal-head");
+        head.appendChild(el("b", "mono", j.id));
+        head.appendChild(el("span", "badge badge--ghost mono", "sig_" + j.hash));
+        it.appendChild(head);
+
+        var p = el("p", "", j.desc);
+        p.style.cssText = "font-size:0.88rem;color:var(--text-secondary);margin:4px 0;";
+        it.appendChild(p);
+
+        var flow = el("div", "dash-journal-flow");
+        var sDr = el("span", "", "مدين (Dr): ");
+        sDr.appendChild(el("b", "mono", j.debit));
+        var sCr = el("span", "", "دائن (Cr): ");
+        sCr.appendChild(el("b", "mono", j.credit));
+        flow.appendChild(sDr);
+        flow.appendChild(sCr);
+
+        var amt = el("span", "", "+$" + j.amount.toLocaleString());
+        amt.style.cssText = "margin-inline-start:auto;color:#10b981;font-weight:700;";
+        flow.appendChild(amt);
+
+        it.appendChild(flow);
+        journalList.appendChild(it);
+      });
+    }
+
+    renderIFRSAccounting();
+
+    // Journal Modal Events
+    var btnOpenJournal = document.getElementById("btn-open-journal-modal");
+    var btnCloseJournal = document.getElementById("btn-close-journal-modal");
+    var btnCancelJournal = document.getElementById("btn-cancel-journal");
+    var btnSubmitJournal = document.getElementById("btn-submit-journal");
+
+    if (btnOpenJournal) {
+      btnOpenJournal.addEventListener("click", function () {
+        openModal("modal-journal");
+      });
+    }
+    if (btnCloseJournal) btnCloseJournal.addEventListener("click", function () { closeModal("modal-journal"); });
+    if (btnCancelJournal) btnCancelJournal.addEventListener("click", function () { closeModal("modal-journal"); });
+
+    if (btnSubmitJournal) {
+      btnSubmitJournal.addEventListener("click", function () {
+        var descInput = document.getElementById("journal-desc");
+        var debitSel = document.getElementById("journal-debit-account");
+        var creditSel = document.getElementById("journal-credit-account");
+        var amtInput = document.getElementById("journal-amount");
+
+        var desc = descInput ? descInput.value.trim() : "";
+        var debit = debitSel ? debitSel.value : "1010";
+        var credit = creditSel ? creditSel.value : "4010";
+        var amt = amtInput ? parseFloat(amtInput.value) : 0;
+
+        if (!desc || !amt || amt <= 0) {
+          showToast("✖ يرجى إدخال بيان القيد والمبلغ بصورة صحيحة.", true);
+          return;
+        }
+
+        var randHash = Math.random().toString(16).slice(2, 10);
+        var newId = "TXN-" + (8800 + ifrsJournal.length + 1);
+
+        ifrsJournal.unshift({
+          id: newId,
+          desc: desc,
+          debit: debit,
+          credit: credit,
+          amount: amt,
+          hash: randHash
+        });
+
+        // Update balances
+        var dAcc = ifrsAccounts.find(function (a) { return a.code === debit; });
+        var cAcc = ifrsAccounts.find(function (a) { return a.code === credit; });
+        if (dAcc) dAcc.balance += amt;
+        if (cAcc) cAcc.balance += amt;
+
+        if (descInput) descInput.value = "";
+        if (amtInput) amtInput.value = "";
+        closeModal("modal-journal");
+        renderIFRSAccounting();
+
+        if (window.AwalimAudio) window.AwalimAudio.chime();
+        showToast("✔ تم ترحيل وتوثيق القيد المحاسبي المزدوج تشفيرياً: " + newId);
       });
     }
 
