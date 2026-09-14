@@ -1539,6 +1539,35 @@
         if (cols[k]) cols[k].replaceChildren();
       });
 
+      // Setup column drop targets once
+      Object.keys(cols).forEach(function (colKey) {
+        var colBody = cols[colKey];
+        if (!colBody || colBody.hasAttribute("data-drag-init")) return;
+        colBody.setAttribute("data-drag-init", "true");
+
+        colBody.addEventListener("dragover", function (e) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+          colBody.classList.add("drag-over");
+        });
+        colBody.addEventListener("dragleave", function () {
+          colBody.classList.remove("drag-over");
+        });
+        colBody.addEventListener("drop", function (e) {
+          e.preventDefault();
+          colBody.classList.remove("drag-over");
+          var taskId = e.dataTransfer.getData("text/plain");
+          var found = tasks.find(function (t) { return t.id === taskId; });
+          if (found && found.status !== colKey) {
+            found.status = colKey;
+            saveTasksState();
+            renderTasks();
+            if (window.AwalimAudio) window.AwalimAudio.chime();
+            showToast("✔ تم نقل المهمة إلى مرحلة: " + (stageLabels[colKey] || colKey));
+          }
+        });
+      });
+
       filtered.forEach(function (task) {
         counts[task.status] = (counts[task.status] || 0) + 1;
         var container = cols[task.status];
@@ -1547,6 +1576,16 @@
         var card = document.createElement("div");
         card.className = "dash-kanban-card";
         card.setAttribute("data-task-id", task.id);
+        card.draggable = true;
+        card.addEventListener("dragstart", function (e) {
+          e.dataTransfer.setData("text/plain", task.id);
+          e.dataTransfer.effectAllowed = "move";
+          card.classList.add("is-dragging");
+          if (window.AwalimAudio) window.AwalimAudio.tap(1800, 0.02);
+        });
+        card.addEventListener("dragend", function () {
+          card.classList.remove("is-dragging");
+        });
 
         // Top Row: Priority & Category
         var topRow = document.createElement("div");

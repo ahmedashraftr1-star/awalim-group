@@ -2232,3 +2232,27 @@ html[lang="ar"] .dash-table th {
   vertical-align: -2px;
   margin-inline-end: 5px;
 }
+
+/* Kanban Drag and Drop Visual Feedback */
+.dash-kanban-card[draggable="true"] {
+  cursor: grab;
+  user-select: none;
+}
+.dash-kanban-card[draggable="true"]:active {
+  cursor: grabbing;
+}
+.dash-kanban-card.is-dragging {
+  opacity: 0.35;
+  transform: scale(0.96) rotate(1.5deg);
+  border: 1px dashed #5eead4 !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+}
+.dash-kanban-col__body {
+  min-height: 120px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.dash-kanban-col__body.drag-over {
+  background: rgba(94, 234, 212, 0.08) !important;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 2px rgba(94, 234, 212, 0.4);
+}
