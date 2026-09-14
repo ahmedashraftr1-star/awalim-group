@@ -516,6 +516,7 @@
         localStorage.setItem("awalim_admin_user", JSON.stringify(payload));
       } catch (e) {}
       checkAdminSession();
+      if (window.AwalimAudio) window.AwalimAudio.chime();
       showToast(EN ? "Sovereign Root Admin Authenticated: Ahmed Ashraf" : "تم توثيق جلسة يوزر الإدارة بنجاح: أحمد أشرف");
     }
 
@@ -1183,7 +1184,8 @@
         if (statusText) statusText.textContent = "✔ اكتمل الفحص الشامل بنجاح تام · النتيجة 100/100 Flawless";
         if (subText) subText.textContent = "11 مساراً قيادياً تم فحصها حياً · 84 صفحة مطابقة · 0 أخطاء متصفح";
         if (scoreVal) scoreVal.textContent = "100";
-        showToast("✔ تم اجتياز الفحص الشامل الحي لكافة صفحات المنظومة الـ 84 بنجاح 100%!");
+        if (window.AwalimAudio) window.AwalimAudio.chime();
+      showToast("✔ تم اجتياز الفحص الشامل الحي لكافة صفحات المنظومة الـ 84 بنجاح 100%!");
       });
     });
 
@@ -1268,7 +1270,13 @@
       var lower = cmd.toLowerCase();
 
       if (lower === "help") {
-        resLine.textContent = "Commands: status, audit, keypair, routes, hash <str>, clear, help";
+        resLine.textContent = "Commands: status, audit, keypair, routes, godmode, whoami, hash <str>, clear, help";
+      } else if (lower === "godmode") {
+        if (window.AwalimAudio) window.AwalimAudio.chime();
+        resLine.textContent = "⚡ GOD MODE ACTIVATED: Clearance Level 5 · Sovereign Architect Ahmed Ashraf · All Modules Unlocked · Hardware Enclave Verified";
+        showToast("⚡ تم تفعيل بروتوكول GOD MODE السيادي بنجاح!");
+      } else if (lower === "whoami") {
+        resLine.textContent = "Identity: Ahmed Ashraf (أحمد أشرف) · Role: Founder & Sovereign Architect · Session: AWALIM-ROOT-AA01 · Ed25519 Verified";
       } else if (lower === "status") {
         resLine.textContent = "Kernel: ONLINE (60 FPS) · Latency: 0.2ms · Nodes: 1,420 · SLA: 99.99% · Memory: 14.2 MB";
       } else if (lower === "audit") {

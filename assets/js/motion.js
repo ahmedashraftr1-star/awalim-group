@@ -367,6 +367,98 @@
     }
   }
 
+  
+  /* ======================================================================
+     Sovereign Acoustic Glass Audio Engine (Web Audio API)
+     Zero-latency, zero-external-asset crystalline micro-acoustics.
+     ====================================================================== */
+  var AudioEngine = (function () {
+    var aCtx = null;
+    var enabled = true;
+    try {
+      var saved = localStorage.getItem("awalim_audio_enabled");
+      if (saved !== null) enabled = saved === "true";
+    } catch (e) {}
+
+    function getAudioCtx() {
+      if (!aCtx && (window.AudioContext || window.webkitAudioContext)) {
+        aCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (aCtx && aCtx.state === "suspended") {
+        aCtx.resume();
+      }
+      return aCtx;
+    }
+
+    function playGlassTap(freq, dur) {
+      if (!enabled) return;
+      try {
+        var c = getAudioCtx();
+        if (!c) return;
+        var f = freq || 2600;
+        var d = dur || 0.035;
+        var osc = c.createOscillator();
+        var gain = c.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(f, c.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(f * 0.4, c.currentTime + d);
+        gain.gain.setValueAtTime(0.035, c.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + d);
+        osc.connect(gain);
+        gain.connect(c.destination);
+        osc.start();
+        osc.stop(c.currentTime + d);
+      } catch (e) {}
+    }
+
+    function playChime() {
+      if (!enabled) return;
+      try {
+        var c = getAudioCtx();
+        if (!c) return;
+        [987.77, 1318.51, 1975.53].forEach(function (f, i) {
+          var osc = c.createOscillator();
+          var gain = c.createGain();
+          osc.type = "sine";
+          var start = c.currentTime + (i * 0.06);
+          osc.frequency.setValueAtTime(f, start);
+          gain.gain.setValueAtTime(0.025, start);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.35);
+          osc.connect(gain);
+          gain.connect(c.destination);
+          osc.start(start);
+          osc.stop(start + 0.36);
+        });
+      } catch (e) {}
+    }
+
+    function toggle() {
+      enabled = !enabled;
+      try {
+        localStorage.setItem("awalim_audio_enabled", enabled);
+      } catch (e) {}
+      if (enabled) playGlassTap(2000, 0.05);
+      return enabled;
+    }
+
+    // Attach subtle acoustic feedback to all glass clicks
+    document.addEventListener("click", function (e) {
+      var interactive = e.target.closest("button, .btn, .dash-tab-btn, .pillnav__links a, .icon-btn, .dash-view-btn, .dash-filter-pill");
+      if (interactive) {
+        playGlassTap(2800, 0.025);
+      }
+    }, { passive: true });
+
+    return {
+      tap: playGlassTap,
+      chime: playChime,
+      toggle: toggle,
+      isEnabled: function () { return enabled; }
+    };
+  })();
+
+  window.AwalimAudio = AudioEngine;
+
   /* ---------- cleanup on navigation ---------- */
   addEventListener("pagehide", function () { items = []; if (raf) cancelAnimationFrame(raf); if (lenis) lenis.destroy(); });
 })();
