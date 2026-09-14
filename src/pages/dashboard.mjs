@@ -106,6 +106,16 @@ export default function dashboard(ctx) {
             <span class="dash-tab-icon">🛡️</span>
             <span>${t("الأمان والتدقيق الجنائي", "Security & Forensics")}</span>
           </button>
+          <button type="button" class="dash-tab-btn" data-dash-tab="tasks">
+            <span class="dash-tab-icon">📋</span>
+            <span>${t("إدارة المهام والعمليات (Island Haven)", "Tasks & Sprints (Island Haven)")}</span>
+            <span class="dash-tab-badge" id="badge-tasks-count">6</span>
+          </button>
+          <button type="button" class="dash-tab-btn" data-dash-tab="field">
+            <span class="dash-tab-icon">🚑</span>
+            <span>${t("عمليات رحمة كير الميدانية (RahmaCare Dispatch)", "RahmaCare Field Dispatch")}</span>
+            <span class="dash-tab-badge dash-tab-badge--pass">14 LIVE</span>
+          </button>
           <button type="button" class="dash-tab-btn" data-dash-tab="settings">
             <span class="dash-tab-icon">💾</span>
             <span>${t("الإعدادات والنسخ الاحتياطي", "Settings & Backups")}</span>
@@ -782,6 +792,284 @@ export default function dashboard(ctx) {
           </div>
         </section>
 
+        <!-- ================= PANEL 12: TASKS & SPRINTS (ISLAND HAVEN ENGINE) ================= -->
+        <section class="dash-panel" data-dash-panel="tasks" aria-label="${t("إدارة المهام وسبرنت العمليات", "Tasks & Sprint Operations")}">
+          <div class="dash-panel-head">
+            <div>
+              <div class="dash-badge-row">
+                <span class="chip chip--accent"><span class="dot dot--live" aria-hidden="true"></span>${t("محرك Island Haven السيادي", "ISLAND HAVEN TASK ENGINE")}</span>
+                <span class="dash-tab-badge" id="tasks-total-badge">6 ${t("مهام نشطة", "Active Tasks")}</span>
+              </div>
+              <h2 class="dash-panel-title">${t("إدارة المهام وسبرنت العمليات السيادية (Island Haven Engine)", "Sovereign Tasks & Sprint Operations (Island Haven Engine)")}</h2>
+              <p class="dash-panel-desc">${t("نظام كانبان تفاعلي متكامل لإدارة مهام وتطوير أنظمة عوالِم، مستوحى من نظام إدارة المهام والعمليات لـ Island Haven.", "Full-featured interactive Kanban and sprint management system for Awalim systems, powered by the Island Haven operations engine.")}</p>
+            </div>
+            <div class="dash-panel-tools">
+              <div class="dash-view-switcher" role="group" aria-label="${t("طريقة العرض", "View Switcher")}">
+                <button type="button" class="dash-view-btn active" data-task-view="kanban" aria-pressed="true">
+                  <span>🗂️ ${t("لوحة كانبان", "Kanban Board")}</span>
+                </button>
+                <button type="button" class="dash-view-btn" data-task-view="table" aria-pressed="false">
+                  <span>📑 ${t("جدول مفصل", "List Table")}</span>
+                </button>
+                <button type="button" class="dash-view-btn" data-task-view="feed" aria-pressed="false">
+                  <span>📡 ${t("نبض العمليات", "Live Feed")}</span>
+                </button>
+              </div>
+              <button type="button" class="btn btn--primary btn--sm" id="btn-add-task">
+                <span>+ ${t("مهمة سيادية جديدة", "New Sovereign Task")}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tasks Filter Bar -->
+          <div class="dash-task-filter-bar">
+            <div class="dash-search-box">
+              <span aria-hidden="true">🔍</span>
+              <input type="search" class="dash-input" id="task-search-input" placeholder="${t("ابحث في المهام، المسؤول، أو الوسم...", "Search tasks, assignee, or tag...")}">
+            </div>
+            <div class="dash-filter-pills" id="task-category-filters">
+              <button type="button" class="dash-filter-pill active" data-filter-cat="all">${t("كافة الأقسام", "All Domains")}</button>
+              <button type="button" class="dash-filter-pill" data-filter-cat="kernel">${t("هندسة النواة", "Apex Kernel")}</button>
+              <button type="button" class="dash-filter-pill" data-filter-cat="systems">${t("تطوير الأنظمة", "Systems")}</button>
+              <button type="button" class="dash-filter-pill" data-filter-cat="design">${t("تصميم وواجهات", "UI / HMI")}</button>
+              <button type="button" class="dash-filter-pill" data-filter-cat="security">${t("أمان وتشفير", "Security")}</button>
+              <button type="button" class="dash-filter-pill" data-filter-cat="emergency">${t("إغاثة وطوارئ", "Emergency")}</button>
+            </div>
+            <div class="dash-priority-select-wrap">
+              <select class="dash-select" id="task-priority-filter" aria-label="${t("تصفية بالأولوية", "Filter by Priority")}">
+                <option value="all">${t("كافة الأولويات", "All Priorities")}</option>
+                <option value="urgent">${t("🔥 عاجل طارئ", "🔥 Urgent")}</option>
+                <option value="high">${t("🔺 أولوية عليا", "🔺 High")}</option>
+                <option value="medium">${t("➖ أولوية متوسطة", "➖ Medium")}</option>
+                <option value="low">${t("🔻 اعتيادية", "🔻 Low")}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- View 1: Kanban Board View -->
+          <div class="dash-kanban-wrap" id="tasks-view-kanban">
+            <div class="dash-kanban-grid">
+              <!-- Col 1: Backlog -->
+              <div class="dash-kanban-col" data-col="backlog">
+                <div class="dash-kanban-col__head">
+                  <div class="dash-kanban-col__title">
+                    <span class="col-dot col-dot--backlog"></span>
+                    <span>${t("المتراكم والأفكار", "Backlog")}</span>
+                  </div>
+                  <span class="col-badge" id="col-count-backlog">0</span>
+                </div>
+                <div class="dash-kanban-col__body" data-drop-col="backlog" id="kanban-cards-backlog"></div>
+              </div>
+
+              <!-- Col 2: Todo -->
+              <div class="dash-kanban-col" data-col="todo">
+                <div class="dash-kanban-col__head">
+                  <div class="dash-kanban-col__title">
+                    <span class="col-dot col-dot--todo"></span>
+                    <span>${t("مجدول للسبرنت", "To Do")}</span>
+                  </div>
+                  <span class="col-badge" id="col-count-todo">0</span>
+                </div>
+                <div class="dash-kanban-col__body" data-drop-col="todo" id="kanban-cards-todo"></div>
+              </div>
+
+              <!-- Col 3: In Progress -->
+              <div class="dash-kanban-col" data-col="in_progress">
+                <div class="dash-kanban-col__head">
+                  <div class="dash-kanban-col__title">
+                    <span class="col-dot col-dot--progress"></span>
+                    <span>${t("جارٍ التنفيذ والبرمجة", "In Progress")}</span>
+                  </div>
+                  <span class="col-badge" id="col-count-in_progress">0</span>
+                </div>
+                <div class="dash-kanban-col__body" data-drop-col="in_progress" id="kanban-cards-in_progress"></div>
+              </div>
+
+              <!-- Col 4: Review -->
+              <div class="dash-kanban-col" data-col="review">
+                <div class="dash-kanban-col__head">
+                  <div class="dash-kanban-col__title">
+                    <span class="col-dot col-dot--review"></span>
+                    <span>${t("مراجعة وتدقيق جنائي", "Review & Audit")}</span>
+                  </div>
+                  <span class="col-badge" id="col-count-review">0</span>
+                </div>
+                <div class="dash-kanban-col__body" data-drop-col="review" id="kanban-cards-review"></div>
+              </div>
+
+              <!-- Col 5: Done -->
+              <div class="dash-kanban-col" data-col="done">
+                <div class="dash-kanban-col__head">
+                  <div class="dash-kanban-col__title">
+                    <span class="col-dot col-dot--done"></span>
+                    <span>${t("منجز ومعتمد للإنتاج", "Done / Shipped")}</span>
+                  </div>
+                  <span class="col-badge" id="col-count-done">0</span>
+                </div>
+                <div class="dash-kanban-col__body" data-drop-col="done" id="kanban-cards-done"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- View 2: Detailed Table View -->
+          <div class="dash-table-wrap" id="tasks-view-table" style="display: none;">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>${t("المهمة", "Task Title")}</th>
+                  <th>${t("المرحلة", "Stage")}</th>
+                  <th>${t("الأولوية", "Priority")}</th>
+                  <th>${t("القسم", "Domain")}</th>
+                  <th>${t("المسؤول", "Assignee")}</th>
+                  <th>${t("الاستحقاق", "Due Date")}</th>
+                  <th>${t("إجراءات سريعة", "Actions")}</th>
+                </tr>
+              </thead>
+              <tbody id="tasks-table-body"></tbody>
+            </table>
+          </div>
+
+          <!-- View 3: Team Activity Feed View -->
+          <div class="dash-card" id="tasks-view-feed" style="display: none;">
+            <div class="dash-card-header">
+              <h3 class="dash-card-title">${t("نبض وسجل نشاط الفريق الحي (Team Heartbeat & Audit Trail)", "Live Team Heartbeat & Immutable Audit Trail")}</h3>
+              <span class="badge badge--ok">${t("محدث لحظياً", "Real-Time Synced")}</span>
+            </div>
+            <div class="dash-activity-timeline" id="tasks-feed-list"></div>
+          </div>
+        </section>
+
+        <!-- ================= PANEL 13: RAHMACARE FIELD & EMERGENCY DISPATCH ================= -->
+        <section class="dash-panel" data-dash-panel="field" aria-label="${t("عمليات رحمة كير الميدانية", "RahmaCare Field Dispatch")}">
+          <div class="dash-panel-head">
+            <div>
+              <div class="dash-badge-row">
+                <span class="chip chip--accent"><span class="dot dot--live" aria-hidden="true"></span>${t("مركز عمليات رحمة كير الميداني", "RAHMACARE EMERGENCY DISPATCH")}</span>
+                <span class="badge badge--ok">${t("14 عقدة ميدانية نشطة", "14 Active Edge Nodes")}</span>
+              </div>
+              <h2 class="dash-panel-title">${t("مركز الطوارئ والفرز الميداني والشبكات السيادية (RahmaCare Dispatch)", "Emergency Triage, Supply Telemetry & Offline Mesh Operations")}</h2>
+              <p class="dash-panel-desc">${t("نظام متكامل لإدارة عقد الإغاثة الصحية في غزة وبيروت، تتبع المخزون الطبي الحرج، وتنسيق الفرز الذكي تحت ظروف انقطاع الاتصال.", "Real-time command interface for healthcare relief nodes in Gaza and Beirut, tracking critical medical assets and offline triage dispatch.")}</p>
+            </div>
+            <div class="dash-panel-tools">
+              <button type="button" class="btn btn--primary btn--sm" id="btn-simulate-triage">
+                <span>⚡ ${t("محاكاة فرز طبي عاجل", "Simulate Urgent Triage")}</span>
+              </button>
+              <button type="button" class="btn btn--ghost btn--sm" id="btn-sync-merkle">
+                <span>🔄 ${t("مزامنة أشجار ميركل (P2P)", "P2P Merkle Sync")}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- RahmaCare Live KPIs -->
+          <div class="dash-kpi-grid">
+            <div class="dash-kpi-card">
+              <span class="dash-kpi-label">${t("عقد الاستجابة النشطة", "Active Field Nodes")}</span>
+              <div class="dash-kpi-val"><bdi dir="ltr">14 / 14</bdi></div>
+              <div class="dash-kpi-meta"><span class="badge badge--ok">P2P Mesh</span> ${t("صمود 100% دون إنترنت", "100% Offline Uptime")}</div>
+            </div>
+            <div class="dash-kpi-card">
+              <span class="dash-kpi-label">${t("الحالات الطبية المفرزة", "Triaged Patients")}</span>
+              <div class="dash-kpi-val"><bdi dir="ltr" id="rahma-triaged-count">12,840</bdi></div>
+              <div class="dash-kpi-meta"><span class="badge badge--ok">&lt; 14s</span> ${t("متوسط زمن مطابقة الطبيب", "Avg. Doctor Match Time")}</div>
+            </div>
+            <div class="dash-kpi-card">
+              <span class="dash-kpi-label">${t("المخزون الدوائي الحرج", "Critical Medical Reserve")}</span>
+              <div class="dash-kpi-val"><bdi dir="ltr">84.2%</bdi></div>
+              <div class="dash-kpi-meta"><span class="badge badge--ok">Safe</span> ${t("تأمين الإمدادات لـ 45 يوماً", "45-Day Supply Secured")}</div>
+            </div>
+            <div class="dash-kpi-card">
+              <span class="dash-kpi-label">${t("سجل التحقق التشفيري", "Merkle Anchor Proof")}</span>
+              <div class="dash-kpi-val"><bdi dir="ltr">Ed25519</bdi></div>
+              <div class="dash-kpi-meta"><span class="badge badge--ok">0 Variance</span> ${t("سجلات غير قابلة للتلاعب", "Cryptographically Sealed")}</div>
+            </div>
+          </div>
+
+          <!-- Active Nodes Map & Inventory -->
+          <div class="dash-grid-2">
+            <!-- Node Status Grid -->
+            <div class="dash-card">
+              <div class="dash-card-header">
+                <h3 class="dash-card-title">${t("شبكة العقد الميدانية في غزة وبيروت (Mesh Topology)", "Field Relief Node Topology")}</h3>
+                <span class="badge badge--ok">${t("كافة العقد متزامنة", "All Nodes Healthy")}</span>
+              </div>
+              <div class="dash-nodes-list" id="field-nodes-list">
+                <div class="dash-node-row">
+                  <div class="dash-node-info">
+                    <span class="node-status-dot node-status-dot--online"></span>
+                    <div>
+                      <b>${t("مجمع ناصر الطبي · خان يونس (Node-KH01)", "Nasser Medical Complex · Khan Yunis")}</b>
+                      <span class="node-meta">P2P Mesh · Latency 0.1ms · 42 ${t("طبيب متصل", "Doctors Online")}</span>
+                    </div>
+                  </div>
+                  <span class="badge badge--ok">99.9% Mesh</span>
+                </div>
+                <div class="dash-node-row">
+                  <div class="dash-node-info">
+                    <span class="node-status-dot node-status-dot--online"></span>
+                    <div>
+                      <b>${t("المستشفى الكويتي الميداني · رفح (Node-RF02)", "Kuwaiti Field Hospital · Rafah")}</b>
+                      <span class="node-meta">0 bps Internet · Merkle Synced · 28 ${t("طبيب متصل", "Doctors Online")}</span>
+                    </div>
+                  </div>
+                  <span class="badge badge--ok">100% Offline</span>
+                </div>
+                <div class="dash-node-row">
+                  <div class="dash-node-info">
+                    <span class="node-status-dot node-status-dot--online"></span>
+                    <div>
+                      <b>${t("مستشفى شهداء الأقصى · دير البلح (Node-DB03)", "Al-Aqsa Martyrs Hospital · Deir al-Balah")}</b>
+                      <span class="node-meta">Solar Powered · 0.2ms Kernel · 35 ${t("طبيب متصل", "Doctors Online")}</span>
+                    </div>
+                  </div>
+                  <span class="badge badge--ok">Active Node</span>
+                </div>
+                <div class="dash-node-row">
+                  <div class="dash-node-info">
+                    <span class="node-status-dot node-status-dot--online"></span>
+                    <div>
+                      <b>${t("مستشفى المعمداني للطوارئ · غزة الشمال (Node-GZ04)", "Al-Ahli Arab Hospital · North Gaza")}</b>
+                      <span class="node-meta">Encrypted Radio Relay · 19 ${t("طبيب متصل", "Doctors Online")}</span>
+                    </div>
+                  </div>
+                  <span class="badge badge--ok">Encrypted P2P</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Medical Inventory & Live Triage Stream -->
+            <div class="dash-card">
+              <div class="dash-card-header">
+                <h3 class="dash-card-title">${t("سجل الفرز الطبي وتوزيع الإمدادات الحرج", "Live Triage Stream & Critical Supplies")}</h3>
+                <span class="badge badge--accent">${t("رصد لحظي", "Live Stream")}</span>
+              </div>
+              <div class="dash-supplies-bars" style="margin-bottom: 1rem;">
+                <div class="supply-item">
+                  <div class="supply-head"><span>${t("الأنسولين ومثبطات الصدمة", "Insulin & Antishock")}</span><b>92%</b></div>
+                  <div class="supply-bar"><div class="supply-bar__fill" style="width: 92%; background: #10b981;"></div></div>
+                </div>
+                <div class="supply-item">
+                  <div class="supply-head"><span>${t("المحاليل الوريدية وحقن التخدير", "IV Fluids & Anesthetics")}</span><b>78%</b></div>
+                  <div class="supply-bar"><div class="supply-bar__fill" style="width: 78%; background: #00f0ff;"></div></div>
+                </div>
+                <div class="supply-item">
+                  <div class="supply-head"><span>${t("الشاش المعقم ومضادات الحروق", "Sterile Dressing & Burn Kits")}</span><b>84%</b></div>
+                  <div class="supply-bar"><div class="supply-bar__fill" style="width: 84%; background: #f59e0b;"></div></div>
+                </div>
+              </div>
+              <div class="dash-triage-stream" id="field-triage-stream">
+                <div class="triage-entry">
+                  <span class="triage-time">12:38:05</span>
+                  <div class="triage-body">
+                    <b>${t("استقبال حالة فرز #8921 — إصابة شظايا معقدة", "Triage Case #8921 — Complex Trauma")}</b>
+                    <p>${t("تمت المطابقة الفورية مع استشاري جراحة الأوعية الدموية خلال 8 ثوانٍ.", "Matched vascular surgeon within 8 seconds via offline mesh.")}</p>
+                  </div>
+                  <span class="badge badge--ok">${t("تم التوجيه", "Dispatched")}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- ================= PANEL 11: SETTINGS & BACKUPS ================= -->
         <section class="dash-panel" data-dash-panel="settings" aria-label="${t("الإعدادات والنسخ الاحتياطي", "Settings & Backups")}">
           <div class="dash-panel-head">
@@ -910,6 +1198,76 @@ export default function dashboard(ctx) {
         <div class="dash-modal-footer">
           <button type="button" class="btn btn--ghost btn--sm" id="btn-copy-proposal">${t("نسخ مسودة العرض المقترح 📋", "Copy Proposal Draft 📋")}</button>
           <button type="button" class="btn btn--primary btn--sm" id="btn-mark-inquiry-done">${t("تأكيد التواصل والمتابعة", "Confirm Coordination")}</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 3: Task Create / Edit (Island Haven Engine) -->
+    <div class="dash-modal-overlay" id="modal-task">
+      <div class="dash-modal" role="dialog" aria-modal="true" aria-labelledby="modal-task-title">
+        <div class="dash-modal-header">
+          <h3 class="dash-modal-title" id="modal-task-title">${t("إضافة / تعديل مهمة سيادية", "Add / Edit Sovereign Task")}</h3>
+          <button type="button" class="dash-modal-close" id="btn-close-task-modal" aria-label="${t("إغلاق", "Close")}">✕</button>
+        </div>
+        <div class="dash-modal-body">
+          <input type="hidden" id="form-task-id" value="">
+          <div class="dash-field-group">
+            <label class="dash-label">${t("عنوان المهمة", "Task Title")}</label>
+            <input type="text" class="dash-input" id="form-task-title" placeholder="${t("مثال: ربط بوابات RahmaCare اللامركزية في غزة", "e.g. Deploy RahmaCare decentralized mesh nodes")}">
+          </div>
+          <div class="dash-grid-2" style="gap: 12px;">
+            <div class="dash-field-group">
+              <label class="dash-label">${t("المرحلة (Stage)", "Status Stage")}</label>
+              <select class="dash-select" id="form-task-status">
+                <option value="backlog">${t("المتراكم والأفكار (Backlog)", "Backlog")}</option>
+                <option value="todo">${t("مجدول للسبرنت (To Do)", "To Do")}</option>
+                <option value="in_progress">${t("جارٍ التنفيذ والبرمجة (In Progress)", "In Progress")}</option>
+                <option value="review">${t("مراجعة وتدقيق جنائي (Review)", "Review")}</option>
+                <option value="done">${t("منجز ومعتمد للإنتاج (Done)", "Done")}</option>
+              </select>
+            </div>
+            <div class="dash-field-group">
+              <label class="dash-label">${t("الأولوية (Priority)", "Priority")}</label>
+              <select class="dash-select" id="form-task-priority">
+                <option value="urgent">${t("🔥 عاجل طارئ (Urgent)", "🔥 Urgent")}</option>
+                <option value="high">${t("🔺 أولوية عليا (High)", "🔺 High")}</option>
+                <option value="medium" selected>${t("➖ أولوية متوسطة (Medium)", "➖ Medium")}</option>
+                <option value="low">${t("🔻 اعتيادية (Low)", "🔻 Low")}</option>
+              </select>
+            </div>
+          </div>
+          <div class="dash-grid-2" style="gap: 12px;">
+            <div class="dash-field-group">
+              <label class="dash-label">${t("القسم / النطاق", "Category / Domain")}</label>
+              <select class="dash-select" id="form-task-category">
+                <option value="kernel">${t("هندسة النواة (Apex Kernel)", "Apex Kernel")}</option>
+                <option value="systems">${t("تطوير الأنظمة (Systems)", "Systems")}</option>
+                <option value="design">${t("تصميم وواجهات (UI / HMI)", "UI / HMI")}</option>
+                <option value="security">${t("أمان وتشفير (Security)", "Security")}</option>
+                <option value="emergency">${t("إغاثة وطوارئ (Emergency)", "Emergency")}</option>
+                <option value="operations">${t("عمليات وشراكات (Operations)", "Operations")}</option>
+              </select>
+            </div>
+            <div class="dash-field-group">
+              <label class="dash-label">${t("المسؤول (Assignee)", "Assignee")}</label>
+              <input type="text" class="dash-input" id="form-task-assignee" value="${t("أحمد أشرف", "Ahmed Ashraf")}">
+            </div>
+          </div>
+          <div class="dash-field-group">
+            <label class="dash-label">${t("تاريخ الاستحقاق", "Due Date")}</label>
+            <input type="date" class="dash-input" id="form-task-due">
+          </div>
+          <div class="dash-field-group">
+            <label class="dash-label">${t("تفاصيل ونطاق العمل", "Description & Specifications")}</label>
+            <textarea class="dash-textarea" id="form-task-desc" rows="3" placeholder="${t("اكتب تفاصيل ومخرجات المهمة الهندسية...", "Detailed task specifications...")}"></textarea>
+          </div>
+        </div>
+        <div class="dash-modal-footer">
+          <button type="button" class="btn btn--danger btn--sm" id="btn-delete-task" style="display: none;">${t("حذف المهمة", "Delete Task")}</button>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-task">${t("إلغاء", "Cancel")}</button>
+            <button type="button" class="btn btn--primary btn--sm" id="btn-save-task">${t("حفظ المهمة", "Save Task")}</button>
+          </div>
         </div>
       </div>
     </div>

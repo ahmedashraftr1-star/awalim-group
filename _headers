@@ -7,7 +7,7 @@
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-kIt7fleCGqkmOxJ+Yu6iwVEYkiKwOiRk+3RcmyeXHdw='; style-src 'self' 'sha256-GEKiOPnJ8mnq4vZzQQckkw35IxBNPZvIpGz4MiXKGb4=' 'sha256-PyUUqnEeKv4bptnFScftO1J6MVnhnvDW37xOT89uetc='; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self' https://wa.me; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; require-trusted-types-for 'script'; trusted-types awalim-sw; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-kIt7fleCGqkmOxJ+Yu6iwVEYkiKwOiRk+3RcmyeXHdw='; style-src 'self' 'sha256-GEKiOPnJ8mnq4vZzQQckkw35IxBNPZvIpGz4MiXKGb4=' 'sha256-fjbZ74BSQDe1k8nSy+LlMluwAnkoF/QdlXE6NqmbGms='; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self' https://wa.me; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; require-trusted-types-for 'script'; trusted-types awalim-sw; upgrade-insecure-requests
 
 /assets/fonts/*
   Cache-Control: public, max-age=31536000, immutable

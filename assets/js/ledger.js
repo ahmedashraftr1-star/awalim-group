@@ -1306,6 +1306,564 @@
       });
     }
 
+    // -------------------------------------------------------------
+    // 12. ISLAND HAVEN TASK & SPRINT OPERATIONS ENGINE
+    // -------------------------------------------------------------
+    var defaultTasks = [
+      {
+        id: "task-01",
+        title: "إطلاق تحديث نواة Apex Kernel 4.0 (0 KB Dependencies)",
+        status: "in_progress",
+        priority: "urgent",
+        category: "kernel",
+        assignee: "أحمد أشرف",
+        due: "2026-10-01",
+        desc: "بناء واختبار محرك تشغيل فائق الخفة مكتوب بمعايير الويب الأصيلة مع تحكم عتادي مباشر في دورة حياة الذاكرة واستهلاك أقل من 15MB."
+      },
+      {
+        id: "task-02",
+        title: "تشفير سجل المعاملات المالية المزدوجة بـ Ed25519 و IFRS",
+        status: "review",
+        priority: "high",
+        category: "security",
+        assignee: "أحمد أشرف",
+        due: "2026-09-28",
+        desc: "تطبيق التوقيع التشفيري الرقمي لمنع التلاعب بالسجلات الحسابية وتطوير آليات التدقيق الجنائي اللحظي."
+      },
+      {
+        id: "task-03",
+        title: "ربط عقد المزامنة اللامركزية مع مشافي غزة عبر أشجار ميركل",
+        status: "in_progress",
+        priority: "urgent",
+        category: "emergency",
+        assignee: "فريق النواة",
+        due: "2026-09-30",
+        desc: "تشغيل شبكة Mesh للطوارئ قادرة على العمل تحت الحصار وانقطاع الاتصالات بنسبة 100% دون إنترنت."
+      },
+      {
+        id: "task-04",
+        title: "تصميم وتطوير واجهات قمرة قيادة السيارات الذكية Car HMI",
+        status: "todo",
+        priority: "medium",
+        category: "design",
+        assignee: "مهندس الواجهات",
+        due: "2026-10-15",
+        desc: "تصميم شاشات العدادات التفاعلية بنظام تباين عالي واستجابة لحظية في البيئات القاسية."
+      },
+      {
+        id: "task-05",
+        title: "مراجعة وتحديث معايير الاعتمادية والـ SLA للباقات الهندسية",
+        status: "backlog",
+        priority: "low",
+        category: "operations",
+        assignee: "إدارة العمليات",
+        due: "2026-11-01",
+        desc: "صياغة عقود الصيانة والدعم السيادي طويل الأجل وضمان زمن استجابة أقل من ساعتين للعملاء المؤسسيين."
+      },
+      {
+        id: "task-06",
+        title: "بناء حزمة Flutter الأصلية لتطبيق RahmaCare VIP",
+        status: "done",
+        priority: "high",
+        category: "systems",
+        assignee: "أحمد أشرف",
+        due: "2026-09-10",
+        desc: "إنجاز واجهات التطبيق ومطابقة الاستشاريين واجتياز اختبارات الأداء بنسبة 60 FPS كاملة."
+      }
+    ];
+
+    var tasks = defaultTasks.slice();
+    try {
+      var savedTasks = localStorage.getItem("awalim_sovereign_tasks");
+      if (savedTasks) tasks = JSON.parse(savedTasks);
+    } catch (e) {}
+
+    var activeCatFilter = "all";
+    var activePriorityFilter = "all";
+    var activeSearchQuery = "";
+
+    function saveTasksState() {
+      try {
+        localStorage.setItem("awalim_sovereign_tasks", JSON.stringify(tasks));
+      } catch (e) {}
+    }
+
+    var statusFlow = ["backlog", "todo", "in_progress", "review", "done"];
+    function getNextStatus(curr) {
+      var idx = statusFlow.indexOf(curr);
+      if (idx === -1 || idx >= statusFlow.length - 1) return curr;
+      return statusFlow[idx + 1];
+    }
+
+    var priorityLabels = {
+      urgent: { label: "🔥 عاجل طارئ", cls: "dash-task-priority--urgent" },
+      high:   { label: "🔺 أولوية عليا", cls: "dash-task-priority--high" },
+      medium: { label: "➖ أولوية متوسطة", cls: "dash-task-priority--medium" },
+      low:    { label: "🔻 اعتيادية", cls: "dash-task-priority--low" }
+    };
+
+    var categoryLabels = {
+      kernel: "هندسة النواة",
+      systems: "تطوير الأنظمة",
+      design: "تصميم وواجهات",
+      security: "أمان وتشفير",
+      emergency: "إغاثة وطوارئ",
+      operations: "عمليات وشراكات"
+    };
+
+    var stageLabels = {
+      backlog: "المتراكم والأفكار",
+      todo: "مجدول للسبرنت",
+      in_progress: "جارٍ التنفيذ",
+      review: "مراجعة وتدقيق",
+      done: "منجز ومعتمد"
+    };
+
+    function renderTasks() {
+      var filtered = tasks.filter(function (t) {
+        if (activeCatFilter !== "all" && t.category !== activeCatFilter) return false;
+        if (activePriorityFilter !== "all" && t.priority !== activePriorityFilter) return false;
+        if (activeSearchQuery) {
+          var q = activeSearchQuery.toLowerCase();
+          var matchTitle = t.title.toLowerCase().indexOf(q) !== -1;
+          var matchAssignee = t.assignee.toLowerCase().indexOf(q) !== -1;
+          var matchDesc = (t.desc || "").toLowerCase().indexOf(q) !== -1;
+          if (!matchTitle && !matchAssignee && !matchDesc) return false;
+        }
+        return true;
+      });
+
+      // 1. Render Kanban Columns
+      var cols = {
+        backlog: document.getElementById("kanban-cards-backlog"),
+        todo: document.getElementById("kanban-cards-todo"),
+        in_progress: document.getElementById("kanban-cards-in_progress"),
+        review: document.getElementById("kanban-cards-review"),
+        done: document.getElementById("kanban-cards-done")
+      };
+
+      var counts = { backlog: 0, todo: 0, in_progress: 0, review: 0, done: 0 };
+      Object.keys(cols).forEach(function (k) {
+        if (cols[k]) cols[k].replaceChildren();
+      });
+
+      filtered.forEach(function (task) {
+        counts[task.status] = (counts[task.status] || 0) + 1;
+        var container = cols[task.status];
+        if (!container) return;
+
+        var card = document.createElement("div");
+        card.className = "dash-kanban-card";
+        card.setAttribute("data-task-id", task.id);
+
+        // Top Row: Priority & Category
+        var topRow = document.createElement("div");
+        topRow.className = "dash-kanban-card__top";
+
+        var prioMeta = priorityLabels[task.priority] || priorityLabels.medium;
+        var prioSpan = document.createElement("span");
+        prioSpan.className = "dash-task-priority " + prioMeta.cls;
+        prioSpan.textContent = prioMeta.label;
+
+        var catSpan = document.createElement("span");
+        catSpan.className = "dash-task-cat";
+        catSpan.textContent = categoryLabels[task.category] || task.category;
+
+        topRow.appendChild(prioSpan);
+        topRow.appendChild(catSpan);
+
+        // Title
+        var titleEl = document.createElement("div");
+        titleEl.className = "dash-kanban-card__title";
+        titleEl.textContent = task.title;
+
+        // Desc Excerpt
+        var descEl = document.createElement("div");
+        descEl.className = "dash-kanban-card__desc";
+        descEl.textContent = task.desc || "";
+
+        // Footer Row: Assignee & Advance Button
+        var ftRow = document.createElement("div");
+        ftRow.className = "dash-kanban-card__ft";
+
+        var assigneeDiv = document.createElement("div");
+        assigneeDiv.className = "dash-task-assignee";
+
+        var avatar = document.createElement("span");
+        avatar.className = "dash-avatar-sm";
+        var initials = (task.assignee || "AA").slice(0, 2);
+        avatar.textContent = initials;
+
+        var nameSpan = document.createElement("span");
+        nameSpan.textContent = task.assignee;
+
+        assigneeDiv.appendChild(avatar);
+        assigneeDiv.appendChild(nameSpan);
+        ftRow.appendChild(assigneeDiv);
+
+        if (task.status !== "done") {
+          var btnAdvance = document.createElement("button");
+          btnAdvance.type = "button";
+          btnAdvance.className = "dash-btn-advance";
+          btnAdvance.textContent = "→ المرحلة التالية";
+          btnAdvance.addEventListener("click", function (e) {
+            e.stopPropagation();
+            var next = getNextStatus(task.status);
+            task.status = next;
+            saveTasksState();
+            renderTasks();
+            showToast("✔ تم نقل المهمة إلى مرحلة: " + (stageLabels[next] || next));
+          });
+          ftRow.appendChild(btnAdvance);
+        }
+
+        card.appendChild(topRow);
+        card.appendChild(titleEl);
+        if (task.desc) card.appendChild(descEl);
+        card.appendChild(ftRow);
+
+        card.addEventListener("click", function () {
+          openTaskModal(task);
+        });
+
+        container.appendChild(card);
+      });
+
+      // Update Column Count Badges
+      Object.keys(counts).forEach(function (st) {
+        var badge = document.getElementById("col-count-" + st);
+        if (badge) badge.textContent = String(counts[st]);
+      });
+
+      var totalBadge = document.getElementById("tasks-total-badge");
+      if (totalBadge) totalBadge.textContent = filtered.length + " مهام نشطة";
+      var navTasksBadge = document.getElementById("badge-tasks-count");
+      if (navTasksBadge) navTasksBadge.textContent = String(tasks.length);
+
+      // 2. Render Table View
+      var tableBody = document.getElementById("tasks-table-body");
+      if (tableBody) {
+        tableBody.replaceChildren();
+        filtered.forEach(function (task) {
+          var tr = document.createElement("tr");
+
+          var tdTitle = document.createElement("td");
+          var bTitle = document.createElement("b");
+          bTitle.textContent = task.title;
+          tdTitle.appendChild(bTitle);
+
+          var tdStatus = document.createElement("td");
+          var stSpan = document.createElement("span");
+          stSpan.className = "badge badge--ok";
+          stSpan.textContent = stageLabels[task.status] || task.status;
+          tdStatus.appendChild(stSpan);
+
+          var tdPrio = document.createElement("td");
+          var pMeta = priorityLabels[task.priority] || priorityLabels.medium;
+          var pSpan = document.createElement("span");
+          pSpan.className = "dash-task-priority " + pMeta.cls;
+          pSpan.textContent = pMeta.label;
+          tdPrio.appendChild(pSpan);
+
+          var tdCat = document.createElement("td");
+          tdCat.textContent = categoryLabels[task.category] || task.category;
+
+          var tdAssignee = document.createElement("td");
+          tdAssignee.textContent = task.assignee;
+
+          var tdDue = document.createElement("td");
+          tdDue.className = "mono";
+          tdDue.textContent = task.due || "—";
+
+          var tdAct = document.createElement("td");
+          var btnEdit = document.createElement("button");
+          btnEdit.type = "button";
+          btnEdit.className = "btn btn--ghost btn--sm";
+          btnEdit.textContent = "تعديل";
+          btnEdit.addEventListener("click", function () {
+            openTaskModal(task);
+          });
+          tdAct.appendChild(btnEdit);
+
+          tr.appendChild(tdTitle);
+          tr.appendChild(tdStatus);
+          tr.appendChild(tdPrio);
+          tr.appendChild(tdCat);
+          tr.appendChild(tdAssignee);
+          tr.appendChild(tdDue);
+          tr.appendChild(tdAct);
+
+          tableBody.appendChild(tr);
+        });
+      }
+
+      // 3. Render Activity Feed
+      var feedList = document.getElementById("tasks-feed-list");
+      if (feedList) {
+        feedList.replaceChildren();
+        tasks.slice(0, 5).forEach(function (task, i) {
+          var item = document.createElement("div");
+          item.className = "dash-activity-item";
+
+          var av = document.createElement("div");
+          av.className = "dash-activity-avatar";
+          av.textContent = (task.assignee || "AA").slice(0, 2);
+
+          var contentDiv = document.createElement("div");
+          contentDiv.className = "dash-activity-content";
+
+          var actor = document.createElement("div");
+          actor.className = "dash-activity-actor";
+          actor.textContent = task.assignee + " · " + (stageLabels[task.status] || task.status);
+
+          var textDiv = document.createElement("div");
+          textDiv.className = "dash-activity-text";
+          textDiv.textContent = task.title;
+
+          contentDiv.appendChild(actor);
+          contentDiv.appendChild(textDiv);
+
+          var timeDiv = document.createElement("div");
+          timeDiv.className = "dash-activity-time";
+          timeDiv.textContent = "قبل " + ((i + 1) * 2) + " س";
+
+          item.appendChild(av);
+          item.appendChild(contentDiv);
+          item.appendChild(timeDiv);
+
+          feedList.appendChild(item);
+        });
+      }
+    }
+
+    // View Switcher Handlers
+    var viewBtns = $$("[data-task-view]");
+    viewBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var view = btn.getAttribute("data-task-view");
+        viewBtns.forEach(function (b) {
+          var active = b === btn;
+          b.classList.toggle("active", active);
+          b.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+        var vKanban = document.getElementById("tasks-view-kanban");
+        var vTable = document.getElementById("tasks-view-table");
+        var vFeed = document.getElementById("tasks-view-feed");
+        if (vKanban) vKanban.style.display = view === "kanban" ? "block" : "none";
+        if (vTable) vTable.style.display = view === "table" ? "block" : "none";
+        if (vFeed) vFeed.style.display = view === "feed" ? "block" : "none";
+      });
+    });
+
+    // Category Filter Pills
+    var catPills = $$("[data-filter-cat]");
+    catPills.forEach(function (pill) {
+      pill.addEventListener("click", function () {
+        catPills.forEach(function (p) { p.classList.remove("active"); });
+        pill.classList.add("active");
+        activeCatFilter = pill.getAttribute("data-filter-cat");
+        renderTasks();
+      });
+    });
+
+    // Priority Filter
+    var prioSelect = document.getElementById("task-priority-filter");
+    if (prioSelect) {
+      prioSelect.addEventListener("change", function (e) {
+        activePriorityFilter = e.target.value;
+        renderTasks();
+      });
+    }
+
+    // Search Filter
+    var searchInput = document.getElementById("task-search-input");
+    if (searchInput) {
+      searchInput.addEventListener("input", function (e) {
+        activeSearchQuery = e.target.value.trim();
+        renderTasks();
+      });
+    }
+
+    // Task Modal Controls
+    var editingTaskId = null;
+    function openTaskModal(task) {
+      var modal = document.getElementById("modal-task");
+      if (!modal) return;
+      var titleModal = document.getElementById("modal-task-title");
+      var btnDel = document.getElementById("btn-delete-task");
+
+      if (task) {
+        editingTaskId = task.id;
+        if (titleModal) titleModal.textContent = "تعديل المهمة السيادية: " + task.title;
+        if (btnDel) btnDel.style.display = "inline-block";
+        var fTitle = document.getElementById("form-task-title"); if (fTitle) fTitle.value = task.title;
+        var fStatus = document.getElementById("form-task-status"); if (fStatus) fStatus.value = task.status;
+        var fPrio = document.getElementById("form-task-priority"); if (fPrio) fPrio.value = task.priority;
+        var fCat = document.getElementById("form-task-category"); if (fCat) fCat.value = task.category;
+        var fAssignee = document.getElementById("form-task-assignee"); if (fAssignee) fAssignee.value = task.assignee;
+        var fDue = document.getElementById("form-task-due"); if (fDue) fDue.value = task.due || "";
+        var fDesc = document.getElementById("form-task-desc"); if (fDesc) fDesc.value = task.desc || "";
+      } else {
+        editingTaskId = null;
+        if (titleModal) titleModal.textContent = "إضافة مهمة سيادية جديدة";
+        if (btnDel) btnDel.style.display = "none";
+        var fTitle = document.getElementById("form-task-title"); if (fTitle) fTitle.value = "";
+        var fStatus = document.getElementById("form-task-status"); if (fStatus) fStatus.value = "todo";
+        var fPrio = document.getElementById("form-task-priority"); if (fPrio) fPrio.value = "medium";
+        var fCat = document.getElementById("form-task-category"); if (fCat) fCat.value = "kernel";
+        var fAssignee = document.getElementById("form-task-assignee"); if (fAssignee) fAssignee.value = "أحمد أشرف";
+        var fDue = document.getElementById("form-task-due"); if (fDue) fDue.value = "";
+        var fDesc = document.getElementById("form-task-desc"); if (fDesc) fDesc.value = "";
+      }
+      openModal("modal-task");
+    }
+
+    var btnAddTask = document.getElementById("btn-add-task");
+    if (btnAddTask) {
+      btnAddTask.addEventListener("click", function () {
+        openTaskModal(null);
+      });
+    }
+
+    var btnCloseTaskModal = document.getElementById("btn-close-task-modal");
+    if (btnCloseTaskModal) btnCloseTaskModal.addEventListener("click", function () { closeModal("modal-task"); });
+    var btnCancelTask = document.getElementById("btn-cancel-task");
+    if (btnCancelTask) btnCancelTask.addEventListener("click", function () { closeModal("modal-task"); });
+
+    var btnSaveTask = document.getElementById("btn-save-task");
+    if (btnSaveTask) {
+      btnSaveTask.addEventListener("click", function () {
+        var fTitle = document.getElementById("form-task-title");
+        var titleVal = fTitle ? fTitle.value.trim() : "";
+        if (!titleVal) {
+          showToast("✖ يرجى كتابة عنوان المهمة.", true);
+          return;
+        }
+
+        var fStatus = document.getElementById("form-task-status");
+        var fPrio = document.getElementById("form-task-priority");
+        var fCat = document.getElementById("form-task-category");
+        var fAssignee = document.getElementById("form-task-assignee");
+        var fDue = document.getElementById("form-task-due");
+        var fDesc = document.getElementById("form-task-desc");
+
+        var taskObj = {
+          id: editingTaskId || ("task-" + Date.now()),
+          title: titleVal,
+          status: fStatus ? fStatus.value : "todo",
+          priority: fPrio ? fPrio.value : "medium",
+          category: fCat ? fCat.value : "kernel",
+          assignee: fAssignee ? fAssignee.value.trim() || "أحمد أشرف" : "أحمد أشرف",
+          due: fDue ? fDue.value : "",
+          desc: fDesc ? fDesc.value.trim() : ""
+        };
+
+        if (editingTaskId) {
+          var idx = tasks.findIndex(function (t) { return t.id === editingTaskId; });
+          if (idx !== -1) tasks[idx] = taskObj;
+          showToast("✔ تم تحديث المهمة السيادية بنجاح.");
+        } else {
+          tasks.unshift(taskObj);
+          showToast("✔ تم إنشاء المهمة السيادية بنجاح وإدراجها في السبرنت.");
+        }
+
+        saveTasksState();
+        renderTasks();
+        closeModal("modal-task");
+      });
+    }
+
+    var btnDelTask = document.getElementById("btn-delete-task");
+    if (btnDelTask) {
+      btnDelTask.addEventListener("click", function () {
+        if (!editingTaskId) return;
+        if (confirm("هل أنت متأكد من رغبتك في حذف هذه المهمة نهائياً؟")) {
+          tasks = tasks.filter(function (t) { return t.id !== editingTaskId; });
+          saveTasksState();
+          renderTasks();
+          closeModal("modal-task");
+          showToast("✔ تم حذف المهمة بنجاح.");
+        }
+      });
+    }
+
+    renderTasks();
+
+    // -------------------------------------------------------------
+    // 13. RAHMACARE EMERGENCY FIELD DISPATCH SIMULATOR
+    // -------------------------------------------------------------
+    var btnSimulateTriage = document.getElementById("btn-simulate-triage");
+    var triageStream = document.getElementById("field-triage-stream");
+    var triagedCountEl = document.getElementById("rahma-triaged-count");
+    var triageCounter = 12840;
+
+    var mockEmergencyCases = [
+      {
+        title: "حالة فرز #8922 — كسر حوضي معقد مع نزف داخلي (خان يونس)",
+        desc: "مطابقة فورية مع استشاري جراحة العظام والأوعية الدموية خلال 7 ثوانٍ عبر شبكة غزة Mesh."
+      },
+      {
+        title: "حالة فرز #8923 — استنفاد طارئ لمخزون الأنسولين (دير البلح)",
+        desc: "توجيه آلي لشحنة إمداد عاجلة من مستودع الأقصى الإقليمي وتأكيد المزامنة المشفرة."
+      },
+      {
+        title: "حالة فرز #8924 — إنعاش قلبي رئوي لطفل مصاب (المستشفى الكويتي - رفح)",
+        desc: "تفعيل بروتوكول الإغاثة المركزي وربط الاستشارة التلفزيونية دون اتصال بالإنترنت (Merkle Verified)."
+      }
+    ];
+    var mockIdx = 0;
+
+    if (btnSimulateTriage && triageStream) {
+      btnSimulateTriage.addEventListener("click", function () {
+        triageCounter++;
+        if (triagedCountEl) triagedCountEl.textContent = triageCounter.toLocaleString();
+
+        var mCase = mockEmergencyCases[mockIdx % mockEmergencyCases.length];
+        mockIdx++;
+
+        var now = new Date();
+        var timeStr = (now.getHours() < 10 ? "0" : "") + now.getHours() + ":" +
+                      (now.getMinutes() < 10 ? "0" : "") + now.getMinutes() + ":" +
+                      (now.getSeconds() < 10 ? "0" : "") + now.getSeconds();
+
+        var entry = document.createElement("div");
+        entry.className = "triage-entry is-new";
+
+        var tTime = document.createElement("span");
+        tTime.className = "triage-time";
+        tTime.textContent = timeStr;
+
+        var tBody = document.createElement("div");
+        tBody.className = "triage-body";
+
+        var bTitle = document.createElement("b");
+        bTitle.textContent = mCase.title;
+        var pDesc = document.createElement("p");
+        pDesc.textContent = mCase.desc;
+
+        tBody.appendChild(bTitle);
+        tBody.appendChild(pDesc);
+
+        var badge = document.createElement("span");
+        badge.className = "badge badge--ok";
+        badge.textContent = "تم التوجيه ⚡";
+
+        entry.appendChild(tTime);
+        entry.appendChild(tBody);
+        entry.appendChild(badge);
+
+        triageStream.insertBefore(entry, triageStream.firstChild);
+        showToast("⚡ تم استقبال حالة فرز عاجلة ومطابقة الاستشاري الجراحي بنجاح.");
+      });
+    }
+
+    var btnSyncMerkle = document.getElementById("btn-sync-merkle");
+    if (btnSyncMerkle) {
+      btnSyncMerkle.addEventListener("click", function () {
+        showToast("🔄 تم إثبات وتثبيت شجرة ميركل عبر 14 عقدة ميدانية بنجاح (0 تفاوت تشفيري).");
+      });
+    }
+
     var btnRefreshTelemetry = document.getElementById("btn-refresh-telemetry");
     if (btnRefreshTelemetry) {
       btnRefreshTelemetry.addEventListener("click", function () {
