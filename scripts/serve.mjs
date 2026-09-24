@@ -65,7 +65,20 @@ createServer(async (req, res) => {
   // 🎛️ SOVEREIGN ADMIN API — التحكم الفعلي المباشر في الموقع
   // ═════════════════════════════════════════════════════════
   if (pathname.startsWith("/api/admin/")) {
-    const ALLOWED_FILES = new Set(["site.json", "cases.json", "products.json", "pages.json", "careers.json", "journal.json", "i18n.json"]);
+    const ALLOWED_FILES = new Set([
+      "site.json",
+      "cases.json",
+      "products.json",
+      "pages.json",
+      "careers.json",
+      "journal.json",
+      "i18n.json",
+      "tasks.json",
+      "rahmacare.json",
+      "security.json",
+      "press.json",
+      "owner.json"
+    ]);
 
     // GET /api/admin/content?file=site.json
     if (pathname === "/api/admin/content" && req.method === "GET") {

@@ -1,0 +1,281 @@
+{
+  "version": "4.0.0",
+  "system": "Island Haven x Awalim Operations Core",
+  "lastSync": "2026-09-19T10:07:02.650Z",
+  "tasks": [
+    {
+      "id": "task-01",
+      "title": "إطلاق تحديث نواة Apex Kernel 4.0 (0 KB Dependencies)",
+      "description": "بناء واختبار محرك تشغيل فائق الخفة مكتوب بمعايير الويب الأصيلة مع تحكم عتادي مباشر في دورة حياة الذاكرة واستهلاك أقل من 15MB.",
+      "status": "todo",
+      "priority": "urgent",
+      "category": "kernel",
+      "assignee": "أحمد أشرف",
+      "createdBy": "أحمد أشرف",
+      "dueDate": "2026-10-01",
+      "tags": [
+        "Kernel",
+        "ZeroDeps",
+        "WebCrypto",
+        "Performance"
+      ],
+      "orderIndex": 1,
+      "createdAt": "2026-09-14T08:00:00Z",
+      "updatedAt": "2026-09-19T07:00:00Z",
+      "commentCount": 3,
+      "comments": [
+        {
+          "id": "c-01",
+          "author": "أحمد أشرف",
+          "avatar": "/assets/img/ahmed-personal.webp",
+          "body": "تم تقليص حجم الذاكرة إلى 12.8MB بنجاح، وجميع اختبارات CSP Level 3 تعمل بلا أي تحذيرات.",
+          "createdAt": "2026-09-14T10:15:00Z"
+        },
+        {
+          "id": "c-02",
+          "author": "مهندس النواة",
+          "avatar": "/assets/img/ahmed-personal.webp",
+          "body": "تم فحص استجابة محرك الحركة عبر Web Workers، والنتيجة 60 FPS ثابتة على كافة المتصفحات.",
+          "createdAt": "2026-09-15T12:30:00Z"
+        },
+        {
+          "id": "c-03",
+          "author": "أحمد أشرف",
+          "avatar": "/assets/img/ahmed-personal.webp",
+          "body": "جاهز للمراجعة النهائية قبل دمج حزمة الإنتاج.",
+          "createdAt": "2026-09-19T06:45:00Z"
+        }
+      ],
+      "activity": [
+        {
+          "actor": "أحمد أشرف",
+          "label": "أنشأ المهمة السيادية",
+          "timeStr": "اليوم 09:30"
+        }
+      ]
+    },
+    {
+      "id": "task-02",
+      "title": "تشفير سجل المعاملات المالية المزدوجة بـ Ed25519 و IFRS",
+      "description": "تطبيق التوقيع التشفيري الرقمي لمنع التلاعب بالسجلات الحسابية وتطوير آليات التدقيق الجنائي اللحظي لبرنامج المحاسب الذكي.",
+      "status": "review",
+      "priority": "high",
+      "category": "security",
+      "assignee": "أحمد أشرف",
+      "createdBy": "أحمد أشرف",
+      "dueDate": "2026-09-28",
+      "tags": [
+        "Crypto",
+        "Ed25519",
+        "Accounting",
+        "Audit"
+      ],
+      "orderIndex": 2,
+      "createdAt": "2026-09-12T09:00:00Z",
+      "updatedAt": "2026-09-18T14:20:00Z",
+      "commentCount": 2,
+      "comments": [
+        {
+          "id": "c-04",
+          "author": "محلل الأمان الجنائي",
+          "avatar": "/assets/img/ahmed-personal.webp",
+          "body": "تم اختبار التوقيع التشفيري على أكثر من 50,000 معاملة متزامنة مع زمن تحقق 1.2ms لكل معاملة.",
+          "createdAt": "2026-09-16T11:00:00Z"
+        },
+        {
+          "id": "c-05",
+          "author": "أحمد أشرف",
+          "avatar": "/assets/img/ahmed-personal.webp",
+          "body": "ممتاز، سنعتمد هذا التوقيع في صفحة التحقق السيادي /verify.",
+          "createdAt": "2026-09-18T14:20:00Z"
+        }
+      ]
+    },
+    {
+      "id": "task-03",
+      "title": "ربط عقد المزامنة اللامركزية مع مشافي غزة عبر أشجار ميركل",
+      "description": "تشغيل شبكة Mesh للطوارئ قادرة على العمل تحت الحصار وانقطاع الاتصالات بنسبة 100% دون إنترنت ومزامنة البيانات الطبية فور استعادة الاتصال.",
+      "status": "in_progress",
+      "priority": "urgent",
+      "category": "emergency",
+      "assignee": "فريق النواة",
+      "createdBy": "أحمد أشرف",
+      "dueDate": "2026-09-30",
+      "tags": [
+        "RahmaCare",
+        "Emergency",
+        "Mesh",
+        "MerkleTree",
+        "Gaza"
+      ],
+      "orderIndex": 3,
+      "createdAt": "2026-09-10T07:30:00Z",
+      "updatedAt": "2026-09-19T06:00:00Z",
+      "commentCount": 2,
+      "comments": [
+        {
+          "id": "c-06",
+          "author": "مسؤول العمليات والانتشار",
+          "avatar": "/assets/img/ahmed-personal.webp",
+          "body": "عقد مجمع الشفاء وناصر الطبي متصلة الآن بالشبكة المحلية بنجاح.",
+          "createdAt": "2026-09-17T09:10:00Z"
+        }
+      ]
+    },
+    {
+      "id": "task-04",
+      "title": "تصميم وتطوير واجهات قمرة قيادة السيارات الذكية Car HMI",
+      "description": "تصميم شاشات العدادات التفاعلية بنظام تباين عالي واستجابة لحظية في البيئات القاسية لمصنعي المركبات الكهربائية.",
+      "status": "in_progress",
+      "priority": "medium",
+      "category": "design",
+      "assignee": "فريق الواجهات",
+      "createdBy": "أحمد أشرف",
+      "dueDate": "2026-10-15",
+      "tags": [
+        "Automotive",
+        "HMI",
+        "WebGL",
+        "UltraLowLatency"
+      ],
+      "orderIndex": 4,
+      "createdAt": "2026-09-08T11:00:00Z",
+      "updatedAt": "2026-09-14T08:00:00Z",
+      "commentCount": 1,
+      "comments": []
+    },
+    {
+      "id": "task-05",
+      "title": "مراجعة وتحديث معايير الاعتمادية والـ SLA للباقات الهندسية",
+      "description": "صياغة عقود الصيانة والدعم السيادي طويل الأجل وضمان زمن استجابة أقل من ساعتين للعملاء المؤسسيين في الخليج وأوروبا.",
+      "status": "todo",
+      "priority": "low",
+      "category": "operations",
+      "assignee": "مسؤول العمليات والانتشار",
+      "createdBy": "أحمد أشرف",
+      "dueDate": "2026-11-01",
+      "tags": [
+        "SLA",
+        "Enterprise",
+        "Contracts",
+        "Legal"
+      ],
+      "orderIndex": 5,
+      "createdAt": "2026-09-05T13:00:00Z",
+      "updatedAt": "2026-09-05T13:00:00Z",
+      "commentCount": 0,
+      "comments": []
+    },
+    {
+      "id": "task-06",
+      "title": "بناء حزمة Flutter الأصلية لتطبيق RahmaCare VIP",
+      "description": "إنجاز واجهات التطبيق ومطابقة الاستشاريين واجتياز اختبارات الأداء بنسبة 60 FPS كاملة.",
+      "status": "done",
+      "priority": "high",
+      "category": "systems",
+      "assignee": "أحمد أشرف",
+      "createdBy": "أحمد أشرف",
+      "dueDate": "2026-09-10",
+      "tags": [
+        "Flutter",
+        "Mobile",
+        "iOS",
+        "Android"
+      ],
+      "orderIndex": 6,
+      "createdAt": "2026-09-01T10:00:00Z",
+      "updatedAt": "2026-09-10T16:00:00Z",
+      "commentCount": 1,
+      "comments": [
+        {
+          "id": "c-07",
+          "author": "أحمد أشرف",
+          "avatar": "/assets/img/ahmed-personal.webp",
+          "body": "تم تسليم النسخة التجريبية واجتياز كافة فحوصات الذاكرة بنجاح.",
+          "createdAt": "2026-09-10T16:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "task-07",
+      "title": "نظام إدارة حجوزات ومنتجع آيلاند هيفن (Island Haven Real-time Engine)",
+      "description": "تكامل محرك الحجز الفوري مع نظام الفواتير والتحقق من الهوية وإرسال التنبيهات المباشرة للضيوف والمشرفين.",
+      "status": "done",
+      "priority": "high",
+      "category": "systems",
+      "assignee": "أحمد أشرف",
+      "createdBy": "أحمد أشرف",
+      "dueDate": "2026-09-05",
+      "tags": [
+        "IslandHaven",
+        "Resort",
+        "RealTime",
+        "Bookings"
+      ],
+      "orderIndex": 7,
+      "createdAt": "2026-08-25T09:00:00Z",
+      "updatedAt": "2026-09-05T12:00:00Z",
+      "commentCount": 2,
+      "comments": []
+    }
+  ],
+  "activity": [
+    {
+      "id": "act-01",
+      "taskId": "task-01",
+      "taskTitle": "إطلاق تحديث نواة Apex Kernel 4.0",
+      "actor": "أحمد أشرف",
+      "action": "status_change",
+      "fromValue": "todo",
+      "toValue": "in_progress",
+      "createdAt": "2026-09-14T09:30:00Z"
+    },
+    {
+      "id": "act-02",
+      "taskId": "task-02",
+      "taskTitle": "تشفير سجل المعاملات المالية المزدوجة بـ Ed25519",
+      "actor": "أحمد أشرف",
+      "action": "status_change",
+      "fromValue": "in_progress",
+      "toValue": "review",
+      "createdAt": "2026-09-18T14:20:00Z"
+    },
+    {
+      "id": "act-03",
+      "taskId": "task-06",
+      "taskTitle": "بناء حزمة Flutter الأصلية لتطبيق RahmaCare VIP",
+      "actor": "أحمد أشرف",
+      "action": "status_change",
+      "fromValue": "review",
+      "toValue": "done",
+      "createdAt": "2026-09-10T16:00:00Z"
+    }
+  ],
+  "team": [
+    {
+      "name": "أحمد أشرف",
+      "role": "المؤسّس ورئيس الهندسة",
+      "avatar": "/assets/img/ahmed-personal.webp"
+    },
+    {
+      "name": "مهندس النواة",
+      "role": "مهندس أنظمة النواة والتوزيع",
+      "avatar": "/assets/img/ahmed-personal.webp"
+    },
+    {
+      "name": "فريق الواجهات",
+      "role": "هندسة التفاعل والتصميم السائل",
+      "avatar": "/assets/img/ahmed-personal.webp"
+    },
+    {
+      "name": "مسؤول العمليات والانتشار",
+      "role": "إدارة الميدان والتعاقدات",
+      "avatar": "/assets/img/ahmed-personal.webp"
+    },
+    {
+      "name": "محلل الأمان الجنائي",
+      "role": "التدقيق التشفيري والامتثال",
+      "avatar": "/assets/img/ahmed-personal.webp"
+    }
+  ]
+}

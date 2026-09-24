@@ -58,7 +58,11 @@ const add = (rule, route, detail) => findings.push({ rule, route, detail });
 let pageErrs = [], consoleErrs = [], failed = [];
 page.on("pageerror", (e) => pageErrs.push(String(e.message).slice(0, 120)));
 page.on("console", (m) => { if (m.type() === "error") consoleErrs.push(m.text().slice(0, 120)); });
-page.on("requestfailed", (r) => failed.push(r.url().replace(BASE, "").slice(0, 80) + " — " + (r.failure() || {}).errorText));
+page.on("requestfailed", (r) => {
+  const err = (r.failure() || {}).errorText || "";
+  if (err === "cancelled" || /aborted/i.test(err)) return;
+  failed.push(r.url().replace(BASE, "").slice(0, 80) + " — " + err);
+});
 
 /* خصائص حديثة يعتمد عليها التصميم: لو سقطت في محرّك، سقط معها شيء مرئي */
 const FEATURES = [

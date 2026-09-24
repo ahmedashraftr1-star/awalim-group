@@ -96,9 +96,9 @@ export const featureList = (list, cols = 2) => `<div class="frows frows--${cols}
 export const metricBar = ({ metric = {}, href, ctaLabel = "دراسة الحالة", stats = {} }) => {
   const items = [];
   if (metric.rating) {
-    items.push(`<div class="mbar__meta"><span class="mbar__stars" aria-label="تقييم ${esc(metric.rating)}">★★★★★</span><b class="mbar__val">${esc(metric.rating)}</b><span class="mbar__sub">تقييم</span></div>`);
+    items.push(`<div class="mbar__meta"><span class="trust-badge-pill mono">99.9% UPTIME</span><b class="mbar__val">${esc(metric.rating)}</b><span class="mbar__sub">تقييم</span></div>`);
   } else {
-    items.push(`<div class="mbar__meta"><span class="mbar__stars" aria-hidden="true">★★★★★</span><b class="mbar__val">4.9</b><span class="mbar__sub">معتمد مؤسسياً</span></div>`);
+    items.push(`<div class="mbar__meta"><span class="trust-badge-pill mono">99.9% UPTIME</span><b class="mbar__val">4.9</b><span class="mbar__sub">معتمد مؤسسياً</span></div>`);
   }
 
   if (metric.users) {
@@ -178,7 +178,7 @@ export const cockpit = ({ tilt = true, parallax = true, live = true, cls = "", i
           <i style="--h:58%"></i><i style="--h:79%"></i><i style="--h:71%"></i><i style="--h:92%"></i>
         </div>
         <div class="cockpit__rows" data-ledger-rows>
-          <div class="cockpit__row"><span>آخر قيد · <span class="mono" lang="en">#<span data-ledger-n>2478</span></span></span><b class="cockpit__ok">متوازن <span class="cockpit__tick">${icon("check")}</span></b></div>
+          <div class="cockpit__row"><span>آخر قيد · <span class="mono">رقم <span data-ledger-n>2478</span></span></span><b class="cockpit__ok">متوازن <span class="cockpit__tick">${icon("check")}</span></b></div>
           <div class="cockpit__row"><span>فاتورة كهرباء — التُقطت بالكاميرا</span><b class="mono">150.00</b></div>
           <div class="cockpit__row"><span>مسيَّر الرواتب — رُحِّل تلقائياً</span><b class="mono" lang="en">IAS 19</b></div>
         </div>
@@ -187,7 +187,7 @@ export const cockpit = ({ tilt = true, parallax = true, live = true, cls = "", i
         <div class="ledger__act">
           <button class="btn btn--sm btn--accent" type="button" data-ledger-action="scan">${icon("camera")}<span>صوِّر فاتورة</span></button>
           <button class="btn btn--sm btn--ghost" type="button" data-ledger-action="sale">${icon("plus")}<span>سجّل مبيعة</span></button>
-          <span class="ledger__hint">جرّبه — قيد مزدوج يُحسب فعلاً</span>
+          <span class="ledger__hint">جرّب بنفسك — قيد مزدوج يُحسب فعلياً</span>
         </div>
         <p class="sr-only" aria-live="polite" data-ledger-live></p>` : ""}
       </div>
@@ -235,40 +235,40 @@ export const cockpit = ({ tilt = true, parallax = true, live = true, cls = "", i
   </div>`;
 
 /** Interactive project scope and investment estimator. */
-export const scopeEstimator = (site) => `
-<section class="sec sec--alt" id="estimator" aria-label="حاسبة استثمار النظم">
+export const scopeEstimator = (site, isEn = false) => `
+<section class="sec sec--alt" id="estimator" aria-label="${isEn ? "System Investment Calculator" : "حاسبة استثمار النظم"}">
   <div class="wrap wrap--wide">
     <div class="estimator rv" data-stagger data-estimator>
       <div class="estimator__head">
         ${eyebrow("SYS-EST-01", "ESTIMATOR")}
-        <h2 class="d-1">حاسبة استثمار النظم</h2>
-        <p class="lede">احسب نطاق نظامك ومدة تسليمه بدقة — شفافية كاملة قبل بدء أي كود.</p>
+        <h2 class="d-1">${isEn ? "System Investment Calculator" : "حاسبة استثمار النظم"}</h2>
+        <p class="lede">${isEn ? "Estimate your system scope and delivery timeline with full clarity before any code begins." : "احسب نطاق نظامك ومدة تسليمه بدقة — شفافية كاملة قبل بدء أي كود."}</p>
       </div>
       <div class="estimator__grid">
         <div class="estimator__form">
           <div class="estimator__grp">
-            <span class="estimator__label">نوع النظام المطلوب</span>
+            <span class="estimator__label">${isEn ? "Requested System Type" : "نوع النظام المطلوب"}</span>
             <div class="estimator__options">
-              <label class="estimator__opt"><input type="radio" name="scope_type" value="enterprise" checked><span>نظام مؤسسي متكامل</span></label>
-              <label class="estimator__opt"><input type="radio" name="scope_type" value="agents"><span>وكلاء ذكاء اصطناعي</span></label>
-              <label class="estimator__opt"><input type="radio" name="scope_type" value="mobile"><span>تطبيق موبايل سيادي</span></label>
-              <label class="estimator__opt"><input type="radio" name="scope_type" value="brand"><span>هوية ونظام تصميم</span></label>
+              <label class="estimator__opt"><input type="radio" name="scope_type" value="enterprise" checked><span>${isEn ? "Integrated Enterprise System" : "نظام مؤسسي متكامل"}</span></label>
+              <label class="estimator__opt"><input type="radio" name="scope_type" value="agents"><span>${isEn ? "Autonomous AI Agents" : "وكلاء ذكاء اصطناعي"}</span></label>
+              <label class="estimator__opt"><input type="radio" name="scope_type" value="mobile"><span>${isEn ? "Sovereign Mobile App" : "تطبيق موبايل سيادي"}</span></label>
+              <label class="estimator__opt"><input type="radio" name="scope_type" value="brand"><span>${isEn ? "Brand & Design System" : "هوية ونظام تصميم"}</span></label>
             </div>
           </div>
           <div class="estimator__grp">
-            <span class="estimator__label">المنصات والربط</span>
+            <span class="estimator__label">${isEn ? "Platforms & Integrations" : "المنصات والربط"}</span>
             <div class="estimator__checks">
-              <label class="estimator__opt"><input type="checkbox" name="scope_feat" value="dashboard" checked><span>لوحة تحكّم وبوابة ويب</span></label>
-              <label class="estimator__opt"><input type="checkbox" name="scope_feat" value="mobile" checked><span>تطبيقات iOS وأندرويد</span></label>
-              <label class="estimator__opt"><input type="checkbox" name="scope_feat" value="ai"><span>محرك ذكاء اصطناعي محلي</span></label>
-              <label class="estimator__opt"><input type="checkbox" name="scope_feat" value="offline"><span>مزامنة أوفلاين وسجل مشفّر</span></label>
+              <label class="estimator__opt"><input type="checkbox" name="scope_feat" value="dashboard" checked><span>${isEn ? "Web Portal & Dashboard" : "لوحة تحكّم وبوابة ويب"}</span></label>
+              <label class="estimator__opt"><input type="checkbox" name="scope_feat" value="mobile" checked><span>${isEn ? "iOS & Android Apps" : "تطبيقات iOS وأندرويد"}</span></label>
+              <label class="estimator__opt"><input type="checkbox" name="scope_feat" value="ai"><span>${isEn ? "Local Private AI Engine" : "محرك ذكاء اصطناعي محلي"}</span></label>
+              <label class="estimator__opt"><input type="checkbox" name="scope_feat" value="offline"><span>${isEn ? "Offline Sync & Encrypted Ledger" : "مزامنة أوفلاين وسجل مشفّر"}</span></label>
             </div>
           </div>
           <div class="estimator__grp">
-            <span class="estimator__label">سرعة التسليم</span>
+            <span class="estimator__label">${isEn ? "Delivery Speed" : "سرعة التسليم"}</span>
             <div class="estimator__options">
-              <label class="estimator__opt"><input type="radio" name="scope_speed" value="standard" checked><span>مسار قياسي (4–6 أسابيع)</span></label>
-              <label class="estimator__opt"><input type="radio" name="scope_speed" value="sprint"><span>مسار مسرّع (2–3 أسابيع)</span></label>
+              <label class="estimator__opt"><input type="radio" name="scope_speed" value="standard" checked><span>${isEn ? "Standard Track (4–6 weeks)" : "مسار قياسي (4–6 أسابيع)"}</span></label>
+              <label class="estimator__opt"><input type="radio" name="scope_speed" value="sprint"><span>${isEn ? "Accelerated Sprint (2–3 weeks)" : "مسار مسرّع (2–3 أسابيع)"}</span></label>
             </div>
           </div>
         </div>
@@ -276,18 +276,18 @@ export const scopeEstimator = (site) => `
           <div class="estimator__card">
             <div class="estimator__card-h">
               <span class="mono">SPEC-EST-2026</span>
-              <span class="chip chip--accent">جاهز للشحن</span>
+              <span class="chip chip--accent">${isEn ? "READY TO SHIP" : "جاهز للشحن"}</span>
             </div>
             <div class="estimator__kpis">
-              <div class="estimator__kpi"><span>المدة التقديرية</span><b class="mono" data-est-time><bdi dir="ltr">4–6</bdi> أسابيع</b></div>
-              <div class="estimator__kpi"><span>المعايير المضمونة</span><b>عزل مستأجرين · وصولية AA · ميزانية أداء</b></div>
+              <div class="estimator__kpi"><span>${isEn ? "Estimated Timeline" : "المدة التقديرية"}</span><b class="mono" data-est-time><bdi dir="ltr">4–6</bdi> ${isEn ? "weeks" : "أسابيع"}</b></div>
+              <div class="estimator__kpi"><span>${isEn ? "Guaranteed Standards" : "المعايير المضمونة"}</span><b>${isEn ? "Multi-tenant isolation · AA Accessibility · Performance Budget" : "عزل مستأجرين · وصولية AA · ميزانية أداء"}</b></div>
             </div>
             <div class="estimator__actions">
               <a class="btn btn--primary btn--full" href="https://wa.me/970593636136" target="_blank" rel="noopener" data-est-wa>
-                ${arrow()}<span>إرسال المواصفات إلى واتساب</span>
+                ${arrow()}<span>${isEn ? "Send Specifications to WhatsApp" : "إرسال المواصفات إلى واتساب"}</span>
               </a>
               <a class="btn btn--ghost btn--full" href="/contact">
-                <span>أو تواصل عبر نموذج المشاريع</span>
+                <span>${isEn ? "Or reach out via project inquiry form" : "أو تواصل عبر نموذج المشاريع"}</span>
               </a>
             </div>
           </div>
@@ -772,7 +772,10 @@ export const mockScreen = (kind) => {
 
 
 export const bentoHighlights = (ctx) => {
-  const { site, stats, themes, pages } = ctx;
+  const { site, stats, themes, pages, locale } = ctx;
+  const isEn = locale === "en";
+  const demoLbl = isEn ? "▶ 60fps Live Demo" : "▶ تجربة حية 60fps";
+  const vibeLbl = isEn ? "▶ Test Vibe OS" : "▶ تجربة Vibe OS";
   const h = pages.home;
 
   return `<div class="bento-grid rv" data-stagger>
@@ -810,7 +813,7 @@ export const bentoHighlights = (ctx) => {
     <div class="bento-card bento-card--col-6 themed" style="${themeStyle(themes.rahmacare)}">
       <div class="bento-card__top">
         <span class="bento-badge bento-badge--cyan">SYS-RAHM-02 · غزة & الطوارئ</span>
-        <span class="bento-stars" aria-label="تقييم 5 من 5">★★★★★</span>
+        <span class="trust-badge-pill mono"><span class="badge-dot"></span>VERIFIED SYSTEM</span>
       </div>
       <h4 class="bento-card__subh">رحمة كير — الرعاية الطبية تحت الحصار</h4>
       <p class="bento-card__subp">نظام فرز طبي وتشخيص ميداني بالذكاء الاصطناعي يعمل في أشد البيئات انقطاعاً عن الإنترنت مع مزامنة تشفيرية Merkle Tree.</p>
@@ -821,6 +824,7 @@ export const bentoHighlights = (ctx) => {
       </div>
       <div class="bento-card__ft">
         ${btn({ href: "/work/rahmacare", label: "استكشف دراسة الحالة", kind: "ghost", arrow: true })}
+        <button type="button" class="btn-demo-trigger" data-demo-target="rahmacare"><span>${demoLbl}</span></button>
       </div>
     </div>
 
@@ -828,7 +832,7 @@ export const bentoHighlights = (ctx) => {
     <div class="bento-card bento-card--col-6 themed" style="${themeStyle(themes.academy)}">
       <div class="bento-card__top">
         <span class="bento-badge bento-badge--blue">SYS-ACAD-03 · هندسة النظم</span>
-        <span class="bento-stars" aria-label="تقييم 5 من 5">★★★★★</span>
+        <span class="trust-badge-pill mono"><span class="badge-dot"></span>VERIFIED SYSTEM</span>
       </div>
       <h4 class="bento-card__subh">أكاديمية عوالِم — مصنع مهندسي النخبة</h4>
       <p class="bento-card__subp">تأهيل هندسي شاق قائم على بناء أنظمة إنتاجية حقيقية بصفر أطر عمل جاهزة. تخريج معماريين يقودون هندسة البرمجيات إقليمياً.</p>
@@ -839,6 +843,7 @@ export const bentoHighlights = (ctx) => {
       </div>
       <div class="bento-card__ft">
         ${btn({ href: "/academy", label: "مسارات الأكاديمية", kind: "ghost", arrow: true })}
+        <button type="button" class="btn-demo-trigger" data-demo-target="vibe"><span>${vibeLbl}</span></button>
       </div>
     </div>
 
@@ -855,6 +860,7 @@ export const bentoHighlights = (ctx) => {
         </div>
         <div class="bento-card__ft">
           ${btn({ href: "/products/smart-accountant", label: "تفاصيل النظام المحاسبي", kind: "ghost", arrow: true })}
+          <button type="button" class="btn-demo-trigger" data-demo-target="accountant"><span>${demoLbl}</span></button>
         </div>
       </div>
       <div class="bento-card__divider" aria-hidden="true"></div>
@@ -877,7 +883,7 @@ export const bentoHighlights = (ctx) => {
 
 
 export const sovereignArchitecture = (ctx) => {
-  return `<section class="sec sec--arch" id="architecture" aria-label="معمارية النواة السيادية">
+  return `<section class="sec sec--arch" id="sovereign-architecture" aria-label="معمارية النواة السيادية">
   <div class="wrap wrap--wide">
     <div class="arch-head rv" data-stagger>
       <span class="chip chip--accent"><span class="dot" aria-hidden="true"></span>معمارية النواة السيادية · SOVEREIGN ARCHITECTURE</span>
@@ -1198,28 +1204,28 @@ export const trustAccreditationStrip = (ctx) => {
   <div class="wrap wrap--wide">
     <div class="trust-strip__grid rv" data-stagger>
       <div class="trust-item">
-        <span class="trust-item__flag" aria-hidden="true">🇦🇪</span>
+        <span class="trust-item__icon mono" aria-label="الإمارات">UAE</span>
         <div class="trust-item__txt">
           <b class="trust-item__title">ترخيص تجاري رسمي — الإمارات</b>
           <span class="trust-item__sub">شركة مسجلة ذات مسؤولية محدودة · Awalim Group LLC</span>
         </div>
       </div>
       <div class="trust-item">
-        <span class="trust-item__flag" aria-hidden="true">🇵🇸</span>
+        <span class="trust-item__icon mono" aria-label="فلسطين">PS</span>
         <div class="trust-item__txt">
           <b class="trust-item__title">هندسة سيادية مستقلة من غزة</b>
           <span class="trust-item__sub">ملكية فكرية وكود عربي أصيل 100% بدون تبعيات</span>
         </div>
       </div>
       <div class="trust-item">
-        <span class="trust-item__flag" aria-hidden="true">🛡️</span>
+        <span class="trust-item__icon" aria-label="حماية وتشفير"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
         <div class="trust-item__txt">
           <b class="trust-item__title">تشفير <span dir="ltr">Ed25519</span> & <span dir="ltr">Local-First</span></b>
           <span class="trust-item__sub">سيادة بيانات كاملة وصمود تشغيلي دون إنترنت</span>
         </div>
       </div>
       <div class="trust-item">
-        <span class="trust-item__flag" aria-hidden="true">📜</span>
+        <span class="trust-item__icon" aria-label="معايير معتمدة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
         <div class="trust-item__txt">
           <b class="trust-item__title">مطابقة معايير الحوسبة الدولية</b>
           <span class="trust-item__sub">سجلات تدقيق مالي <span dir="ltr">IFRS</span> وامتثال أمني متقدم</span>
@@ -1388,7 +1394,7 @@ export const sovereignDock = (ctx) => {
       <span class="dock-num">06</span>
       <span class="dock-text">التعاقد</span>
     </a>
-    <button type="button" class="sovereign-dock__pill sovereign-dock__pill--terminal" data-terminal-btn aria-label="فتح الطرفية">
+    <button type="button" class="sovereign-dock__pill sovereign-dock__pill--terminal" data-terminal-btn data-palette-open aria-label="فتح الطرفية">
       <span class="dock-icon">⌘K</span>
       <span class="dock-text">الطرفية</span>
     </button>

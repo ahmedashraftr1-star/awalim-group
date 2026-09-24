@@ -151,7 +151,7 @@ export const page = ({ site, seo, active = "", body, schema = [], bodyClass = ""
   const og = `${site.brand.url}${seo.ogImage || site.brand.ogImage}`;
   const motion = needsMotionLibs(body);
   return `<!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -196,6 +196,7 @@ ${FONT_PRELOADS.map((f) => `<link rel="preload" href="${f}" as="font" type="font
 ${schema.map(jsonld).join("\n")}
 </head>
 <body class="${[bodyClass, /data-subnav/.test(body) ? "has-subnav" : ""].filter(Boolean).join(" ")}" id="top">
+<div class="scroll-progress-bar" aria-hidden="true"></div>
 <a class="skip" href="#main">تخطَّ إلى المحتوى الرئيسي</a>
 <div class="curtain" data-curtain aria-hidden="true"><span class="curtain__mark"><img src="${site.brand.mark}" alt="" width="40" height="40"></span></div>
 <div class="cursor" data-cursor-el aria-hidden="true"><span class="cursor__l"></span></div>
@@ -216,9 +217,9 @@ ${footer(site)}
     </div>
     <nav class="sovereign-admin-bar__nav" aria-label="روابط سريعة للإدارة">
       <a href="/dashboard" class="admin-bar-link"><span>📊 لوحة التحكم</span></a>
-      <a href="/dashboard" onclick="try{localStorage.setItem('awalim_dash_active_tab','tasks')}catch(e){}" class="admin-bar-link"><span>📋 مهام Island Haven</span></a>
-      <a href="/dashboard" onclick="try{localStorage.setItem('awalim_dash_active_tab','field')}catch(e){}" class="admin-bar-link"><span>🚑 طوارئ RahmaCare</span></a>
-      <a href="/dashboard" onclick="try{localStorage.setItem('awalim_dash_active_tab','security')}catch(e){}" class="admin-bar-link"><span>🛡️ الخزنة</span></a>
+      <a href="/dashboard?tab=tasks" data-admin-tab="tasks" class="admin-bar-link"><span>📋 مهام Island Haven</span></a>
+      <a href="/dashboard?tab=field" data-admin-tab="field" class="admin-bar-link"><span>🚑 طوارئ RahmaCare</span></a>
+      <a href="/dashboard?tab=security" data-admin-tab="security" class="admin-bar-link"><span>🛡️ الخزنة</span></a>
     </nav>
     <div class="sovereign-admin-bar__act">
       <button type="button" class="btn btn--danger btn--xs" id="btn-admin-bar-lock" title="قفل جلسة الإدارة">🔒 قفل</button>
@@ -245,8 +246,8 @@ ${footer(site)}
 
       <form id="form-admin-auth-modal">
         <div style="max-width: 320px; margin: 0 auto;">
-          <input type="password" class="dash-input" id="input-admin-auth-pin" placeholder="رمز المرور أو الدخول الفوري" style="text-align: center; font-size: 1rem; margin-bottom: 0.8rem;" autocomplete="current-password">
-          <div id="admin-auth-modal-err" style="color: #EF4444; font-size: 0.8rem; min-height: 1.2rem; margin-bottom: 0.6rem;"></div>
+          <input type="password" name="admin_pin" class="dash-input" id="input-admin-auth-pin" aria-label="رمز المرور أو الدخول الفوري" placeholder="رمز المرور أو الدخول الفوري" style="text-align: center; font-size: 1rem; margin-bottom: 0.8rem;" autocomplete="current-password" aria-describedby="admin-auth-modal-err">
+          <div id="admin-auth-modal-err" role="alert" aria-live="polite" style="color: #EF4444; font-size: 0.8rem; min-height: 1.2rem; margin-bottom: 0.6rem;"></div>
           <button type="submit" class="btn btn--primary btn--sm" style="width: 100%; justify-content: center; margin-bottom: 0.6rem;">دخول لوحة التحكم ↗</button>
           <button type="button" class="btn btn--gold btn--sm" id="btn-admin-auth-quick" style="width: 100%; justify-content: center;">⚡ دخول فوري للمؤسس أحمد أشرف</button>
         </div>
@@ -258,6 +259,7 @@ ${footer(site)}
 <script src="/assets/js/awalim.js?v=${buildStamp}" defer></script>
 <script src="/assets/js/motion.js?v=${buildStamp}" defer></script>
 <script src="/assets/js/extras.js?v=${buildStamp}" defer></script>
+<script src="/assets/js/apex.js?v=${buildStamp}" defer></script>
 ${/data-ledger/.test(body) ? `<script src="/assets/js/ledger.js?v=${buildStamp}" defer></script>` : ""}
 ${/data-sec\b/.test(body) ? `<script src="/assets/js/security.js?v=${buildStamp}" defer></script>` : ""}
 </body>

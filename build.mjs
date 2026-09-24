@@ -113,6 +113,7 @@ const buildCtx = (locale) => {
     legal: hydrate(readLocale("legal.json", locale)),
     press: undraft(hydrate(readLocale("press.json", locale))),
     security: hydrate(readLocale("security.json", locale)),
+    owner: readLocale("owner.json", locale),
     /* أرقام لا نصّ: القياس واحد للّغتين، وما حوله من كلام يعيش في القالب والقاموس */
     compare: read("src/content/compare.json"),
     site: s,
@@ -185,7 +186,7 @@ ctx.routesCount = 1 + 1 + ctx.cases.length + 1 + ctx.products.length + 1 + ctx.p
 
 /* ---------- CSS: concatenate layers, extract the critical fences, minify ---------- */
 const cssDir = join(ROOT, "src/css");
-const layers = ["tokens.css", "base.css", "components.css", "motion.css", "pages.css"];
+const layers = ["tokens.css", "base.css", "components.css", "motion.css", "pages.css", "sovereign-apex.css"];
 const rawCss = layers.map((f) => readFileSync(join(cssDir, f), "utf8")).join("\n");
 const minify = (c) => c.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\s+/g, " ").replace(/\s*([{};,>])\s*/g, "$1").replace(/;}/g, "}").replace(/:\s+/g, ":").trim();
 /* tokens + base are always critical; other layers contribute only what sits inside @critical fences */
@@ -194,7 +195,7 @@ const criticalRaw = ["tokens.css", "base.css"].map((f) => readFileSync(join(cssD
 const css = "/* عوالِم قروب — built from src/css/*.css · do not edit by hand */\n" + minify(rawCss);
 const criticalCss = minify(criticalRaw);
 write("assets/css/awalim.css", css);
-const jsForStamp = ["awalim.js", "motion.js", "extras.js", "ledger.js"].map((f) => readFileSync(join(ROOT, "assets/js", f), "utf8")).join("");
+const jsForStamp = ["awalim.js", "motion.js", "extras.js", "ledger.js", "apex.js"].map((f) => readFileSync(join(ROOT, "assets/js", f), "utf8")).join("");
 let buildStamp = createHash("sha256").update(css + jsForStamp).digest("hex").slice(0, 8);
 let cssBytes = css.length, criticalBytes = criticalCss.length;
 setBuild(criticalCss, buildStamp);
@@ -314,7 +315,7 @@ function localize(html, path, loc) {
     for (const k of ["description", "og:description", "twitter:description"])
       out = out.replace(new RegExp(`(<meta[^>]*(?:property|name)="${k}"[^>]*content=")([^"]*)(")`),
         (m, a, t, b) => a + fitDesc(t) + b);
-    out = out.replace('<html lang="ar" dir="rtl">', `<html lang="${loc.code}" dir="${loc.dir}">`);
+    out = out.replace(/<html\s+lang="[^"]*"\s+dir="[^"]*"/, `<html lang="${loc.code}" dir="${loc.dir}"`);
     /* internal links move under the locale prefix; assets never do */
     out = out.replace(/(href|src)="(\/[^"#]*)"/g, (m, attr, p) => (ASSET_RE.test(p) ? m : `${attr}="${loc.prefix}${p}"`));
     /* absolute URLs in canonical, og:url and JSON-LD */

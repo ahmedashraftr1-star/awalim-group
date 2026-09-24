@@ -5,6 +5,7 @@ import * as C from "../lib/components.mjs";
 export function renderIndex(ctx) {
   const { site, stats, themes, pages } = ctx;
   const s = pages.services;
+  const isEn = ctx.locale === "en";
 
   const body = join([
     `<section class="phero">
@@ -18,7 +19,7 @@ export function renderIndex(ctx) {
     `<section class="sec sec--tight">
       <div class="wrap wrap--wide">
         <div class="indexed">
-          ${C.sideIndex([{ title: "المجالات", items: s.items.map((it) => ({ id: it.id, label: it.t })) }, { title: "", items: [{ id: "process", label: "كيف نعمل" }, { id: "standards", label: "المعايير" }, { id: "pricing", label: "كيف نُسعّر" }] }], "فهرس الخدمات")}
+          ${C.sideIndex([{ title: "المجالات", items: s.items.map((it) => ({ id: it.id, label: it.t })) }, { title: "", items: [{ id: "process", label: "كيف نعمل" }, { id: "standards", label: "المعايير" }, { id: "estimator", label: isEn ? "Scope Estimator" : "حاسبة النطاق" }, { id: "pricing", label: isEn ? "Pricing Models" : "كيف نُسعّر" }] }], "فهرس الخدمات")}
           <div class="indexed__col">
             ${s.items.map((it, i) => {
               const t = themes[it.theme];
@@ -57,6 +58,8 @@ export function renderIndex(ctx) {
         ${C.standardsGrid(site.standards)}
       </div>
     </section>`,
+
+    C.scopeEstimator(site, isEn),
 
     `<section class="sec" id="pricing">
       <div class="wrap wrap--wide">

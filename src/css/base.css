@@ -27,11 +27,16 @@
 /* ---- reset ---- */
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; }
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--nav-h) + var(--space-4)); }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--nav-h) + var(--space-4)); scroll-padding-bottom: 120px; }
+a, button, input, select, textarea, [tabindex] { scroll-margin-bottom: 120px; scroll-margin-top: calc(var(--nav-h) + var(--space-4)); }
 html:focus-within { scroll-behavior: smooth; }
 body {
   min-height: 100dvh;
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 45% at 50% -10%, rgba(24, 156, 142, 0.05), transparent 70%),
+    radial-gradient(circle at 90% 5%, rgba(138, 90, 0, 0.03), transparent 45%);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-ar);
   font-size: var(--fs-body);
@@ -60,7 +65,7 @@ p { text-wrap: pretty; }
 /* fixed لا absolute: المطلق مربوط بالمستند، فإن كانت الصفحة ممرَّرة ظلّ الرابط
    عند رأس المستند — أي فوق الشاشة — ولا يعود إليها أبداً. والزائر الذي يضغط
    Tab بعد أن قرأ نصف الصفحة هو بالضبط من يحتاجه. */
-.skip { position: fixed; inset-block-start: -100px; inset-inline-start: var(--space-4); z-index: 1000; padding: var(--space-3) var(--space-5); background: var(--accent-text); color: var(--accent-ink); font-weight: var(--w-semibold); border-radius: 0 0 var(--r-sm) var(--r-sm); transition: inset-block-start var(--d-fast) ease; }
+.skip { position: fixed; inset-block-start: -100px; inset-inline-start: var(--space-4); z-index: 100000; padding: var(--space-3) var(--space-5); background: var(--accent-text); color: var(--accent-ink); font-weight: var(--w-semibold); border-radius: 0 0 var(--r-sm) var(--r-sm); transition: inset-block-start var(--d-fast) ease; }
 .skip:focus { inset-block-start: 0; }
 
 /* ---- layout primitives ---- */
@@ -135,3 +140,14 @@ p { text-wrap: pretty; }
    beneath the bar. :where() keeps specificity at zero so the three explicit
    rules still win and this is only the default. */
 :where([id]:not(html):not(body)) { scroll-margin-top: calc(var(--nav-h) + var(--space-4)); }
+
+
+/* sovereign dark atmosphere */
+:root[data-theme="dark"] body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 240, 255, 0.06), transparent 70%),
+    radial-gradient(circle at 92% 12%, rgba(16, 185, 129, 0.04), transparent 45%),
+    radial-gradient(circle at 8% 45%, rgba(245, 158, 11, 0.03), transparent 45%);
+  background-attachment: fixed;
+}

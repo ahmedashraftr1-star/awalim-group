@@ -58,5 +58,29 @@
     "eyebrow": "Disclosure",
     "h": "Found a hole?",
     "d": "Tell us directly and we answer within one working day. We have no bounty programme yet and will not pretend otherwise — but we credit whoever reports, if they want it."
+  },
+  "raqib": {
+    "eyebrow": "AWALIM RAQIB SENTINEL · COMPLIANCE & CYBER DEFENSE",
+    "h": "Sovereign External Security Scanning & Privacy Law Compliance",
+    "lede": "Scan any domain or SaaS externally in real-time: cryptographic validation, strict headers, cookie leaks, and precise legal mapping to Egypt PDPL Law 151/2020, Saudi PDPL, and GDPR with liability calculation and instant code remediations.",
+    "target_label": "Enter target domain or SaaS URL for external scanning:",
+    "placeholder": "https://your-saas-platform.com",
+    "framework_label": "Regulatory & Legal Compliance Framework:",
+    "btn_scan": "Run Sovereign Forensic Audit",
+    "btn_export": "Download Certified Forensic Report",
+    "fines_title": "Statutory Fines & Regulatory Liability Risk",
+    "articles_title": "Egypt PDPL (Law 151/2020) Statutory Articles Mapping",
+    "remediation_title": "Instant Actionable Remediation Code",
+    "comparison_title": "Why Awalim Raqib Outperforms Traditional Scanners",
+    "tab_scanner": "Perimeter & Statutory Scanner",
+    "tab_breach": "72h Breach Protocol",
+    "tab_consent": "0KB Sovereign Consent",
+    "tab_readiness": "Readiness Diagnostic",
+    "breach_h": "72-Hour Data Breach Statutory Emergency Protocol",
+    "breach_desc": "Article 12 of Egypt PDPL and Article 24 of Saudi PDPL mandate notifying data authorities within 72 hours of discovering any data breach to avoid criminal liability.",
+    "consent_h": "0KB Zero-Tracker Sovereign Consent Banner Generator",
+    "consent_desc": "Articles 3 and 7 of Egypt PDPL explicitly void implied consent and pre-checked boxes. Generate a zero-tracker, high-converting sovereign consent banner for your web application.",
+    "readiness_h": "Institutional PDPL Readiness & Governance Diagnostic",
+    "readiness_desc": "Rapid 5-question statutory assessment measuring your organization's legal compliance posture, RoPA registry, cross-border flows, and DPO appointment."
   }
 }

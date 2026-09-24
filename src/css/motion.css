@@ -168,6 +168,54 @@
   }
 }
 
+/* ==========================================================================
+   VIEW TRANSITIONS API & SCROLL-DRIVEN PROGRESS — Level 2 Native Physics
+   ========================================================================== */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-old(root) {
+  animation-name: vt-fade-out;
+}
+
+::view-transition-new(root) {
+  animation-name: vt-fade-in;
+}
+
+@keyframes vt-fade-out {
+  from { opacity: 1; transform: scale(1); filter: blur(0px); }
+  to { opacity: 0; transform: scale(0.985); filter: blur(4px); }
+}
+
+@keyframes vt-fade-in {
+  from { opacity: 0; transform: scale(1.015); filter: blur(4px); }
+  to { opacity: 1; transform: scale(1); filter: blur(0px); }
+}
+
+/* Scroll-Driven Progress Track (Hardware Accelerated) */
+@supports (animation-timeline: scroll()) {
+  .scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00F0FF, #10B981, #2DD4BF);
+    transform-origin: 0% 50%;
+    z-index: 9999;
+    animation: scroll-progress auto linear;
+    animation-timeline: scroll(root);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+  }
+  @keyframes scroll-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+}
+
 /* ---------- reduced motion: stop everything decorative ---------- */
 @media (prefers-reduced-motion: reduce) {
   html:focus-within { scroll-behavior: auto; }
@@ -176,6 +224,7 @@
      `.kl > .kl__in` (0,2,0) and the settled heading is `.js .sec-head.in .klh
      .klh__in` (0,5,0), so a bare `.kl__in` here silently lost the cascade and
      both masks kept animating for a reader who asked for no motion. */
+  .kl, .js .sec-head .klh { overflow: visible; padding-block: 0; margin-block-end: 0; }
   .kl > .kl__in { transform: none; animation: none; }
   .js :is(.hero, .phero, .chero) .rv { animation: none; }
   .js .sec-head .klh .klh__in, .js .sec-head.in .klh .klh__in { transform: none; transition: none; }

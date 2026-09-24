@@ -36,7 +36,7 @@ export default function render(ctx) {
           </div>
         </div>
         <div class="hero__media rv" style="--i:2" data-tilt>
-          ${C.cockpit({ tilt: true, live: true, cls: "hero__dev", interactive: true })}
+          ${C.cockpit({ tilt: false, live: true, cls: "hero__dev", interactive: true })}
           <span class="hero__orb" aria-hidden="true"></span>
         </div>
       </div>
@@ -47,7 +47,7 @@ export default function render(ctx) {
               <span class="brief-pod__tag">مشروع جديد</span>
               <p class="brief-pod__p">عندك فكرة نظام مؤسسي أو أتمتة بالذكاء الاصطناعي؟ احكِ لنا عنها ونحن نتولى الباقي من النواة إلى الإنتاج.</p>
             </div>
-            ${C.btn({ href: "/contact", label: "ابدأ مشروعك الآن", kind: "primary", arrow: true })}
+            ${C.btn({ href: "/contact", label: "طلب دراسة النطاق والجدوى", kind: "primary", arrow: true })}
           </div>
           <div class="brief-pod brief-pod--glass">
             <div class="brief-pod__main">
@@ -263,8 +263,7 @@ export default function render(ctx) {
     /* 15 — CTA */
     C.ctaBand({ h: "عندك عملية تستحقّ نظاماً؟", lede: "احكِ لنا عن العملية التي تستهلك وقت فريقك اليوم. نعود إليك بتشخيص أوّلي وتقدير نطاق — دون التزام منك.", primary: { href: "/contact", label: "ابدأ محادثة", kind: "primary" }, site }),
 
-    /* 16 — SOVEREIGN FLOATING DOCK */
-    C.sovereignDock(ctx)
+    /* 16 — SOVEREIGN DOCK REMOVED (UNOBSTRUCTED VIEW) */
   ]);
 
   return {

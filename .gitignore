@@ -10,3 +10,4 @@ test-results/
 .claude/
 CLAUDE.md
 .panel-backups/
+*.zip

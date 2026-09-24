@@ -86,9 +86,15 @@ for (const r of routes) {
   /* إرسال فارغ: هل يُقال للزائر ما الخطأ، ويصل التركيز إليه؟ */
   const submit = await page.$('form button[type=submit], form input[type=submit], form button:not([type])');
   if (submit) {
-    await page.evaluate(() => { const f = document.querySelector("form"); f.setAttribute("novalidate", ""); });
-    await submit.click().catch(() => {});
-    await page.waitForTimeout(400);
+    await page.evaluate(() => {
+      const f = document.querySelector("form");
+      if (f) {
+        f.setAttribute("novalidate", "");
+        const btn = f.querySelector("button[type=submit], input[type=submit], button:not([type])");
+        if (btn) btn.click();
+      }
+    });
+    await page.waitForTimeout(100);
     const after = await page.evaluate(() => {
       const f = document.querySelector("form");
       const invalid = [...f.querySelectorAll('[aria-invalid="true"], .is-error, :invalid')].length;
