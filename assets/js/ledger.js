@@ -593,7 +593,7 @@
 
     dashTabs.forEach(function (tab) {
           var match = tab.getAttribute("data-dash-tab") === tabName;
-          tab.classList.toggle("active", match);
+          tab.classList.toggle("active", match); tab.classList.toggle("is-active", match); tab.setAttribute("aria-pressed", match ? "true" : "false"); tab.setAttribute("aria-selected", match ? "true" : "false");
         });
         dashPanels.forEach(function (panel) {
           var match = panel.getAttribute("data-dash-panel") === tabName;
@@ -2923,7 +2923,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
       svg.setAttribute("width", "100%");
       svg.setAttribute("height", h);
       svg.setAttribute("aria-hidden", "true");
-      svg.style.cssText = "display:block; overflow:visible;";
+      svg.setAttribute("class", "dash-sparkline-svg");
 
       // Gradient fill
       var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
@@ -2962,7 +2962,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
 
       // Animate stroke drawing
       var totalLen = 400;
-      line.style.cssText = "stroke-dasharray:" + totalLen + "; stroke-dashoffset:" + totalLen + "; animation: spark-draw 1.2s ease forwards;";
+      line.setAttribute("stroke-dasharray", totalLen); line.setAttribute("stroke-dashoffset", totalLen); line.setAttribute("class", "dash-sparkline-path");
       svg.appendChild(line);
 
       // Live dot at end
@@ -2973,7 +2973,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
       dot.setAttribute("cy", lastY);
       dot.setAttribute("r", "3.5");
       dot.setAttribute("fill", color);
-      dot.style.cssText = "filter: drop-shadow(0 0 4px " + color + ");";
+      dot.setAttribute("class", "dash-sparkline-dot");
       svg.appendChild(dot);
 
       // Pulse ring
@@ -2985,19 +2985,13 @@ var btnAddArticle = document.getElementById("btn-add-article");
       pulse.setAttribute("stroke", color);
       pulse.setAttribute("stroke-width", "1.5");
       pulse.setAttribute("opacity", "0.6");
-      pulse.style.animation = "spark-pulse 1.8s ease-out infinite";
+      pulse.setAttribute("class", "dash-sparkline-pulse");
       svg.appendChild(pulse);
 
       container.appendChild(svg);
     }
 
-    // Add keyframe animations inline
-    if (!document.getElementById("sparkline-keyframes")) {
-      var style = document.createElement("style");
-      style.id = "sparkline-keyframes";
-      style.textContent = "@keyframes spark-draw { to { stroke-dashoffset: 0; } } @keyframes spark-pulse { 0% { r: 6; opacity: 0.6; } 100% { r: 14; opacity: 0; } }";
-      document.head.appendChild(style);
-    }
+
 
     // Generate data with randomized variation
     function makeSparkData(base, variance, points) {
@@ -3267,7 +3261,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
     // Drawer delete button
     if (drawerDeleteBtn) {
       drawerDeleteBtn.addEventListener("click", function () {
-        if (!currentDrawerTask) return;
+        if (!currentDrawerTask) { closeTaskDrawer(); return; }
         if (confirm("هل أنت متأكد من حذف هذه المهمة السيادية نهائياً؟")) {
           var id = currentDrawerTask.id;
           tasks = tasks.filter(function (t) { return t.id !== id; });
@@ -5078,7 +5072,12 @@ function renderEmployeePortal(empCode) {
       var avatarEl = document.getElementById("portal-user-avatar");
       if (avatarEl) {
         if (emp.avatar) {
-          avatarEl.innerHTML = "<img src=\"" + emp.avatar + "\" alt=\"" + (isEn ? emp.nameEn : emp.name) + "\" style=\"width:100%; height:100%; border-radius:50%; object-fit:cover;\">";
+          avatarEl.textContent = "";
+          var img = document.createElement("img");
+          img.src = emp.avatar;
+          img.alt = isEn ? emp.nameEn : emp.name;
+          img.className = "portal-user-avatar-img";
+          avatarEl.appendChild(img);
         } else {
           var initials = (emp.nameEn || emp.name).split(" ").map(function(s){ return s[0]; }).join("").slice(0, 2).toUpperCase();
           avatarEl.textContent = initials;
@@ -6082,8 +6081,10 @@ function renderEmployeePortal(empCode) {
           var portalBtn = document.createElement("button");
           portalBtn.type = "button";
           portalBtn.className = "btn btn--outline btn--xs btn-open-staff-portal";
-          portalBtn.style.cssText = "margin-top:0.4rem; width:100%; justify-content:center;";
-          portalBtn.innerHTML = "<span>👤 " + (isEn ? "Open Employee Portal & Desk" : "فتح البوابة الإدارية والدوام") + "</span>";
+          portalBtn.className = "btn btn--outline btn--xs btn-open-staff-portal dash-w-full";
+          var spPortal = document.createElement("span");
+          spPortal.textContent = "👤 " + (isEn ? "Open Employee Portal & Desk" : "فتح البوابة الإدارية والدوام");
+          portalBtn.appendChild(spPortal);
           portalBtn.addEventListener("click", function(ev) {
             ev.stopPropagation();
             if (window.AwalimAudio) window.AwalimAudio.tap();
@@ -6102,8 +6103,10 @@ function renderEmployeePortal(empCode) {
           var bonusBtn = document.createElement("button");
           bonusBtn.type = "button";
           bonusBtn.className = "btn btn--ghost btn--xs btn-card-award-bonus";
-          bonusBtn.style.cssText = "margin-top:0.25rem; width:100%; justify-content:center; color:var(--gold,#D4AF37); border-color:rgba(212,175,55,0.25);";
-          bonusBtn.innerHTML = "<span>🏆 " + (isEn ? "Award Spot Excellence Bonus" : "صرف مكافأة تميز وإنجاز") + "</span>";
+          bonusBtn.className = "btn btn--ghost btn--xs btn-card-award-bonus dash-w-full color-gold-btn";
+          var spBonus = document.createElement("span");
+          spBonus.textContent = "🏆 " + (isEn ? "Award Spot Excellence Bonus" : "صرف مكافأة تميز وإنجاز");
+          bonusBtn.appendChild(spBonus);
           bonusBtn.addEventListener("click", function(ev) {
             ev.stopPropagation();
             openSpotBonusModal(empId);
@@ -6149,10 +6152,7 @@ function renderEmployeePortal(empCode) {
         var activeCode = userSwitcher.value || "AA-01";
         renderEmployeePortal(activeCode);
       });
-      // Initial render on load
-      setTimeout(function() {
-        renderEmployeePortal(userSwitcher.value || "AA-01");
-      }, 300);
+
     }
 
 

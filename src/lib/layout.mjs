@@ -208,7 +208,7 @@ ${body}
 ${footer(site)}
 
 <!-- Global Floating Sovereign Admin Bar (Visible when Admin User is active) -->
-<aside class="sovereign-admin-bar" id="sovereign-admin-bar" style="display: none;" aria-label="شريط تحكم يوزر الإدارة">
+<aside class="sovereign-admin-bar" id="sovereign-admin-bar" style="display: none;" aria-label="شريط تحكم يوزر الإدارة" aria-hidden="true" inert>
   <div class="sovereign-admin-bar__inner">
     <div class="sovereign-admin-bar__brand">
       <span class="admin-bar-crown">👑</span>

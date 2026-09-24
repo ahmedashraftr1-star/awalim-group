@@ -8,6 +8,37 @@
 
 (function () {
   'use strict';
+  function h(tag, attrs, ...children) {
+    const el = document.createElement(tag);
+    if (attrs) {
+      for (const k in attrs) {
+        if (Object.prototype.hasOwnProperty.call(attrs, k)) {
+          const v = attrs[k];
+          if (k === 'className') el.className = v;
+          else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2).toLowerCase(), v);
+          else el.setAttribute(k, v);
+        }
+      }
+    }
+    for (let i = 0; i < children.length; i++) {
+      const c = children[i];
+      if (c == null) continue;
+      if (Array.isArray(c)) {
+        for (let j = 0; j < c.length; j++) {
+          const item = c[j];
+          if (item == null) continue;
+          if (typeof item === 'string' || typeof item === 'number') el.appendChild(document.createTextNode(String(item)));
+          else if (item instanceof Node) el.appendChild(item);
+        }
+      } else if (typeof c === 'string' || typeof c === 'number') {
+        el.appendChild(document.createTextNode(String(c)));
+      } else if (c instanceof Node) {
+        el.appendChild(c);
+      }
+    }
+    return el;
+  }
+
 
   const isEn = document.documentElement.lang === 'en' || window.location.pathname.startsWith('/en');
 
@@ -186,23 +217,23 @@
         drop.classList.toggle('open');
         playTap();
       });
+
+      document.addEventListener('click', (e) => {
+        if (drop && !drop.contains(e.target) && e.target !== btn) {
+          drop.classList.remove('open');
+        }
+      });
+
+      drop.querySelectorAll('.sov-curr-opt').forEach(opt => {
+        opt.addEventListener('click', () => {
+          const c = opt.dataset.curr;
+          applyCurrency(c);
+          drop.classList.remove('open');
+        });
+      });
     } catch(err) {
       console.warn('Currency mount bypassed:', err);
     }
-
-    document.addEventListener('click', (e) => {
-      if (drop && !drop.contains(e.target) && e.target !== btn) {
-        drop.classList.remove('open');
-      }
-    });
-
-    drop?.querySelectorAll('.sov-curr-opt').forEach(opt => {
-      opt.addEventListener('click', () => {
-        const c = opt.dataset.curr;
-        applyCurrency(c);
-        drop.classList.remove('open');
-      });
-    });
   }
 
   // 3. INTERACTIVE 60FPS VISIONOS DEMO VIEWPORT
@@ -328,37 +359,28 @@
   function mountDemoModal() {
     if (document.getElementById('sovDemoOverlay')) return;
 
-    const overlay = document.createElement('div');
-    overlay.id = 'sovDemoOverlay';
-    overlay.className = 'sov-demo-modal-overlay';
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-modal', 'true');
-    overlay.innerHTML = `
-      <div class="sov-demo-window">
-        <div class="sov-demo-topbar">
-          <div class="sov-demo-controls">
-            <span class="sov-demo-dot close" id="sovDemoCloseDot" title="${isEn ? 'Close' : 'إغلاق'}"></span>
-            <span class="sov-demo-dot minimize" title="${isEn ? 'Minimize' : 'تصغير'}"></span>
-            <span class="sov-demo-dot maximize" title="${isEn ? 'Maximize' : 'تكبير'}"></span>
-          </div>
-          <div class="sov-demo-urlbar">
-            <span class="sov-demo-url-lock">🔒</span>
-            <span id="sovDemoUrl">https://awalim.io/live-demo</span>
-          </div>
-          <button type="button" class="sov-demo-btn-close" id="sovDemoCloseBtn" aria-label="${isEn ? 'Close Demo' : 'إغلاق العرض'}">✕</button>
-        </div>
-
-        <div class="sov-demo-tabs">
-          <button type="button" class="sov-demo-tab active" data-tab="rahmacare">${isEn ? 'RahmaCare (Medical)' : 'رحمة كير (طبي)'}</button>
-          <button type="button" class="sov-demo-tab" data-tab="accountant">${isEn ? 'Smart Accountant (IFRS)' : 'محاسب ذكي (IFRS)'}</button>
-          <button type="button" class="sov-demo-tab" data-tab="vibe">${isEn ? 'Vibe OS 4.0' : 'Vibe OS 4.0'}</button>
-        </div>
-
-        <div class="sov-demo-body" id="sovDemoBody">
-          <!-- Dynamic demo content rendered here -->
-        </div>
-      </div>
-    `;
+    const overlay = h('div', { id: 'sovDemoOverlay', className: 'sov-demo-modal-overlay', role: 'dialog', 'aria-modal': 'true' },
+      h('div', { className: 'sov-demo-window' },
+        h('div', { className: 'sov-demo-topbar' },
+          h('div', { className: 'sov-demo-controls' },
+            h('span', { className: 'sov-demo-dot close', id: 'sovDemoCloseDot', title: isEn ? 'Close' : 'إغلاق' }),
+            h('span', { className: 'sov-demo-dot minimize', title: isEn ? 'Minimize' : 'تصغير' }),
+            h('span', { className: 'sov-demo-dot maximize', title: isEn ? 'Maximize' : 'تكبير' })
+          ),
+          h('div', { className: 'sov-demo-urlbar' },
+            h('span', { className: 'sov-demo-url-lock' }, '🔒'),
+            h('span', { id: 'sovDemoUrl' }, 'https://awalim.io/live-demo')
+          ),
+          h('button', { type: 'button', className: 'sov-demo-btn-close', id: 'sovDemoCloseBtn', 'aria-label': isEn ? 'Close Demo' : 'إغلاق العرض' }, '✕')
+        ),
+        h('div', { className: 'sov-demo-tabs' },
+          h('button', { type: 'button', className: 'sov-demo-tab active', 'data-tab': 'rahmacare' }, isEn ? 'RahmaCare (Medical)' : 'رحمة كير (طبي)'),
+          h('button', { type: 'button', className: 'sov-demo-tab', 'data-tab': 'accountant' }, isEn ? 'Smart Accountant (IFRS)' : 'محاسب ذكي (IFRS)'),
+          h('button', { type: 'button', className: 'sov-demo-tab', 'data-tab': 'vibe' }, isEn ? 'Vibe OS 4.0' : 'Vibe OS 4.0')
+        ),
+        h('div', { className: 'sov-demo-body', id: 'sovDemoBody' })
+      )
+    );
 
     document.body.appendChild(overlay);
 
@@ -387,7 +409,6 @@
       });
     });
 
-    // Delegate actions inside demo modal body
     overlay.addEventListener('click', (e) => {
       if (e.target.closest('.js-chime-btn')) {
         playChime();
@@ -414,87 +435,101 @@
       t.classList.toggle('active', t.dataset.tab === demoKey);
     });
 
-    const metricsHtml = demo.metrics.map(m => `
-      <div class="sov-demo-stat-box">
-        <div class="sov-demo-stat-val">${m.num}</div>
-        <div class="sov-demo-stat-lbl">${m.label}</div>
-      </div>
-    `).join('');
-
-    const barsHtml = demo.bars.map(h => `
-      <div class="sov-demo-chart-bar" data-h="${h}" title="${h}%"></div>
-    `).join('');
-
     const liveText = isEn ? 'Live 60fps Broadcast' : 'بث حي ومباشر 60fps';
     const liveIndicator = isEn ? 'Live Performance Telemetry' : 'مؤشر الأداء اللحظي';
 
-    bodyEl.innerHTML = `
-      <div class="sov-demo-header-row">
-        <div>
-          <span class="sov-demo-badge sov-demo-badge-accent">
-            ${demo.badge}
-          </span>
-          <h3 class="sov-demo-title-txt">${demo.title}</h3>
-        </div>
-        <div class="sov-demo-live-tag">
-          <span class="sov-demo-live-dot"></span> ${liveText}
-        </div>
-      </div>
+    const statBoxes = demo.metrics.map(m =>
+      h('div', { className: 'sov-demo-stat-box' },
+        h('div', { className: 'sov-demo-stat-val' }, m.num),
+        h('div', { className: 'sov-demo-stat-lbl' }, m.label)
+      )
+    );
 
-      <div class="sov-demo-metric-grid">${metricsHtml}</div>
+    const chartBars = demo.bars.map(barH =>
+      h('div', { className: 'sov-demo-chart-bar', 'data-h': String(barH), title: barH + '%' })
+    );
 
-      <div class="sov-demo-chart-mock">
-        <div class="sov-demo-chart-header">
-          <span class="sov-demo-chart-title">${demo.chartTitle}</span>
-          <span class="sov-demo-chart-sub">${liveIndicator}</span>
-        </div>
-        <div class="sov-demo-chart-bars">${barsHtml}</div>
-      </div>
+    let actionsEl;
+    if (demoKey === 'rahmacare') {
+      actionsEl = h('div', { className: 'sov-demo-actions' },
+        h('a', { href: 'https://wa.me/970593636136?text=' + encodeURIComponent(isEn ? 'I request licensing for RahmaCare' : 'أرغب في ترخيص منظومة RahmaCare'), target: '_blank', rel: 'noopener', className: 'btn btn--primary' },
+          h('span', null, isEn ? 'Request System License ()' : 'طلب ترخيص المنظومة الطبية ()')
+        ),
+        h('button', { type: 'button', className: 'btn btn--ghost js-chime-btn' },
+          h('span', null, isEn ? 'Simulate Real-time Triage' : 'محاكاة فرز سريري لحظي')
+        )
+      );
+    } else if (demoKey === 'accountant') {
+      actionsEl = h('div', { className: 'sov-demo-actions' },
+        h('a', { href: 'https://wa.me/970593636136?text=' + encodeURIComponent(isEn ? 'I request licensing for Smart Accountant' : 'أرغب في ترخيص Smart Accountant'), target: '_blank', rel: 'noopener', className: 'btn btn--primary' },
+          h('span', null, isEn ? 'Request Accounting License ()' : 'طلب ترخيص النظام المحاسبي ()')
+        ),
+        h('button', { type: 'button', className: 'btn btn--ghost js-chime-btn' },
+          h('span', null, isEn ? 'Generate Verified Ledger Entry' : 'إصدار فاتورة تجريبية معتمدة')
+        )
+      );
+    } else {
+      actionsEl = h('div', { className: 'sov-demo-actions' },
+        h('a', { href: '/dashboard', className: 'btn btn--primary' },
+          h('span', null, isEn ? 'Launch Central Control Dashboard' : 'فتح لوحة التحكم المركزية الـ 14 جناحاً')
+        ),
+        h('button', { type: 'button', className: 'btn btn--ghost js-chime-btn' },
+          h('span', null, isEn ? 'Benchmark 60fps Glass Engine' : 'اختبار أداء المعالج 60fps')
+        )
+      );
+    }
 
-      ${demo.actions}
-    `;
-
-    // Apply CSSOM height safely (compliant with CSP)
-    bodyEl.querySelectorAll('.sov-demo-chart-bar').forEach(b => {
-      b.style.height = b.dataset.h + '%';
-    });
+    bodyEl.textContent = '';
+    bodyEl.appendChild(
+      h('div', null,
+        h('div', { className: 'sov-demo-header-row' },
+          h('div', null,
+            h('span', { className: 'sov-demo-badge sov-demo-badge-accent' }, demo.badge),
+            h('h3', { className: 'sov-demo-title-txt' }, demo.title)
+          ),
+          h('div', { className: 'sov-demo-live-tag' },
+            h('span', { className: 'sov-demo-live-dot' }),
+            ' ' + liveText
+          )
+        ),
+        h('div', { className: 'sov-demo-metric-grid' }, statBoxes),
+        h('div', { className: 'sov-demo-chart-mock' },
+          h('div', { className: 'sov-demo-chart-header' },
+            h('span', { className: 'sov-demo-chart-title' }, demo.chartTitle),
+            h('span', { className: 'sov-demo-chart-sub' }, liveIndicator)
+          ),
+          h('div', { className: 'sov-demo-chart-bars' }, chartBars)
+        ),
+        actionsEl
+      )
+    );
 
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    playChime();
+    playTap();
   }
 
-  window.SovereignDemo = { open: openDemo };
-
-  // 4. SOVEREIGN COMMS HUB (Direct Touchpoint with Ahmed Ashraf)
   function mountCommsUI() {
     if (document.getElementById('sovereignCommsTrigger')) return;
 
-    const trigger = document.createElement('div');
-    trigger.id = 'sovereignCommsTrigger';
-    trigger.className = 'sovereign-comms-trigger';
-    trigger.setAttribute('role', 'button');
-    
     const commsTitle = isEn ? 'Connect with Ahmed Ashraf' : 'تواصل مع أحمد أشرف';
     const commsSub = isEn ? 'Online now for consultation' : 'متاح الآن للاستشارة';
 
-    trigger.setAttribute('aria-label', commsTitle);
-    trigger.innerHTML = `
-      <div class="comms-trigger-avatar-wrap">
-        <img src="/assets/img/ahmed-personal.webp" alt="Ahmed Ashraf" class="comms-trigger-avatar" onerror="this.src='/assets/brand/mark.svg'">
-        <span class="comms-trigger-status" title="${commsSub}"></span>
-      </div>
-      <div class="comms-trigger-text">
-        <span class="comms-trigger-name">${commsTitle}</span>
-        <span class="comms-trigger-sub"><span class="comms-live-dot"></span> ${commsSub}</span>
-      </div>
-      <span class="comms-trigger-badge">1</span>
-    `;
+    const trigger = h('div', { id: 'sovereignCommsTrigger', className: 'sovereign-comms-trigger', role: 'button', 'aria-label': commsTitle },
+      h('div', { className: 'comms-trigger-avatar-wrap' },
+        h('img', { src: '/assets/img/ahmed-personal.webp', alt: 'Ahmed Ashraf', className: 'comms-trigger-avatar' }),
+        h('span', { className: 'comms-trigger-status', title: commsSub })
+      ),
+      h('div', { className: 'comms-trigger-text' },
+        h('span', { className: 'comms-trigger-name' }, commsTitle),
+        h('span', { className: 'comms-trigger-sub' },
+          h('span', { className: 'comms-live-dot' }),
+          ' ' + commsSub
+        )
+      ),
+      h('span', { className: 'comms-trigger-badge' }, '1')
+    );
 
-    const modal = document.createElement('div');
-    modal.id = 'sovereignCommsModal';
-    modal.className = 'sovereign-comms-modal';
-    
     const modalSub = isEn ? 'Direct Line · Founder & Chief Architect' : 'قناة التوجيه المباشر · المؤسس والمعماري';
     const quickTitle = isEn ? 'Quick Inquiries:' : 'مواضيع سريعة:';
     const chip1 = isEn ? 'System Architecture' : 'معمارية النظم';
@@ -503,36 +538,33 @@
     const placeholder = isEn ? 'Write your message to Ahmed Ashraf...' : 'اكتب استفسارك أو تفاصيل مشروعك هنا...';
     const sendBtnLbl = isEn ? 'Send' : 'إرسال';
 
-    modal.innerHTML = `
-      <div class="comms-header">
-        <div class="comms-header-info">
-          <img src="/assets/img/ahmed-personal.webp" alt="Ahmed Ashraf" class="comms-header-avatar" onerror="this.src='/assets/brand/mark.svg'">
-          <div>
-            <div class="comms-header-title">أحمد أشرف · Ahmed Ashraf</div>
-            <div class="comms-header-sub">${modalSub}</div>
-          </div>
-        </div>
-        <button type="button" class="comms-close-btn" id="sovereignCommsClose" aria-label="${isEn ? 'Close' : 'إغلاق'}">✕</button>
-      </div>
-
-      <div class="comms-body" id="sovereignCommsMsgs">
-        <div class="comms-msg founder">
-          ${isEn ? 'Welcome! I am Ahmed Ashraf, Chief Architect at Awalim Group. How can we accelerate your enterprise architecture today?' : 'أهلاً بك! أنا أحمد أشرف، المعماري التقني ومؤسس مجموعة عوالِم. يسعدني مناقشة متطلبات مشروعك، بنية أنظمتك السحابية، أو ترخيص حلولنا السيادية مباشرة.'}
-        </div>
-      </div>
-
-      <div class="comms-chips-wrap">
-        <span class="comms-chips-title">${quickTitle}</span>
-        <button type="button" class="comms-quick-chip" data-text="${chip1}">${chip1}</button>
-        <button type="button" class="comms-quick-chip" data-text="${chip2}">${chip2}</button>
-        <a href="https://wa.me/970593636136" target="_blank" rel="noopener" class="comms-quick-chip comms-chip-wa">${chip3} ↗</a>
-      </div>
-
-      <div class="comms-footer">
-        <input type="text" class="comms-input" id="commsInput" placeholder="${placeholder}">
-        <button type="button" class="comms-send-btn" id="commsSendBtn">${sendBtnLbl}</button>
-      </div>
-    `;
+    const modal = h('div', { id: 'sovereignCommsModal', className: 'sovereign-comms-modal' },
+      h('div', { className: 'comms-header' },
+        h('div', { className: 'comms-header-info' },
+          h('img', { src: '/assets/img/ahmed-personal.webp', alt: 'Ahmed Ashraf', className: 'comms-header-avatar' }),
+          h('div', null,
+            h('div', { className: 'comms-header-title' }, 'أحمد أشرف · Ahmed Ashraf'),
+            h('div', { className: 'comms-header-sub' }, modalSub)
+          )
+        ),
+        h('button', { type: 'button', className: 'comms-close-btn', id: 'sovereignCommsClose', 'aria-label': isEn ? 'Close' : 'إغلاق' }, '✕')
+      ),
+      h('div', { className: 'comms-body', id: 'sovereignCommsMsgs' },
+        h('div', { className: 'comms-msg founder' },
+          isEn ? 'Welcome! I am Ahmed Ashraf, Chief Architect at Awalim Group. How can we accelerate your enterprise architecture today?' : 'أهلاً بك! أنا أحمد أشرف، المعماري التقني ومؤسس مجموعة عوالِم. يسعدني مناقشة متطلبات مشروعك، بنية أنظمتك السحابية، أو ترخيص حلولنا السيادية مباشرة.'
+        )
+      ),
+      h('div', { className: 'comms-chips-wrap' },
+        h('span', { className: 'comms-chips-title' }, quickTitle),
+        h('button', { type: 'button', className: 'comms-quick-chip', 'data-text': chip1 }, chip1),
+        h('button', { type: 'button', className: 'comms-quick-chip', 'data-text': chip2 }, chip2),
+        h('a', { href: 'https://wa.me/970593636136', target: '_blank', rel: 'noopener', className: 'comms-quick-chip comms-chip-wa' }, chip3 + ' ↗')
+      ),
+      h('div', { className: 'comms-footer' },
+        h('input', { type: 'text', className: 'comms-input', id: 'commsInput', placeholder: placeholder }),
+        h('button', { type: 'button', className: 'comms-send-btn', id: 'commsSendBtn' }, sendBtnLbl)
+      )
+    );
 
     document.body.appendChild(trigger);
     document.body.appendChild(modal);
@@ -578,10 +610,16 @@
       setTimeout(() => {
         const rMsg = document.createElement('div');
         rMsg.className = 'comms-msg founder';
-        const replyText = isEn 
-          ? `Message received! You can also reach me directly on my private WhatsApp: <a href="https://wa.me/970593636136?text=${encodeURIComponent(text)}" target="_blank" class="comms-wa-link">Click here to open WhatsApp</a>`
-          : `وصلت رسالتك يا أستاذي الكريم! يمكنك أيضاً إرسال تفاصيل مشروعك مباشرة إلى واتساب الشخصي: <a href="https://wa.me/970593636136?text=${encodeURIComponent(text)}" target="_blank" class="comms-wa-link">اضغط هنا للتحويل الفوري لواتساب</a>`;
-        rMsg.innerHTML = replyText;
+        rMsg.textContent = isEn 
+          ? 'Message received! You can also reach me directly on my private WhatsApp: '
+          : 'وصلت رسالتك يا أستاذي الكريم! يمكنك أيضاً إرسال تفاصيل مشروعك مباشرة إلى واتساب الشخصي: ';
+        const waLink = h('a', {
+          href: 'https://wa.me/970593636136?text=' + encodeURIComponent(text),
+          target: '_blank',
+          rel: 'noopener',
+          className: 'comms-wa-link'
+        }, isEn ? 'Click here to open WhatsApp' : 'اضغط هنا للتحويل الفوري لواتساب');
+        rMsg.appendChild(waLink);
         msgs.appendChild(rMsg);
         playChime();
         msgs.scrollTop = msgs.scrollHeight;

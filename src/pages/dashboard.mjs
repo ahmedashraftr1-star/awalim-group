@@ -141,7 +141,7 @@ export default function dashboard(ctx) {
         </div>
 <!-- Navigation Tabs Rail (Sovereign Owner Cockpit & Modules) -->
         <nav class="dash-nav-rail" aria-label="${t("أقسام لوحة التحكم", "Dashboard Sections Navigation")}">
-          <button type="button" class="dash-tab-btn active" data-dash-tab="overview">
+          <button type="button" class="dash-tab-btn active is-active" data-dash-tab="overview" aria-pressed="true" aria-selected="true">
             <span class="dash-tab-icon">${icon("gauge", "dash-tab-svg")}</span>
             <span>${t("نظرة عامة والتحليلات", "Overview & Analytics")}</span>
           </button>
@@ -638,28 +638,28 @@ export default function dashboard(ctx) {
 
             <div class="dash-editor-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
               <div class="dash-field-group">
-                <label class="dash-label">${t("الأنظمة المسلّمة (Systems Delivered)", "Systems Delivered")}</label>
-                <input type="number" class="dash-input mono" id="stat-input-systems" value="50">
+                <label class="dash-label" for="stat-input-systems">${t("الأنظمة المسلّمة (Systems Delivered)", "Systems Delivered")}</label>
+                <input type="number" class="dash-input mono" id="stat-input-systems" value="50" aria-label="${t("الأنظمة المسلّمة", "Systems Delivered")}">
               </div>
               <div class="dash-field-group">
-                <label class="dash-label">${t("المهندسون المتدربون (Engineers Trained)", "Engineers Trained")}</label>
-                <input type="number" class="dash-input mono" id="stat-input-engineers" value="1200">
+                <label class="dash-label" for="stat-input-engineers">${t("المهندسون المتدربون (Engineers Trained)", "Engineers Trained")}</label>
+                <input type="number" class="dash-input mono" id="stat-input-engineers" value="1200" aria-label="${t("المهندسون المتدربون", "Engineers Trained")}">
               </div>
               <div class="dash-field-group">
-                <label class="dash-label">${t("الخريجون المعتمدون (Certified Graduates)", "Certified Graduates")}</label>
-                <input type="number" class="dash-input mono" id="stat-input-graduates" value="682">
+                <label class="dash-label" for="stat-input-graduates">${t("الخريجون المعتمدون (Certified Graduates)", "Certified Graduates")}</label>
+                <input type="number" class="dash-input mono" id="stat-input-graduates" value="682" aria-label="${t("الخريجون المعتمدون", "Certified Graduates")}">
               </div>
               <div class="dash-field-group">
-                <label class="dash-label">${t("الدول المخدومة (Client Countries)", "Client Countries")}</label>
-                <input type="number" class="dash-input mono" id="stat-input-countries" value="10">
+                <label class="dash-label" for="stat-input-countries">${t("الدول المخدومة (Client Countries)", "Client Countries")}</label>
+                <input type="number" class="dash-input mono" id="stat-input-countries" value="10" aria-label="${t("الدول المخدومة", "Client Countries")}">
               </div>
               <div class="dash-field-group">
-                <label class="dash-label">${t("سنوات البناء (Years Building)", "Years Building")}</label>
-                <input type="number" class="dash-input mono" id="stat-input-years" value="8">
+                <label class="dash-label" for="stat-input-years">${t("سنوات البناء (Years Building)", "Years Building")}</label>
+                <input type="number" class="dash-input mono" id="stat-input-years" value="8" aria-label="${t("سنوات البناء", "Years Building")}">
               </div>
               <div class="dash-field-group">
-                <label class="dash-label">${t("شارة التوفر للتعاقد (Availability Badge)", "Availability Badge")}</label>
-                <input type="text" class="dash-input" id="stat-input-availability" value="${t("متاحون لمشاريع الربع القادم", "Available for next quarter deployments")}">
+                <label class="dash-label" for="stat-input-availability">${t("شارة التوفر للتعاقد (Availability Badge)", "Availability Badge")}</label>
+                <input type="text" class="dash-input" id="stat-input-availability" value="${t("متاحون لمشاريع الربع القادم", "Available for next quarter deployments")}" aria-label="${t("شارة التوفر للتعاقد", "Availability Badge")}">
               </div>
             </div>
           </div>

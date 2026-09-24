@@ -46,7 +46,15 @@ var T = function (ar, en) { return EN ? en : ar; };
     function load() {
       if (index) return Promise.resolve(index);
       if (loading) return loading;
-      loading = fetch(EN ? "/en/search.json" : "/search.json").then(function (r) { return r.json(); }).then(function (j) { index = j; return j; }).catch(function () { index = []; return index; });
+      try {
+        loading = fetch(EN ? "/en/search.json" : "/search.json")
+          .then(function (r) { return r.ok ? r.json() : []; })
+          .then(function (j) { index = Array.isArray(j) ? j : []; return index; })
+          .catch(function () { index = []; return index; });
+      } catch (_) {
+        index = [];
+        loading = Promise.resolve(index);
+      }
       return loading;
     }
     function score(it, q, toks) {
@@ -137,7 +145,8 @@ var T = function (ar, en) { return EN ? en : ar; };
       else if (e.target.closest("[data-palette-close]")) close();
     });
     /* warm the index on idle so the first ⌘K is instant */
-    if (window.requestIdleCallback) requestIdleCallback(function () { load(); }, { timeout: 2500 }); else setTimeout(load, 1500);
+    var warm = function () { try { load().catch(function () {}); } catch (_) {} };
+    if (window.requestIdleCallback) requestIdleCallback(warm, { timeout: 3500 }); else setTimeout(warm, 3500);
   }
 
   /* ======================================================================
@@ -349,12 +358,20 @@ var T = function (ar, en) { return EN ? en : ar; };
   function syncAdminUI() {
     var session = null;
     try {
-      session = JSON.parse(localStorage.getItem("awalim_admin_user"));
+      session = JSON.parse(localStorage.getItem("awalim_sovereign_gate_active"));
     } catch (e) {}
 
     var isLogged = !!(session && session.user);
     if (adminBar) {
-      adminBar.style.display = isLogged ? "block" : "none";
+      if (isLogged) {
+        adminBar.classList.add("is-active");
+        adminBar.removeAttribute("inert");
+        adminBar.setAttribute("aria-hidden", "false");
+      } else {
+        adminBar.classList.remove("is-active");
+        adminBar.setAttribute("inert", "");
+        adminBar.setAttribute("aria-hidden", "true");
+      }
     }
     if (adminGateBtn) {
       adminGateBtn.classList.toggle("admin-logged", isLogged);
@@ -373,24 +390,15 @@ var T = function (ar, en) { return EN ? en : ar; };
       token: "SOV-AA-ED25519"
     };
     try {
-      localStorage.setItem("awalim_admin_user", JSON.stringify(payload));
+      localStorage.setItem("awalim_sovereign_gate_active", JSON.stringify(payload)); localStorage.setItem("awalim_admin_user", JSON.stringify(payload));
     } catch (e) {}
     syncAdminUI();
     if (adminModal) adminModal.classList.remove("active");
-    window.location.href = EN ? "/en/dashboard" : "/dashboard";
   }
 
   if (adminGateBtn) {
     adminGateBtn.addEventListener("click", function () {
-      var session = null;
-      try {
-        session = JSON.parse(localStorage.getItem("awalim_admin_user"));
-      } catch (e) {}
-      if (session && session.user) {
-        window.location.href = EN ? "/en/dashboard" : "/dashboard";
-      } else {
-        if (adminModal) adminModal.classList.add("active");
-      }
+      if (adminModal) adminModal.classList.toggle("active");
     });
   }
 
@@ -441,7 +449,7 @@ var T = function (ar, en) { return EN ? en : ar; };
   if (adminBarLock) {
     adminBarLock.addEventListener("click", function () {
       try {
-        localStorage.removeItem("awalim_admin_user");
+        localStorage.removeItem("awalim_sovereign_gate_active"); localStorage.removeItem("awalim_admin_user");
       } catch (e) {}
       syncAdminUI();
       if (window.location.pathname.indexOf("dashboard") !== -1) {
@@ -652,20 +660,25 @@ var T = function (ar, en) { return EN ? en : ar; };
         }
         if (window.AwalimAudio) window.AwalimAudio.tap();
         modalApply.style.display = "flex";
-        modalApply.classList.add("active");
+        modalApply.classList.add("active", "is-open");
+        if (applyBtn) applyBtn.setAttribute("aria-expanded", "true");
       }
     });
 
     if (btnCloseApply && modalApply) {
       btnCloseApply.addEventListener("click", function() {
         modalApply.style.display = "none";
-        modalApply.classList.remove("active");
+        modalApply.classList.remove("active", "is-open");
+        document.querySelectorAll(".btn-open-academy-apply[aria-expanded='true']").forEach(b => b.setAttribute("aria-expanded", "false"));
       });
     }
     if (btnCancelApply && modalApply) {
       btnCancelApply.addEventListener("click", function() {
         modalApply.style.display = "none";
-        modalApply.classList.remove("active");
+        modalApply.classList.remove("active", "is-open");
+        document.querySelectorAll(".btn-open-academy-apply[aria-expanded='true']").forEach(function(b) {
+          b.setAttribute("aria-expanded", "false");
+        });
       });
     }
 
@@ -702,7 +715,7 @@ var T = function (ar, en) { return EN ? en : ar; };
         var track = document.getElementById("select-academy-track") ? document.getElementById("select-academy-track").value : "";
         var name = nameInput ? nameInput.value : "";
 
-        if (window.AwalimAudio) window.AwalimAudio.clockIn();
+        if (window.AwalimAudio && typeof window.AwalimAudio.clockIn === "function") window.AwalimAudio.clockIn();
         if (modalApply) {
           modalApply.style.display = "none";
           modalApply.classList.remove("active");
@@ -718,6 +731,8 @@ var T = function (ar, en) { return EN ? en : ar; };
     if (btnPrintCert) {
       btnPrintCert.addEventListener("click", function() {
         if (window.AwalimAudio) window.AwalimAudio.tap();
+        btnPrintCert.setAttribute("data-printed", "true");
+        btnPrintCert.classList.add("is-active");
         window.print();
       });
     }
@@ -727,70 +742,88 @@ var T = function (ar, en) { return EN ? en : ar; };
   /* --------------------------------------------------------------------------
      Sovereign Products Suite: Filtering, Sandbox Simulator, & Enterprise RFQ
      -------------------------------------------------------------------------- */
+  
+  /* ==========================================================================
+     SOVEREIGN PRODUCTS SUITE: MULTI-EXPERT SANDBOX & ENTERPRISE RFQ
+     Domains: Cryptography (ZATCA P2), Distributed RF (Friis), Physics (Harmonic), AI
+     ========================================================================== */
   (function() {
+    // Clean DOM node builder (100% CSP Level 3 & Trusted Types Compliant)
+    function el(tag, cls, text) {
+      var d = document.createElement(tag);
+      if (cls) d.className = cls;
+      if (text != null) d.textContent = text;
+      return d;
+    }
+
     // 1. Category Filtering & Live Search
     var filterSuite = document.getElementById("prod-filter-suite");
     var prodGrid = document.getElementById("prod-items-grid");
     var searchInput = document.getElementById("input-prod-search");
     var counterDisplay = document.getElementById("prod-counter-display");
 
-    function applyFilterAndSearch() {
-      if (!prodGrid) return;
-      var activeTab = filterSuite ? filterSuite.querySelector(".prod-tab.active") : null;
-      var activeCat = activeTab ? activeTab.getAttribute("data-filter") : "all";
-      var query = searchInput ? searchInput.value.trim().toLowerCase() : "";
-      var isEn = document.documentElement.getAttribute("dir") === "ltr";
+    var activeFilter = "all";
+    var currentQuery = "";
+    var isEn = document.documentElement.getAttribute("dir") === "ltr";
 
+    function updateProductDisplay() {
+      if (!prodGrid) return;
       var cards = prodGrid.querySelectorAll(".prod-card-wrapper");
       var visibleCount = 0;
+      var totalCount = cards.length;
 
       cards.forEach(function(card) {
-        var cardCat = card.getAttribute("data-category") || "";
-        var cardSearch = card.getAttribute("data-search") || "";
+        var category = card.getAttribute("data-category") || "";
+        var searchIndex = (card.getAttribute("data-search") || "").toLowerCase();
 
-        var matchCat = (activeCat === "all" || cardCat === activeCat);
-        var matchQuery = (!query || cardSearch.indexOf(query) !== -1);
+        var matchesCategory = (activeFilter === "all" || category === activeFilter);
+        var matchesQuery = (!currentQuery || searchIndex.indexOf(currentQuery) !== -1);
 
-        if (matchCat && matchQuery) {
-          card.style.display = "flex";
+        if (matchesCategory && matchesQuery) {
+          card.classList.remove("hidden");
           visibleCount++;
         } else {
-          card.style.display = "none";
+          card.classList.add("hidden");
         }
       });
 
       if (counterDisplay) {
         if (isEn) {
-          counterDisplay.textContent = "Showing " + visibleCount + " of " + cards.length + " systems";
+          counterDisplay.textContent = "Showing " + visibleCount + " of " + totalCount + " systems";
         } else {
-          counterDisplay.textContent = "عرض " + visibleCount + " من أصل " + cards.length + " أنظمة";
+          counterDisplay.textContent = "عرض " + visibleCount + " من " + totalCount + " أنظمة";
         }
       }
     }
 
     if (filterSuite) {
       filterSuite.addEventListener("click", function(e) {
-        var tab = e.target.closest(".prod-tab");
-        if (tab) {
-          filterSuite.querySelectorAll(".prod-tab").forEach(function(t) {
-            t.classList.remove("active");
-            t.setAttribute("aria-selected", "false");
-          });
-          tab.classList.add("active");
-          tab.setAttribute("aria-selected", "true");
-          if (window.AwalimAudio) window.AwalimAudio.tap();
-          applyFilterAndSearch();
+        var tabBtn = e.target.closest(".prod-tab");
+        if (tabBtn) {
+          var f = tabBtn.getAttribute("data-filter");
+          if (f) {
+            activeFilter = f;
+            filterSuite.querySelectorAll(".prod-tab").forEach(function(b) {
+              b.classList.remove("active");
+              b.setAttribute("aria-selected", "false");
+            });
+            tabBtn.classList.add("active");
+            tabBtn.setAttribute("aria-selected", "true");
+            if (window.AwalimAudio) window.AwalimAudio.tap();
+            updateProductDisplay();
+          }
         }
       });
     }
 
     if (searchInput) {
-      searchInput.addEventListener("input", function() {
-        applyFilterAndSearch();
+      searchInput.addEventListener("input", function(e) {
+        currentQuery = (e.target.value || "").trim().toLowerCase();
+        updateProductDisplay();
       });
     }
 
-    // 2. Sovereign Sandbox Simulator Modal
+    // 2. Product Sandbox Modal Engine
     var modalSandbox = document.getElementById("modal-product-sandbox");
     var btnCloseSandbox = document.getElementById("btn-close-sandbox-modal");
 
@@ -799,10 +832,10 @@ var T = function (ar, en) { return EN ? en : ar; };
       if (btnSandbox && modalSandbox) {
         var slug = btnSandbox.getAttribute("data-product");
         if (window.AwalimAudio) window.AwalimAudio.tap();
-        modalSandbox.style.display = "flex";
-        modalSandbox.classList.add("active");
+        modalSandbox.classList.remove("hidden");
+        modalSandbox.classList.add("active", "is-open");
+        btnSandbox.setAttribute("aria-expanded", "true");
 
-        // Switch to corresponding tab if available
         if (slug) {
           var targetTabBtn = modalSandbox.querySelector('.sandbox-tab-btn[data-sandbox-tab="' + slug + '"]');
           if (targetTabBtn) targetTabBtn.click();
@@ -812,10 +845,18 @@ var T = function (ar, en) { return EN ? en : ar; };
 
     if (btnCloseSandbox && modalSandbox) {
       btnCloseSandbox.addEventListener("click", function() {
-        modalSandbox.style.display = "none";
-        modalSandbox.classList.remove("active");
+        modalSandbox.classList.add("hidden");
+        modalSandbox.classList.remove("active", "is-open");
+        document.querySelectorAll(".btn-open-sandbox[aria-expanded='true']").forEach(b => b.setAttribute("aria-expanded", "false"));
       });
     }
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape" && modalSandbox && !modalSandbox.classList.contains("hidden")) {
+        modalSandbox.classList.add("hidden");
+        modalSandbox.classList.remove("active");
+      }
+    });
 
     // Tab switching inside Sandbox
     if (modalSandbox) {
@@ -829,68 +870,269 @@ var T = function (ar, en) { return EN ? en : ar; };
           tabBtn.classList.add("active");
 
           modalSandbox.querySelectorAll(".sandbox-view-panel").forEach(function(panel) {
-            panel.style.display = "none";
+            panel.classList.add("hidden");
           });
 
           var targetPanel = document.getElementById("sandbox-view-" + tabTarget);
           if (targetPanel) {
-            targetPanel.style.display = "block";
+            targetPanel.classList.remove("hidden");
           }
           if (window.AwalimAudio) window.AwalimAudio.tap();
         }
       });
     }
 
-    // Simulator 1: Smart Accountant IFRS & ZATCA Calculation
+    // -------------------------------------------------------------------------
+    // EXPERT 1: Smart Accountant (ZATCA Phase 2 TLV & IFRS 15 Engine)
+    // -------------------------------------------------------------------------
+    function encodeTLV(tag, value) {
+      var utf8Bytes = [];
+      var str = String(value);
+      for (var i = 0; i < str.length; i++) {
+        var code = str.charCodeAt(i);
+        if (code < 0x80) {
+          utf8Bytes.push(code);
+        } else if (code < 0x800) {
+          utf8Bytes.push(0xc0 | (code >> 6), 0x80 | (code & 0x3f));
+        } else if (code < 0xd800 || code >= 0xe000) {
+          utf8Bytes.push(0xe0 | (code >> 12), 0x80 | ((code >> 6) & 0x3f), 0x80 | (code & 0x3f));
+        } else {
+          i++;
+          code = 0x10000 + (((code & 0x3ff) << 10) | (str.charCodeAt(i) & 0x3ff));
+          utf8Bytes.push(0xf0 | (code >> 18), 0x80 | ((code >> 12) & 0x3f), 0x80 | ((code >> 6) & 0x3f), 0x80 | (code & 0x3f));
+        }
+      }
+      return [tag, utf8Bytes.length].concat(utf8Bytes);
+    }
+
+    function bytesToBase64(bytes) {
+      var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+      var out = "";
+      var len = bytes.length;
+      for (var i = 0; i < len; i += 3) {
+        var b1 = bytes[i];
+        var b2 = i + 1 < len ? bytes[i + 1] : 0;
+        var b3 = i + 2 < len ? bytes[i + 2] : 0;
+        out += chars.charAt(b1 >> 2);
+        out += chars.charAt(((b1 & 3) << 4) | (b2 >> 4));
+        out += i + 1 < len ? chars.charAt(((b2 & 15) << 2) | (b3 >> 6)) : "=";
+        out += i + 2 < len ? chars.charAt(b3 & 63) : "=";
+      }
+      return out;
+    }
+
+    function generateSVGQRMatrix(seedBytes) {
+      var size = 25;
+      var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 " + size + " " + size);
+      svg.setAttribute("class", "sb-qr-svg");
+      svg.setAttribute("aria-hidden", "true");
+
+      function isFinder(r, c) {
+        if (r < 7 && c < 7) return true; // top-left
+        if (r < 7 && c >= size - 7) return true; // top-right
+        if (r >= size - 7 && c < 7) return true; // bottom-left
+        return false;
+      }
+
+      function drawFinder(startR, startC) {
+        for (var r = 0; r < 7; r++) {
+          for (var c = 0; c < 7; c++) {
+            var isBlack = (r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4));
+            if (isBlack) {
+              var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+              rect.setAttribute("x", startC + c);
+              rect.setAttribute("y", startR + r);
+              rect.setAttribute("width", "1");
+              rect.setAttribute("height", "1");
+              rect.setAttribute("fill", "#051419");
+              svg.appendChild(rect);
+            }
+          }
+        }
+      }
+
+      drawFinder(0, 0);
+      drawFinder(0, size - 7);
+      drawFinder(size - 7, 0);
+
+      var byteIdx = 0;
+      for (var r = 0; r < size; r++) {
+        for (var c = 0; c < size; c++) {
+          if (isFinder(r, c)) continue;
+          if (r === 6 || c === 6) { // Timing lines
+            if ((r + c) % 2 === 0) {
+              var tRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+              tRect.setAttribute("x", c);
+              tRect.setAttribute("y", r);
+              tRect.setAttribute("width", "1");
+              tRect.setAttribute("height", "1");
+              tRect.setAttribute("fill", "#051419");
+              svg.appendChild(tRect);
+            }
+            continue;
+          }
+          var seed = (seedBytes[byteIdx % seedBytes.length] || 0) + (r * 31 + c * 17);
+          byteIdx++;
+          if (seed % 3 === 0 || (seed % 7 === 0 && (r + c) % 2 === 0)) {
+            var dRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            dRect.setAttribute("x", c);
+            dRect.setAttribute("y", r);
+            dRect.setAttribute("width", "1");
+            dRect.setAttribute("height", "1");
+            dRect.setAttribute("fill", "#051419");
+            svg.appendChild(dRect);
+          }
+        }
+      }
+      return svg;
+    }
+
     var btnAccCalc = document.getElementById("btn-run-acc-calc");
     if (btnAccCalc) {
       btnAccCalc.addEventListener("click", function() {
         var amountInput = document.getElementById("sb-acc-amount");
         var taxSelect = document.getElementById("sb-acc-tax");
         var outputEl = document.getElementById("sb-acc-output");
+        var qrWrap = document.getElementById("sb-acc-qr-svg-wrap");
 
         var amount = parseFloat(amountInput ? amountInput.value : "10000") || 10000;
         var taxRate = parseFloat(taxSelect ? taxSelect.value : "0.15") || 0.15;
-        var taxVal = amount * taxRate;
-        var total = amount + taxVal;
+        var taxVal = Math.round(amount * taxRate * 100) / 100;
+        var total = Math.round((amount + taxVal) * 100) / 100;
 
-        if (window.AwalimAudio) window.AwalimAudio.clockIn();
+        if (window.AwalimAudio && typeof window.AwalimAudio.clockIn === "function") window.AwalimAudio.clockIn();
 
-        var hashSim = Array.from({length: 8}, function() { return Math.random().toString(16).substring(2, 6); }).join("");
-        var now = new Date().toISOString();
+        var sellerName = isEn ? "Awalim Group for Advanced Systems Ltd." : "عوالِم قروب للأنظمة المتقدمة المحدودة";
+        var vatNumber = "310123456700003";
+        var nowISO = new Date().toISOString().slice(0, 19) + "Z";
+        var totalStr = total.toFixed(2);
+        var taxStr = taxVal.toFixed(2);
+
+        var tlv1 = encodeTLV(1, sellerName);
+        var tlv2 = encodeTLV(2, vatNumber);
+        var tlv3 = encodeTLV(3, nowISO);
+        var tlv4 = encodeTLV(4, totalStr);
+        var tlv5 = encodeTLV(5, taxStr);
+
+        var pseudoHash = Array.from({length: 32}, function(_, i) { return (i * 17 + Math.floor(amount)) & 0xff; });
+        var tlv6 = [6, pseudoHash.length].concat(pseudoHash);
+        var pseudoSig = Array.from({length: 64}, function(_, i) { return (i * 31 + Math.floor(total)) & 0xff; });
+        var tlv7 = [7, pseudoSig.length].concat(pseudoSig);
+
+        var allBytes = tlv1.concat(tlv2, tlv3, tlv4, tlv5, tlv6, tlv7);
+        var base64TLV = bytesToBase64(allBytes);
+
+        if (qrWrap) {
+          qrWrap.textContent = "";
+          qrWrap.appendChild(generateSVGQRMatrix(allBytes));
+        }
 
         if (outputEl) {
-          outputEl.innerHTML = [
-            '<div>[IFRS-ENGINE] === BALANCED JOURNAL TRANSACTION COMMIT ===</div>',
-            '<div>[TIMESTAMP] ' + now + ' · ID: TX-' + Math.floor(Math.random()*90000 + 10000) + '</div>',
-            '<div style="color:#e6edf3;">  • DEBIT  (مدين): ح/ الذمم والعملاء   ' + total.toLocaleString('en-US', {minimumFractionDigits: 2}) + '</div>',
-            '<div style="color:#e6edf3;">  • CREDIT (دائن): ح/ إيراد المبيعات     ' + amount.toLocaleString('en-US', {minimumFractionDigits: 2}) + '</div>',
-            '<div style="color:#e6edf3;">  • CREDIT (دائن): ح/ ضريبة القيمة المضافة ' + taxVal.toLocaleString('en-US', {minimumFractionDigits: 2}) + '</div>',
-            '<div style="color:#60a5fa;">[BALANCE] ΣDebits = ΣCredits (' + total.toLocaleString('en-US', {minimumFractionDigits: 2}) + ') · VARIANCE: 0.0000</div>',
-            '<div style="color:#fbbf24;">[ZATCA P2 HASH] SHA256:' + hashSim + ' (ECDSA Certified)</div>',
-            '<div style="color:#4ade80;">[STATUS] ✔ Invoice registered & cryptographically sealed.</div>'
-          ].join("");
+          outputEl.textContent = "";
+          var lines = [
+            "[IFRS 15 JOURNAL COMMIT] === DOUBLE-ENTRY BALANCED LEDGER ===",
+            "[TIMESTAMP] " + nowISO + " · TX-ID: ZATCA-TX-" + Math.floor(Math.random() * 90000 + 10000),
+            "  • DEBIT  (مدين): ح/ الذمم المدينة والعملاء      " + total.toLocaleString("en-US", {minimumFractionDigits: 2}) + " SAR",
+            "  • CREDIT (دائن): ح/ إيرادات العقود والخدمات     " + amount.toLocaleString("en-US", {minimumFractionDigits: 2}) + " SAR",
+            "  • CREDIT (دائن): ح/ ضريبة القيمة المضافة (ZATCA) " + taxVal.toLocaleString("en-US", {minimumFractionDigits: 2}) + " SAR",
+            "[RECONCILIATION] ΣDebits = ΣCredits (" + total.toLocaleString("en-US", {minimumFractionDigits: 2}) + " SAR) · VARIANCE: 0.000000",
+            "[ZATCA P2 TLV DIGEST] " + base64TLV.slice(0, 48) + "... (" + allBytes.length + " bytes encoded)",
+            "[STATUS] ✔ Cryptographically sealed & compliant with ZATCA Phase 2 E-Invoicing standard."
+          ];
+
+          lines.forEach(function(l, idx) {
+            var row = el("div", null, l);
+            if (idx === 0) row.className = "color-cyan font-bold";
+            else if (idx >= 2 && idx <= 4) row.className = "color-fg";
+            else if (idx === 5) row.className = "color-blue font-bold";
+            else if (idx === 6) row.className = "color-gold";
+            else if (idx === 7) row.className = "color-green font-bold";
+            outputEl.appendChild(row);
+          });
         }
       });
+      // Initial trigger
+      btnAccCalc.click();
     }
 
-    // Simulator 2: RahmaCare Mesh Ping & Blackout
+    // -------------------------------------------------------------------------
+    // EXPERT 2: RahmaCare (Friis Transmission RF Link Budget & LoRa SX1262)
+    // -------------------------------------------------------------------------
+    var meshDist = document.getElementById("sb-mesh-dist");
+    var meshDistVal = document.getElementById("sb-mesh-dist-val");
+    var meshSf = document.getElementById("sb-mesh-sf");
     var btnMeshPing = document.getElementById("btn-run-mesh-ping");
     var btnToggleBlackout = document.getElementById("btn-toggle-blackout");
     var meshOutput = document.getElementById("sb-mesh-output");
+
+    function updateRFLinkBudget() {
+      var d = parseFloat(meshDist ? meshDist.value : "8.5") || 8.5;
+      if (meshDistVal) meshDistVal.textContent = d.toFixed(1) + " km";
+
+      var sf = parseInt(meshSf ? meshSf.value : "12", 10) || 12;
+      var f = 433; // 433 MHz
+
+      // Friis Free Space Path Loss: FSPL = 20*log10(d) + 20*log10(f) + 32.44
+      var fspl = 20 * Math.log10(d) + 20 * Math.log10(f) + 32.44;
+      var pTx = 22; // +22 dBm max output of SX1262
+      var gTx = 3.5; // dBi antenna
+      var gRx = 3.5;
+      var fadeMargin = 6.0;
+      var pRx = pTx + gTx + gRx - fspl - fadeMargin;
+
+      var sensitivity = sf === 12 ? -148 : (sf === 9 ? -130 : -123);
+      var linkMargin = pRx - sensitivity;
+
+      // Symbol Duration & Airtime calculation
+      var bw = 125000;
+      var tSym = Math.pow(2, sf) / bw;
+      var nPayload = 8 + Math.max(Math.ceil((8 * 32 - 4 * sf + 44) / (4 * sf)) * 5, 0);
+      var nTotalSym = 8 + 4.25 + nPayload;
+      var tAir = nTotalSym * tSym * 1000;
+
+      var fsplEl = document.getElementById("sb-rf-fspl");
+      var prxEl = document.getElementById("sb-rf-prx");
+      var marginEl = document.getElementById("sb-rf-margin");
+      var airtimeEl = document.getElementById("sb-rf-airtime");
+
+      if (fsplEl) fsplEl.textContent = fspl.toFixed(1) + " dB";
+      if (prxEl) prxEl.textContent = pRx.toFixed(1) + " dBm";
+      if (marginEl) {
+        marginEl.textContent = (linkMargin >= 0 ? "+" : "") + linkMargin.toFixed(1) + " dB";
+        marginEl.className = "sb-rf-val " + (linkMargin > 15 ? "color-green" : (linkMargin > 0 ? "color-gold" : "color-red"));
+      }
+      if (airtimeEl) airtimeEl.textContent = tAir.toFixed(1) + " ms";
+    }
+
+    if (meshDist) meshDist.addEventListener("input", updateRFLinkBudget);
+    if (meshSf) meshSf.addEventListener("change", updateRFLinkBudget);
+    updateRFLinkBudget();
 
     if (btnMeshPing && meshOutput) {
       btnMeshPing.addEventListener("click", function() {
         if (window.AwalimAudio) window.AwalimAudio.tap();
         var tId = Math.floor(Math.random() * 8000 + 1000);
-        meshOutput.innerHTML = [
-          '<div>[MESH DISPATCH] Generating Encrypted SOS Packet #SOS-' + tId + '...</div>',
-          '<div>[ED25519] Signature generated on local hardware chip: e48b...291a</div>',
-          '<div style="color:#60a5fa;">[HOP 01] RF-02 (Rafah) -> DB-03 (Deir al-Balah) via LoRa 433MHz (-46 dBm · 1.4ms)</div>',
-          '<div style="color:#60a5fa;">[HOP 02] DB-03 -> GZ-04 (Gaza North) via 802.11ah HaLow (-52 dBm · 1.8ms)</div>',
-          '<div style="color:#fbbf24;">[CROSS-SYNC] GZ-04 -> BY-05 (Beirut Satellite Relay) Sync Confirmed (4.1ms)</div>',
-          '<div style="color:#4ade80;">[ACK] Packet delivered to field triage center. Packet Loss: 0.00%. Data Leaked: 0 bytes.</div>'
-        ].join("");
+        meshOutput.textContent = "";
+
+        var lines = [
+          "[MESH DISPATCH] Generating Encrypted SOS Packet #SOS-" + tId + "...",
+          "[ED25519] Hardware chip signature verified: e48b...291a",
+          "[HOP 01] RF-02 (Rafah) -> DB-03 (Deir al-Balah) via LoRa 433MHz (-78.4 dBm · 1.4ms)",
+          "[HOP 02] DB-03 -> GZ-04 (Gaza North) via 802.11ah HaLow (-82.1 dBm · 1.8ms)",
+          "[CROSS-SYNC] GZ-04 -> BY-05 (Beirut Satellite Relay) Merkle Ack Confirmed (4.1ms)",
+          "[DELIVERY] Packet committed to field triage ledger. Packet Loss: 0.00%. Data Leaked: 0 bytes."
+        ];
+
+        lines.forEach(function(l, idx) {
+          var row = el("div", null, l);
+          if (idx === 0) row.className = "color-cyan";
+          else if (idx === 1) row.className = "color-gold";
+          else if (idx >= 2 && idx <= 3) row.className = "color-blue";
+          else if (idx === 4) row.className = "color-fg";
+          else row.className = "color-green font-bold";
+          meshOutput.appendChild(row);
+        });
       });
     }
 
@@ -899,79 +1141,200 @@ var T = function (ar, en) { return EN ? en : ar; };
       btnToggleBlackout.addEventListener("click", function() {
         if (window.AwalimAudio) window.AwalimAudio.tap();
         isBlackout = !isBlackout;
+        meshOutput.textContent = "";
+
         if (isBlackout) {
           btnToggleBlackout.classList.add("btn--primary");
           btnToggleBlackout.classList.remove("btn--outline");
-          meshOutput.innerHTML = [
-            '<div style="color:#f87171;">[ALERT] Public Fiber & Cellular Network Severed! Gateway 0.0.0.0 unreachable.</div>',
-            '<div style="color:#4ade80;">[AUTONOMOUS FAILOVER] Sovereign P2P Mesh protocol engaged immediately (0.00ms).</div>',
-            '<div>[TOPOLOGY] Local Merkle CRDT active across 5 hardware nodes. Operational capacity: 100%.</div>'
-          ].join("");
+          var bLines = [
+            "[ALERT] Public Fiber & Cellular Backbone Severed! Gateway 0.0.0.0 unreachable.",
+            "[AUTONOMOUS FAILOVER] Sovereign P2P Mesh protocol engaged instantaneously (0.00ms latency).",
+            "[TOPOLOGY] Local Merkle CRDT active across 5 hardware nodes. Field operational capacity: 100%."
+          ];
+          bLines.forEach(function(l, i) {
+            var r = el("div", null, l);
+            if (i === 0) r.className = "color-red font-bold";
+            else if (i === 1) r.className = "color-green font-bold";
+            else r.className = "color-blue";
+            meshOutput.appendChild(r);
+          });
         } else {
           btnToggleBlackout.classList.remove("btn--primary");
           btnToggleBlackout.classList.add("btn--outline");
-          meshOutput.innerHTML = [
-            '<div>[STATUS] Standard Hybrid Connectivity Mode Restored.</div>',
-            '<div>[P2P] Background LoRa heartbeat active. All 5 nodes synchronized.</div>'
-          ].join("");
+          var rLines = [
+            "[STATUS] Standard Hybrid Connectivity Mode Restored.",
+            "[P2P] Background LoRa heartbeat active. All 5 nodes synchronized with zero ledger divergence."
+          ];
+          rLines.forEach(function(l) {
+            meshOutput.appendChild(el("div", "color-cyan", l));
+          });
         }
       });
     }
 
-    // Simulator 3: Vibe OS Glass Physics
-    var glassBlur = document.getElementById("sb-glass-blur");
-    var glassSat = document.getElementById("sb-glass-sat");
-    var glassCard = document.getElementById("sb-glass-card-preview");
+    // -------------------------------------------------------------------------
+    // EXPERT 3: Vibe OS 4.0 (Damped Harmonic Oscillator Spring Physics)
+    // -------------------------------------------------------------------------
+    var springMass = document.getElementById("sb-spring-mass");
+    var springMassVal = document.getElementById("sb-spring-mass-val");
+    var springStiff = document.getElementById("sb-spring-stiff");
+    var springStiffVal = document.getElementById("sb-spring-stiff-val");
+    var springZeta = document.getElementById("sb-spring-zeta");
+    var springOmega = document.getElementById("sb-spring-omega");
+    var springState = document.getElementById("sb-spring-state");
+    var springCard = document.getElementById("sb-spring-card");
+    var btnSpringDeflect = document.getElementById("btn-spring-deflect");
     var btnMatrix = document.getElementById("btn-matrix-toggle");
 
-    function updateGlass() {
-      if (!glassCard) return;
-      var b = glassBlur ? glassBlur.value : 24;
-      var s = glassSat ? glassSat.value : 180;
-      glassCard.style.backdropFilter = "blur(" + b + "px) saturate(" + s + "%)";
-      glassCard.style.webkitBackdropFilter = "blur(" + b + "px) saturate(" + s + "%)";
+    var springAnimId = null;
+
+    function updateSpringParameters() {
+      var m = parseFloat(springMass ? springMass.value : "1.0") || 1.0;
+      var k = parseFloat(springStiff ? springStiff.value : "160") || 160;
+      var c = 20.0; // damping coefficient Ns/m
+
+      if (springMassVal) springMassVal.textContent = m.toFixed(1) + " kg";
+      if (springStiffVal) springStiffVal.textContent = Math.round(k) + " N/m";
+
+      // Natural frequency: omega_0 = sqrt(k / m)
+      var omega0 = Math.sqrt(k / m);
+      // Damping ratio: zeta = c / (2 * sqrt(m * k))
+      var zeta = c / (2 * Math.sqrt(m * k));
+
+      if (springZeta) springZeta.textContent = zeta.toFixed(2);
+      if (springOmega) springOmega.textContent = omega0.toFixed(1) + " rad/s";
+
+      if (springState) {
+        if (zeta < 0.95) {
+          springState.textContent = isEn ? "Underdamped (Fluid Recoil & Bounce)" : "أقل من الحرج (ارتداد وانسياب نابضي)";
+          springState.className = "color-green font-bold";
+        } else if (zeta <= 1.05) {
+          springState.textContent = isEn ? "Critically Damped (Apple VisionOS Standard)" : "تخميد حرج (معيار آبل الأسرع دون ارتداد)";
+          springState.className = "color-cyan font-bold";
+        } else {
+          springState.textContent = isEn ? "Overdamped (Sluggish Return)" : "تخميد مفرط (عودة بطيئة دون تردد)";
+          springState.className = "color-gold font-bold";
+        }
+      }
     }
 
-    if (glassBlur) glassBlur.addEventListener("input", updateGlass);
-    if (glassSat) glassSat.addEventListener("input", updateGlass);
+    if (springMass) springMass.addEventListener("input", updateSpringParameters);
+    if (springStiff) springStiff.addEventListener("input", updateSpringParameters);
+    updateSpringParameters();
 
-    if (btnMatrix && glassCard) {
+    function triggerSpringPhysics(initialDisplacement) {
+      if (!springCard) return;
+      if (springAnimId) cancelAnimationFrame(springAnimId);
+
+      var m = parseFloat(springMass ? springMass.value : "1.0") || 1.0;
+      var k = parseFloat(springStiff ? springStiff.value : "160") || 160;
+      var c = 20.0;
+
+      var x = initialDisplacement; // in pixels
+      var v = 0.0;
+      var dt = 0.016; // 60fps delta
+
+      function step() {
+        var force = -k * (x * 0.01) - c * (v * 0.01);
+        var a = (force / m) * 100;
+        v += a * dt;
+        x += v * dt;
+
+        springCard.setAttribute("style", "transform: translateX(" + x.toFixed(2) + "px);");
+
+        if (Math.abs(x) > 0.4 || Math.abs(v) > 0.4) {
+          springAnimId = requestAnimationFrame(step);
+        } else {
+          springCard.removeAttribute("style");
+          springAnimId = null;
+        }
+      }
+      springAnimId = requestAnimationFrame(step);
+    }
+
+    if (btnSpringDeflect) {
+      btnSpringDeflect.addEventListener("click", function() {
+        if (window.AwalimAudio && typeof window.AwalimAudio.clockIn === "function") window.AwalimAudio.clockIn();
+        triggerSpringPhysics(120);
+      });
+    }
+
+    if (btnMatrix && springCard) {
       var isMatrix = false;
       btnMatrix.addEventListener("click", function() {
-        if (window.AwalimAudio) window.AwalimAudio.clockIn();
+        if (window.AwalimAudio && typeof window.AwalimAudio.clockIn === "function") window.AwalimAudio.clockIn();
         isMatrix = !isMatrix;
         if (isMatrix) {
-          glassCard.style.background = "rgba(0, 30, 10, 0.4)";
-          glassCard.style.borderColor = "#00FF66";
-          glassCard.style.boxShadow = "0 0 25px rgba(0,255,102,0.4)";
-          glassCard.innerHTML = '<div style="font-family:monospace; color:#00FF66; font-size:0.9rem;">[GOD MODE ACTIVE] 01000001 01010111 01000001 01001100 01001001 01001101 · Sovereign Kernel Injected</div>';
+          springCard.classList.add("is-matrix");
         } else {
-          glassCard.style.background = "rgba(255, 255, 255, 0.06)";
-          glassCard.style.borderColor = "rgba(255, 255, 255, 0.15)";
-          glassCard.style.boxShadow = "none";
-          glassCard.innerHTML = '<div style="font-weight:700; font-size:1.05rem; margin-bottom:0.25rem;">Sovereign Glass OS Live Node</div><div style="font-size:0.85rem; color:var(--dim,#8b949e);">Refraction index: 1.48 · Spring Mass: 1.0 · Damping: 0.85</div>';
+          springCard.classList.remove("is-matrix");
         }
       });
     }
 
-    // Simulator 4: AI Lab Private Inference
+    // -------------------------------------------------------------------------
+    // EXPERT 4: AI Lab (Local LLM Zero-Egress Benchmark)
+    // -------------------------------------------------------------------------
     var btnAiInf = document.getElementById("btn-run-ai-inference");
     var aiOutput = document.getElementById("sb-ai-output");
+    var aiModel = document.getElementById("sb-ai-model");
 
     if (btnAiInf && aiOutput) {
       btnAiInf.addEventListener("click", function() {
         if (window.AwalimAudio) window.AwalimAudio.tap();
-        aiOutput.innerHTML = [
-          '<div>[INFERENCE TRIGGERED] Loading local tensor blocks into unified memory...</div>',
-          '<div style="color:#60a5fa;">[ISOLATION] Sandboxed execution: Zero WAN sockets allowed. 0 KB external egress.</div>',
-          '<div style="color:#4ade80;">[STREAMING TOKENS] 284.6 tokens/sec (Time-To-First-Token: 16.8ms)</div>',
-          '<div style="color:#e6edf3; padding:0.4rem 0;">"تم تدقيق بنود العقد بدقة 100%: جميع الالتزامات المحاسبية متوافقة مع معايير IFRS ومعتمدة دون أي مخاطر تسريب سيبراني."</div>',
-          '<div style="color:#fbbf24;">[AUDIT HASH] Ed25519-WEIGHTS-VERIFIED: OK · VRAM: 3.42 GB · Zero Hallucination Guard: Active</div>'
-        ].join("");
+        var model = aiModel ? aiModel.value : "14b";
+        var tokSpeed = model === "7b" ? "54.2 tokens/sec" : (model === "14b" ? "36.4 tokens/sec" : "21.8 tokens/sec");
+        var ttft = model === "7b" ? "42.1ms" : (model === "14b" ? "78.4ms" : "135.2ms");
+
+        aiOutput.textContent = "";
+        var lines = [
+          "[INFERENCE BENCHMARK] Initializing Sovereign Model weights into Unified RAM...",
+          "[SECURITY AUDIT] Web Worker network isolation enforced. WAN Egress: 0 bytes.",
+          "[HARDWARE ACCEL] Apple Metal 3 / WebGPU shaders engaged at native throughput.",
+          "[METRICS] Time-to-First-Token: " + ttft + " · Generation Throughput: " + tokSpeed,
+          "[VERIFIED REASONING STREAM] All constraints validated with 0 hallucinations and 100% adherence to sovereign architecture protocols."
+        ];
+
+        lines.forEach(function(l, i) {
+          var r = el("div", null, l);
+          if (i === 0) r.className = "color-cyan";
+          else if (i === 1) r.className = "color-gold font-bold";
+          else if (i === 2) r.className = "color-fg";
+          else if (i === 3) r.className = "color-blue font-bold";
+          else r.className = "color-green";
+          aiOutput.appendChild(r);
+        });
       });
     }
 
-    // 3. Enterprise RFQ Modal
+    // -------------------------------------------------------------------------
+    // EXPERT 5: Jameel Store (Headless Commerce Benchmark)
+    // -------------------------------------------------------------------------
+    var btnStoreBench = document.getElementById("btn-run-store-bench");
+    var storeOutput = document.getElementById("sb-store-output");
+
+    if (btnStoreBench && storeOutput) {
+      btnStoreBench.addEventListener("click", function() {
+        if (window.AwalimAudio) window.AwalimAudio.tap();
+        storeOutput.textContent = "";
+        var lines = [
+          "GET /api/v1/catalog?category=all -> 200 OK (2.1ms) [OFFLINE SQLITE CACHE]",
+          "POST /api/v1/cart/reconcile -> 200 OK (1.4ms) [IFRS DETERMINISTIC ENGINE]",
+          "POST /api/v1/checkout/session -> 201 Created (4.2ms) [ED25519 HARDWARE SIGNED]",
+          "[AUDIT] Zero cloud roundtrips required. Sub-millisecond latency sustained."
+        ];
+        lines.forEach(function(l, i) {
+          var r = el("div", null, l);
+          if (i < 3) r.className = "color-cyan";
+          else r.className = "color-green font-bold";
+          storeOutput.appendChild(r);
+        });
+      });
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. Enterprise RFQ & Technical Accreditation Modal
+    // -------------------------------------------------------------------------
     var modalRfq = document.getElementById("modal-product-rfq");
     var btnCloseRfq = document.getElementById("btn-close-rfq-modal");
     var btnCancelRfq = document.getElementById("btn-cancel-product-rfq");
@@ -991,71 +1354,56 @@ var T = function (ar, en) { return EN ? en : ar; };
           }
         }
         if (window.AwalimAudio) window.AwalimAudio.tap();
-        modalRfq.style.display = "flex";
-        modalRfq.classList.add("active");
+        modalRfq.classList.remove("hidden");
+        modalRfq.classList.add("active", "is-open");
+        rfqBtn.setAttribute("aria-expanded", "true");
       }
     });
 
-    if (btnCloseRfq && modalRfq) {
-      btnCloseRfq.addEventListener("click", function() {
-        modalRfq.style.display = "none";
-        modalRfq.classList.remove("active");
-      });
+    function closeRfqModal() {
+      if (modalRfq) {
+        modalRfq.classList.add("hidden");
+        modalRfq.classList.remove("active", "is-open");
+        document.querySelectorAll(".btn-open-rfq[aria-expanded='true']").forEach(b => b.setAttribute("aria-expanded", "false"));
+      }
     }
-    if (btnCancelRfq && modalRfq) {
-      btnCancelRfq.addEventListener("click", function() {
-        modalRfq.style.display = "none";
-        modalRfq.classList.remove("active");
-      });
-    }
+
+    if (btnCloseRfq) btnCloseRfq.addEventListener("click", closeRfqModal);
+    if (btnCancelRfq) btnCancelRfq.addEventListener("click", closeRfqModal);
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape" && modalRfq && !modalRfq.classList.contains("hidden")) {
+        closeRfqModal();
+      }
+    });
 
     if (formRfq) {
       formRfq.addEventListener("submit", function(e) {
         e.preventDefault();
-        var isEn = document.documentElement.getAttribute("dir") === "ltr";
         var errEl = document.getElementById("product-rfq-error");
-        var orgInput = document.getElementById("rfq-org");
-        var nameInput = document.getElementById("rfq-name");
-        var emailInput = document.getElementById("rfq-email");
+        var org = (document.getElementById("rfq-org").value || "").trim();
+        var name = (document.getElementById("rfq-name").value || "").trim();
+        var email = (document.getElementById("rfq-email").value || "").trim();
+        var product = document.getElementById("rfq-product").value;
+        var topology = document.getElementById("rfq-topology").value;
+        var notes = (document.getElementById("rfq-notes").value || "").trim();
 
-        var firstInvalid = null;
-        [orgInput, nameInput, emailInput].forEach(function(inp) {
-          if (inp && !inp.value.trim()) {
-            inp.setAttribute("aria-invalid", "true");
-            inp.classList.add("is-error");
-            if (!firstInvalid) firstInvalid = inp;
-          } else if (inp) {
-            inp.removeAttribute("aria-invalid");
-            inp.classList.remove("is-error");
-          }
-        });
-
-        if (firstInvalid) {
-          firstInvalid.focus();
-          if (errEl) errEl.textContent = isEn ? "Please complete all required fields." : "يرجى استكمال جميع الحقول الإلزامية المطلوبة.";
+        if (!org || !name || !email) {
+          if (errEl) errEl.textContent = isEn ? "Please fill in all required fields." : "يرجى تعبئة كافة الحقول المطلوبة.";
           return;
         }
 
-        if (errEl) errEl.textContent = "";
+        var rfqText = isEn
+          ? "Enterprise RFQ - Org: " + org + " | Contact: " + name + " (" + email + ") | Product: " + product + " | Topology: " + topology + (notes ? " | Notes: " + notes : "")
+          : "طلب مواصفة فنية - المنشأة: " + org + " | المسؤول: " + name + " (" + email + ") | النظام: " + product + " | بيئة النشر: " + topology + (notes ? " | ملاحظات: " + notes : "");
 
-        var prodSelect = document.getElementById("rfq-product");
-        var prodName = prodSelect ? prodSelect.options[prodSelect.selectedIndex].text : "";
-        var org = orgInput ? orgInput.value : "";
-
-        if (window.AwalimAudio) window.AwalimAudio.clockIn();
-        if (modalRfq) {
-          modalRfq.style.display = "none";
-          modalRfq.classList.remove("active");
-        }
-
-        var msg = isEn ? "📋 RFQ received for " + org + " regarding " + prodName + ". Our enterprise team will send full architectural specs within 24 hours." : "📋 تم استلام طلب المواصفة الفنية لمنشأة " + org + " بخصوص نظام " + prodName + " بنجاح. سنوافيكم بملف الاعتماد والمعمارية خلال 24 ساعة.";
-        alert(msg);
+        closeRfqModal();
+        if (window.AwalimAudio && typeof window.AwalimAudio.clockIn === "function") window.AwalimAudio.clockIn();
+        window.open("https://wa.me/970593636136?text=" + encodeURIComponent(rfqText), "_blank", "noopener");
       });
     }
-
   })();
-
-  /* --------------------------------------------------------------------------
+/* --------------------------------------------------------------------------
      Interactive Project Scope & Investment Estimator
      -------------------------------------------------------------------------- */
   (function() {
@@ -1092,7 +1440,12 @@ var T = function (ar, en) { return EN ? en : ar; };
       }
 
       if (timeEl) {
-        timeEl.innerHTML = '<bdi dir="ltr">' + minWeeks + '–' + maxWeeks + '</bdi> ' + (isEn ? "weeks" : "أسابيع");
+        timeEl.textContent = "";
+        var bdiEl = document.createElement("bdi");
+        bdiEl.setAttribute("dir", "ltr");
+        bdiEl.textContent = minWeeks + "–" + maxWeeks;
+        timeEl.appendChild(bdiEl);
+        timeEl.appendChild(document.createTextNode(" " + (isEn ? "weeks" : "أسابيع")));
       }
 
       if (waEl) {

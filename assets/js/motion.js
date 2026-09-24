@@ -452,6 +452,10 @@
     return {
       tap: playGlassTap,
       chime: playChime,
+      clockIn: function () { playChime(); },
+      clockOut: function () { playGlassTap(1600, 0.04); },
+      bonus: function () { playChime(); },
+      emergency: function () { playGlassTap(900, 0.08); },
       toggle: toggle,
       isEnabled: function () { return enabled; }
     };
