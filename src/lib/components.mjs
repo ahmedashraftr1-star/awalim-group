@@ -95,10 +95,10 @@ export const featureList = (list, cols = 2) => `<div class="frows frows--${cols}
 /* ---------- metric bar (Jonny Czar & Enterprise Grade) ---------- */
 export const metricBar = ({ metric = {}, href, ctaLabel = "دراسة الحالة", stats = {} }) => {
   const items = [];
+  // Only what the data actually says. A rating or an uptime figure appears
+  // when a case carries one — never a default.
   if (metric.rating) {
-    items.push(`<div class="mbar__meta"><span class="trust-badge-pill mono">99.9% UPTIME</span><b class="mbar__val">${esc(metric.rating)}</b><span class="mbar__sub">تقييم</span></div>`);
-  } else {
-    items.push(`<div class="mbar__meta"><span class="trust-badge-pill mono">99.9% UPTIME</span><b class="mbar__val">4.9</b><span class="mbar__sub">معتمد مؤسسياً</span></div>`);
+    items.push(`<div class="mbar__meta"><b class="mbar__val">${esc(metric.rating)}</b><span class="mbar__sub">تقييم</span></div>`);
   }
 
   if (metric.users) {
@@ -157,14 +157,6 @@ export const cockpit = ({ tilt = true, parallax = true, live = true, cls = "", i
       <span class="dev__url" data-console-badge>SYS-ACC-01 · حيّ</span>
       ` : `<span class="dev__url">cockpit · محاسب ذكي</span>`}
     </div>
-    ${interactive ? `
-    <div class="cockpit__hud" aria-label="تشخيص العتاد اللحظي">
-      <span class="hud__item hud__item--live"><span class="hud__dot" aria-hidden="true"></span><bdi class="mono" data-hud-fps>60.0 FPS</bdi></span>
-      <span class="hud__item"><bdi class="mono" dir="ltr">0.2ms</bdi> زمن النواة</span>
-      <span class="hud__item"><bdi class="mono" dir="ltr">Ed25519</bdi> مشفّر</span>
-      <span class="hud__item hud__item--edge"><span class="hud__pulse" aria-hidden="true"></span>عقدة غزة نشطة</span>
-    </div>
-    ` : ""}
     <div class="cockpit"${interactive ? "" : ' aria-hidden="true"'}>
       <!-- Mode 1: Smart Accountant -->
       <div class="cockpit__panel is-active" data-panel="ledger">

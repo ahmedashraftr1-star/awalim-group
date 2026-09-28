@@ -22,7 +22,7 @@ export default function render(ctx) {
 
     `<section class="sec" id="timeline">
       <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: "القصّة الكاملة", eyebrowEn: "TIMELINE", h: "من غرفة في غزّة إلى أنظمة تعمل في عشر دول", lede: "ثماني محطّات — كل واحدة منها قرار." })}
+        ${C.sectionHead({ eyebrowAr: "القصّة الكاملة", eyebrowEn: "TIMELINE", h: "من غرفة في غزّة إلى أنظمة تعمل في 14 دولة", lede: "ثماني محطّات — كل واحدة منها قرار." })}
         ${C.timeline(g.timeline)}
       </div>
     </section>`,

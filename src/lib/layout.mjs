@@ -151,7 +151,7 @@ export const page = ({ site, seo, active = "", body, schema = [], bodyClass = ""
   const og = `${site.brand.url}${seo.ogImage || site.brand.ogImage}`;
   const motion = needsMotionLibs(body);
   return `<!doctype html>
-<html lang="ar" dir="rtl" data-theme="dark">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -184,7 +184,7 @@ ${FONT_PRELOADS.map((f) => `<link rel="preload" href="${f}" as="font" type="font
 <noscript><link rel="stylesheet" href="/assets/css/awalim.css?v=${buildStamp}"></noscript>
 <script>
 /* Theme before first paint: saved choice wins, otherwise follow the system. */
-(function(){try{var s=localStorage.getItem("awalim-theme");var d=s?s==="dark":true;document.documentElement.setAttribute("data-theme",d?"dark":"light");if(s)document.documentElement.setAttribute("data-theme-saved","")}catch(e){}document.documentElement.classList.add("js")})();
+(function(){try{var s=localStorage.getItem("awalim-theme-v2");var d=s?s==="dark":false;document.documentElement.setAttribute("data-theme",d?"dark":"light");if(s)document.documentElement.setAttribute("data-theme-saved","")}catch(e){}document.documentElement.classList.add("js")})();
 /* The full sheet used to be promoted by an inline load handler on the link.
    script-src-attr blocks those and no hash can cover one: a hash authorises a
    script element, never an event-handler attribute. So the swap moved in here,

@@ -15,7 +15,7 @@
       "lede": "Awalim Group is a digital engineering house building enterprise products that hold under real pressure: double-entry accounting on IFRS, AI agents that execute rather than chat, Flutter apps with native performance, and web platforms measured in milliseconds."
     },
     "story": {
-      "big": "From a room in Gaza to systems running in ten countries",
+      "big": "From a room in Gaza to systems running in 14 countries",
       "p": "Awalim started in 2021 on a single conviction: the Arab engineer can build systems measured by the global standard. These are the milestones."
     },
     "manifesto": {
@@ -307,7 +307,7 @@
   },
   "group": {
     "seo": {
-      "title": "The Group — from a room in Gaza to systems running in ten countries | Awalim Group",
+      "title": "The Group — from a room in Gaza to systems running in 14 countries | Awalim Group",
       "description": "The story of Awalim Group: founded 2021 in Palestine. The timeline, the values, and a note from founder Ahmed Ashraf."
     },
     "h": "The Group",
@@ -345,7 +345,7 @@
       },
       {
         "y": "2025",
-        "t": "More than 50 systems in 10 countries",
+        "t": "More than 50 systems in 14 countries",
         "d": "Expanding from local clients to a regional and international network."
       },
       {
@@ -381,7 +381,7 @@
       "full": [
         "I started in 2018 from Gaza with a mobile phone and a slow connection. The goal was never just to have work; it was to prove that an Arab engineer can build systems measured by the global standard — not by a lenient local one.",
         "The first fifty dollars were less a fee than a proof that skill outruns geography. And when the solo work became an engineering house in 2021, the only condition was that the standards stay the same: documentation, code review, and contractual responsibility.",
-        "Today an engineering team serves clients in more than ten countries, and much of it came from the Academy we built to keep our standards alive. That is still the measure we hold everything we ship against."
+        "Today an engineering team serves clients in 14 countries, and much of it came from the Academy we built to keep our standards alive. That is still the measure we hold everything we ship against."
       ]
     }
   },

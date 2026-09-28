@@ -138,48 +138,51 @@
 
 /* ---- dark (designed, not inverted) ---- */
 :root[data-theme="dark"] {
-  --bg:            #060709;
-  --surface:       #0c0e14;
-  --surface-2:     #131722;
-  --surface-3:     #1a202e;
-  --surface-1:     #0c0e14;
-  --text:          #F8FAFC;
-  --text-2:        #CBD5E1;
-  --text-muted:    #94A3B8;      /* 8.8:1 on Obsidian void */
-  --border:        rgba(255, 255, 255, 0.09);
-  --border-2:      rgba(255, 255, 255, 0.16);
-  --ink-strip:     #0c0e14;
-  --ink-strip-fg:  #F8FAFC;
+  /* Calm-premium pass (2026-09-28): the dark theme was slate + "electric
+     cyan" with glow — the stock AI look. It is now a warm charcoal tinted
+     toward the brand teal, and the accent is the SAME turquoise as the light
+     identity, lifted just enough to read on dark. No glow. */
+  --bg:            #0E1111;
+  --surface:       #141817;
+  --surface-2:     #1A1F1E;
+  --surface-3:     #222826;
+  --surface-1:     #141817;
+  --text:          #F1F0EB;
+  --text-2:        #CFCDC5;
+  --text-muted:    #A09E96;
+  --border:        rgba(241, 240, 235, 0.09);
+  --border-2:      rgba(241, 240, 235, 0.17);
+  --ink-strip:     #141817;
+  --ink-strip-fg:  #F1F0EB;
 
-  --accent:        #00F0FF;      /* electric cyan highlight */
-  --accent-text:   #2DD4BF;      /* luminous emerald/mint */
-  --accent-strong: #10B981;
-  --accent-ink:    #030e12;
-  --accent-soft:   rgba(0, 240, 255, 0.10);
-  --accent-line:   rgba(0, 240, 255, 0.40);
-  --accent-glow:   rgba(0, 240, 255, 0.32);
-  --amber:         #F59E0B;
-  --amber-soft:    rgba(245, 158, 11, .15);
-  --amber-line:    rgba(245, 158, 11, .40);
-  --bad:           #EF4444;
-  --bad-soft:      rgba(239, 68, 68, .15);
-  --bad-line:      rgba(239, 68, 68, .40);
-  --live:          #10B981;
+  --accent:        #3FB5A6;
+  --accent-text:   #6DCDBF;
+  --accent-strong: #2E9C8E;
+  --accent-ink:    #0A1A18;
+  --accent-soft:   rgba(63, 181, 166, 0.10);
+  --accent-line:   rgba(63, 181, 166, 0.36);
+  --accent-glow:   rgba(63, 181, 166, 0.14);
+  --amber:         #E0A43A;
+  --amber-soft:    rgba(224, 164, 58, .14);
+  --amber-line:    rgba(224, 164, 58, .38);
+  --bad:           #F07A6E;
+  --bad-soft:      rgba(240, 122, 110, .14);
+  --bad-line:      rgba(240, 122, 110, .38);
+  --live:          #4CC08A;
 
-  --btn-bg:        #F8FAFC;
-  --btn-fg:        #060709;
+  --btn-bg:        #F1F0EB;
+  --btn-fg:        #0E1111;
   --btn-bg-h:      #FFFFFF;
 
-  --shadow-card:   0 20px 60px -20px rgba(0, 0, 0, .6);
-  --shadow-card-h: 0 34px 80px -24px rgba(0, 0, 0, .75);
-  --shadow-pill:   0 0 0 1px rgba(255,255,255,.06), 0 10px 30px -14px rgba(0,0,0,.8);
-  --shadow-dev:    0 40px 90px -36px rgba(0, 0, 0, .85);
+  --shadow-card:   0 20px 60px -20px rgba(0, 0, 0, .55);
+  --shadow-card-h: 0 34px 80px -24px rgba(0, 0, 0, .7);
+  --shadow-pill:   0 0 0 1px rgba(241,240,235,.06), 0 10px 30px -14px rgba(0,0,0,.7);
+  --shadow-dev:    0 40px 90px -36px rgba(0, 0, 0, .8);
 
-  /* ---- sovereign glass & spring physics (dark) ---- */
-  --glass-bg:      color-mix(in srgb, var(--surface) 72%, transparent);
-  --glass-border:  rgba(255, 255, 255, 0.12);
-  --glass-sheen:   inset 0 1px 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 20px 0 rgba(0, 240, 255, 0.03);
-  --shadow-glass:  0 16px 48px -12px rgba(0, 0, 0, 0.7);
+  --glass-bg:      color-mix(in srgb, var(--surface) 80%, transparent);
+  --glass-border:  rgba(241, 240, 235, 0.10);
+  --glass-sheen:   inset 0 1px 0 0 rgba(241, 240, 235, 0.06);
+  --shadow-glass:  0 16px 48px -12px rgba(0, 0, 0, 0.6);
   --ease-spring:   cubic-bezier(0.16, 1, 0.3, 1);
 
   color-scheme: dark;

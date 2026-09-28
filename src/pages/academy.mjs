@@ -65,7 +65,7 @@ export default function render(ctx) {
     `<section class="sec sec--tight" aria-label="${t("أرقام الأكاديمية", "Academy Verified Metrics")}">
       <div class="wrap wrap--wide">
         ${C.statBar(a.stats, stats, { size: "xl", cls: "statbar--hero", verify: true, signing: ctx.signing })}
-        <p class="small muted rv statbar__note">${fill(t("«{engineersTrained}» هم كل من دخل مساراً في الأكاديمية؛ «{certifiedGraduates}» هم من أنهوا المسار كاملاً بمشروع منشور. الدول الست هي التي يعمل فيها خرّيجونا اليوم — أما «{clientCountries} دول» في الرئيسية فهي دول عملاء المجموعة.", "'{engineersTrained}' entered our engineering tracks; '{certifiedGraduates}' completed the capstone project live in production. Graduates operate across 6 countries today."), stats)}</p>
+        <p class="small muted rv statbar__note">${fill(t("«{engineersTrained}» هم كل من دخل مساراً في الأكاديمية؛ «{certifiedGraduates}» هم من أنهوا المسار كاملاً بمشروع منشور. الدول الست هي التي يعمل فيها خرّيجونا اليوم — أما «{clientCountries} دولة» في الرئيسية فهي دول عملاء المجموعة.", "'{engineersTrained}' entered our engineering tracks; '{certifiedGraduates}' completed the capstone project live in production. Graduates operate across 6 countries today."), stats)}</p>
       </div>
     </section>`,
 

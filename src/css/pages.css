@@ -482,8 +482,8 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 12px #10b981;
+  background: var(--accent-strong);
+  box-shadow: 0 0 12px var(--accent-strong);
   animation: pulse-dot 2s infinite ease-in-out;
 }
 @keyframes pulse-dot {
@@ -887,7 +887,7 @@
   width: 28px;
   height: 28px;
   stroke-width: 1.75;
-  stroke: #5eead4;
+  stroke: var(--accent-text);
   margin-bottom: 6px;
 }
 .view-svg {
@@ -910,7 +910,7 @@
 .dash-kanban-card.is-dragging {
   opacity: 0.35;
   transform: scale(0.96) rotate(1.5deg);
-  border: 1px dashed #5eead4 !important;
+  border: 1px dashed var(--accent-text) !important;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
 }
 .dash-kanban-col__body {
@@ -1378,7 +1378,7 @@
 }
 .dash-treasury-val--gold {
   color: #D4AF37;
-  text-shadow: 0 0 24px rgba(212, 175, 55, 0.35);
+  text-shadow: none;
 }
 .dash-treasury-meta {
   font-size: var(--fs-xs);
@@ -1414,7 +1414,7 @@
 }
 .dash-venture-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(0, 240, 255, 0.35);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
 }
 .dash-venture-head {
   display: flex;
@@ -1561,7 +1561,7 @@
 .dash-milestone-bar {
   block-size: 100%;
   border-radius: 3px;
-  background: linear-gradient(90deg, #00F0FF, #10B981);
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
 }
 
 /* Workforce Grid */
@@ -1654,7 +1654,7 @@
   user-select: none;
 }
 .dash-cmd-item:hover, .dash-cmd-item.active {
-  background: rgba(0, 240, 255, 0.12);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
   color: var(--text-1);
 }
 .dash-cmd-item-left {
@@ -1750,7 +1750,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold, #D4AF37), var(--accent, #00F0FF), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold, #D4AF37), var(--accent), transparent);
 }
 .raqib-console-head {
   display: flex;
@@ -1866,7 +1866,7 @@
 }
 .raqib-framework-pill.active,
 .raqib-framework-pill:has(input:checked) {
-  background: rgba(0, 240, 255, 0.08);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
   border-color: var(--accent);
   color: var(--text-1);
   font-weight: var(--w-bold);
@@ -1876,10 +1876,10 @@
 .raqib-hud {
   margin-top: 1.5rem;
   background: #090b0e;
-  border: 1px solid rgba(0, 240, 255, 0.3);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
   border-radius: var(--radius-md);
   padding: var(--space-4);
-  box-shadow: 0 8px 32px rgba(0, 240, 255, 0.1);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 .raqib-hud-header {
   display: flex;
@@ -1897,7 +1897,7 @@
 }
 .raqib-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent, #00F0FF), var(--gold, #D4AF37));
+  background: linear-gradient(90deg, var(--accent), var(--gold, #D4AF37));
   transition: width 0.18s ease-out;
 }
 .raqib-terminal-logs {
@@ -2153,7 +2153,7 @@
 .raqib-textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 20%, transparent);
   background: rgba(0, 0, 0, 0.6);
 }
 
@@ -2193,7 +2193,7 @@
 }
 
 .raqib-toggle-pill:has(input:checked) {
-  background: rgba(0, 240, 255, 0.1);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
   border-color: var(--accent);
   color: var(--text-1);
 }
@@ -2399,7 +2399,7 @@
 }
 :root[data-theme="dark"] .dash-treasury-val--gold {
   color: #D4AF37 !important;
-  text-shadow: 0 0 20px rgba(212, 175, 55, 0.35);
+  text-shadow: none;
 }
 
 :root[data-theme="dark"] .dash-owner-banner {
@@ -2491,17 +2491,17 @@
 
 /* Apple Pro Action Button */
 .raqib-run-btn {
-  background: #00BD7D !important;
+  background: var(--accent) !important;
   color: #FFFFFF !important;
   border: none !important;
   font-weight: 700 !important;
-  box-shadow: 0 4px 14px rgba(0, 189, 125, 0.35) !important;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 .raqib-run-btn:hover {
   background: #00A66E !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 8px 24px rgba(0, 189, 125, 0.45) !important;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 45%, transparent) !important;
 }
 
 /* Tab buttons in dashboard */
@@ -2918,7 +2918,7 @@
   font-size: 0.76rem !important;
   font-weight: 600 !important;
   background: rgba(16, 185, 129, 0.12) !important;
-  color: #10B981 !important;
+  color: var(--accent-strong) !important;
   border: 1px solid rgba(16, 185, 129, 0.25) !important;
 }
 
@@ -3593,7 +3593,7 @@ html[dir="ltr"] .dash-table th {
 }
 .dash-switcher-icon {
   display: inline-flex;
-  color: var(--accent, #00F0FF);
+  color: var(--accent);
   width: 18px;
   height: 18px;
 }
@@ -3617,15 +3617,15 @@ html[dir="ltr"] .dash-table th {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 .dash-staff-card.is-active-workspace {
-  border-color: var(--accent, #00F0FF) !important;
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.18) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 18%, transparent) !important;
 }
 .dash-staff-card.is-active-workspace::after {
   content: "الجلسة النشطة";
   position: absolute;
   top: -9px;
   left: 12px;
-  background: var(--accent, #00F0FF);
+  background: var(--accent);
   color: #051419;
   font-size: 0.65rem;
   font-weight: 700;
@@ -3671,9 +3671,9 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
   font-family: var(--font-mono, monospace);
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--accent, #00F0FF);
+  color: var(--accent);
   letter-spacing: 0.05em;
-  text-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+  text-shadow: none;
 }
 .dash-portal-section-grid {
   display: grid;
@@ -3782,14 +3782,14 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent, #00F0FF);
-  box-shadow: 0 0 8px var(--accent, #00F0FF);
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
   flex-shrink: 0;
   animation: dot-live-pulse 2s ease-in-out infinite;
 }
 @keyframes dot-live-pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--accent, #00F0FF); }
-  50%       { opacity: 0.55; box-shadow: 0 0 2px var(--accent, #00F0FF); }
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--accent); }
+  50%       { opacity: 0.55; box-shadow: 0 0 2px var(--accent); }
 }
 
 /* Portal section grid — two-column layout */
@@ -3841,10 +3841,10 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
 }
 
 .prod-tab.active {
-  background: var(--accent, #00F0FF);
+  background: var(--accent);
   color: #0b0f19;
-  border-color: var(--accent, #00F0FF);
-  box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
 .prod-tab-badge {
@@ -3881,8 +3881,8 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
 }
 
 .prod-search-box:focus-within {
-  border-color: var(--accent, #00F0FF);
-  box-shadow: 0 0 16px rgba(0, 240, 255, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 .prod-search-icon {
@@ -3962,8 +3962,8 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
 
 .sandbox-tab-btn.active {
   background: rgba(255, 255, 255, 0.1);
-  color: var(--accent, #00F0FF);
-  border-color: rgba(0, 240, 255, 0.3);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
 .sandbox-terminal-view {
@@ -4236,7 +4236,7 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
   gap: 0.4rem;
 }
 
-.color-cyan { color: var(--accent, #00F0FF) !important; }
+.color-cyan { color: var(--accent) !important; }
 .color-green { color: #4ade80 !important; }
 .color-blue { color: #60a5fa !important; }
 .color-gold { color: #fbbf24 !important; }
@@ -4286,7 +4286,7 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
 }
 .admin-bar-link:hover, .admin-bar-link:focus-visible {
   background: rgba(255, 255, 255, 0.1) !important;
-  outline: 2px solid var(--accent, #00F0FF) !important;
+  outline: 2px solid var(--accent) !important;
 }
 
 

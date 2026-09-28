@@ -71,8 +71,8 @@
 :root[data-theme="dark"].js body {
   background-color: var(--bg) !important;
   background-image: 
-    radial-gradient(1300px 750px at 50% -120px, rgba(0, 189, 125, 0.08), transparent 70%),
-    radial-gradient(950px 550px at 95% 20%, rgba(0, 240, 255, 0.04), transparent 60%),
+    radial-gradient(1300px 750px at 50% -120px, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%),
+    radial-gradient(950px 550px at 95% 20%, color-mix(in srgb, var(--accent) 4%, transparent), transparent 60%),
     radial-gradient(1100px 650px at 5% 65%, rgba(16, 185, 129, 0.04), transparent 60%) !important;
   background-attachment: fixed !important;
 }
@@ -203,12 +203,12 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #00F0FF, #10B981, #2DD4BF);
+    background: linear-gradient(90deg, var(--accent), var(--accent-strong), var(--accent-text));
     transform-origin: 0% 50%;
     z-index: 9999;
     animation: scroll-progress auto linear;
     animation-timeline: scroll(root);
-    box-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 60%, transparent);
   }
   @keyframes scroll-progress {
     from { transform: scaleX(0); }

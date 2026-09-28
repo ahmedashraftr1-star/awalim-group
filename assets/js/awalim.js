@@ -30,7 +30,7 @@
   /* ---------- theme: system default, saved choice wins ---------- */
   function applyTheme(t, save) {
     root.setAttribute("data-theme", t);
-    if (save) { try { localStorage.setItem("awalim-theme", t); root.setAttribute("data-theme-saved", ""); } catch (_) {} }
+    if (save) { try { localStorage.setItem("awalim-theme-v2", t); root.setAttribute("data-theme-saved", ""); } catch (_) {} }
     $$("[data-theme-toggle]").forEach(function (b) {
       b.setAttribute("aria-pressed", t === "dark" ? "true" : "false");
       b.setAttribute("aria-label", t === "dark" ? T("التبديل إلى الوضع النهاري", "Switch to light mode") : T("التبديل إلى الوضع الليلي", "Switch to dark mode"));

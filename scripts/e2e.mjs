@@ -51,7 +51,7 @@ for (const r of routes) {
   await page.click("[data-theme-toggle]");
   const after = await page.evaluate(() => document.documentElement.getAttribute("data-theme"));
   ok(before !== after, `theme toggle ${before} → ${after}`);
-  ok(await page.evaluate(() => localStorage.getItem("awalim-theme")) === after, "theme persisted");
+  ok(await page.evaluate(() => localStorage.getItem("awalim-theme-v2")) === after, "theme persisted");
   await page.click(".acc__q >> nth=0");
   await page.waitForTimeout(500);
   ok(await page.locator(".acc__it.is-open").count() === 1, "accordion opens");

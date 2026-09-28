@@ -1477,7 +1477,7 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
 }
 .bento-badge--cyan {
   background: rgba(6, 182, 212, 0.12);
-  color: #06b6d4;
+  color: var(--accent-text);
   border: 1px solid rgba(6, 182, 212, 0.3);
 }
 .bento-badge--blue {
@@ -1626,15 +1626,15 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
   inline-size: 7px;
   block-size: 7px;
   border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 10px #10b981;
+  background: var(--accent-strong);
+  box-shadow: 0 0 10px var(--accent-strong);
 }
 .hud__item--edge .hud__pulse {
   inline-size: 7px;
   block-size: 7px;
   border-radius: 50%;
-  background: #06b6d4;
-  box-shadow: 0 0 10px #06b6d4;
+  background: var(--accent-text);
+  box-shadow: 0 0 10px var(--accent-text);
   animation: hudPulse 2s infinite ease-in-out;
 }
 @keyframes hudPulse {
@@ -1718,8 +1718,8 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
   padding: 4px 10px;
   border-radius: var(--r-full);
 }
-.arch-chip--teal { background: rgba(14, 122, 111, 0.15); color: #2dd4bf; border: 1px solid rgba(45, 212, 191, 0.3); }
-.arch-chip--cyan { background: rgba(6, 182, 212, 0.15); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.3); }
+.arch-chip--teal { background: rgba(14, 122, 111, 0.15); color: var(--accent-text); border: 1px solid rgba(45, 212, 191, 0.3); }
+.arch-chip--cyan { background: rgba(6, 182, 212, 0.15); color: var(--accent-text); border: 1px solid rgba(6, 182, 212, 0.3); }
 .arch-chip--gold { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
 .arch-chip--purple { background: rgba(168, 85, 247, 0.15); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); }
 .arch-card__spec {
@@ -1834,7 +1834,7 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
   padding: 3px 8px;
   border-radius: var(--r-pill);
   background: rgba(14, 122, 111, 0.2);
-  color: #2dd4bf;
+  color: var(--accent-text);
 }
 .matrix-badge--dim {
   background: rgba(255, 255, 255, 0.08);
@@ -1874,7 +1874,7 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
   border-inline: 1px solid rgba(14, 122, 111, 0.15);
 }
 .matrix-val--win b {
-  color: #10b981;
+  color: var(--accent-strong);
 }
 .matrix-val--win .matrix-val__icon {
   display: inline-flex;
@@ -1884,7 +1884,7 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
   block-size: 20px;
   border-radius: 50%;
   background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
+  color: var(--accent-strong);
   font-size: 0.75rem;
   margin-inline-end: 6px;
 }
@@ -1949,9 +1949,9 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
   padding: 4px 10px;
   border-radius: var(--r-full);
 }
-.endorse-chip--teal { background: rgba(14, 122, 111, 0.15); color: #2dd4bf; border: 1px solid rgba(45, 212, 191, 0.3); }
+.endorse-chip--teal { background: rgba(14, 122, 111, 0.15); color: var(--accent-text); border: 1px solid rgba(45, 212, 191, 0.3); }
 .endorse-chip--gold { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
-.endorse-chip--cyan { background: rgba(6, 182, 212, 0.15); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.3); }
+.endorse-chip--cyan { background: rgba(6, 182, 212, 0.15); color: var(--accent-text); border: 1px solid rgba(6, 182, 212, 0.3); }
 .endorse-chip--purple { background: rgba(168, 85, 247, 0.15); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); }
 .endorse-metric {
   font-size: 0.75rem;
@@ -1984,9 +1984,9 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
   flex: none;
   border: 1px solid var(--border);
 }
-.endorse-avatar--teal { background: rgba(14, 122, 111, 0.15); color: #2dd4bf; }
+.endorse-avatar--teal { background: rgba(14, 122, 111, 0.15); color: var(--accent-text); }
 .endorse-avatar--gold { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-.endorse-avatar--cyan { background: rgba(6, 182, 212, 0.15); color: #06b6d4; }
+.endorse-avatar--cyan { background: rgba(6, 182, 212, 0.15); color: var(--accent-text); }
 .endorse-avatar--purple { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
 .endorse-meta {
   display: flex;
@@ -2738,3 +2738,28 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
 }
 
 .estimator__opt input { min-inline-size: 24px; min-block-size: 24px; inline-size: 24px; block-size: 24px; cursor: pointer; }
+
+/* ---------- calm-premium pass (2026-09-28) ----------
+   Mobile header: the row carried six controls, squeezed the wordmark to a
+   few pixels and `overflow-wrap: anywhere` then broke «عوالِم قروب» one
+   letter per line. English and the admin gate already live in the drawer,
+   so the bar keeps only search, theme and the menu — and the name never wraps. */
+@media (max-width: 60em) {
+  .pillnav__act .lang-btn, .pillnav__act .admin-gate-btn { display: none; }
+  .pillnav__in > .brand { flex: 0 0 auto; }
+  .brand__name { white-space: nowrap; overflow-wrap: normal; }
+}
+
+/* One quiet contact affordance: a round WhatsApp button, out of the reading
+   column's way. Replaces a wide floating chat pill that covered content. */
+.contact-fab {
+  position: fixed; inset-block-end: 20px; inset-inline-start: 20px; z-index: 90;
+  display: grid; place-items: center; inline-size: 52px; block-size: 52px; border-radius: 50%;
+  background: var(--surface); color: var(--accent-text); border: 1px solid var(--border-2);
+  box-shadow: var(--shadow-pill);
+  transition: transform var(--d-fast) var(--ease-out), border-color var(--d-fast) ease;
+}
+.contact-fab:hover { transform: translateY(-2px); border-color: var(--accent-line); }
+.contact-fab:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+.contact-fab svg { inline-size: 24px; block-size: 24px; }
+@media print { .contact-fab { display: none; } }

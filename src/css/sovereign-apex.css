@@ -31,12 +31,12 @@
 
 .sov-currency-btn:hover {
   background: var(--surface-3, rgba(255, 255, 255, 0.12));
-  border-color: var(--accent, #00BD7D);
+  border-color: var(--accent);
   transform: translateY(-1px);
 }
 
 .sov-currency-btn svg, .sov-currency-btn i {
-  color: var(--accent, #00BD7D);
+  color: var(--accent);
 }
 
 .sov-currency-dropdown {
@@ -47,7 +47,7 @@
   background: var(--surface, rgba(16, 20, 28, 0.95));
   border: 1px solid var(--border, rgba(255, 255, 255, 0.14));
   border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 189, 125, 0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px color-mix(in srgb, var(--accent) 15%, transparent);
   backdrop-filter: blur(28px) saturate(190%);
   -webkit-backdrop-filter: blur(28px) saturate(190%);
   padding: 6px;
@@ -85,8 +85,8 @@
 }
 
 .sov-curr-opt.active {
-  background: rgba(0, 189, 125, 0.12);
-  color: var(--accent, #00BD7D);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
   font-weight: 700;
 }
 
@@ -122,7 +122,7 @@
   border-radius: 28px;
   box-shadow:
     0 40px 120px rgba(0, 0, 0, 0.95),
-    0 0 60px rgba(0, 189, 125, 0.2),
+    0 0 60px color-mix(in srgb, var(--accent) 20%, transparent),
     inset 0 1px 2px rgba(255, 255, 255, 0.4);
   display: flex;
   flex-direction: column;
@@ -133,7 +133,7 @@
 :root:not([data-theme="dark"]) .sov-demo-window {
   background: #FFFFFF;
   border-color: rgba(0, 0, 0, 0.12);
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.2), 0 0 40px rgba(0, 189, 125, 0.15);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.2), 0 0 40px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 @keyframes sovWindowPop {
@@ -301,9 +301,9 @@
   border-radius: var(--r-pill, 999px);
   font-size: 0.8rem;
   font-weight: 700;
-  background: rgba(0, 189, 125, 0.08);
-  border: 1px solid rgba(0, 189, 125, 0.25);
-  color: var(--accent, #00BD7D);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  color: var(--accent);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   backdrop-filter: blur(16px);
@@ -313,16 +313,16 @@
 }
 
 .btn-demo-trigger:hover {
-  background: rgba(0, 189, 125, 0.2);
-  border-color: var(--accent, #00BD7D);
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  border-color: var(--accent);
   color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 189, 125, 0.25);
+  box-shadow: 0 10px 25px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
 :root:not([data-theme="dark"]) .btn-demo-trigger {
-  background: rgba(0, 189, 125, 0.08);
-  border-color: rgba(0, 189, 125, 0.3);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
   color: #047857;
 }
 
@@ -338,7 +338,7 @@
   -webkit-backdrop-filter: blur(28px) saturate(190%);
   box-shadow:
     0 16px 48px rgba(0, 0, 0, 0.75),
-    0 0 24px rgba(0, 189, 125, 0.2),
+    0 0 24px color-mix(in srgb, var(--accent) 20%, transparent),
     inset 0 1px 2px rgba(255, 255, 255, 0.35);
   border-radius: 999px;
   padding: 8px 18px 8px 10px;
@@ -353,13 +353,13 @@
 :root:not([data-theme="dark"]) .sovereign-comms-trigger {
   background: rgba(255, 255, 255, 0.95);
   border-color: rgba(0, 0, 0, 0.12);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12), 0 0 24px rgba(0, 189, 125, 0.15);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12), 0 0 24px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 .sovereign-comms-trigger:hover {
   transform: translateY(-4px) scale(1.02);
-  border-color: var(--accent, #00BD7D);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 189, 125, 0.35);
+  border-color: var(--accent);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 35px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 
 .comms-trigger-avatar-wrap {
@@ -373,7 +373,7 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid var(--accent, #00BD7D);
+  border: 1.5px solid var(--accent);
 }
 
 .comms-trigger-status {
@@ -382,7 +382,7 @@
   right: 0;
   width: 10px;
   height: 10px;
-  background: var(--accent, #00BD7D);
+  background: var(--accent);
   border-radius: 50%;
   border: 2px solid var(--surface, #0A0E17);
 }
@@ -401,14 +401,14 @@
 
 .comms-trigger-sub {
   font-size: 0.68rem;
-  color: var(--accent, #00BD7D);
+  color: var(--accent);
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
 .comms-trigger-badge {
-  background: var(--accent, #00BD7D);
+  background: var(--accent);
   color: #051A14;
   font-size: 0.65rem;
   font-weight: 800;
@@ -431,7 +431,7 @@
   border-radius: 24px;
   box-shadow:
     0 32px 80px rgba(0, 0, 0, 0.9),
-    0 0 50px rgba(0, 189, 125, 0.2),
+    0 0 50px color-mix(in srgb, var(--accent) 20%, transparent),
     inset 0 1px 1px rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(32px) saturate(190%);
   -webkit-backdrop-filter: blur(32px) saturate(190%);
@@ -445,7 +445,7 @@
 :root:not([data-theme="dark"]) .sovereign-comms-modal {
   background: #FFFFFF;
   border-color: rgba(0, 0, 0, 0.12);
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.15), 0 0 40px rgba(0, 189, 125, 0.15);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.15), 0 0 40px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 .sovereign-comms-modal.open {
@@ -477,7 +477,7 @@
   height: 38px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid var(--accent, #00BD7D);
+  border: 1.5px solid var(--accent);
 }
 
 .comms-header-info h4 {
@@ -489,7 +489,7 @@
 
 .comms-header-info p {
   font-size: 0.7rem;
-  color: var(--accent, #00BD7D);
+  color: var(--accent);
   margin: 2px 0 0 0;
   display: flex;
   align-items: center;
@@ -607,7 +607,7 @@
 
 .comms-msg.user {
   align-self: flex-end;
-  background: linear-gradient(135deg, var(--accent, #00BD7D), #059669);
+  background: linear-gradient(135deg, var(--accent), #059669);
   color: #fff;
   border-bottom-left-radius: 4px;
 }
@@ -645,7 +645,7 @@
 }
 
 .comms-send-btn {
-  background: var(--accent, #00BD7D);
+  background: var(--accent);
   border: none;
   border-radius: 50%;
   width: 34px;
@@ -670,28 +670,28 @@
 
 .hero__dev {
   transform-style: preserve-3d;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5), 0 0 50px rgba(0, 189, 125, 0.15) !important;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5), 0 0 50px color-mix(in srgb, var(--accent) 15%, transparent) !important;
 }
 
 :root:not([data-theme="dark"]) .hero__dev {
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12), 0 0 40px rgba(0, 189, 125, 0.1) !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12), 0 0 40px color-mix(in srgb, var(--accent) 10%, transparent) !important;
 }
 
 /* ── Sovereign Apex CSP-Compliant Helper Classes ── */
-.sov-curr-icon { color: var(--accent, #00BD7D); font-size: 11px; }
+.sov-curr-icon { color: var(--accent); font-size: 11px; }
 .sov-curr-caret { font-size: 7px; opacity: 0.6; }
 .sov-demo-actions { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
 .sov-demo-url-lock { font-size: 10px; opacity: 0.6; }
 .sov-demo-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
-.sov-demo-badge-accent { background: rgba(0, 189, 125, 0.15); color: var(--accent, #00BD7D); border: 1px solid rgba(0, 189, 125, 0.3); }
+.sov-demo-badge-accent { background: color-mix(in srgb, var(--accent) 15%, transparent); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
 .sov-demo-title-txt { font-size: 1.3rem; font-weight: 800; color: var(--text, #fff); margin: 8px 0 0; }
-.sov-demo-live-tag { font-size: 0.78rem; color: var(--accent, #00BD7D); display: flex; align-items: center; gap: 6px; font-weight: 700; }
-.sov-demo-live-dot { width: 8px; height: 8px; background: var(--accent, #00BD7D); border-radius: 50%; display: inline-block; }
+.sov-demo-live-tag { font-size: 0.78rem; color: var(--accent); display: flex; align-items: center; gap: 6px; font-weight: 700; }
+.sov-demo-live-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; }
 .sov-demo-chart-header { display: flex; justify-content: space-between; align-items: center; }
 .sov-demo-chart-title { font-size: 0.88rem; font-weight: 800; color: var(--text, #fff); }
 .sov-demo-chart-sub { font-size: 0.75rem; color: var(--text-muted, rgba(255, 255, 255, 0.5)); }
-.comms-live-dot { width: 6px; height: 6px; background: var(--accent, #00BD7D); border-radius: 50%; display: inline-block; }
+.comms-live-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block; }
 .comms-chips-wrap { padding: 0 16px 8px; display: flex; gap: 6px; flex-wrap: wrap; }
 .comms-chips-title { font-size: 10px; color: var(--text-muted, rgba(255, 255, 255, 0.4)); width: 100%; margin-bottom: 2px; }
-.comms-chip-wa { color: var(--accent, #00BD7D); text-decoration: none; }
-.comms-wa-link { color: var(--accent, #00BD7D); font-weight: 700; text-decoration: underline; }
+.comms-chip-wa { color: var(--accent); text-decoration: none; }
+.comms-wa-link { color: var(--accent); font-weight: 700; text-decoration: underline; }

@@ -146,7 +146,7 @@ p { text-wrap: pretty; }
 :root[data-theme="dark"] body {
   background-color: var(--bg);
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 240, 255, 0.06), transparent 70%),
+    radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 70%),
     radial-gradient(circle at 92% 12%, rgba(16, 185, 129, 0.04), transparent 45%),
     radial-gradient(circle at 8% 45%, rgba(245, 158, 11, 0.03), transparent 45%);
   background-attachment: fixed;
