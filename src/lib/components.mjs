@@ -103,8 +103,6 @@ export const metricBar = ({ metric = {}, href, ctaLabel = "دراسة الحال
 
   if (metric.users) {
     items.push(`<div class="mbar__meta"><span class="mbar__ic">${icon("globe")}</span><b class="mbar__val">${fill(metric.users, stats)}</b><span class="mbar__sub">مستخدم</span></div>`);
-  } else {
-    items.push(`<div class="mbar__meta"><span class="mbar__ic">${icon("shield")}</span><b class="mbar__val">99.99%</b><span class="mbar__sub">جهوزية</span></div>`);
   }
 
   if (metric.platform) {
@@ -752,8 +750,8 @@ export const mockScreen = (kind) => {
         <div class="mk__hd"><span>مختبر الذكاء · وكيل الفواتير</span><span class="mk__chip">live</span></div>
         <div class="mk__log">
           <div class="mk__ln"><span class="k">▶</span><span>استلام مستند <span class="j">INV-EL-4471.jpg</span></span></div>
-          <div class="mk__ln"><span class="k">⚙</span><span>أداة <span class="j">extract_fields</span> → <span class="j">{ vendor: "شركة الكهرباء", net: 1000, vat: 150 }</span></span></div>
-          <div class="mk__ln"><span class="k">⚙</span><span>أداة <span class="j">propose_entry</span> → مدين 1,150 = دائن 1,150 ✓</span></div>
+          <div class="mk__ln"><span class="k"></span><span>أداة <span class="j">extract_fields</span> → <span class="j">{ vendor: "شركة الكهرباء", net: 1000, vat: 150 }</span></span></div>
+          <div class="mk__ln"><span class="k"></span><span>أداة <span class="j">propose_entry</span> → مدين 1,150 = دائن 1,150 ✓</span></div>
           <div class="mk__ln is-wait"><span class="k">⏸</span><span>أثر مالي — بانتظار اعتماد بشري</span></div>
           <div class="mk__ln is-ok"><span class="k">✓</span><span>اعتُمد بواسطة م. سارة · سُجِّل القرار في السجل</span></div>
           <div class="mk__ln"><span class="k">▶</span><span>المستند التالي <span class="j">INV-TC-1187.pdf</span> <span class="mk__cursor"></span></span></div>
@@ -1338,7 +1336,7 @@ export const sovereignJourneyMilestones = (ctx) => {
         <div class="journey-item__marker" aria-hidden="true"></div>
         <div class="journey-item__body">
           <h3 class="journey-item__title">الترخيص الإماراتي والتوسع الإقليمي</h3>
-          <p class="journey-item__desc">تسجيل <span dir="ltr">Awalim Group LLC</span> في دولة الإمارات العربية المتحدة 🇦🇪 وترسيخ الحضور المؤسسي لخدمة الشركاء عبر 14 دولة.</p>
+          <p class="journey-item__desc">تسجيل <span dir="ltr">Awalim Group LLC</span> في دولة الإمارات العربية المتحدة وترسيخ الحضور المؤسسي لخدمة الشركاء عبر 14 دولة.</p>
           <span class="journey-item__tag">الترخيص والاعتماد الدولي</span>
         </div>
       </div>
@@ -1445,7 +1443,7 @@ export const sovereignDisciplines = (ctx) => {
     </div>
     <div class="disc-grid rv" data-stagger>
       <div class="disc-card">
-        <div class="disc-icon" aria-hidden="true">🎨</div>
+        <div class="disc-icon" aria-hidden="true"></div>
         <h3 class="disc-title">الهندسة البصرية والتصميم</h3>
         <p class="disc-desc">أنظمة بصرية عالمية، هوية متكاملة، وواجهات مستخدم سائلة ترقى لأرقى الجوائز العالمية مع احترام قواعد التيبوغرافيا العربية.</p>
         <div class="disc-tags">
@@ -1456,7 +1454,7 @@ export const sovereignDisciplines = (ctx) => {
         </div>
       </div>
       <div class="disc-card">
-        <div class="disc-icon" aria-hidden="true">⚡</div>
+        <div class="disc-icon" aria-hidden="true"></div>
         <h3 class="disc-title">تطوير الأنظمة والتطبيقات</h3>
         <p class="disc-desc">كود معياري نظيف صفر تبعيات، تطبيقات ويب وموبايل فائقة الأداء، وقواعد بيانات محلية سريعة الاستجابة تحت أقسى الظروف.</p>
         <div class="disc-tags">
@@ -1467,7 +1465,7 @@ export const sovereignDisciplines = (ctx) => {
         </div>
       </div>
       <div class="disc-card">
-        <div class="disc-icon" aria-hidden="true">🤖</div>
+        <div class="disc-icon" aria-hidden="true"></div>
         <h3 class="disc-title">نواة الذكاء الاصطناعي والأتمتة</h3>
         <p class="disc-desc">بناء أسراب وكلاء ذكاء اصطناعي سياديين يعملون محلياً لأتمتة سلاسل الإمداد، الفوترة، والتحليل المالي دون تسريب أي بيانات.</p>
         <div class="disc-tags">
@@ -1478,7 +1476,7 @@ export const sovereignDisciplines = (ctx) => {
         </div>
       </div>
       <div class="disc-card">
-        <div class="disc-icon" aria-hidden="true">🎬</div>
+        <div class="disc-icon" aria-hidden="true"></div>
         <h3 class="disc-title">الإنتاج الإعلامي والحركي</h3>
         <p class="disc-desc">موشن جرافيك متقدم، مونتاج سينمائي، ومؤثرات حركية فائقة الدقة تعزز الحضور البصري للعلامة التجارية في المنصات العالمية.</p>
         <div class="disc-tags">

@@ -2763,3 +2763,6 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
 .contact-fab:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
 .contact-fab svg { inline-size: 24px; block-size: 24px; }
 @media print { .contact-fab { display: none; } }
+/* Internal system codes (SYS-ACC-01…) are for us, not for a buyer: the chip
+   keeps its status dot and word, the code itself is not painted. */
+.syscode__code { display: none; }

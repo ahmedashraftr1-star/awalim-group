@@ -55,7 +55,7 @@ export default function render(ctx) {
 
     `<section class="sec sec--born" aria-label="Born in Palestine">
       <div class="wrap wrap--wide born rv">
-        <span class="born__flag" aria-hidden="true">🇵🇸</span>
+        <span class="born__flag" aria-hidden="true"></span>
         <p class="born__h d-1" lang="en">Born in Palestine</p>
         <p class="lede">فلسطيني الجذر، عالمي المعيار. كل نظام نسلّمه يحمل هذا السطر في تذييله — ونقصده.</p>
       </div>

@@ -165,10 +165,10 @@ for (const r of routes) {
   /* self-audit readouts filled */
   await page.mouse.move(200, 200); await page.mouse.click(200, 200);
   await page.waitForTimeout(800);
-  const lcp = await page.locator('[data-audit="lcp"] b >> nth=0').textContent();
-  ok(/\d/.test(lcp || ""), "live LCP readout: " + lcp);
-  const c = await page.locator('[data-audit="contrast"] b').textContent();
-  ok(/:1/.test(c || ""), "live contrast readout: " + c);
+  /* the home standards grid (with its live contrast card) left the home page
+     in the calm-premium pass; the footer vitals strip carries LCP now */
+  const lcp = await page.locator('b[data-audit="lcp"]').first().textContent();
+  ok(/\d/.test(lcp || ""), "live LCP readout (footer): " + lcp);
   await ctx.close();
 }
 

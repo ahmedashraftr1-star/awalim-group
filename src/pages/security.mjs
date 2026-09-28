@@ -37,13 +37,13 @@ export default function render(ctx) {
             <span class="dot dot--live"></span> <span>${s.raqib ? s.raqib.tab_scanner : "الماسح الخارجي والمطابقة"}</span>
           </button>
           <button type="button" class="raqib-module-tab-btn" data-tab="breach">
-            <span>🚨 ${s.raqib ? s.raqib.tab_breach : "إخطار الخروقات (72 ساعة)"}</span>
+            <span>${s.raqib ? s.raqib.tab_breach : "إخطار الخروقات (72 ساعة)"}</span>
           </button>
           <button type="button" class="raqib-module-tab-btn" data-tab="consent">
-            <span>🛡️ ${s.raqib ? s.raqib.tab_consent : "مولّد شريط الامتثال 0KB"}</span>
+            <span>${s.raqib ? s.raqib.tab_consent : "مولّد شريط الامتثال 0KB"}</span>
           </button>
           <button type="button" class="raqib-module-tab-btn" data-tab="readiness">
-            <span>📊 ${s.raqib ? s.raqib.tab_readiness : "مقياس الجاهزية المؤسسية"}</span>
+            <span>${s.raqib ? s.raqib.tab_readiness : "مقياس الجاهزية المؤسسية"}</span>
           </button>
         </div>
 
@@ -64,12 +64,12 @@ export default function render(ctx) {
               <label for="input-raqib-target" class="raqib-label">${s.raqib ? s.raqib.target_label : (ctx.locale === "en" ? "Enter target domain or SaaS URL:" : "أدخل عنوان النطاق أو تطبيق الـ SaaS للفحص الخارجي:")}</label>
               <div class="raqib-input-row">
                 <div class="raqib-input-box">
-                  <span class="raqib-input-icon">🌐</span>
+                  <span class="raqib-input-icon"></span>
                   <input type="url" name="target_url" class="raqib-target-input mono" id="input-raqib-target" placeholder="https://your-saas-platform.com" required aria-describedby="raqib-input-err">
                   <div id="raqib-input-err" role="alert" aria-live="polite" class="raqib-error-msg" style="display:none; color:#EF4444; font-size:0.8rem; margin-top:0.35rem;"></div>
                 </div>
                 <button type="submit" class="btn btn--primary raqib-submit-btn" id="btn-run-raqib-scan">
-                  <span>⚡ ${s.raqib ? s.raqib.btn_scan : (ctx.locale === "en" ? "Run Sovereign Audit" : "بدء الفحص الجنائي السيادي")}</span>
+                  <span>${s.raqib ? s.raqib.btn_scan : (ctx.locale === "en" ? "Run Sovereign Audit" : "بدء الفحص الجنائي السيادي")}</span>
                 </button>
               </div>
             </div>
@@ -150,7 +150,7 @@ export default function render(ctx) {
 
               <div style="display: flex; flex-direction: column; justify-content: center; gap: 8px;">
                 <button type="button" class="btn btn--outline btn--sm" id="btn-export-raqib-report">
-                  <span>📥 ${s.raqib ? s.raqib.btn_export : (ctx.locale === "en" ? "Download Certified Forensic Report" : "تحميل التقرير الجنائي المعتمد")}</span>
+                  <span>${s.raqib ? s.raqib.btn_export : (ctx.locale === "en" ? "Download Certified Forensic Report" : "تحميل التقرير الجنائي المعتمد")}</span>
                 </button>
                 <span class="mono" style="font-size: 0.7rem; color: var(--text-muted); text-align: center;">SHA-256 Merkle Certified</span>
               </div>
@@ -291,8 +291,8 @@ export default function render(ctx) {
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
                 <h4 style="font-size: 0.95rem; font-weight: var(--w-bold); color: var(--text-1); margin: 0;">${ctx.locale === "en" ? "Formal Regulatory Notification Dispatch (Statutory Law 151/2020 Art. 12)" : "نص الإخطار الرسمي لمركز حماية البيانات الشخصية (وفق المادة 12)"}</h4>
                 <div style="display: flex; gap: 8px;">
-                  <button type="button" class="btn btn--ghost btn--xs" id="btn-copy-breach-notice"><span>📋 ${ctx.locale === "en" ? "Copy Official Letter" : "نسخ الخطاب الرسمي"}</span></button>
-                  <button type="button" class="btn btn--outline btn--xs" id="btn-download-breach-notice"><span>📥 ${ctx.locale === "en" ? "Download Dispatch (.txt)" : "تنزيل الخطاب (.txt)"}</span></button>
+                  <button type="button" class="btn btn--ghost btn--xs" id="btn-copy-breach-notice"><span>${ctx.locale === "en" ? "Copy Official Letter" : "نسخ الخطاب الرسمي"}</span></button>
+                  <button type="button" class="btn btn--outline btn--xs" id="btn-download-breach-notice"><span>${ctx.locale === "en" ? "Download Dispatch (.txt)" : "تنزيل الخطاب (.txt)"}</span></button>
                 </div>
               </div>
               <pre class="raqib-code-pre mono" id="raqib-breach-notice-content" dir="rtl" style="white-space: pre-wrap; font-size: 0.82rem; line-height: 1.6; max-height: 360px; overflow-y: auto;"></pre>
@@ -325,14 +325,14 @@ export default function render(ctx) {
               <div class="raqib-consent-preview" id="raqib-consent-preview-box">
                 <div class="raqib-consent-inner">
                   <div style="display: flex; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
-                    <span style="font-size: 1.75rem;">🛡️</span>
+                    <span style="font-size: 1.75rem;"></span>
                     <div style="flex: 1; min-width: 240px;">
                       <h4 style="margin: 0 0 4px; font-size: 0.95rem; font-weight: var(--w-bold); color: var(--text-1);">${ctx.locale === "en" ? "Sovereign Privacy & Explicit Consent" : "الخصوصية السيادية والموافقة الصريحة"}</h4>
                       <p style="margin: 0 0 10px; font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">${ctx.locale === "en" ? "In compliance with Egypt Law 151/2020 & GDPR, we respect your rights. No non-essential cookies or analytics are executed without your explicit choice." : "التزاماً بالقانون 151 لسنة 2020 ولائحة GDPR، نحترم سيادتك الرقمية. لا يتم تشغيل أي أدوات أو كوكيز غير ضرورية دون موافقتك الصريحة المستقلة."}</p>
                       <div class="raqib-consent-toggles">
-                        <label class="raqib-toggle-pill active"><input type="checkbox" checked disabled> <span>🔒 ${ctx.locale === "en" ? "Essential (Always Active)" : "الضرورية (مفعلة دائماً)"}</span></label>
-                        <label class="raqib-toggle-pill"><input type="checkbox" id="chk-consent-pref" checked> <span>⚙️ ${ctx.locale === "en" ? "Preferences" : "التفضيلات"}</span></label>
-                        <label class="raqib-toggle-pill"><input type="checkbox" id="chk-consent-telemetry"> <span>📈 ${ctx.locale === "en" ? "Edge Telemetry (0-PII)" : "القياس المجهول (0-PII)"}</span></label>
+                        <label class="raqib-toggle-pill active"><input type="checkbox" checked disabled> <span>${ctx.locale === "en" ? "Essential (Always Active)" : "الضرورية (مفعلة دائماً)"}</span></label>
+                        <label class="raqib-toggle-pill"><input type="checkbox" id="chk-consent-pref" checked> <span>${ctx.locale === "en" ? "Preferences" : "التفضيلات"}</span></label>
+                        <label class="raqib-toggle-pill"><input type="checkbox" id="chk-consent-telemetry"> <span>${ctx.locale === "en" ? "Edge Telemetry (0-PII)" : "القياس المجهول (0-PII)"}</span></label>
                       </div>
                     </div>
                     <div class="raqib-consent-actions">
@@ -348,7 +348,7 @@ export default function render(ctx) {
             <div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                 <h4 style="font-size: 0.95rem; font-weight: var(--w-bold); color: var(--text-1); margin: 0;">${ctx.locale === "en" ? "Pure 0KB Zero-Tracker HTML/JS Snippet (Copy & Paste)" : "كود التضمين السيادي الخفيف (انسخ والصق في موقعك)"}</h4>
-                <button type="button" class="btn btn--ghost btn--xs" id="btn-copy-consent-code"><span>📋 ${ctx.locale === "en" ? "Copy Snippet" : "نسخ الكود"}</span></button>
+                <button type="button" class="btn btn--ghost btn--xs" id="btn-copy-consent-code"><span>${ctx.locale === "en" ? "Copy Snippet" : "نسخ الكود"}</span></button>
               </div>
               <pre class="raqib-code-pre mono" id="raqib-consent-code" dir="ltr" style="font-size: 0.78rem; max-height: 280px; overflow-y: auto;"></pre>
             </div>
@@ -450,7 +450,7 @@ export default function render(ctx) {
                 </div>
                 <div class="raqib-readiness-actions" style="margin-top: 1.25rem; width: 100%;">
                   <button type="button" class="btn btn--outline btn--sm" id="btn-export-readiness-cert" style="width: 100%;">
-                    <span>📥 ${ctx.locale === "en" ? "Export Readiness Roadmap (JSON)" : "تصدير خارطة طريق الامتثال (JSON)"}</span>
+                    <span>${ctx.locale === "en" ? "Export Readiness Roadmap (JSON)" : "تصدير خارطة طريق الامتثال (JSON)"}</span>
                   </button>
                 </div>
               </div>

@@ -17,6 +17,15 @@ export default function render(ctx) {
     .map((p) => ({ ...p, href: p.href || `/products/${p.slug}` }));
   const posts = h.journal.map((s) => articles.find((a) => a.slug === s)).filter(Boolean);
 
+  /* Calm-premium pass (2026-09-28): the home page was 26 sections and ~32
+     screens. It now answers a buyer's questions in the order they ask them —
+     what do you do, how big are you, what have you built, how do you think,
+     how do you work, who are you, what about X, how do I start. The removed
+     sections (bento highlights, sovereign architecture, why-us, vs-big-tech,
+     values, product grid, engines, disciplines, standards, stack, reach,
+     journal, milestones, estimator, pathways) still exist as components and
+     on their own pages. The endorsements were removed outright — they quoted
+     named people who never gave them. */
   const body = join([
     /* 1 — HERO */
     `<section class="hero" data-hero>
@@ -32,30 +41,12 @@ export default function render(ctx) {
           </div>
           <div class="hero__meta rv" style="--i:5">
             <img src="${site.brand.founder.photo}" alt="" width="44" height="44" loading="lazy" decoding="async">
-            <p>أسّسها <b>${esc(site.brand.founder.name)}</b> عام ${stats.founded.value} من غزّة. اليوم فريق هندسي يخدم عملاء في أكثر من ${fill("{clientCountries}", stats).replace("+", "")} دول.</p>
+            <p>أسّسها <b>${esc(site.brand.founder.name)}</b> عام ${stats.founded.value} من غزّة. اليوم فريق هندسي يخدم عملاء في ${fill("{clientCountries}", stats).replace("+", "")} دولة.</p>
           </div>
         </div>
         <div class="hero__media rv" style="--i:2" data-tilt>
           ${C.cockpit({ tilt: false, live: true, cls: "hero__dev", interactive: true })}
           <span class="hero__orb" aria-hidden="true"></span>
-        </div>
-      </div>
-      <div class="wrap wrap--wide hero__pods-wrap">
-        <div class="hero__brief-pods rv" style="--i:6">
-          <div class="brief-pod brief-pod--primary">
-            <div class="brief-pod__main">
-              <span class="brief-pod__tag">مشروع جديد</span>
-              <p class="brief-pod__p">عندك فكرة نظام مؤسسي أو أتمتة بالذكاء الاصطناعي؟ احكِ لنا عنها ونحن نتولى الباقي من النواة إلى الإنتاج.</p>
-            </div>
-            ${C.btn({ href: "/contact", label: "طلب دراسة النطاق والجدوى", kind: "primary", arrow: true })}
-          </div>
-          <div class="brief-pod brief-pod--glass">
-            <div class="brief-pod__main">
-              <span class="brief-pod__tag">هندسة سيادية</span>
-              <p class="brief-pod__p">أنظمة مبنية بصفر مكتبات خارجية، تدقيق تشفيري لحظي، ومطابقة معايير الحوسبة المؤسسية العالمية.</p>
-            </div>
-            ${C.btn({ href: "#highlights", label: "استكشف المنظومة", kind: "ghost", arrow: true })}
-          </div>
         </div>
       </div>
     </section>`,
@@ -65,22 +56,16 @@ export default function render(ctx) {
       <div class="wrap wrap--wide">${C.statBar(h.statBar, stats, { size: "xl", cls: "statbar--hero", verify: true, signing: ctx.signing })}</div>
     </section>`,
 
-    /* 2b — TRUST ACCREDITATIONS STRIP */
-    C.trustAccreditationStrip(ctx),
-
-    /* 3 — TECH STRIP (dark, visually separated from the hero) */
-    `<div class="marq-band">${C.marquee(site.marquee)}</div>`,
-
-    /* 4 — STORY SPLIT (BENTO HIGHLIGHTS) */
-    `<section class="sec" id="highlights">
+    /* 6 — SELECTED WORK */
+    `<section class="sec" id="work">
       <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: "أبرز المحطّات", eyebrowEn: "HIGHLIGHTS", h: "خمس سنوات من الشحن السيادي" })}
-        ${C.bentoHighlights(ctx)}
+        ${C.sectionHead({ eyebrowAr: "الأعمال", eyebrowEn: "SELECTED WORK", h: "ما بنيناه فعلاً", lede: "أنظمة وتطبيقات وهويات سُلِّمت لعملاء حقيقيين." })}
+        <div class="hcards">
+          ${selected.map((c) => C.heroCard({ ...c, themes, href: `/work/${c.slug}`, alt: c.heroAlt, stats, lazy: true })).join("")}
+        </div>
+        ${C.btnRow([C.btn({ href: "/work", label: "كل الأعمال", kind: "primary" })], "btn-row--after")}
       </div>
     </section>`,
-
-    /* 4b — SOVEREIGN ARCHITECTURE (Apple Silicon Style) */
-    C.sovereignArchitecture(ctx),
 
     /* 5 — MANIFESTO */
     `<section class="sec sec--alt">
@@ -95,100 +80,6 @@ export default function render(ctx) {
           </div>
           <div class="manifesto__bp">${C.blueprint()}</div>
         </div>
-      </div>
-    </section>`,
-
-    /* 5b — WHY US
-       The competitor answers this with adjectives. Adjectives are free, so
-       they are worth nothing. Every reason here ends in a link to the place on
-       this site where the visitor checks it — and the last one opens onto a
-       measurement with a column we lose. */
-    `<section class="sec" id="why">
-      <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: h.why.eyebrow, eyebrowEn: "WHY US", h: h.why.h, lede: h.why.lede })}
-        ${C.whyGrid(h.why.reasons)}
-        <div class="why__cmp" id="compare">${C.compareStrip(ctx.compare, h.why.cmp)}</div>
-      </div>
-    </section>`,
-
-    /* 5c — SOVEREIGN VS BIG TECH MATRIX */
-    C.sovereignVsBigTech(ctx),
-
-    /* 5d — SOVEREIGN VALUES */
-    C.sovereignValues(ctx),
-
-    /* 6 — SELECTED WORK */
-    `<section class="sec" id="work">
-      <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: "الأعمال", eyebrowEn: "SELECTED WORK", h: "ما بنيناه فعلاً", lede: "أنظمة وتطبيقات وهويات سُلِّمت لعملاء حقيقيين." })}
-        <div class="hcards">
-          ${selected.map((c) => C.heroCard({ ...c, themes, href: `/work/${c.slug}`, alt: c.heroAlt, stats, lazy: true })).join("")}
-        </div>
-        ${C.btnRow([C.btn({ href: "/work", label: "كل الأعمال", kind: "primary" })], "btn-row--after")}
-      </div>
-    </section>`,
-
-    /* 6b — EXECUTIVE ENDORSEMENTS (VERIFIED PARTNER PROOF) */
-    C.executiveEndorsements(ctx),
-
-    /* 7 — PRODUCT GRID 3×2 */
-    `<section class="sec sec--alt" id="ecosystem">
-      <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: "المنظومة", eyebrowEn: "SYSTEMS", h: "ستّة خطوط إنتاج تحت مظلّة واحدة", lede: "كل خط منتج قائم بذاته — ويستفيد من البنية والفريق نفسيهما." })}
-        <div class="pcards" data-stagger>${gridProducts.map((p) => C.pcard(p, themes)).join("")}</div>
-      </div>
-    </section>`,
-
-    /* 7b — VIBE OS CAPABILITIES (6 SOVEREIGN ENGINES) */
-    C.vibeOsCapabilities(ctx),
-
-    /* 7c — SOVEREIGN DISCIPLINES */
-    C.sovereignDisciplines(ctx),
-
-    /* 8 — ENGINEERING STANDARDS */
-    `<section class="sec" id="standards">
-      <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: "المعايير", eyebrowEn: "ENGINEERING STANDARDS", h: "ثمانية شروط لا نسلّم بدونها", lede: "ليست ميزات نبيعها — هي الحدّ الأدنى الذي يجعل النظام صالحاً للتشغيل أصلاً." })}
-        ${C.standardsGrid(site.standards, {
-          "01": `<a class="lnk" href="#top" data-scroll-top><span>جرّب محرّك القيود في الأعلى</span>${C.arrow()}</a>`,
-          "05": `<span class="live live--static"><span class="live__l">قبل كل نشر</span><b>${ctx.routesCount || 31} مسار × 2 شاشة · تباين · روابط</b></span>`,
-          "06": `${C.live("contrast", "تباين هذه الصفحة الآن")}${C.live("headings", "تسلسل العناوين")}`,
-          "07": `${C.live("rtl", "الاتجاه واللغة")}${C.live("digits", "سياسة الأرقام")}`,
-          "08": `${C.live("lcp", "LCP")}${C.live("cls", "CLS")}${C.live("inp", "INP")}${C.live("weight", "الوزن")}`
-        })}
-        <p class="small muted rv caps__note">القيم في البطاقات 06–08 تُقاس حيّاً في متصفّحك الآن عبر <bdi lang="en">PerformanceObserver</bdi> — لا نكتب أرقاماً لا نقيسها.</p>
-      </div>
-    </section>`,
-
-    /* 9 — STACK */
-    `<section class="sec sec--alt" id="stack">
-      <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: "المنظومة التقنية", eyebrowEn: "STACK", h: "أدوات نعرفها عن ظهر قلب", lede: "لا نطارد كل جديد. مع كل أداة هنا الحدّ الذي اصطدمنا به فيها — ومعرفة الحدّ هي الفرق بين استعمال الأداة وإتقانها." })}
-        ${C.wall(site.stack)}
-      </div>
-    </section>`,
-
-    /* 9b — WHERE WE OPERATE
-       A competitor answers this with a wall of client flags. We cannot: the
-       client names are not ours to publish. So the section is split — what we
-       can NAME (country packs we built, each openable and checkable) sits above
-       what we can only COUNT (signed numbers), and the note says which is which
-       and why. Stating the boundary is the claim; a flag we cannot back is not. */
-    `<section class="sec" id="reach">
-      <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: site.reach.eyebrowAr, eyebrowEn: site.reach.eyebrowEn, h: site.reach.h, lede: site.reach.lede })}
-        <div class="reach rv" data-stagger>
-          <div class="reach__named">
-            <p class="reach__label">${site.reach.namedLabel}</p>
-            <ul class="reach__packs">
-              ${site.reach.named.map((n) => `<li class="reach__pack">${n}</li>`).join("")}
-            </ul>
-          </div>
-          <div class="reach__counted">
-            ${site.reach.counted.map((c) => C.statTile({ ...stats[c.stat], label: c.label }, { size: "md" })).join("")}
-          </div>
-        </div>
-        <p class="reach__note rv">${site.reach.note}</p>
       </div>
     </section>`,
 
@@ -213,7 +104,7 @@ export default function render(ctx) {
             <p class="small muted">${fill("{engineersTrained} مهندس دخلوا مسارات الأكاديمية؛ {certifiedGraduates} منهم أنهوا المسار كاملاً بمشروع منشور. التدريب ليس خط دخل — هو كيف نبني الفريق الذي نوظّفه لاحقاً.", stats)}</p>
           </div>
           <div class="rv" data-stagger>
-            ${C.eyebrow("SYS-ACAD-03", "ACADEMY")}
+            ${C.eyebrow("الأكاديمية", "ACADEMY")}
             <h2 class="d-1">أكاديمية عوالِم</h2>
             <p class="lede">مسارات تدريب هندسية تُدرَّس بالطريقة التي نعمل بها فعلاً: مشروع حقيقي، مراجعة كود، واختبارات — لا سلسلة فيديوهات.</p>
             ${C.btnRow([C.btn({ href: "/academy", label: "المسارات", kind: "ghost", arrow: true })])}
@@ -222,28 +113,10 @@ export default function render(ctx) {
       </div>
     </section>`,
 
-    /* 12 — JOURNAL */
-    `<section class="sec" id="journal">
-      <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: "رؤى", eyebrowEn: "JOURNAL", h: "ما نتعلّمه ونكتبه", lede: "ملاحظات هندسية من مشاريع حقيقية — لا محتوى تسويقي." })}
-        <div class="posts" data-stagger>${posts.map((a) => C.postCard(a)).join("")}</div>
-        ${C.btnRow([C.btn({ href: "/journal", label: "كل المقالات", kind: "ghost", arrow: true })], "btn-row--after")}
-      </div>
-    </section>`,
-
     /* 13 — FOUNDER */
     `<section class="sec sec--alt" id="founder">
       <div class="wrap wrap--wide">${C.founder({ site, quote: site.founderQuote })}</div>
     </section>`,
-
-    /* 13-II — SOVEREIGN JOURNEY MILESTONES */
-    C.sovereignJourneyMilestones(ctx),
-
-    /* 13b — ESTIMATOR */
-    C.scopeEstimator(site),
-
-    /* 13c — ENTERPRISE ENGAGEMENT PATHWAYS */
-    C.enterprisePathways(ctx),
 
     /* 14 — FAQ */
     `<section class="sec" id="faq">
@@ -262,8 +135,6 @@ export default function render(ctx) {
 
     /* 15 — CTA */
     C.ctaBand({ h: "عندك عملية تستحقّ نظاماً؟", lede: "احكِ لنا عن العملية التي تستهلك وقت فريقك اليوم. نعود إليك بتشخيص أوّلي وتقدير نطاق — دون التزام منك.", primary: { href: "/contact", label: "ابدأ محادثة", kind: "primary" }, site }),
-
-    /* 16 — SOVEREIGN DOCK REMOVED (UNOBSTRUCTED VIEW) */
   ]);
 
   return {

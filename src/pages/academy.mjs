@@ -91,17 +91,17 @@ export default function render(ctx) {
               <!-- Interactive Track Actions -->
               <div class="track__actions" style="display:flex; flex-wrap:wrap; gap:0.6rem; align-items:center; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.08);">
                 <button type="button" class="btn btn--primary btn--sm btn-open-academy-apply" data-track-name="${esc(tr.t)}" style="padding:8px 18px; border-radius:8px; height:auto; width:auto; font-size:0.85rem; display:inline-flex;">
-                  <span>⚡ ${t("التقديم لهذا المسار", "Apply for Track")}</span>
+                  <span>${t("التقديم لهذا المسار", "Apply for Track")}</span>
                 </button>
                 <button type="button" class="btn btn--outline btn--sm btn-toggle-sprint-plan" data-sprint-target="track-sprints-${i + 1}" style="padding:8px 18px; border-radius:8px; height:auto; width:auto; font-size:0.85rem; display:inline-flex;">
-                  <span>📋 ${t("خطة السبرنتات الـ 4", "4-Sprint Roadmap")}</span>
+                  <span>${t("خطة السبرنتات الـ 4", "4-Sprint Roadmap")}</span>
                 </button>
               </div>
 
               <!-- Collapsible 4-Sprint Roadmap -->
               <div id="track-sprints-${i + 1}" class="track-sprints-drawer" style="display:none; padding:1.25rem; border-radius:var(--radius-md, 10px); background:rgba(14,18,25,0.65); border:1px solid rgba(212,175,55,0.25); box-shadow:0 10px 30px rgba(0,0,0,0.4);">
                 <div style="font-weight:700; font-size:0.9rem; margin-bottom:0.85rem; color:var(--gold, #D4AF37);">
-                  🏁 ${t("خطة السبرنتات الـ 4 والمخرجات الهندسية للمشروع", "4-Sprint Execution Roadmap & Technical Deliverables")}
+                  ${t("خطة السبرنتات الـ 4 والمخرجات الهندسية للمشروع", "4-Sprint Execution Roadmap & Technical Deliverables")}
                 </div>
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.75rem;">
                   ${(sprintRoadmaps[i] || []).map(sp => `
@@ -143,7 +143,7 @@ export default function render(ctx) {
               </div>
               <div style="display:flex; align-items:flex-end;">
                 <button type="submit" class="btn btn--primary btn--sm" id="btn-submit-verify-cert" style="background:var(--gold,#D4AF37); border-color:var(--gold,#D4AF37); color:#000; font-weight:700; height:42px;">
-                  <span>🔍 ${t("فحص ومصادقة الشهادة", "Verify Signature")}</span>
+                  <span>${t("فحص ومصادقة الشهادة", "Verify Signature")}</span>
                 </button>
               </div>
             </div>
@@ -162,7 +162,7 @@ export default function render(ctx) {
           <div id="cert-verification-result" style="padding:1.5rem; border-radius:12px; background:radial-gradient(circle at top right, rgba(212,175,55,0.08), transparent 70%), rgba(255,255,255,0.02); border:1px solid rgba(212,175,55,0.4);">
             <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
               <div style="display:flex; align-items:center; gap:0.75rem;">
-                <span style="font-size:2rem;">🛡️</span>
+                <span style="font-size:2rem;"></span>
                 <div>
                   <div class="mono" style="font-size:0.75rem; color:var(--gold,#D4AF37); font-weight:700;" id="cert-out-id">AWL-CERT-2026-ENG01</div>
                   <h3 style="margin:0.2rem 0; font-size:1.2rem; font-weight:800;" id="cert-out-name">${t("المهندس طارق الناصر", "Eng. Tariq Al-Nasser")}</h3>
@@ -196,7 +196,7 @@ export default function render(ctx) {
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; font-size:0.72rem; color:var(--muted);">
               <div class="mono" id="cert-out-hash">SHA-256: 7c129f40b311...tn02 · ED25519 ROOT ATTESTED</div>
               <button type="button" class="btn btn--outline btn--xs" id="btn-print-academic-cert">
-                <span>🖨️ ${t("طباعة / تصدير الشهادة", "Print Official Credential")}</span>
+                <span>${t("طباعة / تصدير الشهادة", "Print Official Credential")}</span>
               </button>
             </div>
           </div>
@@ -254,7 +254,7 @@ export default function render(ctx) {
       <div class="dash-modal" style="max-width:560px;">
         <div class="dash-modal-header" style="border-bottom:1px solid rgba(255,255,255,0.08);">
           <div style="display:flex; align-items:center; gap:0.5rem;">
-            <span style="font-size:1.3rem;">🎓</span>
+            <span style="font-size:1.3rem;"></span>
             <h3 class="dash-modal-title" id="modal-apply-title" style="margin:0; font-size:1.15rem; font-weight:700;">
               ${t("طلب الالتحاق بمسارات أكاديمية عوالِم", "Apply for Awalim Academy Track")}
             </h3>
@@ -306,7 +306,7 @@ export default function render(ctx) {
           <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
             <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-academy-apply">${t("إلغاء", "Cancel")}</button>
             <button type="submit" class="btn btn--primary btn--sm" style="background:var(--gold,#D4AF37); border-color:var(--gold,#D4AF37); color:#000; font-weight:700;">
-              <span>🚀 ${t("إرسال طلب الالتحاق ومراجعة المعمارية", "Submit Application for Review")}</span>
+              <span>${t("إرسال طلب الالتحاق ومراجعة المعمارية", "Submit Application for Review")}</span>
             </button>
           </div>
         </form>

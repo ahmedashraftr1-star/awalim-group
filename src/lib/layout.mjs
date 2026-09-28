@@ -211,18 +211,18 @@ ${footer(site)}
 <aside class="sovereign-admin-bar" id="sovereign-admin-bar" style="display: none;" aria-label="شريط تحكم يوزر الإدارة" aria-hidden="true" inert>
   <div class="sovereign-admin-bar__inner">
     <div class="sovereign-admin-bar__brand">
-      <span class="admin-bar-crown">👑</span>
+      <span class="admin-bar-crown"></span>
       <span class="admin-bar-name">${esc(site.brand.founder.name)}</span>
       <span class="chip chip--accent" style="padding:2px 8px;font-size:0.7rem;"><span class="dot dot--live"></span>يوزر الإدارة</span>
     </div>
     <nav class="sovereign-admin-bar__nav" aria-label="روابط سريعة للإدارة">
-      <a href="/dashboard" class="admin-bar-link"><span>📊 لوحة التحكم</span></a>
-      <a href="/dashboard?tab=tasks" data-admin-tab="tasks" class="admin-bar-link"><span>📋 مهام Island Haven</span></a>
-      <a href="/dashboard?tab=field" data-admin-tab="field" class="admin-bar-link"><span>🚑 طوارئ RahmaCare</span></a>
-      <a href="/dashboard?tab=security" data-admin-tab="security" class="admin-bar-link"><span>🛡️ الخزنة</span></a>
+      <a href="/dashboard" class="admin-bar-link"><span>لوحة التحكم</span></a>
+      <a href="/dashboard?tab=tasks" data-admin-tab="tasks" class="admin-bar-link"><span>مهام Island Haven</span></a>
+      <a href="/dashboard?tab=field" data-admin-tab="field" class="admin-bar-link"><span>طوارئ RahmaCare</span></a>
+      <a href="/dashboard?tab=security" data-admin-tab="security" class="admin-bar-link"><span>الخزنة</span></a>
     </nav>
     <div class="sovereign-admin-bar__act">
-      <button type="button" class="btn btn--danger btn--xs" id="btn-admin-bar-lock" title="قفل جلسة الإدارة">🔒 قفل</button>
+      <button type="button" class="btn btn--danger btn--xs" id="btn-admin-bar-lock" title="قفل جلسة الإدارة">قفل</button>
     </div>
   </div>
 </aside>
@@ -232,7 +232,7 @@ ${footer(site)}
   <div class="dash-modal dash-modal--auth" style="max-width:440px;">
     <div class="dash-modal-header">
       <div style="display: flex; align-items: center; gap: 8px;">
-        <span style="font-size: 1.3rem;">👑</span>
+        <span style="font-size: 1.3rem;"></span>
         <h3 class="dash-modal-title" id="modal-admin-title">بوابة يوزر الإدارة السيادية</h3>
       </div>
       <button type="button" class="dash-modal-close" id="btn-close-admin-auth" aria-label="إغلاق">&times;</button>
@@ -249,7 +249,7 @@ ${footer(site)}
           <input type="password" name="admin_pin" class="dash-input" id="input-admin-auth-pin" aria-label="رمز المرور أو الدخول الفوري" placeholder="رمز المرور أو الدخول الفوري" style="text-align: center; font-size: 1rem; margin-bottom: 0.8rem;" autocomplete="current-password" aria-describedby="admin-auth-modal-err">
           <div id="admin-auth-modal-err" role="alert" aria-live="polite" style="color: #EF4444; font-size: 0.8rem; min-height: 1.2rem; margin-bottom: 0.6rem;"></div>
           <button type="submit" class="btn btn--primary btn--sm" style="width: 100%; justify-content: center; margin-bottom: 0.6rem;">دخول لوحة التحكم ↗</button>
-          <button type="button" class="btn btn--gold btn--sm" id="btn-admin-auth-quick" style="width: 100%; justify-content: center;">⚡ دخول فوري للمؤسس أحمد أشرف</button>
+          <button type="button" class="btn btn--gold btn--sm" id="btn-admin-auth-quick" style="width: 100%; justify-content: center;">دخول فوري للمؤسس أحمد أشرف</button>
         </div>
       </form>
     </div>

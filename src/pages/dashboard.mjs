@@ -67,7 +67,7 @@ export default function dashboard(ctx) {
           <div class="dash-apple-header__actions">
             <button type="button" class="btn btn--primary btn--sm" id="btn-rebuild-site">
               <span class="dot dot--live" aria-hidden="true"></span>
-              <span>${t("⚡ إعادة بناء وتحديث الموقع", "⚡ Rebuild & Deploy")}</span>
+              <span>${t("إعادة بناء وتحديث الموقع", "Rebuild & Deploy")}</span>
             </button>
             <button type="button" class="btn btn--outline btn--sm" id="btn-run-master-audit">
               <span>${t("فحص شامل", "Run Audit")}</span>
@@ -87,17 +87,17 @@ export default function dashboard(ctx) {
             <span class="dash-switcher-icon">${icon("users", "dash-switcher-svg")}</span>
             <span class="dash-switcher-title">${t("جلسة العمل والموظف النشط:", "Active Workspace Identity:")}</span>
             <select id="dash-user-switcher" class="dash-select dash-select--sm" aria-label="${t("تبديل هوية المستخدم", "Switch Active Workspace User")}">
-              <option value="AA-01" data-name="${isEn ? "Eng. Ahmed Ashraf" : "المهندس أحمد أشرف"}" data-name-en="Eng. Ahmed Ashraf" data-role="${isEn ? "Owner & Founder" : "صاحب المنظومة والمؤسس"}" data-role-en="Owner & Founder" data-clearance="0x00 ROOT" data-avatar="/assets/img/ahmed-personal.webp" data-node="${isEn ? "Jerusalem" : "القدس"}" selected>👑 ${t("م. أحمد أشرف — المؤسس ورئيس المنظومة (ROOT)", "Eng. Ahmed Ashraf — Founder & Root Architect")}</option>
-              <option value="ENG-01" data-name="${isEn ? "Eng. Tariq Al-Nasser" : "م. طارق الناصر"}" data-name-en="Eng. Tariq Al-Nasser" data-role="${isEn ? "Lead Systems Architect" : "قائد النواة والأنظمة المصرفية"}" data-role-en="Lead Systems Architect" data-clearance="0x01 KERNEL" data-avatar="" data-node="${isEn ? "Jerusalem" : "القدس"}">💻 ${t("م. طارق الناصر — قائد النواة المصرفية (Island Haven)", "Eng. Tariq Al-Nasser — Island Haven Lead")}</option>
-              <option value="ENG-02" data-name="${isEn ? "Dr. Layla Mansour" : "د. ليلى منصور"}" data-name-en="Dr. Layla Mansour" data-role="${isEn ? "Field Mesh Director" : "قائدة شبكات الإغاثة الميدانية"}" data-role-en="Field Mesh Director" data-clearance="0x02 FIELD" data-avatar="" data-node="${isEn ? "Beirut" : "بيروت"}">🚑 ${t("د. ليلى منصور — قائدة شبكات الإغاثة (RahmaCare)", "Dr. Layla Mansour — RahmaCare Field Director")}</option>
-              <option value="ENG-03" data-name="${isEn ? "Eng. Sarah Al-Ali" : "م. سارة العلي"}" data-name-en="Eng. Sarah Al-Ali" data-role="${isEn ? "Chief Cryptographer" : "رئيسة التدقيق الجنائي والتشفير"}" data-role-en="Chief Cryptographer" data-clearance="0x01 CRYPTO" data-avatar="" data-node="${isEn ? "Amman" : "عمان"}">🔐 ${t("م. سارة العلي — رئيسة التدقيق الجنائي والتشفير", "Eng. Sarah Al-Ali — Chief Cryptographer")}</option>
-              <option value="ENG-04" data-name="${isEn ? "Eng. Omar Al-Saleh" : "م. عمر الصالح"}" data-name-en="Eng. Omar Al-Saleh" data-role="${isEn ? "Principal IFRS Architect" : "كبير مهندسي معايير IFRS"}" data-role-en="Principal IFRS Architect" data-clearance="0x02 LEDGER" data-avatar="" data-node="${isEn ? "Ramallah" : "رام الله"}">📊 ${t("م. عمر الصالح — كبير مهندسي IFRS (Falcon ERP)", "Eng. Omar Al-Saleh — Falcon IFRS Lead")}</option>
-              <option value="ENG-05" data-name="${isEn ? "Eng. Kamal Darwish" : "م. كمال درويش"}" data-name-en="Eng. Kamal Darwish" data-role="${isEn ? "Senior Crypto Engineer" : "مهندس أول تعمية النواة وMerkle"}" data-role-en="Senior Crypto Engineer" data-clearance="0x02 CRYPTO" data-avatar="" data-node="${isEn ? "Dubai" : "دبي"}">🛡️ ${t("م. كمال درويش — مهندس تعمية النواة وMerkle", "Eng. Kamal Darwish — Senior Crypto Engineer")}</option>
-              <option value="ENG-06" data-name="${isEn ? "Eng. Hana Al-Zoubi" : "م. هناء الزعبي"}" data-name-en="Eng. Hana Al-Zoubi" data-role="${isEn ? "Offline P2P Mesh Specialist" : "مهندسة شبكات بدون إنترنت P2P Mesh"}" data-role-en="Offline P2P Mesh Specialist" data-clearance="0x02 FIELD" data-avatar="" data-node="${isEn ? "Gaza" : "غزة"}">📡 ${t("م. هناء الزعبي — مهندسة شبكات P2P Mesh (غزة)", "Eng. Hana Al-Zoubi — Offline P2P Specialist (Gaza)")}</option>
-              <option value="ENG-07" data-name="${isEn ? "Eng. Ziad Qasim" : "م. زياد قاسم"}" data-name-en="Eng. Ziad Qasim" data-role="${isEn ? "AI Runtime Engineer" : "مهندس محركات الذكاء الاصطناعي"}" data-role-en="AI Runtime Engineer" data-clearance="0x02 AI" data-avatar="" data-node="${isEn ? "Cairo" : "القاهرة"}">🤖 ${t("م. زياد قاسم — مهندس الذكاء الاصطناعي السيادي", "Eng. Ziad Qasim — Autonomous AI Engineer")}</option>
+              <option value="AA-01" data-name="${isEn ? "Eng. Ahmed Ashraf" : "المهندس أحمد أشرف"}" data-name-en="Eng. Ahmed Ashraf" data-role="${isEn ? "Owner & Founder" : "صاحب المنظومة والمؤسس"}" data-role-en="Owner & Founder" data-clearance="0x00 ROOT" data-avatar="/assets/img/ahmed-personal.webp" data-node="${isEn ? "Jerusalem" : "القدس"}" selected>${t("م. أحمد أشرف — المؤسس ورئيس المنظومة (ROOT)", "Eng. Ahmed Ashraf — Founder & Root Architect")}</option>
+              <option value="ENG-01" data-name="${isEn ? "Eng. Tariq Al-Nasser" : "م. طارق الناصر"}" data-name-en="Eng. Tariq Al-Nasser" data-role="${isEn ? "Lead Systems Architect" : "قائد النواة والأنظمة المصرفية"}" data-role-en="Lead Systems Architect" data-clearance="0x01 KERNEL" data-avatar="" data-node="${isEn ? "Jerusalem" : "القدس"}">${t("م. طارق الناصر — قائد النواة المصرفية (Island Haven)", "Eng. Tariq Al-Nasser — Island Haven Lead")}</option>
+              <option value="ENG-02" data-name="${isEn ? "Dr. Layla Mansour" : "د. ليلى منصور"}" data-name-en="Dr. Layla Mansour" data-role="${isEn ? "Field Mesh Director" : "قائدة شبكات الإغاثة الميدانية"}" data-role-en="Field Mesh Director" data-clearance="0x02 FIELD" data-avatar="" data-node="${isEn ? "Beirut" : "بيروت"}">${t("د. ليلى منصور — قائدة شبكات الإغاثة (RahmaCare)", "Dr. Layla Mansour — RahmaCare Field Director")}</option>
+              <option value="ENG-03" data-name="${isEn ? "Eng. Sarah Al-Ali" : "م. سارة العلي"}" data-name-en="Eng. Sarah Al-Ali" data-role="${isEn ? "Chief Cryptographer" : "رئيسة التدقيق الجنائي والتشفير"}" data-role-en="Chief Cryptographer" data-clearance="0x01 CRYPTO" data-avatar="" data-node="${isEn ? "Amman" : "عمان"}">${t("م. سارة العلي — رئيسة التدقيق الجنائي والتشفير", "Eng. Sarah Al-Ali — Chief Cryptographer")}</option>
+              <option value="ENG-04" data-name="${isEn ? "Eng. Omar Al-Saleh" : "م. عمر الصالح"}" data-name-en="Eng. Omar Al-Saleh" data-role="${isEn ? "Principal IFRS Architect" : "كبير مهندسي معايير IFRS"}" data-role-en="Principal IFRS Architect" data-clearance="0x02 LEDGER" data-avatar="" data-node="${isEn ? "Ramallah" : "رام الله"}">${t("م. عمر الصالح — كبير مهندسي IFRS (Falcon ERP)", "Eng. Omar Al-Saleh — Falcon IFRS Lead")}</option>
+              <option value="ENG-05" data-name="${isEn ? "Eng. Kamal Darwish" : "م. كمال درويش"}" data-name-en="Eng. Kamal Darwish" data-role="${isEn ? "Senior Crypto Engineer" : "مهندس أول تعمية النواة وMerkle"}" data-role-en="Senior Crypto Engineer" data-clearance="0x02 CRYPTO" data-avatar="" data-node="${isEn ? "Dubai" : "دبي"}">${t("م. كمال درويش — مهندس تعمية النواة وMerkle", "Eng. Kamal Darwish — Senior Crypto Engineer")}</option>
+              <option value="ENG-06" data-name="${isEn ? "Eng. Hana Al-Zoubi" : "م. هناء الزعبي"}" data-name-en="Eng. Hana Al-Zoubi" data-role="${isEn ? "Offline P2P Mesh Specialist" : "مهندسة شبكات بدون إنترنت P2P Mesh"}" data-role-en="Offline P2P Mesh Specialist" data-clearance="0x02 FIELD" data-avatar="" data-node="${isEn ? "Gaza" : "غزة"}">${t("م. هناء الزعبي — مهندسة شبكات P2P Mesh (غزة)", "Eng. Hana Al-Zoubi — Offline P2P Specialist (Gaza)")}</option>
+              <option value="ENG-07" data-name="${isEn ? "Eng. Ziad Qasim" : "م. زياد قاسم"}" data-name-en="Eng. Ziad Qasim" data-role="${isEn ? "AI Runtime Engineer" : "مهندس محركات الذكاء الاصطناعي"}" data-role-en="AI Runtime Engineer" data-clearance="0x02 AI" data-avatar="" data-node="${isEn ? "Cairo" : "القاهرة"}">${t("م. زياد قاسم — مهندس الذكاء الاصطناعي السيادي", "Eng. Ziad Qasim — Autonomous AI Engineer")}</option>
               <option value="ENG-08" data-name="${isEn ? "Eng. Razan Al-Alami" : "م. رزان العلمي"}" data-name-en="Eng. Razan Al-Alami" data-role="${isEn ? "Glass Physics & UI Lead" : "مهندسة فيزياء الزجاج وتجربة HMI"}" data-role-en="Glass Physics & UI Lead" data-clearance="0x03 UI" data-avatar="" data-node="${isEn ? "London" : "لندن"}">✨ ${t("م. رزان العلمي — فيزياء الواجهات السائلة والتصميم", "Eng. Razan Al-Alami — Liquid HMI Lead")}</option>
-              <option value="ENG-09" data-name="${isEn ? "Eng. Youssef Al-Najjar" : "م. يوسف النجار"}" data-name-en="Eng. Youssef Al-Najjar" data-role="${isEn ? "Senior Academy Mentor" : "كبير موجهي أكاديمية النظم المعقدة"}" data-role-en="Senior Academy Mentor" data-clearance="0x03 MENTOR" data-avatar="" data-node="${isEn ? "Istanbul" : "إسطنبول"}">🎓 ${t("م. يوسف النجار — كبير موجهي الأكاديمية", "Eng. Youssef Al-Najjar — Senior Academy Mentor")}</option>
-              <option value="ENG-10" data-name="${isEn ? "Eng. Maryam Khalil" : "م. مريم خليل"}" data-name-en="Eng. Maryam Khalil" data-role="${isEn ? "Cyber Threat Specialist" : "مهندسة دفاع سيبراني ومراقبة التهديدات"}" data-role-en="Cyber Threat Specialist" data-clearance="0x02 SEC" data-avatar="" data-node="${isEn ? "Berlin" : "برلين"}">🛰️ ${t("م. مريم خليل — دفاع سيبراني ومصفوفة التهديدات", "Eng. Maryam Khalil — Cyber Threat Specialist")}</option>
+              <option value="ENG-09" data-name="${isEn ? "Eng. Youssef Al-Najjar" : "م. يوسف النجار"}" data-name-en="Eng. Youssef Al-Najjar" data-role="${isEn ? "Senior Academy Mentor" : "كبير موجهي أكاديمية النظم المعقدة"}" data-role-en="Senior Academy Mentor" data-clearance="0x03 MENTOR" data-avatar="" data-node="${isEn ? "Istanbul" : "إسطنبول"}">${t("م. يوسف النجار — كبير موجهي الأكاديمية", "Eng. Youssef Al-Najjar — Senior Academy Mentor")}</option>
+              <option value="ENG-10" data-name="${isEn ? "Eng. Maryam Khalil" : "م. مريم خليل"}" data-name-en="Eng. Maryam Khalil" data-role="${isEn ? "Cyber Threat Specialist" : "مهندسة دفاع سيبراني ومراقبة التهديدات"}" data-role-en="Cyber Threat Specialist" data-clearance="0x02 SEC" data-avatar="" data-node="${isEn ? "Berlin" : "برلين"}">${t("م. مريم خليل — دفاع سيبراني ومصفوفة التهديدات", "Eng. Maryam Khalil — Cyber Threat Specialist")}</option>
             </select>
           </div>
           <div class="dash-user-switcher-right">
@@ -936,7 +936,7 @@ export default function dashboard(ctx) {
                     <span id="preview-pod1">${t("حجز استشارة هندسية سيادية", "Book Sovereign Engineering Session")}</span> ↗
                   </div>
                   <div class="dash-hero-preview-pod" style="background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.3); color: #38bdf8;">
-                    <span id="preview-pod2">${t("فتح الطرفية الجنائية والأوامر", "Launch Forensic Command Terminal")}</span> ⚡
+                    <span id="preview-pod2">${t("فتح الطرفية الجنائية والأوامر", "Launch Forensic Command Terminal")}</span> 
                   </div>
                 </div>
               </div>
@@ -1444,16 +1444,16 @@ export default function dashboard(ctx) {
               <div style="display:flex; gap:0.5rem;">
                 <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
                 <a href="${pfx}/security?raqib-tab=scanner#raqib-sentinel" class="btn btn--outline btn--xs" target="_blank">
-                  <span>⚡ ${t("الماسح الخارجي", "Scanner")}</span>
+                  <span>${t("الماسح الخارجي", "Scanner")}</span>
                 </a>
                 <a href="${pfx}/security?raqib-tab=breach#raqib-sentinel" class="btn btn--ghost btn--xs" target="_blank" style="border:1px solid rgba(239,68,68,0.3);">
-                  <span>🚨 ${t("طوارئ 72h", "72h Breach")}</span>
+                  <span>${t("طوارئ 72h", "72h Breach")}</span>
                 </a>
                 <a href="${pfx}/security?raqib-tab=consent#raqib-sentinel" class="btn btn--ghost btn--xs" target="_blank" style="border:1px solid rgba(0,240,255,0.3);">
-                  <span>🛡️ ${t("شريط الموافقة", "Consent")}</span>
+                  <span>${t("شريط الموافقة", "Consent")}</span>
                 </a>
                 <a href="${pfx}/security?raqib-tab=readiness#raqib-sentinel" class="btn btn--ghost btn--xs" target="_blank" style="border:1px solid rgba(212,175,55,0.3);">
-                  <span>📊 ${t("الجاهزية", "Readiness")}</span>
+                  <span>${t("الجاهزية", "Readiness")}</span>
                 </a>
               </div>
               </div>
@@ -1606,10 +1606,10 @@ export default function dashboard(ctx) {
             <div class="dash-priority-select-wrap">
               <select class="dash-select" id="task-priority-filter" aria-label="${t("تصفية بالأولوية", "Filter by Priority")}">
                 <option value="all">${t("كافة الأولويات", "All Priorities")}</option>
-                <option value="urgent">${t("🔥 عاجل طارئ", "🔥 Urgent")}</option>
-                <option value="high">${t("🔺 أولوية عليا", "🔺 High")}</option>
+                <option value="urgent">${t("عاجل طارئ", "Urgent")}</option>
+                <option value="high">${t("أولوية عليا", "High")}</option>
                 <option value="medium">${t("➖ أولوية متوسطة", "➖ Medium")}</option>
-                <option value="low">${t("🔻 اعتيادية", "🔻 Low")}</option>
+                <option value="low">${t("اعتيادية", "Low")}</option>
               </select>
             </div>
           </div>
@@ -1787,9 +1787,9 @@ export default function dashboard(ctx) {
                 <span class="badge badge--ok mono" style="border-color: var(--gold,#D4AF37); color: var(--gold,#D4AF37);">0x00 ROOT</span>
               </div>
               <div style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.72rem; color: var(--text-2); margin-bottom: 0.75rem;">
-                <span class="chip chip--sm">📍 ${t("فلسطين (القدس / شبكة موزعة)", "Palestine (Jerusalem)")}</span>
-                <span class="chip chip--sm">⚙️ ${t("هندسة النواة والأنظمة المعقدة", "Core & Systems")}</span>
-                <span class="chip chip--sm">💼 ${t("3 مهام قيد المتابعة", "3 Active Sprints")}</span>
+                <span class="chip chip--sm">${t("فلسطين (القدس / شبكة موزعة)", "Palestine (Jerusalem)")}</span>
+                <span class="chip chip--sm">${t("هندسة النواة والأنظمة المعقدة", "Core & Systems")}</span>
+                <span class="chip chip--sm">${t("3 مهام قيد المتابعة", "3 Active Sprints")}</span>
               </div>
               <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 1rem 0;">
                 ${t("قيادة المعمارية العليا لكافة المنصات، اعتماد التوقيعات التشفيرية، وتوجيه استراتيجية التوسع والأكاديمية.", "Apex architecture governance, cryptographic attestation, and strategic expansion across all ventures.")}
@@ -1805,10 +1805,10 @@ export default function dashboard(ctx) {
                 </div>
                 <div style="display: flex; gap: 0.4rem;">
                   <button type="button" class="btn btn--outline btn--xs btn-act-open-portal" data-user-id="AA-01" style="flex: 1; justify-content: center;">
-                    <span>👤 ${t("فتح البوابة الإدارية", "Open Portal")}</span>
+                    <span>${t("فتح البوابة الإدارية", "Open Portal")}</span>
                   </button>
                   <button type="button" class="btn btn--ghost btn--xs btn-act-award-bonus" data-user-id="AA-01" style="color: var(--gold,#D4AF37); border: 1px solid rgba(212,175,55,0.3); justify-content: center;">
-                    <span>🏆 ${t("صرف مكافأة", "Spot Bonus")}</span>
+                    <span>${t("صرف مكافأة", "Spot Bonus")}</span>
                   </button>
                 </div>
               </div>
@@ -1833,7 +1833,7 @@ export default function dashboard(ctx) {
                   <span class="badge badge--ok mono">${eng.clearance}</span>
                 </div>
                 <div style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.72rem; color: var(--text-2); margin-bottom: 0.75rem;">
-                  <span class="chip chip--sm">📍 ${isEn ? (eng.country_en || eng.country) : eng.country}</span>
+                  <span class="chip chip--sm">${isEn ? (eng.country_en || eng.country) : eng.country}</span>
                   <span class="chip chip--sm"><span class="dot dot--live"></span> ${isEn ? (eng.status_en || eng.status) : eng.status}</span>
                   <span class="chip chip--sm mono">${eng.id}</span>
                 </div>
@@ -1852,10 +1852,10 @@ export default function dashboard(ctx) {
                   </div>
                   <div style="display: flex; gap: 0.4rem;">
                     <button type="button" class="btn btn--outline btn--xs btn-act-open-portal" data-user-id="${eng.id}" style="flex: 1; justify-content: center;">
-                      <span>👤 ${t("فتح البوابة والدوام", "Employee Portal")}</span>
+                      <span>${t("فتح البوابة والدوام", "Employee Portal")}</span>
                     </button>
                     <button type="button" class="btn btn--ghost btn--xs btn-act-award-bonus" data-user-id="${eng.id}" style="color: var(--gold,#D4AF37); border: 1px solid rgba(212,175,55,0.3); justify-content: center;">
-                      <span>🏆 ${t("صرف مكافأة", "Spot Bonus")}</span>
+                      <span>${t("صرف مكافأة", "Spot Bonus")}</span>
                     </button>
                   </div>
                 </div>
@@ -2493,7 +2493,7 @@ export default function dashboard(ctx) {
               <div id="portal-hardware-list" style="display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1rem;">
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:0.65rem 0.85rem; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);">
                   <div style="display:flex; align-items:center; gap:0.65rem;">
-                    <span style="font-size:1.2rem;">💻</span>
+                    <span style="font-size:1.2rem;"></span>
                     <div>
                       <div style="font-weight:700; font-size:0.85rem;" id="hw-pc-name">MacBook Pro M3 Max 64GB (Hardware Enclave)</div>
                       <div class="mono text-muted small" style="font-size:0.7rem;" id="hw-pc-serial">SN: AWL-ENG-M3-9941 · Secured FileVault</div>
@@ -2504,7 +2504,7 @@ export default function dashboard(ctx) {
 
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:0.65rem 0.85rem; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);">
                   <div style="display:flex; align-items:center; gap:0.65rem;">
-                    <span style="font-size:1.2rem;">📡</span>
+                    <span style="font-size:1.2rem;"></span>
                     <div>
                       <div style="font-weight:700; font-size:0.85rem;" id="hw-sat-name">Sovereign Mesh Satellite Transceiver 4.8GHz</div>
                       <div class="mono text-muted small" style="font-size:0.7rem;" id="hw-sat-serial">SN: SAT-MESH-NODE-08 · Sub-15ms Latency</div>
@@ -2515,7 +2515,7 @@ export default function dashboard(ctx) {
 
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:0.65rem 0.85rem; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);">
                   <div style="display:flex; align-items:center; gap:0.65rem;">
-                    <span style="font-size:1.2rem;">🔑</span>
+                    <span style="font-size:1.2rem;"></span>
                     <div>
                       <div style="font-weight:700; font-size:0.85rem;" id="hw-key-name">YubiKey 5C NFC FIPS Cryptographic Token</div>
                       <div class="mono text-muted small" style="font-size:0.7rem;" id="hw-key-serial">FIPS 140-2 Level 3 · Serial: 8841-AA01</div>
@@ -2528,7 +2528,7 @@ export default function dashboard(ctx) {
               <!-- Action button for Hardware Request -->
               <div style="display:flex; justify-content:space-between; align-items:center;">
                 <button type="button" class="btn btn--outline btn--xs" id="btn-portal-emergency-ping" style="border-color:#EF4444; color:#EF4444;">
-                  <span>⚡ ${t("نداء عمليات طارئ (Emergency Ping)", "Emergency Command Ping")}</span>
+                  <span>${t("نداء عمليات طارئ (Emergency Ping)", "Emergency Command Ping")}</span>
                 </button>
                 <button type="button" class="btn btn--outline btn--xs" id="btn-request-hardware">
                   <span>${icon("clipboard", "dash-btn-svg")} ${t("طلب صيانة / عتاد إضافي", "Request Hardware Service")}</span>
@@ -2552,7 +2552,7 @@ export default function dashboard(ctx) {
             </div>
             <div class="dash-panel-tools">
               <button type="button" class="btn btn--outline btn--sm" id="btn-open-dispatch">
-                <span>${icon("plus", "dash-btn-svg")} 📦 ${t("توجيه شحنة إمداد عاجلة", "Dispatch Supply Kit")}</span>
+                <span>${icon("plus", "dash-btn-svg")} ${t("توجيه شحنة إمداد عاجلة", "Dispatch Supply Kit")}</span>
               </button>
               <button type="button" class="btn btn--primary btn--sm" id="btn-simulate-triage">
                 <span>${icon("bolt", "dash-btn-svg")} ${t("محاكاة فرز طبي عاجل", "Simulate Urgent Triage")}</span>
@@ -2670,8 +2670,8 @@ export default function dashboard(ctx) {
                   </div>
                   <div style="display:flex; gap:0.4rem; align-items:center;">
                     <span class="badge badge--ok">99.9% Mesh</span>
-                    <button type="button" class="btn btn--outline btn--xs btn-inspect-node" data-node="Node-KH01"><span>⚡ ${t("فحص العقدة", "Inspect")}</span></button>
-                    <button type="button" class="btn btn--primary btn--xs btn-quick-dispatch" data-node="Node-KH01"><span>📦 ${t("إمداد", "Supply")}</span></button>
+                    <button type="button" class="btn btn--outline btn--xs btn-inspect-node" data-node="Node-KH01"><span>${t("فحص العقدة", "Inspect")}</span></button>
+                    <button type="button" class="btn btn--primary btn--xs btn-quick-dispatch" data-node="Node-KH01"><span>${t("إمداد", "Supply")}</span></button>
                   </div>
                 </div>
                 <div class="dash-node-row" style="display:flex; justify-content:space-between; align-items:center;">
@@ -2684,8 +2684,8 @@ export default function dashboard(ctx) {
                   </div>
                   <div style="display:flex; gap:0.4rem; align-items:center;">
                     <span class="badge badge--ok">100% Offline</span>
-                    <button type="button" class="btn btn--outline btn--xs btn-inspect-node" data-node="Node-RF02"><span>⚡ ${t("فحص العقدة", "Inspect")}</span></button>
-                    <button type="button" class="btn btn--primary btn--xs btn-quick-dispatch" data-node="Node-RF02"><span>📦 ${t("إمداد", "Supply")}</span></button>
+                    <button type="button" class="btn btn--outline btn--xs btn-inspect-node" data-node="Node-RF02"><span>${t("فحص العقدة", "Inspect")}</span></button>
+                    <button type="button" class="btn btn--primary btn--xs btn-quick-dispatch" data-node="Node-RF02"><span>${t("إمداد", "Supply")}</span></button>
                   </div>
                 </div>
                 <div class="dash-node-row" style="display:flex; justify-content:space-between; align-items:center;">
@@ -2698,8 +2698,8 @@ export default function dashboard(ctx) {
                   </div>
                   <div style="display:flex; gap:0.4rem; align-items:center;">
                     <span class="badge badge--ok">Active Node</span>
-                    <button type="button" class="btn btn--outline btn--xs btn-inspect-node" data-node="Node-DB03"><span>⚡ ${t("فحص العقدة", "Inspect")}</span></button>
-                    <button type="button" class="btn btn--primary btn--xs btn-quick-dispatch" data-node="Node-DB03"><span>📦 ${t("إمداد", "Supply")}</span></button>
+                    <button type="button" class="btn btn--outline btn--xs btn-inspect-node" data-node="Node-DB03"><span>${t("فحص العقدة", "Inspect")}</span></button>
+                    <button type="button" class="btn btn--primary btn--xs btn-quick-dispatch" data-node="Node-DB03"><span>${t("إمداد", "Supply")}</span></button>
                   </div>
                 </div>
                 <div class="dash-node-row" style="display:flex; justify-content:space-between; align-items:center;">
@@ -2712,8 +2712,8 @@ export default function dashboard(ctx) {
                   </div>
                   <div style="display:flex; gap:0.4rem; align-items:center;">
                     <span class="badge badge--ok">Encrypted P2P</span>
-                    <button type="button" class="btn btn--outline btn--xs btn-inspect-node" data-node="Node-GZ04"><span>⚡ ${t("فحص العقدة", "Inspect")}</span></button>
-                    <button type="button" class="btn btn--primary btn--xs btn-quick-dispatch" data-node="Node-GZ04"><span>📦 ${t("إمداد", "Supply")}</span></button>
+                    <button type="button" class="btn btn--outline btn--xs btn-inspect-node" data-node="Node-GZ04"><span>${t("فحص العقدة", "Inspect")}</span></button>
+                    <button type="button" class="btn btn--primary btn--xs btn-quick-dispatch" data-node="Node-GZ04"><span>${t("إمداد", "Supply")}</span></button>
                   </div>
                 </div>
                 <div class="dash-node-row" style="display:flex; justify-content:space-between; align-items:center;">
@@ -2726,8 +2726,8 @@ export default function dashboard(ctx) {
                   </div>
                   <div style="display:flex; gap:0.4rem; align-items:center;">
                     <span class="badge badge--ok" style="background:rgba(212,175,55,0.15); color:var(--gold,#d4af37);">Regional Hub</span>
-                    <button type="button" class="btn btn--outline btn--xs btn-inspect-node" data-node="Node-BY05"><span>⚡ ${t("فحص العقدة", "Inspect")}</span></button>
-                    <button type="button" class="btn btn--primary btn--xs btn-quick-dispatch" data-node="Node-BY05"><span>📦 ${t("إمداد", "Supply")}</span></button>
+                    <button type="button" class="btn btn--outline btn--xs btn-inspect-node" data-node="Node-BY05"><span>${t("فحص العقدة", "Inspect")}</span></button>
+                    <button type="button" class="btn btn--primary btn--xs btn-quick-dispatch" data-node="Node-BY05"><span>${t("إمداد", "Supply")}</span></button>
                   </div>
                 </div>
               </div>
@@ -2969,10 +2969,10 @@ export default function dashboard(ctx) {
             <div class="dash-field-group">
               <label class="dash-label">${t("الأولوية (Priority)", "Priority")}</label>
               <select class="dash-select" id="task-drawer-select-prio">
-                <option value="urgent">${t("🔥 عاجل طارئ", "🔥 Urgent")}</option>
-                <option value="high">${t("🔺 أولوية عليا", "🔺 High")}</option>
+                <option value="urgent">${t("عاجل طارئ", "Urgent")}</option>
+                <option value="high">${t("أولوية عليا", "High")}</option>
                 <option value="medium">${t("➖ أولوية متوسطة", "➖ Medium")}</option>
-                <option value="low">${t("🔻 اعتيادية", "🔻 Low")}</option>
+                <option value="low">${t("اعتيادية", "Low")}</option>
               </select>
             </div>
             <div class="dash-field-group">
@@ -3188,10 +3188,10 @@ export default function dashboard(ctx) {
             <div class="dash-field-group">
               <label class="dash-label">${t("الأولوية (Priority)", "Priority")}</label>
               <select class="dash-select" id="form-task-priority">
-                <option value="urgent">${t("🔥 عاجل طارئ (Urgent)", "🔥 Urgent")}</option>
-                <option value="high">${t("🔺 أولوية عليا (High)", "🔺 High")}</option>
+                <option value="urgent">${t("عاجل طارئ (Urgent)", "Urgent")}</option>
+                <option value="high">${t("أولوية عليا (High)", "High")}</option>
                 <option value="medium" selected>${t("➖ أولوية متوسطة (Medium)", "➖ Medium")}</option>
-                <option value="low">${t("🔻 اعتيادية (Low)", "🔻 Low")}</option>
+                <option value="low">${t("اعتيادية (Low)", "Low")}</option>
               </select>
             </div>
           </div>
@@ -3333,7 +3333,7 @@ export default function dashboard(ctx) {
       <div class="dash-modal" role="dialog" aria-modal="true" aria-labelledby="modal-bonus-title" style="max-width:540px;">
         <div class="dash-modal-header" style="border-bottom:1px solid rgba(212,175,55,0.25);">
           <div style="display:flex; align-items:center; gap:0.5rem;">
-            <span style="font-size:1.3rem;">🏆</span>
+            <span style="font-size:1.3rem;"></span>
             <h3 class="dash-modal-title" id="modal-bonus-title" style="color:var(--gold,#D4AF37); margin:0;">${t("صرف مكافأة تميز وإنجاز استثنائي", "Authorize Spot Excellence Bonus")}</h3>
           </div>
           <button type="button" class="dash-modal-close" id="btn-close-bonus-modal" aria-label="${t("إغلاق", "Close")}">✕</button>
@@ -3343,7 +3343,7 @@ export default function dashboard(ctx) {
           <input type="hidden" name="bonus_emp_code" id="input-bonus-emp-code" value="">
 
           <div style="display:flex; align-items:center; gap:0.75rem; padding:0.75rem; border-radius:8px; background:rgba(212,175,55,0.05); border:1px solid rgba(212,175,55,0.2); margin-bottom:1rem;">
-            <div style="font-size:1.5rem;">👤</div>
+            <div style="font-size:1.5rem;"></div>
             <div>
               <div style="font-weight:700; font-size:0.95rem;" id="bonus-modal-emp-name">${t("المهندس طارق الناصر", "Eng. Tariq Al-Nasser")}</div>
               <div class="small text-muted" id="bonus-modal-emp-role">${t("قائد النواة والأنظمة المصرفية · رام الله، فلسطين", "Lead Systems Architect · Ramallah, Palestine")}</div>
@@ -3368,7 +3368,7 @@ export default function dashboard(ctx) {
           <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
             <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-bonus">${t("إلغاء", "Cancel")}</button>
             <button type="submit" class="btn btn--primary btn--sm" style="background:var(--gold,#D4AF37); border-color:var(--gold,#D4AF37); color:#000; font-weight:700;">
-              <span>🏆 ${t("اعتماد وصرف فوري من الخزينة السيادية", "Authorize & Disburse Immediately")}</span>
+              <span>${t("اعتماد وصرف فوري من الخزينة السيادية", "Authorize & Disburse Immediately")}</span>
             </button>
           </div>
         </form>
@@ -3379,7 +3379,7 @@ export default function dashboard(ctx) {
       <div class="dash-modal" role="dialog" aria-modal="true" aria-labelledby="modal-ping-title" style="max-width:560px;">
         <div class="dash-modal-header" style="border-bottom:1px solid rgba(239,68,68,0.2);">
           <div style="display:flex; align-items:center; gap:0.5rem;">
-            <span style="font-size:1.3rem;">⚡</span>
+            <span style="font-size:1.3rem;"></span>
             <h3 class="dash-modal-title" id="modal-ping-title" style="color:#EF4444; margin:0;">${t("نداء عمليات طارئ لغرفة القيادة السيادية", "Emergency Operational Command Dispatch")}</h3>
           </div>
           <button type="button" class="dash-modal-close" id="btn-close-ping-modal" aria-label="${t("إغلاق", "Close")}">✕</button>
@@ -3400,8 +3400,8 @@ export default function dashboard(ctx) {
             <div class="dash-field-group">
               <label class="dash-label" for="select-ping-severity">${t("مستوى الحرج", "Severity Tier")}</label>
               <select name="ping_severity" class="dash-select" id="select-ping-severity" aria-label="${t("مستوى الحرج", "Severity Tier")}">
-                <option value="p0" selected>${t("🔥 P0 - حرج للغاية وفوري", "🔥 P0 - Immediate Critical")}</option>
-                <option value="p1">${t("🔺 P1 - أولوية عليا", "🔺 P1 - High Urgency")}</option>
+                <option value="p0" selected>${t("P0 - حرج للغاية وفوري", "P0 - Immediate Critical")}</option>
+                <option value="p1">${t("P1 - أولوية عليا", "P1 - High Urgency")}</option>
               </select>
             </div>
             <div class="dash-field-group">
@@ -3418,7 +3418,7 @@ export default function dashboard(ctx) {
           <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
             <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-ping">${t("إلغاء", "Cancel")}</button>
             <button type="submit" class="btn btn--primary btn--sm" style="background:#EF4444; border-color:#EF4444;">
-              <span>⚡ ${t("إرسال النداء وتنبيه أحمد أشرف فوراً", "Dispatch Alert to Command Room")}</span>
+              <span>${t("إرسال النداء وتنبيه أحمد أشرف فوراً", "Dispatch Alert to Command Room")}</span>
             </button>
           </div>
         </form>
@@ -3471,12 +3471,12 @@ export default function dashboard(ctx) {
 
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
             <button type="button" class="btn btn--outline btn--sm" id="btn-node-ping-test">
-              <span>⚡ ${t("فحص إشارة البينغ الحية", "Send Live Ping Handshake")}</span>
+              <span>${t("فحص إشارة البينغ الحية", "Send Live Ping Handshake")}</span>
             </button>
             <div style="display:flex; gap:0.5rem;">
               <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-node-modal">${t("إغلاق", "Close")}</button>
               <button type="button" class="btn btn--primary btn--sm" id="btn-node-dispatch-drop" style="background:var(--gold,#d4af37); border-color:var(--gold,#d4af37); color:#000; font-weight:700;">
-                <span>📦 ${t("توجيه شحنة إمداد عاجلة للعقدة", "Dispatch Supply to Node")}</span>
+                <span>${t("توجيه شحنة إمداد عاجلة للعقدة", "Dispatch Supply to Node")}</span>
               </button>
             </div>
           </div>
@@ -3489,7 +3489,7 @@ export default function dashboard(ctx) {
       <div class="dash-modal" role="dialog" aria-modal="true" aria-labelledby="modal-dispatch-title" style="max-width:560px;">
         <div class="dash-modal-header" style="border-bottom:1px solid rgba(212,175,55,0.25);">
           <div style="display:flex; align-items:center; gap:0.5rem;">
-            <span style="font-size:1.3rem;">📦</span>
+            <span style="font-size:1.3rem;"></span>
             <h3 class="dash-modal-title" id="modal-dispatch-title" style="color:var(--gold,#d4af37); margin:0;">${t("صرف وتوجيه إمداد طبي عاجل", "Emergency Medical Supply Dispatch")}</h3>
           </div>
           <button type="button" class="dash-modal-close" id="btn-close-dispatch-modal" aria-label="${t("إغلاق", "Close")}">✕</button>
@@ -3533,7 +3533,7 @@ export default function dashboard(ctx) {
           <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
             <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-dispatch">${t("إلغاء", "Cancel")}</button>
             <button type="submit" class="btn btn--primary btn--sm" style="background:var(--gold,#d4af37); border-color:var(--gold,#d4af37); color:#000; font-weight:700;">
-              <span>🚀 ${t("اعتماد الشحنة والتوجيه الفوري", "Authorize & Dispatch Medical Supplies")}</span>
+              <span>${t("اعتماد الشحنة والتوجيه الفوري", "Authorize & Dispatch Medical Supplies")}</span>
             </button>
           </div>
         </form>

@@ -9,7 +9,7 @@ const PRODUCT_META = {
     badgeEn: "IFRS ACCREDITED · AIR-GAPPED READY",
     domainAr: "أنظمة مالية ومحاسبة",
     domainEn: "Sovereign FinTech & ERP",
-    icon: "📊"
+    icon: ""
   },
   "rahmacare": {
     category: "mesh",
@@ -17,7 +17,7 @@ const PRODUCT_META = {
     badgeEn: "P2P LORA MESH · ZERO INTERNET DEPENDENCY",
     domainAr: "رعاية صحية وشبكات طوارئ",
     domainEn: "Emergency Mesh & Health",
-    icon: "🕊️"
+    icon: ""
   },
   "vibe-os": {
     category: "os-ai",
@@ -25,7 +25,7 @@ const PRODUCT_META = {
     badgeEn: "GLASS MATRIX OS · MASS & MAGNETISM",
     domainAr: "أنظمة تشغيل وواجهات",
     domainEn: "Glass OS & Web Physics",
-    icon: "⚡"
+    icon: ""
   },
   "ai-lab": {
     category: "os-ai",
@@ -33,7 +33,7 @@ const PRODUCT_META = {
     badgeEn: "LOCAL LLM INFERENCE · ZERO DATA LEAK",
     domainAr: "ذكاء اصطناعي سيادي",
     domainEn: "Private AI & Local LLM",
-    icon: "🧠"
+    icon: ""
   },
   "jameel-store": {
     category: "commerce",
@@ -41,7 +41,7 @@ const PRODUCT_META = {
     badgeEn: "SUB-MILLISECOND COMMERCE · ED25519 SIGNED",
     domainAr: "متاجر ومنصات تجارية",
     domainEn: "High-Velocity Commerce",
-    icon: "🛍️"
+    icon: ""
   },
   "web-platforms": {
     category: "commerce",
@@ -49,7 +49,7 @@ const PRODUCT_META = {
     badgeEn: "SOVEREIGN WEB ARCHITECTURE",
     domainAr: "منصات وبوابات رقمية",
     domainEn: "Sovereign Web Portals",
-    icon: "🌐"
+    icon: ""
   },
   "brand-studio": {
     category: "commerce",
@@ -57,7 +57,7 @@ const PRODUCT_META = {
     badgeEn: "APPLE STANDARDS DESIGN SUITE",
     domainAr: "تصميم وهويات بصرية",
     domainEn: "Design & Brand Systems",
-    icon: "🎨"
+    icon: ""
   }
 };
 
@@ -68,7 +68,7 @@ function renderSandboxModal(isEn, t, products) {
       <div class="dash-modal dash-modal-lg">
         <div class="dash-modal-header">
           <div class="dash-modal-title-wrap">
-            <span class="dash-modal-icon">⚡</span>
+            <span class="dash-modal-icon"></span>
             <h3 class="dash-modal-title" id="modal-sandbox-title">
               ${t("محاكي الأنظمة السيادية المباشر (Multi-Expert Sandbox)", "Sovereign Systems Multi-Expert Live Sandbox")}
             </h3>
@@ -77,11 +77,11 @@ function renderSandboxModal(isEn, t, products) {
         </div>
 
         <div class="sandbox-tabs-nav" role="tablist" aria-label="${t("اختيار نظام للمحاكاة", "Select System Sandbox")}">
-          <button type="button" class="sandbox-tab-btn active" data-sandbox-tab="smart-accountant">📊 ${t("محاسب ذكي (ZATCA P2)", "Smart Accountant")}</button>
-          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="rahmacare">🕊️ ${t("RahmaCare (RF Mesh)", "RahmaCare Mesh")}</button>
-          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="vibe-os">⚡ ${t("Vibe OS (Physics Engine)", "Vibe OS Physics")}</button>
-          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="ai-lab">🧠 ${t("AI Lab (Local LLM)", "AI Lab Engine")}</button>
-          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="jameel-store">🛍️ ${t("Jameel Store", "Jameel Store")}</button>
+          <button type="button" class="sandbox-tab-btn active" data-sandbox-tab="smart-accountant">${t("محاسب ذكي (ZATCA P2)", "Smart Accountant")}</button>
+          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="rahmacare">${t("RahmaCare (RF Mesh)", "RahmaCare Mesh")}</button>
+          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="vibe-os">${t("Vibe OS (Physics Engine)", "Vibe OS Physics")}</button>
+          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="ai-lab">${t("AI Lab (Local LLM)", "AI Lab Engine")}</button>
+          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="jameel-store">${t("Jameel Store", "Jameel Store")}</button>
         </div>
 
         <div class="dash-modal-scroll">
@@ -108,7 +108,7 @@ function renderSandboxModal(isEn, t, products) {
 
             <div class="sb-action-row">
               <button type="button" class="btn btn--primary btn--sm sb-action-full" id="btn-run-acc-calc">
-                <span>⚡</span>
+                <span></span>
                 <span>${t("ترحيل القيد المحاسبي وتوليد حزمة TLV والختم التشفيري", "Commit IFRS Ledger & Generate ZATCA Phase 2 TLV QR")}</span>
               </button>
             </div>
@@ -172,11 +172,11 @@ function renderSandboxModal(isEn, t, products) {
 
             <div class="sb-flex-row">
               <button type="button" class="btn btn--primary btn--sm" id="btn-run-mesh-ping">
-                <span>🕊️</span>
+                <span></span>
                 <span>${t("إرسال نداء فرز طبي مشفر (Ed25519 SOS)", "Dispatch Encrypted SOS Packet")}</span>
               </button>
               <button type="button" class="btn btn--outline btn--sm" id="btn-toggle-blackout">
-                <span>📡</span>
+                <span></span>
                 <span>${t("محاكاة انقطاع الإنترنت التام", "Simulate Total Blackout")}</span>
               </button>
             </div>
@@ -223,11 +223,11 @@ function renderSandboxModal(isEn, t, products) {
 
             <div class="sb-flex-row">
               <button type="button" class="btn btn--primary btn--sm" id="btn-spring-deflect">
-                <span>🧲</span>
+                <span></span>
                 <span>${t("سحب وإفلات النابض (Deflect & Release 120px)", "Deflect & Release Spring (120px)")}</span>
               </button>
               <button type="button" class="btn btn--outline btn--sm" id="btn-matrix-toggle">
-                <span>💻</span>
+                <span></span>
                 <span>${t("بروتوكول GOD MODE (Matrix Stream)", "Activate GOD MODE Protocol")}</span>
               </button>
             </div>
@@ -260,7 +260,7 @@ function renderSandboxModal(isEn, t, products) {
 
             <div class="sb-action-row">
               <button type="button" class="btn btn--primary btn--sm sb-action-full" id="btn-run-ai-inference">
-                <span>🧠</span>
+                <span></span>
                 <span>${t("تشغيل استدلال النموذج وتدقيق العزل (Private Inference Benchmark)", "Run Local Private Inference Benchmark")}</span>
               </button>
             </div>
@@ -279,7 +279,7 @@ function renderSandboxModal(isEn, t, products) {
 
             <div class="sb-action-row">
               <button type="button" class="btn btn--primary btn--sm sb-action-full" id="btn-run-store-bench">
-                <span>⚡</span>
+                <span></span>
                 <span>${t("اختبار سرعة استجابة واجهات الشراء والسلة", "Benchmark Sub-Millisecond Checkout")}</span>
               </button>
             </div>
@@ -299,7 +299,7 @@ function renderSandboxModal(isEn, t, products) {
       <div class="dash-modal dash-modal-md">
         <div class="dash-modal-header">
           <div class="dash-modal-title-wrap">
-            <span class="dash-modal-icon">📋</span>
+            <span class="dash-modal-icon"></span>
             <h3 class="dash-modal-title" id="modal-rfq-title">
               ${t("طلب مواصفة فنية واعتماد تجاري", "Enterprise RFQ & Technical Accreditation")}
             </h3>
@@ -432,7 +432,7 @@ export function renderIndex(ctx) {
       <div class="prod-search-wrapper">
         <label for="input-prod-search" class="sr-only">${t("بحث فوري في مواصفات الأنظمة", "Instant search in system specifications")}</label>
         <div class="prod-search-box">
-          <span class="prod-search-icon" aria-hidden="true">🔍</span>
+          <span class="prod-search-icon" aria-hidden="true"></span>
           <input type="search" id="input-prod-search" class="prod-search-input" autocomplete="off" placeholder="${t("ابحث في الأنظمة، التقنيات، أو المعايير (مثلاً: IFRS, P2P, AI, Glass)...", "Search systems, tech, or standards (e.g. IFRS, P2P, AI, Glass)...")}">
           <span class="prod-count-pill" id="prod-counter-display">${t("عرض 7 من 7 أنظمة", "Showing 7 of 7 systems")}</span>
         </div>
@@ -443,7 +443,7 @@ export function renderIndex(ctx) {
       <div class="wrap wrap--wide">
         <div class="hcards hcards--grid" id="prod-items-grid">
           ${products.map((x, i) => {
-            const meta = PRODUCT_META[x.slug] || { category: "commerce", badgeAr: "نظام سيادي", badgeEn: "Sovereign System", icon: "⚡" };
+            const meta = PRODUCT_META[x.slug] || { category: "commerce", badgeAr: "نظام سيادي", badgeEn: "Sovereign System", icon: "" };
             const cardMarkup = C.heroCard({
               ...x,
               themes,
@@ -476,11 +476,11 @@ export function renderIndex(ctx) {
                 ${cardMarkup}
                 <div class="prod-card-actions">
                   <button type="button" class="btn btn--outline btn--sm btn-open-sandbox" data-product="${x.slug}">
-                    <span>⚡</span>
+                    <span></span>
                     <span>${t("تشغيل المحاكي المباشر", "Live Sandbox")}</span>
                   </button>
                   <button type="button" class="btn btn--outline btn--sm btn-open-rfq" data-product="${x.slug}" data-product-title="${esc(x.title)}">
-                    <span>📋</span>
+                    <span></span>
                     <span>${t("طلب مواصفة واعتماد", "Enterprise RFQ")}</span>
                   </button>
                 </div>
