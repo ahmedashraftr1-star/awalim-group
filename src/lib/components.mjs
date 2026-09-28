@@ -188,7 +188,7 @@ export const cockpit = ({ tilt = true, parallax = true, live = true, cls = "", i
         <div class="cockpit__kpis">
           <div class="cockpit__kpi"><span>عقد غزة المتصلة</span><b class="num"><span class="dot dot--live" aria-hidden="true"></span><span data-rahma-nodes>14</span> عقدة</b></div>
           <div class="cockpit__kpi"><span>مطابقة الحالات الذكية</span><b class="num" data-rahma-cases>4,892 حالة</b></div>
-          <div class="cockpit__kpi cockpit__kpi--acc"><span>المزامنة السيادية</span><b class="mono" data-rahma-sync>Merkle 100% ✓</b></div>
+          <div class="cockpit__kpi cockpit__kpi--acc"><span>المزامنة</span><b class="mono" data-rahma-sync>100% ✓</b></div>
         </div>
         <div class="cockpit__rows" data-rahma-feed>
           <div class="cockpit__row"><span>حالة فرز عاجلة · خانيونس #9842</span><b class="cockpit__ok">مطابقة استشاري جراحة خلال 12 ثانية</b></div>
@@ -241,7 +241,7 @@ export const scopeEstimator = (site, isEn = false) => `
             <div class="estimator__options">
               <label class="estimator__opt"><input type="radio" name="scope_type" value="enterprise" checked><span>${isEn ? "Integrated Enterprise System" : "نظام مؤسسي متكامل"}</span></label>
               <label class="estimator__opt"><input type="radio" name="scope_type" value="agents"><span>${isEn ? "Autonomous AI Agents" : "وكلاء ذكاء اصطناعي"}</span></label>
-              <label class="estimator__opt"><input type="radio" name="scope_type" value="mobile"><span>${isEn ? "Sovereign Mobile App" : "تطبيق موبايل سيادي"}</span></label>
+              <label class="estimator__opt"><input type="radio" name="scope_type" value="mobile"><span>${isEn ? "Mobile app" : "تطبيق موبايل"}</span></label>
               <label class="estimator__opt"><input type="radio" name="scope_type" value="brand"><span>${isEn ? "Brand & Design System" : "هوية ونظام تصميم"}</span></label>
             </div>
           </div>

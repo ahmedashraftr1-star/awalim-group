@@ -12,7 +12,7 @@
         "We build the <em>systems</em>",
         "that run companies."
       ],
-      "lede": "Awalim Group is a digital engineering house building enterprise products that hold under real pressure: double-entry accounting on IFRS, AI agents that execute rather than chat, Flutter apps with native performance, and web platforms measured in milliseconds."
+      "lede": "We build the systems your company runs on: accounting that closes the month accurately, AI automation that removes manual work, and apps and platforms your team and customers rely on every day. The code is yours from day one."
     },
     "story": {
       "big": "From a room in Gaza to systems running in 14 countries",
@@ -21,7 +21,7 @@
     "manifesto": {
       "eyebrow": "The thesis",
       "h": "The difference between a website and a system is the difference between a pitch and a product.",
-      "p1": "Most of what is sold in this region as a «platform» is a pretty interface over a spreadsheet. We build the layer nobody sees: balanced journal entries, multi-tenant data isolation, reversible migrations, tests that stop regressions, and an audit log that cannot be erased.",
+      "p1": "Most of what gets sold as a \"platform\" is a pretty screen on top of a spreadsheet. We start with the layer nobody sees: numbers that always balance, each client's data kept apart from every other's, updates that can be rolled back, and a record of every change and who made it.",
       "p2": "The beautiful interface comes after that — and it comes because the structure underneath has earned it."
     },
     "why": {

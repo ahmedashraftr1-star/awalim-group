@@ -61,319 +61,6 @@ const PRODUCT_META = {
   }
 };
 
-function renderSandboxModal(isEn, t, products) {
-  return `
-    <!-- Sovereign Systems Sandbox Modal (WCAG AAA & CSP-Safe) -->
-    <div class="dash-modal-overlay hidden" id="modal-product-sandbox" role="dialog" aria-modal="true" aria-labelledby="modal-sandbox-title">
-      <div class="dash-modal dash-modal-lg">
-        <div class="dash-modal-header">
-          <div class="dash-modal-title-wrap">
-            <span class="dash-modal-icon"></span>
-            <h3 class="dash-modal-title" id="modal-sandbox-title">
-              ${t("محاكي الأنظمة السيادية المباشر (Multi-Expert Sandbox)", "Sovereign Systems Multi-Expert Live Sandbox")}
-            </h3>
-          </div>
-          <button type="button" class="dash-modal-close" id="btn-close-sandbox-modal" aria-label="${t("إغلاق", "Close")}">✕</button>
-        </div>
-
-        <div class="sandbox-tabs-nav" role="tablist" aria-label="${t("اختيار نظام للمحاكاة", "Select System Sandbox")}">
-          <button type="button" class="sandbox-tab-btn active" data-sandbox-tab="smart-accountant">${t("محاسب ذكي (ZATCA P2)", "Smart Accountant")}</button>
-          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="rahmacare">${t("RahmaCare (RF Mesh)", "RahmaCare Mesh")}</button>
-          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="vibe-os">${t("Vibe OS (Physics Engine)", "Vibe OS Physics")}</button>
-          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="ai-lab">${t("AI Lab (Local LLM)", "AI Lab Engine")}</button>
-          <button type="button" class="sandbox-tab-btn" data-sandbox-tab="jameel-store">${t("Jameel Store", "Jameel Store")}</button>
-        </div>
-
-        <div class="dash-modal-scroll">
-          <!-- 1. Smart Accountant Simulator (ZATCA Phase 2 & IFRS 15) -->
-          <div class="sandbox-view-panel" id="sandbox-view-smart-accountant">
-            <div class="sb-intro-text">
-              ${t("محاكاة محرك القيد المزدوج IFRS 15 مع توليد حزمة TLV الثنائية المشفرة المعتمدة لدى هيئة الزكاة والضريبة والجمارك (ZATCA Phase 2):", "Live simulation of IFRS 15 double-entry engine and authentic binary TLV Base64 packing conforming to Saudi ZATCA Phase 2:")}
-            </div>
-
-            <div class="sandbox-calc-grid">
-              <div class="sandbox-calc-box">
-                <label for="sb-acc-amount">${t("قيمة الفاتورة الأساسية", "Invoice Amount (Pre-Tax)")}</label>
-                <input type="number" id="sb-acc-amount" value="10000" min="100" step="100">
-              </div>
-              <div class="sandbox-calc-box">
-                <label for="sb-acc-tax">${t("نسبة الضريبة والدولة", "Tax Authority & Rate")}</label>
-                <select id="sb-acc-tax">
-                  <option value="0.15">${t("15% — المملكة العربية السعودية (ZATCA)", "15% — Kingdom of Saudi Arabia (ZATCA)")}</option>
-                  <option value="0.14">${t("14% — جمهورية مصر العربية (ETA)", "14% — Arab Republic of Egypt (ETA)")}</option>
-                  <option value="0.05">${t("5% — دولة الإمارات العربية المتحدة (FTA)", "5% — United Arab Emirates (FTA)")}</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="sb-action-row">
-              <button type="button" class="btn btn--primary btn--sm sb-action-full" id="btn-run-acc-calc">
-                <span></span>
-                <span>${t("ترحيل القيد المحاسبي وتوليد حزمة TLV والختم التشفيري", "Commit IFRS Ledger & Generate ZATCA Phase 2 TLV QR")}</span>
-              </button>
-            </div>
-
-            <div class="sb-zatca-split" id="sb-acc-split">
-              <div class="sandbox-terminal-view" id="sb-acc-output">
-                <div>[IFRS-ENGINE] Ready. Awaiting ledger commit...</div>
-                <div>[STATUS] Balanced Ledger Architecture verified (IFRS 15 Compliant).</div>
-              </div>
-              <div class="sb-qr-box" id="sb-acc-qr-container">
-                <div class="sb-badge-zatca">ZATCA P2</div>
-                <div id="sb-acc-qr-svg-wrap">
-                  <!-- Generated Mathematical SVG QR matrix -->
-                </div>
-                <div class="sb-qr-caption">SHA-256 + ECDSA</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 2. RahmaCare Mesh Simulator (Friis Path Loss & LoRa SX1262) -->
-          <div class="sandbox-view-panel hidden" id="sandbox-view-rahmacare">
-            <div class="sb-intro-text">
-              ${t("محاكاة ميزانية الوصلة اللاسلكية (RF Link Budget) ومعادلة فريس لشبكة LoRa P2P الطبية المستقلة تماماً عن الإنترنت:", "Physical RF Link Budget and Friis Path Loss calculation for off-grid RahmaCare P2P medical triage mesh:")}
-            </div>
-
-            <div class="sandbox-calc-grid">
-              <div class="sandbox-calc-box">
-                <label for="sb-mesh-dist">
-                  ${t("المسافة بين العقدتين:", "Node Distance:")} <strong id="sb-mesh-dist-val">8.5 km</strong>
-                </label>
-                <input type="range" id="sb-mesh-dist" min="1" max="25" step="0.5" value="8.5">
-              </div>
-              <div class="sandbox-calc-box">
-                <label for="sb-mesh-sf">${t("عامل التوسع والحساسية (Spreading Factor)", "Spreading Factor & Sensitivity")}</label>
-                <select id="sb-mesh-sf">
-                  <option value="12">${t("SF12 — أقصى مدى (-148 dBm · 0.29 kbps)", "SF12 — Ultra Long Range (-148 dBm)")}</option>
-                  <option value="9">${t("SF9 — متوازن (-130 dBm · 1.76 kbps)", "SF9 — Balanced (-130 dBm)")}</option>
-                  <option value="7">${t("SF7 — سرعة عالية (-123 dBm · 5.47 kbps)", "SF7 — High Speed (-123 dBm)")}</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="sb-rf-grid">
-              <div class="sb-rf-card">
-                <div class="sb-rf-lbl">${t("فقد المسار (FSPL)", "Free Space Loss")}</div>
-                <div class="sb-rf-val" id="sb-rf-fspl">103.8 dB</div>
-              </div>
-              <div class="sb-rf-card">
-                <div class="sb-rf-lbl">${t("القدرة المستقبلة", "Received Power (Prx)")}</div>
-                <div class="sb-rf-val" id="sb-rf-prx">-80.8 dBm</div>
-              </div>
-              <div class="sb-rf-card">
-                <div class="sb-rf-lbl">${t("هامش الاتصال (Margin)", "Link Margin")}</div>
-                <div class="sb-rf-val color-green" id="sb-rf-margin">+67.2 dB</div>
-              </div>
-              <div class="sb-rf-card">
-                <div class="sb-rf-lbl">${t("زمن البث في الهواء", "Packet Airtime (Tair)")}</div>
-                <div class="sb-rf-val" id="sb-rf-airtime">782.3 ms</div>
-              </div>
-            </div>
-
-            <div class="sb-flex-row">
-              <button type="button" class="btn btn--primary btn--sm" id="btn-run-mesh-ping">
-                <span></span>
-                <span>${t("إرسال نداء فرز طبي مشفر (Ed25519 SOS)", "Dispatch Encrypted SOS Packet")}</span>
-              </button>
-              <button type="button" class="btn btn--outline btn--sm" id="btn-toggle-blackout">
-                <span></span>
-                <span>${t("محاكاة انقطاع الإنترنت التام", "Simulate Total Blackout")}</span>
-              </button>
-            </div>
-
-            <div class="sandbox-terminal-view" id="sb-mesh-output">
-              <div>[MESH] 5 Nodes active: RF-02 (Rafah) · KH-01 · DB-03 · GZ-04 · BY-05.</div>
-              <div>[RADIO] Semtech SX1262 LoRa 433MHz active. Standby...</div>
-            </div>
-          </div>
-
-          <!-- 3. Vibe OS 4.0 Simulator (Damped Harmonic Oscillator Physics) -->
-          <div class="sandbox-view-panel hidden" id="sandbox-view-vibe-os">
-            <div class="sb-intro-text">
-              ${t("محاكاة حقيقية لفيزياء الميكانيكا الكلاسيكية (Damped Harmonic Oscillator: m·x'' + c·x' + k·x = 0) لنافذة Sovereign Glass:", "Newtonian spring mechanics simulation (Damped Harmonic Oscillator) powering Sovereign Glass OS:")}
-            </div>
-
-            <div class="sandbox-calc-grid">
-              <div class="sandbox-calc-box">
-                <label for="sb-spring-mass">
-                  ${t("الكتلة (Mass m):", "Mass (m):")} <strong id="sb-spring-mass-val">1.0 kg</strong>
-                </label>
-                <input type="range" id="sb-spring-mass" min="0.5" max="3.0" step="0.1" value="1.0">
-              </div>
-              <div class="sandbox-calc-box">
-                <label for="sb-spring-stiff">
-                  ${t("معامل الصلابة (Stiffness k):", "Stiffness (k):")} <strong id="sb-spring-stiff-val">160 N/m</strong>
-                </label>
-                <input type="range" id="sb-spring-stiff" min="50" max="300" step="10" value="160">
-              </div>
-            </div>
-
-            <div class="sb-telemetry-row">
-              <div>${t("نسبة التخميد:", "Damping Ratio:")} <strong id="sb-spring-zeta">0.79</strong></div>
-              <div>${t("التردد الطبيعي:", "Natural Freq:")} <strong id="sb-spring-omega">12.6 rad/s</strong></div>
-              <div>${t("الحالة:", "Dynamic State:")} <strong id="sb-spring-state" class="color-green">Underdamped (Fluid Bounce)</strong></div>
-            </div>
-
-            <div class="sb-spring-stage" id="sb-spring-stage">
-              <div class="sb-spring-card" id="sb-spring-card">
-                <div class="font-bold">Sovereign Glass OS Node</div>
-                <div class="color-dim text-sm">Apple Silicon Accelerated · Spring-Damper Kernel</div>
-              </div>
-            </div>
-
-            <div class="sb-flex-row">
-              <button type="button" class="btn btn--primary btn--sm" id="btn-spring-deflect">
-                <span></span>
-                <span>${t("سحب وإفلات النابض (Deflect & Release 120px)", "Deflect & Release Spring (120px)")}</span>
-              </button>
-              <button type="button" class="btn btn--outline btn--sm" id="btn-matrix-toggle">
-                <span></span>
-                <span>${t("بروتوكول GOD MODE (Matrix Stream)", "Activate GOD MODE Protocol")}</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- 4. AI Lab Simulator (Local LLM Zero-Egress Benchmark) -->
-          <div class="sandbox-view-panel hidden" id="sandbox-view-ai-lab">
-            <div class="sb-intro-text">
-              ${t("فحص سرعة استدلال نماذج الذكاء الاصطناعي السيادية المعزولة محلياً مع تدقيق منع خروج أي بايت عبر الشبكة (Zero-Egress):", "Benchmark local sovereign LLM inference throughput and memory allocation with verified zero WAN socket egress:")}
-            </div>
-
-            <div class="sandbox-calc-grid">
-              <div class="sandbox-calc-box">
-                <label for="sb-ai-model">${t("حجم النموذج السيادي المحلي", "Local Sovereign Model Tier")}</label>
-                <select id="sb-ai-model">
-                  <option value="7b">Sovereign-7B-Instruct (Q4_K_M · 4.3GB VRAM)</option>
-                  <option value="14b" selected>Sovereign-14B-DeepSeek (Q4_K_M · 8.8GB VRAM)</option>
-                  <option value="32b">Sovereign-32B-Apex (Q4_K_M · 19.5GB VRAM)</option>
-                </select>
-              </div>
-              <div class="sandbox-calc-box">
-                <label for="sb-ai-prompt">${t("المهمة الاستدلالية", "Reasoning Benchmark Task")}</label>
-                <select id="sb-ai-prompt">
-                  <option value="ifrs">${t("تدقيق قيد محاسبي معقد حسب IFRS 15", "IFRS 15 Complex Contract Audit")}</option>
-                  <option value="triage">${t("بروتوكول فرز حالات الإصابات الجماعية", "Mass Casualty Clinical Protocol")}</option>
-                  <option value="kernel">${t("توليد شيفرة نواة سيادية بدون تبعيات", "Zero-Dependency Kernel Synthesis")}</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="sb-action-row">
-              <button type="button" class="btn btn--primary btn--sm sb-action-full" id="btn-run-ai-inference">
-                <span></span>
-                <span>${t("تشغيل استدلال النموذج وتدقيق العزل (Private Inference Benchmark)", "Run Local Private Inference Benchmark")}</span>
-              </button>
-            </div>
-
-            <div class="sandbox-terminal-view" id="sb-ai-output">
-              <div>[MODEL] Sovereign-14B-DeepSeek-Q4_K_M loaded into Unified GPU Memory.</div>
-              <div>[SECURITY AUDIT] Zero-Egress Sandbox Enforced. Sockets: 0. Awaiting prompt...</div>
-            </div>
-          </div>
-
-          <!-- 5. Jameel Store Simulator (Headless Edge Commerce) -->
-          <div class="sandbox-view-panel hidden" id="sandbox-view-jameel-store">
-            <div class="sb-intro-text">
-              ${t("محاكاة استجابة المتجر فائق السرعة عبر API بدون رأس مع توقيع المعاملات محلياً بشريحة Ed25519:", "Live simulation of headless commerce API latency and local Ed25519 transaction signing:")}
-            </div>
-
-            <div class="sb-action-row">
-              <button type="button" class="btn btn--primary btn--sm sb-action-full" id="btn-run-store-bench">
-                <span></span>
-                <span>${t("اختبار سرعة استجابة واجهات الشراء والسلة", "Benchmark Sub-Millisecond Checkout")}</span>
-              </button>
-            </div>
-
-            <div class="sandbox-terminal-view" id="sb-store-output">
-              <div>GET /api/v1/products?limit=100 -> 200 OK (2.4ms) [CACHE: HIT]</div>
-              <div>POST /api/v1/checkout/session -> 201 Created (4.6ms) [ED25519 SIGNED]</div>
-              <div>Cart calculation verified with 0 cloud roundtrips.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Enterprise RFQ & Custom Deployment Modal (WCAG AAA & CSP-Safe) -->
-    <div class="dash-modal-overlay hidden" id="modal-product-rfq" role="dialog" aria-modal="true" aria-labelledby="modal-rfq-title">
-      <div class="dash-modal dash-modal-md">
-        <div class="dash-modal-header">
-          <div class="dash-modal-title-wrap">
-            <span class="dash-modal-icon"></span>
-            <h3 class="dash-modal-title" id="modal-rfq-title">
-              ${t("طلب مواصفة فنية واعتماد تجاري", "Enterprise RFQ & Technical Accreditation")}
-            </h3>
-          </div>
-          <button type="button" class="dash-modal-close" id="btn-close-rfq-modal" aria-label="${t("إغلاق", "Close")}">✕</button>
-        </div>
-
-        <form id="form-product-rfq" class="dash-modal-scroll" aria-label="${t("نموذج طلب مواصفة فنية للمنتجات", "Product Technical Specification Request Form")}">
-          <div id="product-rfq-error" role="alert" aria-live="polite" class="color-red font-bold text-sm mb-2"></div>
-
-          <div class="dash-grid-2">
-            <div>
-              <label for="rfq-org" class="dash-lbl">
-                ${t("اسم المنشأة أو المؤسسة *", "Organization Name *")}
-              </label>
-              <input type="text" id="rfq-org" name="org" autocomplete="organization" required aria-required="true" class="dash-input">
-            </div>
-            <div>
-              <label for="rfq-name" class="dash-lbl">
-                ${t("اسم المسؤول التقني *", "Technical Lead Name *")}
-              </label>
-              <input type="text" id="rfq-name" name="name" autocomplete="name" required aria-required="true" class="dash-input">
-            </div>
-          </div>
-
-          <div class="dash-form-group">
-            <label for="rfq-email" class="dash-lbl">
-              ${t("البريد الإلكتروني المؤسسي *", "Corporate Email *")}
-            </label>
-            <input type="email" id="rfq-email" name="email" autocomplete="email" required aria-required="true" class="dash-input">
-          </div>
-
-          <div class="dash-grid-2">
-            <div>
-              <label for="rfq-product" class="dash-lbl">
-                ${t("النظام المستهدف", "Target System")}
-              </label>
-              <select id="rfq-product" name="product" autocomplete="off" class="dash-select">
-                ${products.map((p) => `<option value="${p.slug}">${esc(p.title)} (${esc(p.kind)})</option>`).join("")}
-              </select>
-            </div>
-            <div>
-              <label for="rfq-topology" class="dash-lbl">
-                ${t("طوبولوجيا النشر المقترحة", "Deployment Topology")}
-              </label>
-              <select id="rfq-topology" name="topology" autocomplete="off" class="dash-select">
-                <option value="on-prem">${t("نشر سيادي معزول محلياً (Air-Gapped On-Prem)", "Air-Gapped Sovereign On-Prem")}</option>
-                <option value="p2p-mesh">${t("شبكة لا مركزية هجينة (P2P Mesh Network)", "P2P Decentralized Mesh")}</option>
-                <option value="hybrid-cloud">${t("سحابة سيادية خاصة (Dedicated Sovereign Cloud)", "Dedicated Sovereign Cloud")}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="dash-form-group">
-            <label for="rfq-notes" class="dash-lbl">
-              ${t("المتطلبات التشغيلية والتوافق النظامي", "Operational & Compliance Requirements")}
-            </label>
-            <textarea id="rfq-notes" name="notes" rows="3" autocomplete="off" placeholder="${t("مثال: اشتراطات هيئة الزكاة والضريبة، التوافق مع معايير الأمان السيبراني، عدد المستخدمين المتوقع...", "e.g. Compliance with local data regulations, expected concurrency, custom integrations...")}" class="dash-textarea"></textarea>
-          </div>
-
-          <div class="dash-actions-row">
-            <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-product-rfq">
-              ${t("إلغاء", "Cancel")}
-            </button>
-            <button type="submit" class="btn btn--primary btn--sm" id="btn-submit-product-rfq">
-              ${t("إرسال طلب المواصفة والاعتماد", "Submit RFQ & Request Specs")}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  `;
-}
-
 export function renderIndex(ctx) {
   const { site, stats, themes, pages, products } = ctx;
   const p = pages.products;
@@ -387,25 +74,6 @@ export function renderIndex(ctx) {
         <h1 class="d-hero rv" style="--i:1">${p.h}</h1>
         <p class="lede rv" style="--i:2">${p.lede}</p>
 
-        <!-- Sovereign System Metrics Strip -->
-        <div class="prod-metrics-strip rv" style="--i:3">
-          <div>
-            <div class="prod-metric-lbl">${t("الأنظمة المطورة", "Built Systems")}</div>
-            <div class="prod-metric-val color-cyan">7 ${t("أنظمة سيادية", "Sovereign")}</div>
-          </div>
-          <div>
-            <div class="prod-metric-lbl">${t("الصمود دون إنترنت", "Offline Resilience")}</div>
-            <div class="prod-metric-val color-green">100% Mesh</div>
-          </div>
-          <div>
-            <div class="prod-metric-lbl">${t("تسريب البيانات الخارجية", "Data Leakage")}</div>
-            <div class="prod-metric-val color-blue">0.00% Zero-Leak</div>
-          </div>
-          <div>
-            <div class="prod-metric-lbl">${t("التدقيق والاعتماد", "Certification")}</div>
-            <div class="prod-metric-val color-gold">Ed25519 + IFRS</div>
-          </div>
-        </div>
       </div>
     </section>`,
 
@@ -433,7 +101,7 @@ export function renderIndex(ctx) {
         <label for="input-prod-search" class="sr-only">${t("بحث فوري في مواصفات الأنظمة", "Instant search in system specifications")}</label>
         <div class="prod-search-box">
           <span class="prod-search-icon" aria-hidden="true"></span>
-          <input type="search" id="input-prod-search" class="prod-search-input" autocomplete="off" placeholder="${t("ابحث في الأنظمة، التقنيات، أو المعايير (مثلاً: IFRS, P2P, AI, Glass)...", "Search systems, tech, or standards (e.g. IFRS, P2P, AI, Glass)...")}">
+          <input type="search" id="input-prod-search" class="prod-search-input" autocomplete="off" placeholder="${t("ابحث في المنتجات: محاسبة، صحة، متجر…", "Search products: accounting, health, store…")}">
           <span class="prod-count-pill" id="prod-counter-display">${t("عرض 7 من 7 أنظمة", "Showing 7 of 7 systems")}</span>
         </div>
       </div>
@@ -474,16 +142,6 @@ export function renderIndex(ctx) {
                   <span class="prod-card-icon">${meta.icon}</span>
                 </div>
                 ${cardMarkup}
-                <div class="prod-card-actions">
-                  <button type="button" class="btn btn--outline btn--sm btn-open-sandbox" data-product="${x.slug}">
-                    <span></span>
-                    <span>${t("تشغيل المحاكي المباشر", "Live Sandbox")}</span>
-                  </button>
-                  <button type="button" class="btn btn--outline btn--sm btn-open-rfq" data-product="${x.slug}" data-product-title="${esc(x.title)}">
-                    <span></span>
-                    <span>${t("طلب مواصفة واعتماد", "Enterprise RFQ")}</span>
-                  </button>
-                </div>
               </div>
             `;
           }).join("")}
@@ -492,15 +150,13 @@ export function renderIndex(ctx) {
     </section>`,
 
     C.ctaBand({
-      title: t("تحتاج نظاماً سيادياً بمواصفات خاصة؟", "Need a custom sovereign system?"),
-      lede: t("نبني أنظمة مغلقة، معزولة تماماً عن السحابة العامة، أو شبكات هجينة صامدة مع حقوق ملكية فكرية مطلقة لمنشأتك.", "We engineer air-gapped, zero-dependency platforms with full intellectual property ownership for your organization."),
-      primary: { label: t("ابدأ دراسة مشروعك", "Initiate Architecture Study"), href: "/contact" },
+      title: t("تحتاج نظاماً مبنياً على مقاس عملك؟", "Need a system built around how you work?"),
+      lede: t("احكِ لنا عن العملية التي تريد ضبطها. نعود إليك بتشخيص أوّلي وتقدير نطاق ومدّة — والكود وحقوقه ملكك من اليوم الأول.", "Tell us about the process you want under control. We come back with a first diagnosis, a scope and a timeline — and the code and its rights are yours from day one."),
+      primary: { label: t("ابدأ مشروعك", "Start your project"), href: "/contact" },
       secondary: { label: t("استعرض الخدمات الهندسية", "Explore Engineering Services"), href: "/services" },
       site,
       rv: 8
-    }),
-
-    renderSandboxModal(isEn, t, products)
+    })
   ]);
 
   return {

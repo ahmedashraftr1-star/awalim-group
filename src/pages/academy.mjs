@@ -18,7 +18,7 @@ export default function render(ctx) {
       { num: "01", weeks: t("الأسابيع 1-4", "Weeks 1-4"), title: t("معمارية النواة ونماذج البيانات", "Kernel Architecture & Schemas"), desc: t("تصميم بنية البيانات وتطبيع الجداول ومعايير الأمان وتحديد حدود العمليات المعزولة.", "Data modeling, ACID invariants, and zero-trust isolated execution boundaries.") },
       { num: "02", weeks: t("الأسابيع 5-8", "Weeks 5-8"), title: t("محرك المعاملات والقيد المزدوج IFRS", "IFRS Double-Entry Ledger Engine"), desc: t("بناء آلة الحالة المالية غير القابلة للتراجع وعزل الأخطاء وتأمين سلامة السجلات.", "Deterministic state machines, cryptographic commit logs, and concurrency safety.") },
       { num: "03", weeks: t("الأسابيع 9-12", "Weeks 9-12"), title: t("فحص الضغط ومزامنة العقد الموزعة", "Distributed Stress Testing"), desc: t("اختبار 50,000 عملية في الثانية وتحقيق زمن استجابة دون 10ms تحت الضغط.", "50k tx/sec benchmarking, load balancing, and sub-10ms p99 latency verification.") },
-      { num: "04", weeks: t("الأسابيع 13-16", "Weeks 13-16"), title: t("التدقيق الجنائي والاعتماد السيادي", "Forensic Audit & Defense"), desc: t("مراجعة كود شاملة مع المهندس أحمد أشرف واعتماد ونشر المشروع النهائي حياً.", "Zero-defect code defense with Eng. Ahmed Ashraf and live production launch.") }
+      { num: "04", weeks: t("الأسابيع 13-16", "Weeks 13-16"), title: t("المراجعة النهائية والاعتماد", "Final review & certification"), desc: t("مراجعة كود شاملة مع المهندس أحمد أشرف واعتماد ونشر المشروع النهائي حياً.", "Zero-defect code defense with Eng. Ahmed Ashraf and live production launch.") }
     ],
     // 02 AI
     [

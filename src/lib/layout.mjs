@@ -233,7 +233,7 @@ ${footer(site)}
     <div class="dash-modal-header">
       <div style="display: flex; align-items: center; gap: 8px;">
         <span style="font-size: 1.3rem;"></span>
-        <h3 class="dash-modal-title" id="modal-admin-title">بوابة يوزر الإدارة السيادية</h3>
+        <h3 class="dash-modal-title" id="modal-admin-title">دخول الإدارة</h3>
       </div>
       <button type="button" class="dash-modal-close" id="btn-close-admin-auth" aria-label="إغلاق">&times;</button>
     </div>

@@ -162,10 +162,20 @@ createServer(async (req, res) => {
   const accept = req.headers["accept-encoding"] || "";
   const enc = COMPRESSIBLE.has(ext) ? (accept.includes("br") ? "br" : accept.includes("gzip") ? "gzip" : "") : "";
   /* cache compressed bodies, keyed by mtime so a rebuild is served immediately */
-  const key = file + "|" + enc + "|" + statSync(file).mtimeMs;
+  /* A rebuild deletes and rewrites files underneath a running server. A
+     request that lands in that window used to throw out of the handler and
+     take the whole process down (the "server keeps dying" of earlier
+     sessions). It now gets a 503 and the server stays up. */
+  let key, raw;
+  try {
+    key = file + "|" + enc + "|" + statSync(file).mtimeMs;
+    if (!cache.has(key)) raw = readFileSync(file);
+  } catch (err) {
+    res.writeHead(503, { "Content-Type": "text/plain; charset=utf-8", "Retry-After": "1", "Cache-Control": "no-store" });
+    return res.end("rebuilding — retry");
+  }
   let body = cache.get(key);
   if (!body) {
-    const raw = readFileSync(file);
     body = enc === "br" ? brotliCompressSync(raw, { params: { [constants.BROTLI_PARAM_QUALITY]: 5 } }) : enc === "gzip" ? gzipSync(raw, { level: 6 }) : raw;
     if (cache.size > 400) cache.clear();
     cache.set(key, body);
