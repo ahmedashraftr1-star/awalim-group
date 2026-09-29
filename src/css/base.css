@@ -157,3 +157,6 @@ p { text-wrap: pretty; }
    information; the mirror still records the pair, it just isn't painted. */
 html[lang="ar"] .eyebrow > .eyebrow__sep, html[lang="ar"] .eyebrow > .eyebrow__latin,
 html[lang="en"] .eyebrow > .eyebrow__sep, html[lang="en"] .eyebrow > .eyebrow__ar { display: none; }
+/* the service cards carried the same bilingual pair: «01 · Enterprise
+   Systems» over «أنظمة مؤسسية». The number stays; the translation goes. */
+.svc__latin { display: none; }

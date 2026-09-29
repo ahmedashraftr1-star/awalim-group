@@ -150,7 +150,7 @@ export function renderIndex(ctx) {
     </section>`,
 
     C.ctaBand({
-      title: t("تحتاج نظاماً مبنياً على مقاس عملك؟", "Need a system built around how you work?"),
+      h: t("تحتاج نظاماً مبنياً على مقاس عملك؟", "Need a system built around how you work?"),
       lede: t("احكِ لنا عن العملية التي تريد ضبطها. نعود إليك بتشخيص أوّلي وتقدير نطاق ومدّة — والكود وحقوقه ملكك من اليوم الأول.", "Tell us about the process you want under control. We come back with a first diagnosis, a scope and a timeline — and the code and its rights are yours from day one."),
       primary: { label: t("ابدأ مشروعك", "Start your project"), href: "/contact" },
       secondary: { label: t("استعرض الخدمات الهندسية", "Explore Engineering Services"), href: "/services" },

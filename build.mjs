@@ -467,6 +467,7 @@ eachPage((html) => { collectStyles(html); collectInlineScripts(html); collectInl
 let count = 0;
 const allRoutes = [];
 const leftovers = [];
+const blanks = [];
 {
   eachPage((rendered, r, loc) => {
     const html = stylesToClasses(rendered);
@@ -477,6 +478,15 @@ const leftovers = [];
     write(out, html);
     allRoutes.push(full);
     count++;
+    /* A template that reads a missing field prints it: /products shipped the
+       word «undefined» as its closing heading because ctaBand() was passed
+       `title` instead of `h`. Visible text or attribute values that are
+       exactly undefined/null/NaN are a build error, not a visitor's find. */
+    {
+      const visible = html.replace(/<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>/g, "");
+      const bad = visible.match(/>\s*(undefined|null|NaN)\s*<|="(undefined|null|NaN)"/g);
+      if (bad) blanks.push(`${full}: ${[...new Set(bad)].slice(0, 4).join("  ")}`);
+    }
     if (loc.code === "en") {
       /* the brand's Arabic wordmark is intentional; anything else is a gap */
       /* the wordmark and the "read this in Arabic" switcher are deliberately Arabic */
@@ -488,6 +498,11 @@ const leftovers = [];
       if (hits.length) leftovers.push(`${full}: ${hits.slice(0, 6).join(" | ")}`);
     }
   });
+}
+if (blanks.length) {
+  console.error(`✖ ${blanks.length} page(s) print a missing value — a template read a field that isn't there:`);
+  for (const l of blanks.slice(0, 12)) console.error("   " + l);
+  process.exit(1);
 }
 if (leftovers.length) {
   console.warn(`⚠ ${leftovers.length} English page(s) still contain Arabic — add the strings to src/content/i18n.json or src/content/en/*.json:`);

@@ -2766,3 +2766,7 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
 /* Internal system codes (SYS-ACC-01…) are for us, not for a buyer: the chip
    keeps its status dot and word, the code itself is not painted. */
 .syscode__code { display: none; }
+/* The action group is a plain flex row, not a surface: each control inside
+   already carries its own glass. Painting the rim + shadow on the square
+   group drew a stray hairline under the header buttons. */
+.pillnav .pillnav__act { box-shadow: none; background-image: none; }
