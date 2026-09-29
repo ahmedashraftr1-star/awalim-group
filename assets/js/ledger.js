@@ -331,43 +331,8 @@
       propose(a);
     });
   });
-  /* ======================================================================
-     ESTIMATOR CONTROLLER
-     ====================================================================== */
-  $$("[data-estimator]").forEach(function (box) {
-    var timeEl = $("[data-est-time]", box);
-    var waBtn = $("[data-est-wa]", box);
-    function update() {
-      var typeInput = $('input[name="scope_type"]:checked', box);
-      var speedInput = $('input[name="scope_speed"]:checked', box);
-      var feats = $$('input[name="scope_feat"]:checked', box).map(function (cb) {
-        var lbl = cb.closest("label");
-        return lbl ? lbl.textContent.trim() : cb.value;
-      });
-
-      var typeText = typeInput && typeInput.closest("label") ? typeInput.closest("label").textContent.trim() : "نظام مؤسسي";
-      var speed = speedInput ? speedInput.value : "standard";
-
-      var durationNum = speed === "sprint" ? "2–3" : "4–6";
-      var durationSuffix = T(speed === "sprint" ? " أسابيع (مسار مسرّع)" : " أسابيع (مسار قياسي)", speed === "sprint" ? " weeks (Sprint)" : " weeks (Standard)");
-      if (timeEl) {
-        timeEl.textContent = "";
-        var bdiEl = document.createElement("bdi");
-        bdiEl.dir = "ltr";
-        bdiEl.textContent = durationNum;
-        timeEl.appendChild(bdiEl);
-        timeEl.appendChild(document.createTextNode(durationSuffix));
-      }
-      var durationPlain = durationNum + durationSuffix;
-      var text = EN
-        ? "Hello Awalim Group, I would like to inquire about: " + typeText + " with features: " + feats.join(", ") + ". Desired velocity: " + durationPlain + "."
-        : "مرحباً عوالِم قروب، أود الاستفسار عن مشروع: " + typeText + " مع ميزات: " + feats.join("، ") + " بمسار: " + durationPlain + ".";
-
-      if (waBtn) waBtn.href = "https://wa.me/970593636136?text=" + encodeURIComponent(text);
-    }
-    box.addEventListener("change", update);
-    update();
-  });
+  /* The estimator is driven by extras.js alone; a second controller here
+     computed a different timeline into the same element. */
 
   /* ======================================================================
      HARDWARE HUD FPS TELEMETRY (ZERO-LAG & INTERSECTION-AWARE)

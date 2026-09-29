@@ -26,7 +26,7 @@ export function renderIndex(ctx) {
           ${C.sideIndex([{ title: "دراسات الحالة", items: cases.map((c) => ({ id: `case-${c.slug}`, label: c.title })) }, { title: "أعمال أخرى", items: [{ id: "minor", label: "حملات وأنظمة تصميم" }] }])}
           <div class="indexed__col">
             <div class="hcards" id="work-list">
-              ${cases.map((c, i) => C.heroCard({ ...c, themes, id: `case-${c.slug}`, href: `/work/${c.slug}`, alt: c.heroAlt, stats, lazy: i > 0, tags: c.tech.slice(0, 4), level: 2 }).replace('class="hcard themed rv', `data-cat="${c.cat}" class="hcard themed rv`)).join("")}
+              ${cases.map((c, i) => C.heroCard({ ...c, themes, id: `case-${c.slug}`, href: `/work/${c.slug}`, alt: c.heroAlt, stats, lazy: i > 0, tags: c.tech.slice(0, 4), showImpact: true, level: 2 }).replace('class="hcard themed rv', `data-cat="${c.cat}" class="hcard themed rv`)).join("")}
             </div>
             <div id="minor" class="minor">
               ${C.sectionHead({ eyebrowAr: "أعمال أخرى", eyebrowEn: "CAMPAIGNS", h: "حملات وأنظمة تصميم", lede: "أعمال هوية وحملات موسمية سُلِّمت ضمن نطاقات أصغر." })}

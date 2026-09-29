@@ -226,13 +226,13 @@ export const cockpit = ({ tilt = true, parallax = true, live = true, cls = "", i
 
 /** Interactive project scope and investment estimator. */
 export const scopeEstimator = (site, isEn = false) => `
-<section class="sec sec--alt" id="estimator" aria-label="${isEn ? "System Investment Calculator" : "حاسبة استثمار النظم"}">
+<section class="sec sec--alt" id="estimator" aria-labelledby="estimator-h">
   <div class="wrap wrap--wide">
     <div class="estimator rv" data-stagger data-estimator>
       <div class="estimator__head">
-        ${eyebrow("SYS-EST-01", "ESTIMATOR")}
-        <h2 class="d-1">${isEn ? "System Investment Calculator" : "حاسبة استثمار النظم"}</h2>
-        <p class="lede">${isEn ? "Estimate your system scope and delivery timeline with full clarity before any code begins." : "احسب نطاق نظامك ومدة تسليمه بدقة — شفافية كاملة قبل بدء أي كود."}</p>
+        ${eyebrow(isEn ? "Project scope" : "نطاق المشروع", "")}
+        <h2 class="d-1" id="estimator-h">${isEn ? "Shape your starting scope" : "حدّد نطاقك المبدئي"}</h2>
+        <p class="lede">${isEn ? "Pick what you need and send it to us as it is. We come back with a diagnosis and a scope, before any code." : "اختر ما تحتاجه وأرسله لنا كما هو — نعود إليك بتشخيص وتقدير نطاق، قبل أي كود."}</p>
       </div>
       <div class="estimator__grid">
         <div class="estimator__form">
@@ -254,22 +254,15 @@ export const scopeEstimator = (site, isEn = false) => `
               <label class="estimator__opt"><input type="checkbox" name="scope_feat" value="offline"><span>${isEn ? "Offline Sync & Encrypted Ledger" : "مزامنة أوفلاين وسجل مشفّر"}</span></label>
             </div>
           </div>
-          <div class="estimator__grp">
-            <span class="estimator__label">${isEn ? "Delivery Speed" : "سرعة التسليم"}</span>
-            <div class="estimator__options">
-              <label class="estimator__opt"><input type="radio" name="scope_speed" value="standard" checked><span>${isEn ? "Standard Track (4–6 weeks)" : "مسار قياسي (4–6 أسابيع)"}</span></label>
-              <label class="estimator__opt"><input type="radio" name="scope_speed" value="sprint"><span>${isEn ? "Accelerated Sprint (2–3 weeks)" : "مسار مسرّع (2–3 أسابيع)"}</span></label>
-            </div>
-          </div>
         </div>
         <div class="estimator__summary">
           <div class="estimator__card">
             <div class="estimator__card-h">
-              <span class="mono">SPEC-EST-2026</span>
-              <span class="chip chip--accent">${isEn ? "READY TO SHIP" : "جاهز للشحن"}</span>
+              <span>${isEn ? "Your starting scope" : "نطاقك المبدئي"}</span>
             </div>
             <div class="estimator__kpis">
-              <div class="estimator__kpi"><span>${isEn ? "Estimated Timeline" : "المدة التقديرية"}</span><b class="mono" data-est-time><bdi dir="ltr">4–6</bdi> ${isEn ? "weeks" : "أسابيع"}</b></div>
+              <div class="estimator__kpi"><span>${isEn ? "How it starts" : "كيف يبدأ"}</span><ol class="estimator__steps">${(site.process || []).slice(0, 3).map((p) => `<li><span>${esc(p.t)}</span><b>${esc(p.dur).replace(/(\d+\s*[–-]\s*\d+|\d+)/g, '<bdi dir="ltr">$1</bdi>')}</b></li>`).join("")}</ol></div>
+              <p class="small muted estimator__note">${isEn ? "The full timeline is set in the scope document after diagnosis. We don't quote a number before we've seen the work." : "المدة الكاملة تُحدَّد في وثيقة النطاق بعد التشخيص — لا نعطي رقماً قبل أن نرى العمل."}</p>
               <div class="estimator__kpi"><span>${isEn ? "Guaranteed Standards" : "المعايير المضمونة"}</span><b>${isEn ? "Each client's data kept apart · Usable by everyone (WCAG AA) · Fast on any device" : "بيانات كل عميل معزولة · يستخدمه الجميع (WCAG AA) · سريع على أي جهاز"}</b></div>
             </div>
             <div class="estimator__actions">

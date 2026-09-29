@@ -1411,54 +1411,23 @@ var T = function (ar, en) { return EN ? en : ar; };
     if (!estimator) return;
 
     var isEn = document.documentElement.getAttribute("dir") === "ltr";
-    var timeEl = estimator.querySelector("[data-est-time]");
     var waEl = estimator.querySelector("[data-est-wa]");
+    var labelOf = function (input) { var l = input && input.closest("label"); return l ? l.textContent.trim() : ""; };
 
+    /* The message carries the visitor's own choices and no timeline:
+       durations are set in the scope document after diagnosis, never here.
+       (It used to compute "4–6 weeks" for an enterprise system, contradicting
+       the site's own FAQ.) */
     function updateEstimator() {
-      var typeInput = estimator.querySelector('input[name="scope_type"]:checked');
-      var speedInput = estimator.querySelector('input[name="scope_speed"]:checked');
-      var featInputs = estimator.querySelectorAll('input[name="scope_feat"]:checked');
-
-      var type = typeInput ? typeInput.value : "enterprise";
-      var speed = speedInput ? speedInput.value : "standard";
-      var featCount = featInputs ? featInputs.length : 0;
-
-      var minWeeks = 4, maxWeeks = 6;
-      if (type === "agents") { minWeeks = 3; maxWeeks = 5; }
-      else if (type === "mobile") { minWeeks = 4; maxWeeks = 6; }
-      else if (type === "brand") { minWeeks = 2; maxWeeks = 3; }
-
-      if (featCount > 2) {
-        var extra = featCount - 2;
-        minWeeks += extra;
-        maxWeeks += extra;
-      }
-
-      if (speed === "sprint") {
-        minWeeks = Math.max(2, Math.round(minWeeks * 0.6));
-        maxWeeks = Math.max(3, Math.round(maxWeeks * 0.65));
-      }
-
-      if (timeEl) {
-        timeEl.textContent = "";
-        var bdiEl = document.createElement("bdi");
-        bdiEl.setAttribute("dir", "ltr");
-        bdiEl.textContent = minWeeks + "–" + maxWeeks;
-        timeEl.appendChild(bdiEl);
-        timeEl.appendChild(document.createTextNode(" " + (isEn ? "weeks" : "أسابيع")));
-      }
-
-      if (waEl) {
-        var msg = isEn ?
-          "Hello Awalim Group, I customized a project scope: " + type + " with " + featCount + " features on " + speed + " speed (Timeline: " + minWeeks + "-" + maxWeeks + " weeks). Let us discuss." :
-          "مرحباً عوالِم قروب، قمت بحساب نطاق مشروع: نوع " + type + " مع " + featCount + " ميزات بمسار " + speed + " (المدة المتوقعة: " + minWeeks + "-" + maxWeeks + " أسابيع). نود مناقشة التنفيذ.";
-        waEl.href = "https://wa.me/970593636136?text=" + encodeURIComponent(msg);
-      }
+      if (!waEl) return;
+      var typeLabel = labelOf(estimator.querySelector('input[name="scope_type"]:checked'));
+      var feats = Array.prototype.map.call(estimator.querySelectorAll('input[name="scope_feat"]:checked'), labelOf).filter(Boolean);
+      var msg = isEn
+        ? "Hello Awalim Group, my starting scope: " + typeLabel + (feats.length ? " — " + feats.join(", ") : "") + ". I'd like to book a diagnosis."
+        : "مرحباً عوالِم قروب، نطاقي المبدئي: " + typeLabel + (feats.length ? " — " + feats.join("، ") : "") + ". أودّ حجز جلسة تشخيص.";
+      waEl.href = "https://wa.me/970593636136?text=" + encodeURIComponent(msg);
     }
 
-    estimator.addEventListener("change", function() {
-      if (window.AwalimAudio) window.AwalimAudio.tap();
-      updateEstimator();
-    });
+    estimator.addEventListener("change", updateEstimator);
     updateEstimator();
   })();

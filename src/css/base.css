@@ -160,3 +160,5 @@ html[lang="en"] .eyebrow > .eyebrow__sep, html[lang="en"] .eyebrow > .eyebrow__a
 /* the service cards carried the same bilingual pair: «01 · Enterprise
    Systems» over «أنظمة مؤسسية». The number stays; the translation goes. */
 .svc__latin { display: none; }
+/* native checkboxes / radios / range take the brand ink, not browser blue */
+:root { accent-color: var(--accent-text); }
