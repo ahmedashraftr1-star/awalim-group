@@ -278,7 +278,7 @@
     {
       "n": "02",
       "t": "Design & architecture",
-      "d": "Data model, API contracts and a permissions model — reviewed and approved before we build. Fixing an architectural mistake here costs an hour; three months in it costs a rebuild.",
+      "d": "We map the data, how the system connects to yours, and who sees what, and you sign it off before we build. Fixing a design mistake here costs an hour; three months later it costs a rebuild.",
       "dur": "10–15 working days",
       "out": [
         "Database schema",

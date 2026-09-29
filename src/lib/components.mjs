@@ -270,7 +270,7 @@ export const scopeEstimator = (site, isEn = false) => `
             </div>
             <div class="estimator__kpis">
               <div class="estimator__kpi"><span>${isEn ? "Estimated Timeline" : "المدة التقديرية"}</span><b class="mono" data-est-time><bdi dir="ltr">4–6</bdi> ${isEn ? "weeks" : "أسابيع"}</b></div>
-              <div class="estimator__kpi"><span>${isEn ? "Guaranteed Standards" : "المعايير المضمونة"}</span><b>${isEn ? "Multi-tenant isolation · AA Accessibility · Performance Budget" : "عزل مستأجرين · وصولية AA · ميزانية أداء"}</b></div>
+              <div class="estimator__kpi"><span>${isEn ? "Guaranteed Standards" : "المعايير المضمونة"}</span><b>${isEn ? "Each client's data kept apart · Usable by everyone (WCAG AA) · Fast on any device" : "بيانات كل عميل معزولة · يستخدمه الجميع (WCAG AA) · سريع على أي جهاز"}</b></div>
             </div>
             <div class="estimator__actions">
               <a class="btn btn--primary btn--full" href="https://wa.me/970593636136" target="_blank" rel="noopener" data-est-wa>
