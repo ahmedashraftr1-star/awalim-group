@@ -132,7 +132,7 @@ export default function render(ctx) {
                 <div class="raqib-score-badge" id="raqib-score-grade">A+</div>
                 <div>
                   <div style="font-size: 0.72rem; color: var(--text-muted);">${ctx.locale === "en" ? "Sovereign Compliance Score" : "مؤشر الامتثال والأمان السيادي"}</div>
-                  <div class="mono" id="raqib-score-val" style="font-size: 2rem; font-weight: var(--w-bold); color: var(--gold, #D4AF37);">99/100</div>
+                  <div class="mono" id="raqib-score-val" style="font-size: 2rem; font-weight: var(--w-bold); color: var(--gold);">99/100</div>
                   <span class="badge badge--ok" id="raqib-score-verdict">${ctx.locale === "en" ? "Sovereign Excellence Class" : "مرتبة الامتثال السيادي الفائق"}</span>
                 </div>
               </div>
@@ -445,7 +445,7 @@ export default function render(ctx) {
                 <div class="raqib-score-badge" id="raqib-readiness-gauge">60%</div>
                 <div style="margin-top: 10px; text-align: center;">
                   <div style="font-size: 0.72rem; color: var(--text-muted);">${ctx.locale === "en" ? "Institutional Readiness Index" : "مؤشر الجاهزية التشريعية المؤسسية"}</div>
-                  <div class="mono" id="raqib-readiness-val" style="font-size: 1.6rem; font-weight: var(--w-bold); color: var(--gold, #D4AF37);">60 / 100</div>
+                  <div class="mono" id="raqib-readiness-val" style="font-size: 1.6rem; font-weight: var(--w-bold); color: var(--gold);">60 / 100</div>
                   <span class="badge" id="raqib-readiness-badge" style="margin-top: 4px;">${ctx.locale === "en" ? "Partial Readiness · Gaps Identified" : "جاهزية جزئية · تتطلب سد ثغرات"}</span>
                 </div>
                 <div class="raqib-readiness-actions" style="margin-top: 1.25rem; width: 100%;">
@@ -455,58 +455,6 @@ export default function render(ctx) {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-<!-- Comparison Table: Awalim Raqib vs withraqib.com -->
-        <div class="raqib-comparison-card rv" style="margin-block-start: 2rem; margin-block-end: 2.5rem;">
-          <div style="margin-bottom: 1rem;">
-            <span class="chip chip--gold" style="margin-bottom: 4px;"><span class="dot dot--live"></span>${ctx.locale === "en" ? "TECHNICAL COMPARISON" : "المقارنة التقنية العالمية"}</span>
-            <h3 style="font-size: 1.15rem; font-weight: var(--w-bold); margin: 0; color: var(--text-1);">
-              ${s.raqib ? s.raqib.comparison_title : (ctx.locale === "en" ? "Why Awalim Raqib Outperforms Traditional Scanners" : "لماذا رَقيب عوالِم هو الأقوى والأشمل في العالم؟")}
-            </h3>
-          </div>
-          <div class="dash-table-wrap">
-            <table class="dash-directives-table">
-              <thead>
-                <tr>
-                  <th>${ctx.locale === "en" ? "Feature / Capability" : "المعيار والقدرة التقنية"}</th>
-                  <th style="color: var(--gold, #D4AF37);">${ctx.locale === "en" ? "Awalim Raqib Sentinel" : "رَقيب عوالِم السيادي"}</th>
-                  <th style="color: var(--text-muted);">${ctx.locale === "en" ? "Traditional Tools (withraqib.com)" : "الأدوات التقليدية (withraqib.com)"}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><b>${ctx.locale === "en" ? "Legal Compliance Frameworks" : "الأطر التشريعية المعتمدة"}</b></td>
-                  <td><span class="badge badge--ok">${ctx.locale === "en" ? "Egypt PDPL + Saudi PDPL + UAE + GDPR" : "القانون المصري 151 + السعودي + الإماراتي + GDPR"}</span></td>
-                  <td><span class="chip chip--sm">${ctx.locale === "en" ? "Egypt PDPL Only" : "القانون المصري فقط"}</span></td>
-                </tr>
-                <tr>
-                  <td><b>${ctx.locale === "en" ? "External Trackers & Surveillance" : "المتعقبات وتسريب البيانات"}</b></td>
-                  <td><span class="badge badge--ok">${ctx.locale === "en" ? "0KB Trackers · 0 Cookies · Complete Privacy" : "صفر متعقبات · صفر كوكيز · خصوصية مطلقة"}</span></td>
-                  <td><span class="chip chip--danger">${ctx.locale === "en" ? "Uses Meta Pixel & Cloudflare Tracking" : "يستخدم Meta Pixel ومتعقبات إعلانية"}</span></td>
-                </tr>
-                <tr>
-                  <td><b>${ctx.locale === "en" ? "Audit Performance & Latency" : "سرعة الفحص والأداء"}</b></td>
-                  <td><span class="badge badge--ok mono">${ctx.locale === "en" ? "Sub-16ms Client/Edge Engine" : "استجابة تحت 16ms على الحافة والمتصفح"}</span></td>
-                  <td><span class="chip chip--sm mono">${ctx.locale === "en" ? "Multi-minute Server Queues" : "قوائم انتظار وبطء خادم مركزي"}</span></td>
-                </tr>
-                <tr>
-                  <td><b>${ctx.locale === "en" ? "Security Architecture" : "بنية الأمان السيبراني"}</b></td>
-                  <td><span class="badge badge--ok">${ctx.locale === "en" ? "Strict CSP Level 3 + Trusted Types + Ed25519" : "حماية صارمة CSP L3 + Trusted Types + Ed25519"}</span></td>
-                  <td><span class="chip chip--sm">${ctx.locale === "en" ? "Standard React SPA" : "تطبيق React قياسي غير مدعم بتشفير جذري"}</span></td>
-                </tr>
-                <tr>
-                  <td><b>${ctx.locale === "en" ? "Actionable Remediation" : "حلول المعالجة البرمجية"}</b></td>
-                  <td><span class="badge badge--ok">${ctx.locale === "en" ? "Instant 1-Click Code (Nginx/Cloudflare/Node)" : "كود جاهز فوراً لـ Nginx وCloudflare وNode"}</span></td>
-                  <td><span class="chip chip--sm">${ctx.locale === "en" ? "Generic Text Descriptions" : "إرشادات نصية عامة خلف اشتراك مدفوع"}</span></td>
-                </tr>
-                <tr>
-                  <td><b>${ctx.locale === "en" ? "Cryptographic Report Proof" : "التوثيق التشفيري للتقرير"}</b></td>
-                  <td><span class="badge badge--ok mono">${ctx.locale === "en" ? "SHA-256 WebCrypto Hash Verification" : "توثيق مشفر ببصمة SHA-256 WebCrypto"}</span></td>
-                  <td><span class="chip chip--sm">${ctx.locale === "en" ? "Standard Unsigned PDF" : "ملف PDF تقليدي غير موثق تشفيرياً"}</span></td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
 

@@ -576,76 +576,12 @@
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Apple Pro Button System */
-.btn {
-  font-family: var(--font-base) !important;
-  border-radius: var(--radius-pill, 9999px) !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.01em !important;
-  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.16s ease, filter 0.16s ease, background 0.16s ease !important;
-}
-.btn:hover {
-  transform: translateY(-1px) !important;
-}
-.btn:active {
-  transform: scale(0.97) !important;
-}
-
-/* Primary Action: Apple Executive Obsidian (Light) / Titanium (Dark) */
-:root:not([data-theme="dark"]) .btn--primary,
-:root:not([data-theme="dark"]) .raqib-submit-btn {
-  background: #0F172A !important;
-  color: #FFFFFF !important;
-  border: 1px solid #0F172A !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15) !important;
-}
-:root:not([data-theme="dark"]) .btn--primary:hover,
-:root:not([data-theme="dark"]) .raqib-submit-btn:hover {
-  background: #1E293B !important;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.22) !important;
-  filter: none !important;
-}
-
-:root[data-theme="dark"] .btn--primary,
-:root[data-theme="dark"] .raqib-submit-btn {
-  background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 100%) !important;
-  color: #090D16 !important;
-  border: 1px solid rgba(255, 255, 255, 0.4) !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 #FFFFFF !important;
-}
-:root[data-theme="dark"] .btn--primary:hover,
-:root[data-theme="dark"] .raqib-submit-btn:hover {
-  background: #FFFFFF !important;
-  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.25), inset 0 1px 0 #FFFFFF !important;
-  filter: none !important;
-}
-
-/* Secondary / Ghost Actions */
-:root:not([data-theme="dark"]) .btn--ghost,
-:root:not([data-theme="dark"]) .btn--outline {
-  background: rgba(0, 0, 0, 0.04) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  color: #0F172A !important;
-  box-shadow: none !important;
-}
-:root:not([data-theme="dark"]) .btn--ghost:hover,
-:root:not([data-theme="dark"]) .btn--outline:hover {
-  background: rgba(0, 0, 0, 0.07) !important;
-  border-color: rgba(0, 0, 0, 0.16) !important;
-}
-
-:root[data-theme="dark"] .btn--ghost,
-:root[data-theme="dark"] .btn--outline {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  color: #F1F5F9 !important;
-  box-shadow: none !important;
-}
-:root[data-theme="dark"] .btn--ghost:hover,
-:root[data-theme="dark"] .btn--outline:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
-}
+/* Buttons come from components.css, which reads the card a button sits on
+   (--card-*/.themed) rather than the page. A later layer here forced slate
+   colours with !important per page theme and painted dark ghost text on
+   dark themed cards once light became the default (calm-premium pass). */
+.raqib-submit-btn { background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-bg); }
+.raqib-submit-btn:hover { background: var(--btn-bg-h); }
 
 /* Pillnav stuck state Apple Glass */
 :root[data-theme="dark"] .pillnav[data-stuck="true"] .pillnav__links,
@@ -803,7 +739,7 @@
 }
 :root[data-theme="dark"] .dash-modal-close {
   background: rgba(255, 255, 255, 0.08) !important;
-  color: #94A3B8 !important;
+  color: var(--text-muted) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 :root[data-theme="dark"] .dash-modal-close:hover {
@@ -1121,7 +1057,7 @@
   color: #0071E3 !important;
 }
 :root:not([data-theme="dark"]) .dash-comment-time {
-  color: #94A3B8 !important;
+  color: var(--text-muted) !important;
 }
 :root:not([data-theme="dark"]) .dash-comment-body {
   color: #334155 !important;
@@ -1138,7 +1074,7 @@
   color: #475569 !important;
 }
 :root:not([data-theme="dark"]) .dash-activity-time {
-  color: #94A3B8 !important;
+  color: var(--text-muted) !important;
 }
 
 /* Dark Mode Task Drawer */
@@ -1158,7 +1094,7 @@
   color: #F8FAFC !important;
 }
 :root[data-theme="dark"] .dash-drawer-desc {
-  color: #94A3B8 !important;
+  color: var(--text-muted) !important;
 }
 :root[data-theme="dark"] .dash-drawer-meta-grid {
   background: rgba(255, 255, 255, 0.03) !important;
@@ -1188,30 +1124,30 @@
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 :root[data-theme="dark"] .dash-acting-as {
-  color: #94A3B8 !important;
+  color: var(--text-muted) !important;
 }
 :root[data-theme="dark"] .dash-activity-item {
   border-bottom: 1px dashed rgba(255, 255, 255, 0.05) !important;
-  color: #94A3B8 !important;
+  color: var(--text-muted) !important;
 }
 :root[data-theme="dark"] .dash-activity-time {
   color: #64748B !important;
 }
 /* Urgency Badges */
 .badge--critical {
-  background: rgba(220, 38, 38, 0.25);
-  color: #fca5a5;
-  border: 1px solid rgba(220, 38, 38, 0.5);
+  background: var(--bad-soft);
+  color: var(--bad);
+  border: 1px solid var(--bad-line);
 }
 .badge--severe {
-  background: rgba(249, 115, 22, 0.25);
-  color: #fdba74;
-  border: 1px solid rgba(249, 115, 22, 0.5);
+  background: var(--amber-soft);
+  color: var(--amber);
+  border: 1px solid var(--amber-line);
 }
 .badge--urgent {
-  background: rgba(234, 179, 8, 0.25);
-  color: #fde047;
-  border: 1px solid rgba(234, 179, 8, 0.5);
+  background: var(--amber-soft);
+  color: var(--amber);
+  border: 1px solid var(--amber-line);
 }
 /* Accounting Table & Ledger */
 .dash-coa-item {
@@ -1315,7 +1251,7 @@
   border: 1px solid rgba(212, 175, 55, 0.5);
   display: grid;
   place-items: center;
-  color: #D4AF37;
+  color: var(--gold);
   flex: none;
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
@@ -1377,7 +1313,7 @@
   margin-block-end: var(--space-2);
 }
 .dash-treasury-val--gold {
-  color: #D4AF37;
+  color: var(--gold);
   text-shadow: none;
 }
 .dash-treasury-meta {
@@ -1701,7 +1637,7 @@
   border-color: rgba(212, 175, 55, 0.4);
 }
 .dash-treasury-sim input[type="range"] {
-  accent-color: var(--gold, #D4AF37);
+  accent-color: var(--gold);
   cursor: pointer;
   height: 6px;
   background: rgba(255, 255, 255, 0.1);
@@ -1718,7 +1654,7 @@
   transition: all var(--dur-fast) var(--ease-out);
 }
 .btn-inspect-venture:hover {
-  color: var(--gold, #D4AF37);
+  color: var(--gold);
   transform: translateX(-2px);
 }
 [dir="ltr"] .btn-inspect-venture:hover {
@@ -1750,7 +1686,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold, #D4AF37), var(--accent), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold), var(--accent), transparent);
 }
 .raqib-console-head {
   display: flex;
@@ -1801,7 +1737,7 @@
 }
 .raqib-target-input:focus {
   outline: none;
-  border-color: var(--gold, #D4AF37);
+  border-color: var(--gold);
   box-shadow: 0 0 16px rgba(212, 175, 55, 0.25);
   background: rgba(0, 0, 0, 0.6);
 }
@@ -1839,8 +1775,8 @@
 }
 .raqib-preset-chip.active {
   background: rgba(212, 175, 55, 0.12);
-  border-color: var(--gold, #D4AF37);
-  color: var(--gold, #D4AF37);
+  border-color: var(--gold);
+  color: var(--gold);
   font-weight: var(--w-bold);
 }
 .raqib-framework-pills {
@@ -1897,7 +1833,7 @@
 }
 .raqib-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--gold, #D4AF37));
+  background: linear-gradient(90deg, var(--accent), var(--gold));
   transition: width 0.18s ease-out;
 }
 .raqib-terminal-logs {
@@ -1937,13 +1873,13 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  border: 3px solid var(--gold, #D4AF37);
+  border: 3px solid var(--gold);
   background: rgba(212, 175, 55, 0.1);
   display: grid;
   place-items: center;
   font-size: 1.6rem;
   font-weight: var(--w-black);
-  color: var(--gold, #D4AF37);
+  color: var(--gold);
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
 }
 .raqib-score-badge.bad {
@@ -2009,8 +1945,8 @@
   gap: 1rem;
 }
 .raqib-vector-card {
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 12px 14px;
 }
@@ -2028,10 +1964,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--surface-2);
   padding: 3px;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
 }
 .raqib-tab-btn {
   background: transparent;
@@ -2119,8 +2055,8 @@
 
 .raqib-module-tab-btn.active {
   background: rgba(212, 175, 55, 0.12);
-  border-color: var(--gold, #D4AF37);
-  color: var(--gold, #D4AF37);
+  border-color: var(--gold);
+  color: var(--gold);
   box-shadow: 0 0 16px rgba(212, 175, 55, 0.15);
 }
 
@@ -2295,8 +2231,8 @@
 }
 
 .raqib-switch input:checked + .raqib-slider {
-  background-color: var(--gold, #D4AF37);
-  border-color: var(--gold, #D4AF37);
+  background-color: var(--gold);
+  border-color: var(--gold);
 }
 
 .raqib-switch input:checked + .raqib-slider:before {
@@ -2355,7 +2291,7 @@
 .raqib-digit-box span.mono {
   font-size: 1.75rem;
   font-weight: var(--w-black);
-  color: var(--gold, #D4AF37);
+  color: var(--gold);
   line-height: 1.1;
 }
 .digit-lbl {
@@ -2398,7 +2334,7 @@
   color: #B45309 !important;
 }
 :root[data-theme="dark"] .dash-treasury-val--gold {
-  color: #D4AF37 !important;
+  color: var(--gold) !important;
   text-shadow: none;
 }
 
@@ -2455,7 +2391,7 @@
   color: #0F172A !important;
 }
 :root:not([data-theme="dark"]) .raqib-target-input::placeholder {
-  color: #94A3B8 !important;
+  color: var(--text-muted) !important;
 }
 :root[data-theme="dark"] .raqib-target-input {
   background: rgba(255, 255, 255, 0.06) !important;
@@ -2801,8 +2737,8 @@
 }
 :root[data-theme="dark"] .raqib-score-badge {
   background: rgba(212, 175, 55, 0.12) !important;
-  border-color: #D4AF37 !important;
-  color: #D4AF37 !important;
+  border-color: var(--gold) !important;
+  color: var(--gold) !important;
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.2) !important;
 }
 :root[data-theme="dark"] .raqib-fines-card {
@@ -2865,7 +2801,7 @@
   height: 56px !important;
   border-radius: 50% !important;
   object-fit: cover !important;
-  border: 2px solid var(--gold, #D4AF37) !important;
+  border: 2px solid var(--gold) !important;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25) !important;
 }
 
@@ -2875,7 +2811,7 @@
   right: -2px !important;
   width: 20px !important;
   height: 20px !important;
-  background: var(--gold, #D4AF37) !important;
+  background: var(--gold) !important;
   border-radius: 50% !important;
   display: grid !important;
   place-items: center !important;
@@ -3031,7 +2967,7 @@
 }
 
 :root:not([data-theme="dark"]) .dash-kpi-meta {
-  color: #94A3B8 !important;
+  color: var(--text-muted) !important;
 }
 
 :root[data-theme="dark"] .dash-kpi-card,
@@ -3714,7 +3650,7 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
   flex-wrap: wrap;
   gap: 0.5rem;
   font-size: 0.8rem;
-  color: var(--muted, #94A3B8);
+  color: var(--muted);
 }
 .dash-portal-task-actions {
   display: flex;
@@ -3826,25 +3762,22 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
   border-radius: 9999px;
   font-size: 0.88rem;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--fg, #e6edf3);
+  border: 1px solid var(--border-2);
+  background: var(--surface);
+  color: var(--text-2);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  backdrop-filter: blur(8px);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .prod-tab:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
+  color: var(--text);
+  border-color: var(--text-muted);
 }
 
 .prod-tab.active {
-  background: var(--accent);
-  color: #0b0f19;
-  border-color: var(--accent);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 35%, transparent);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border-color: var(--btn-bg);
 }
 
 .prod-tab-badge {
@@ -3855,13 +3788,13 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
   border-radius: 9999px;
   font-size: 0.72rem;
   font-family: var(--font-mono, monospace);
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--surface-2);
   color: inherit;
 }
 
 .prod-tab.active .prod-tab-badge {
-  background: rgba(0, 0, 0, 0.4);
-  color: #fff;
+  background: color-mix(in srgb, var(--btn-fg) 16%, transparent);
+  color: inherit;
 }
 
 .prod-search-wrapper {
@@ -3873,16 +3806,14 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
   align-items: center;
   gap: 0.75rem;
   padding: 0.65rem 1.15rem;
-  background: rgba(13, 17, 23, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface);
+  border: 1px solid var(--border-2);
   border-radius: 14px;
-  backdrop-filter: blur(12px);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .prod-search-box:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 20%, transparent);
+  border-color: var(--accent-text);
 }
 
 .prod-search-icon {
@@ -3897,19 +3828,19 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
   border: none;
   outline: none;
   font-size: 0.95rem;
-  color: var(--fg, #e6edf3);
+  color: var(--text);
   font-family: inherit;
 }
 
 .prod-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
 }
 
 .prod-count-pill {
   font-size: 0.8rem;
   font-family: var(--font-mono, monospace);
-  color: var(--dim, #8b949e);
-  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  background: var(--surface-2);
   padding: 0.25rem 0.65rem;
   border-radius: 8px;
   white-space: nowrap;
@@ -4042,7 +3973,7 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
   object-fit: cover;
 }
 .color-gold-btn {
-  color: var(--gold, #D4AF37) !important;
+  color: var(--gold) !important;
   border-color: rgba(212, 175, 55, 0.25) !important;
 }
 
@@ -4298,3 +4229,8 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
     min-width: 100% !important;
   }
 }
+
+/* Raqib panel on the light default (calm-premium pass): the copy button sits
+   on the always-dark code block, so it carries its own light ink. */
+.raqib-copy-code-btn.btn { --fg: #F1F0EB; --bd: rgba(241, 240, 235, 0.3); --bg: transparent; }
+.raqib-copy-code-btn.btn:hover { --fg: #0E1111; --bg: #F1F0EB; --bd: #F1F0EB; }

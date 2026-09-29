@@ -2017,7 +2017,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
         if (cryptoResult) {
           cryptoResult.replaceChildren();
         var sp = document.createElement("span");
-        sp.style.color = "#10b981";
+        sp.style.color = "var(--live)";
         sp.textContent = "✔ توقيع تشفيري معتمد: sig_" + randHex + " (Ed25519 Verified · SHA-256)";
         cryptoResult.appendChild(sp);
         }
@@ -2030,7 +2030,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
         if (cryptoResult) {
           cryptoResult.replaceChildren();
         var sp2 = document.createElement("span");
-        sp2.style.color = "#10b981";
+        sp2.style.color = "var(--live)";
         sp2.textContent = "✔ التوقيع التشفيري سليم ومطابق 100% (STATUS: VERIFIED & TAMPER-PROOF)";
         cryptoResult.appendChild(sp2);
         }
@@ -2080,7 +2080,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
           .then(function(r) { return r.json(); })
           .then(function(d) {
             var out = document.createElement("div");
-            out.style.color = "#10B981";
+            out.style.color = "var(--live)";
             out.textContent = "✔ " + (d.buildOutput || "Rebuild complete (84 pages)");
             termOutput.appendChild(out);
             termOutput.scrollTop = termOutput.scrollHeight;
@@ -3362,7 +3362,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
 
         var tdSurg = el("td");
         var surgSpan = el("span", "", c.surgeon);
-        surgSpan.style.cssText = "color:#5eead4;font-weight:600;font-size:0.85rem;";
+        surgSpan.style.cssText = "color:var(--accent-text);font-weight:600;font-size:0.85rem;";
         tdSurg.appendChild(surgSpan);
         tr.appendChild(tdSurg);
 
@@ -3435,7 +3435,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
         left.appendChild(el("span", "", acc.name));
         it.appendChild(left);
         var val = el("b", "mono", "$" + acc.balance.toLocaleString());
-        val.style.color = "#5eead4";
+        val.style.color = "var(--accent-text)";
         it.appendChild(val);
         coaList.appendChild(it);
       });
@@ -3461,7 +3461,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
         flow.appendChild(sCr);
 
         var amt = el("span", "", "+$" + j.amount.toLocaleString());
-        amt.style.cssText = "margin-inline-start:auto;color:#10b981;font-weight:700;";
+        amt.style.cssText = "margin-inline-start:auto;color:var(--live);font-weight:700;";
         flow.appendChild(amt);
 
         it.appendChild(flow);
@@ -4401,7 +4401,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
             '</div>' +
             '<div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:var(--text-muted); margin-bottom:0.75rem;">' +
               '<span>' + (EN ? "Sprint Velocity:" : "إنجاز السبرنت:") + '</span>' +
-              '<span class="mono" style="color:#10B981; font-weight:var(--w-bold);">100% NEW</span>' +
+              '<span class="mono" style="color:var(--live); font-weight:var(--w-bold);">100% NEW</span>' +
             '</div>' +
             '<div style="display:flex; gap:0.5rem; border-top:1px solid rgba(255,255,255,0.06); padding-top:0.75rem;">' +
               '<button type="button" class="btn btn--outline btn--xs btn-act-switch-user" data-user-id="' + newId + '" style="flex:1;">' +

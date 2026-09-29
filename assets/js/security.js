@@ -385,7 +385,7 @@
 
         var scoreSpan = document.createElement("span");
         scoreSpan.className = "mono";
-        scoreSpan.style.color = v.ok ? "#10B981" : "#EF4444";
+        scoreSpan.style.color = v.ok ? "var(--live)" : "var(--bad)";
         scoreSpan.textContent = v.score;
 
         head.appendChild(nameSpan);

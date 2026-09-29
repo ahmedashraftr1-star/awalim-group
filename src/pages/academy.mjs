@@ -99,15 +99,15 @@ export default function render(ctx) {
               </div>
 
               <!-- Collapsible 4-Sprint Roadmap -->
-              <div id="track-sprints-${i + 1}" class="track-sprints-drawer" style="display:none; padding:1.25rem; border-radius:var(--radius-md, 10px); background:rgba(14,18,25,0.65); border:1px solid rgba(212,175,55,0.25); box-shadow:0 10px 30px rgba(0,0,0,0.4);">
-                <div style="font-weight:700; font-size:0.9rem; margin-bottom:0.85rem; color:var(--gold, #D4AF37);">
+              <div id="track-sprints-${i + 1}" class="track-sprints-drawer" style="display:none; padding:1.25rem; border-radius:var(--radius-md, 10px); background:var(--surface-2); border:1px solid var(--border-2);">
+                <div style="font-weight:700; font-size:0.9rem; margin-bottom:0.85rem; color:var(--gold);">
                   ${t("خطة السبرنتات الـ 4 والمخرجات الهندسية للمشروع", "4-Sprint Execution Roadmap & Technical Deliverables")}
                 </div>
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.75rem;">
                   ${(sprintRoadmaps[i] || []).map(sp => `
                     <div style="padding:0.75rem; border-radius:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);">
                       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
-                        <span class="mono" style="font-size:0.75rem; color:var(--gold, #D4AF37); font-weight:700;">Sprint ${sp.num}</span>
+                        <span class="mono" style="font-size:0.75rem; color:var(--gold); font-weight:700;">Sprint ${sp.num}</span>
                         <span style="font-size:0.72rem; color:var(--muted);">${sp.weeks}</span>
                       </div>
                       <div style="font-weight:700; font-size:0.85rem; margin-bottom:0.25rem;">${sp.title}</div>
@@ -131,7 +131,7 @@ export default function render(ctx) {
           lede: t("كل شهادة تخرج معتمدة صادرة من أكاديمية عوالِم موثقة بتوقيع Ed25519 ومربوطة بالهاش المشفر للمشروع النهائي المنشور على GitHub.", "Every accredited graduation certificate issued by Awalim Academy is cryptographically sealed with Ed25519 and verifiable in the visitor browser.")
         })}
 
-        <div style="max-width:820px; margin:0 auto; padding:1.75rem; border-radius:var(--radius-lg, 16px); background:rgba(14,18,25,0.7); border:1px solid rgba(212,175,55,0.3); box-shadow:0 20px 50px rgba(0,0,0,0.5);">
+        <div style="max-width:820px; margin:0 auto; padding:1.75rem; border-radius:var(--radius-lg, 16px); background:var(--surface-2); border:1px solid var(--border-2); box-shadow:var(--shadow-card);">
           
           <form id="form-verify-cert" aria-label="${t("نموذج فحص الشهادة", "Certificate Verification Form")}" style="margin-bottom:1.25rem;">
             <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
@@ -142,12 +142,12 @@ export default function render(ctx) {
                 <input type="text" name="cert_id" id="input-cert-search" class="dash-input" aria-label="${t("أدخل رقم الشهادة أو المعرف الرقمي", "Enter Certificate Serial ID")}" aria-describedby="cert-verify-error" placeholder="AWL-CERT-2026-ENG01" required style="width:100%;">
               </div>
               <div style="display:flex; align-items:flex-end;">
-                <button type="submit" class="btn btn--primary btn--sm" id="btn-submit-verify-cert" style="background:var(--gold,#D4AF37); border-color:var(--gold,#D4AF37); color:#000; font-weight:700; height:42px;">
+                <button type="submit" class="btn btn--primary btn--sm" id="btn-submit-verify-cert" style="height:42px;">
                   <span>${t("فحص ومصادقة الشهادة", "Verify Signature")}</span>
                 </button>
               </div>
             </div>
-            <div id="cert-verify-error" role="alert" aria-live="polite" class="dash-form-error" style="color:var(--danger, #f43f5e); font-size:0.85rem; margin-top:0.35rem; min-height:1rem;"></div>
+            <div id="cert-verify-error" role="alert" aria-live="polite" class="dash-form-error" style="color:var(--bad); font-size:0.85rem; margin-top:0.35rem; min-height:1rem;"></div>
           </form>
 
           <!-- Quick presets -->
@@ -164,12 +164,12 @@ export default function render(ctx) {
               <div style="display:flex; align-items:center; gap:0.75rem;">
                 <span style="font-size:2rem;"></span>
                 <div>
-                  <div class="mono" style="font-size:0.75rem; color:var(--gold,#D4AF37); font-weight:700;" id="cert-out-id">AWL-CERT-2026-ENG01</div>
+                  <div class="mono" style="font-size:0.75rem; color:var(--gold); font-weight:700;" id="cert-out-id">AWL-CERT-2026-ENG01</div>
                   <h3 style="margin:0.2rem 0; font-size:1.2rem; font-weight:800;" id="cert-out-name">${t("المهندس طارق الناصر", "Eng. Tariq Al-Nasser")}</h3>
                   <div style="font-size:0.85rem; color:var(--muted);" id="cert-out-track">${t("مسار 01: هندسة الأنظمة وقواعد البيانات", "Track 01: Systems & Database Architecture")}</div>
                 </div>
               </div>
-              <span class="badge badge--ok" style="font-size:0.75rem; border-color:var(--gold,#D4AF37); color:var(--gold,#D4AF37);" id="cert-out-badge">
+              <span class="badge badge--ok" style="font-size:0.75rem; border-color:var(--gold); color:var(--gold);" id="cert-out-badge">
                 ✔ ${t("شهادة رسمية معتمدة Ed25519", "Ed25519 Verified")}
               </span>
             </div>
@@ -263,7 +263,7 @@ export default function render(ctx) {
         </div>
 
         <form id="form-apply-academy" aria-label="${t("نموذج التقديم على مسار الأكاديمية", "Academy Track Application Form")}" style="padding:1.25rem;">
-          <div id="academy-apply-error" role="alert" aria-live="polite" class="dash-form-error" style="color:var(--danger, #f43f5e); font-size:0.85rem; margin-bottom:0.75rem;"></div>
+          <div id="academy-apply-error" role="alert" aria-live="polite" class="dash-form-error" style="color:var(--bad); font-size:0.85rem; margin-bottom:0.75rem;"></div>
           <div class="dash-field-group" style="margin-bottom:0.85rem;">
             <label class="dash-label" for="select-academy-track">${t("المسار الهندسي المستهدف", "Target Engineering Track")}</label>
             <select name="track_name" class="dash-select" id="select-academy-track" aria-label="${t("المسار الهندسي المستهدف", "Target Engineering Track")}" required>
@@ -305,7 +305,7 @@ export default function render(ctx) {
 
           <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
             <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-academy-apply">${t("إلغاء", "Cancel")}</button>
-            <button type="submit" class="btn btn--primary btn--sm" style="background:var(--gold,#D4AF37); border-color:var(--gold,#D4AF37); color:#000; font-weight:700;">
+            <button type="submit" class="btn btn--primary btn--sm">
               <span>${t("إرسال طلب الالتحاق ومراجعة المعمارية", "Submit Application for Review")}</span>
             </button>
           </div>

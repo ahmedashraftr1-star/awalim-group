@@ -303,7 +303,7 @@ export default function dashboard(ctx) {
                 <p style="font-size: 0.8rem; color: var(--text-2); margin: 0; line-height: 1.5;">${t("بناء النوى المركزية بلغة Rust ومعايير الويب الخالصة دون الاعتماد على خدمات سحابية طرف ثالث.", "Core engines built with Rust and native Web Standards with zero third-party cloud lock-in.")}</p>
               </div>
               <div style="padding: 1rem; border-radius: var(--radius-sm); background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
-                <div style="font-weight: var(--w-bold); margin-bottom: 4px; color: #10B981; font-size: 0.9rem;">2. ${t("التدقيق الجنائي والتوقيع التشفيري", "Forensic Cryptographic Audit")}</div>
+                <div style="font-weight: var(--w-bold); margin-bottom: 4px; color:var(--live); font-size: 0.9rem;">2. ${t("التدقيق الجنائي والتوقيع التشفيري", "Forensic Cryptographic Audit")}</div>
                 <p style="font-size: 0.8rem; color: var(--text-2); margin: 0; line-height: 1.5;">${t("كل بيان مالي أو سجل قيود موثق بشجرة ميركل (Merkle Tree) وتوقيع Ed25519 غير قابل للتلاعب.", "Every ledger transaction is verified via Merkle trees and tamper-proof Ed25519 signatures.")}</p>
               </div>
               <div style="padding: 1rem; border-radius: var(--radius-sm); background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
@@ -344,7 +344,7 @@ export default function dashboard(ctx) {
                     </div>
                     <div class="dash-venture-stat-item">
                       <span class="dash-venture-stat-label">${t("حصة الإيراد", "Rev Share")}</span>
-                      <span class="dash-venture-stat-val" style="color:var(--gold,#D4AF37);">${v.revenue_share}</span>
+                      <span class="dash-venture-stat-val" style="color:var(--gold);">${v.revenue_share}</span>
                     </div>
                     <div class="dash-venture-stat-item">
                       <span class="dash-venture-stat-label">${t("المقاييس / SLA", "SLA Status")}</span>
@@ -390,7 +390,7 @@ export default function dashboard(ctx) {
                       <td class="mono"><b>${c.id}</b></td>
                       <td><b>${isEn ? (c.client_en || c.client) : c.client}</b></td>
                       <td><span class="chip chip--sm">${isEn ? (c.venture_en || c.venture) : c.venture}</span></td>
-                      <td class="mono" style="color:var(--gold,#D4AF37); font-weight:var(--w-bold);">${isEn ? (c.value_en || c.value) : c.value}</td>
+                      <td class="mono" style="color:var(--gold); font-weight:var(--w-bold);">${isEn ? (c.value_en || c.value) : c.value}</td>
                       <td><span class="badge badge--ok">${c.tier}</span></td>
                       <td><span class="dot dot--live"></span> ${isEn ? (c.status_en || c.status) : c.status}</td>
                       <td class="mono">${c.renewal}</td>
@@ -757,7 +757,7 @@ export default function dashboard(ctx) {
                 <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.6rem;">
                   <span class="dot dot--live" style="background:#F59E0B; box-shadow:0 0 8px #F59E0B;"></span>
                   <strong style="font-size:0.88rem;">${t("محرك المحاسبة IFRS المزدوج", "IFRS Dual-Entry Accounting Engine")}</strong>
-                  <span class="badge" style="margin-inline-start:auto; font-size:0.72rem; background:rgba(245,158,11,0.15); color:#F59E0B; border:1px solid rgba(245,158,11,0.3);">IFRS</span>
+                  <span class="badge" style="margin-inline-start:auto; font-size:0.72rem; background:var(--amber-soft); color:var(--amber); border:1px solid var(--amber-line);">IFRS</span>
                 </div>
                 <div class="mono" style="font-size:0.78rem; color:var(--muted); line-height:1.7;">
                   <div>Standard: IAS-1 / IAS-7 Compliant</div>
@@ -771,7 +771,7 @@ export default function dashboard(ctx) {
                 <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.6rem;">
                   <span class="dot dot--live" style="background:#8B5CF6; box-shadow:0 0 8px #8B5CF6;"></span>
                   <strong style="font-size:0.88rem;">${t("RahmaCare Healthcare OS — الميدان", "RahmaCare Field Medical OS")}</strong>
-                  <span class="badge" style="margin-inline-start:auto; font-size:0.72rem; background:rgba(139,92,246,0.15); color:#8B5CF6; border:1px solid rgba(139,92,246,0.3);">MED</span>
+                  <span class="badge" style="margin-inline-start:auto; font-size:0.72rem; background:var(--accent-soft); color:var(--accent-text); border:1px solid var(--accent-line);">MED</span>
                 </div>
                 <div class="mono" style="font-size:0.78rem; color:var(--muted); line-height:1.7;">
                   <div>Active Cases: 14 critical</div>
@@ -1469,9 +1469,9 @@ export default function dashboard(ctx) {
                   <span class="badge badge--ok">100% · A+</span>
                 </div>
                 <div class="dash-venture-stats">
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("التشفير", "TLS")}</span><span class="dash-venture-stat-val mono" style="color:#10B981;">TLS 1.3 / PFS</span></div>
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("الترويسات", "CSP")}</span><span class="dash-venture-stat-val mono" style="color:var(--gold,#D4AF37);">Strict Level 3</span></div>
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("قانون 151", "PDPL")}</span><span class="dash-venture-stat-val" style="color:#10B981;">${t("ممتثل كلياً", "100% Compliant")}</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("التشفير", "TLS")}</span><span class="dash-venture-stat-val mono" style="color:var(--live);">TLS 1.3 / PFS</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("الترويسات", "CSP")}</span><span class="dash-venture-stat-val mono" style="color:var(--gold);">Strict Level 3</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("قانون 151", "PDPL")}</span><span class="dash-venture-stat-val" style="color:var(--live);">${t("ممتثل كلياً", "100% Compliant")}</span></div>
                 </div>
               </div>
 
@@ -1484,9 +1484,9 @@ export default function dashboard(ctx) {
                   <span class="badge badge--ok">100% · A+</span>
                 </div>
                 <div class="dash-venture-stats">
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("التشفير", "TLS")}</span><span class="dash-venture-stat-val mono" style="color:#10B981;">TLS 1.3 / E2E</span></div>
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("الترويسات", "CSP")}</span><span class="dash-venture-stat-val mono" style="color:var(--gold,#D4AF37);">Zero Trust</span></div>
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("قانون 151", "PDPL")}</span><span class="dash-venture-stat-val" style="color:#10B981;">${t("ممتثل كلياً", "100% Compliant")}</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("التشفير", "TLS")}</span><span class="dash-venture-stat-val mono" style="color:var(--live);">TLS 1.3 / E2E</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("الترويسات", "CSP")}</span><span class="dash-venture-stat-val mono" style="color:var(--gold);">Zero Trust</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("قانون 151", "PDPL")}</span><span class="dash-venture-stat-val" style="color:var(--live);">${t("ممتثل كلياً", "100% Compliant")}</span></div>
                 </div>
               </div>
 
@@ -1499,9 +1499,9 @@ export default function dashboard(ctx) {
                   <span class="badge badge--ok">99% · A+</span>
                 </div>
                 <div class="dash-venture-stats">
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("التشفير", "TLS")}</span><span class="dash-venture-stat-val mono" style="color:#10B981;">P2P Mesh E2EE</span></div>
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("الترويسات", "CSP")}</span><span class="dash-venture-stat-val mono" style="color:var(--gold,#D4AF37);">Offline Mode</span></div>
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("قانون 151", "PDPL")}</span><span class="dash-venture-stat-val" style="color:#10B981;">${t("ممتثل كلياً", "100% Compliant")}</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("التشفير", "TLS")}</span><span class="dash-venture-stat-val mono" style="color:var(--live);">P2P Mesh E2EE</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("الترويسات", "CSP")}</span><span class="dash-venture-stat-val mono" style="color:var(--gold);">Offline Mode</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("قانون 151", "PDPL")}</span><span class="dash-venture-stat-val" style="color:var(--live);">${t("ممتثل كلياً", "100% Compliant")}</span></div>
                 </div>
               </div>
 
@@ -1514,9 +1514,9 @@ export default function dashboard(ctx) {
                   <span class="badge badge--ok">100% · A+</span>
                 </div>
                 <div class="dash-venture-stats">
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("التشفير", "TLS")}</span><span class="dash-venture-stat-val mono" style="color:#10B981;">TLS 1.3 / HSM</span></div>
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("الترويسات", "CSP")}</span><span class="dash-venture-stat-val mono" style="color:var(--gold,#D4AF37);">Strict Level 3</span></div>
-                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("قانون 151", "PDPL")}</span><span class="dash-venture-stat-val" style="color:#10B981;">${t("ممتثل كلياً", "100% Compliant")}</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("التشفير", "TLS")}</span><span class="dash-venture-stat-val mono" style="color:var(--live);">TLS 1.3 / HSM</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("الترويسات", "CSP")}</span><span class="dash-venture-stat-val mono" style="color:var(--gold);">Strict Level 3</span></div>
+                  <div class="dash-venture-stat-item"><span class="dash-venture-stat-label">${t("قانون 151", "PDPL")}</span><span class="dash-venture-stat-val" style="color:var(--live);">${t("ممتثل كلياً", "100% Compliant")}</span></div>
                 </div>
               </div>
             </div>
@@ -1776,7 +1776,7 @@ export default function dashboard(ctx) {
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
                 <div style="display: flex; gap: 0.75rem; align-items: center;">
                   <div style="position: relative;">
-                    <img src="/assets/img/ahmed-personal.webp" alt="Ahmed Ashraf" width="46" height="46" style="width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold,#D4AF37);">
+                    <img src="/assets/img/ahmed-personal.webp" alt="Ahmed Ashraf" width="46" height="46" style="width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold);">
                     <span class="live-dot" style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; border: 2px solid #000;" aria-hidden="true"></span>
                   </div>
                   <div>
@@ -1784,7 +1784,7 @@ export default function dashboard(ctx) {
                     <span style="font-size: var(--fs-xs); color: var(--text-muted);">${t("المؤسس ورئيس المنظومة", "Founder & Chief Architect")}</span>
                   </div>
                 </div>
-                <span class="badge badge--ok mono" style="border-color: var(--gold,#D4AF37); color: var(--gold,#D4AF37);">0x00 ROOT</span>
+                <span class="badge badge--ok mono" style="border-color: var(--gold); color: var(--gold);">0x00 ROOT</span>
               </div>
               <div style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.72rem; color: var(--text-2); margin-bottom: 0.75rem;">
                 <span class="chip chip--sm">${t("فلسطين (القدس / شبكة موزعة)", "Palestine (Jerusalem)")}</span>
@@ -1807,7 +1807,7 @@ export default function dashboard(ctx) {
                   <button type="button" class="btn btn--outline btn--xs btn-act-open-portal" data-user-id="AA-01" style="flex: 1; justify-content: center;">
                     <span>${t("فتح البوابة الإدارية", "Open Portal")}</span>
                   </button>
-                  <button type="button" class="btn btn--ghost btn--xs btn-act-award-bonus" data-user-id="AA-01" style="color: var(--gold,#D4AF37); border: 1px solid rgba(212,175,55,0.3); justify-content: center;">
+                  <button type="button" class="btn btn--ghost btn--xs btn-act-award-bonus" data-user-id="AA-01" style="color: var(--gold); border: 1px solid rgba(212,175,55,0.3); justify-content: center;">
                     <span>${t("صرف مكافأة", "Spot Bonus")}</span>
                   </button>
                 </div>
@@ -1839,7 +1839,7 @@ export default function dashboard(ctx) {
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.75rem;">
                   <span>${t("إنجاز السبرنت:", "Sprint Velocity:")}</span>
-                  <span class="mono" style="color: #10B981; font-weight: var(--w-bold);">98% OK</span>
+                  <span class="mono" style="color:var(--live); font-weight: var(--w-bold);">98% OK</span>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 0.4rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.75rem;">
                   <div style="display: flex; gap: 0.5rem;">
@@ -1854,7 +1854,7 @@ export default function dashboard(ctx) {
                     <button type="button" class="btn btn--outline btn--xs btn-act-open-portal" data-user-id="${eng.id}" style="flex: 1; justify-content: center;">
                       <span>${t("فتح البوابة والدوام", "Employee Portal")}</span>
                     </button>
-                    <button type="button" class="btn btn--ghost btn--xs btn-act-award-bonus" data-user-id="${eng.id}" style="color: var(--gold,#D4AF37); border: 1px solid rgba(212,175,55,0.3); justify-content: center;">
+                    <button type="button" class="btn btn--ghost btn--xs btn-act-award-bonus" data-user-id="${eng.id}" style="color: var(--gold); border: 1px solid rgba(212,175,55,0.3); justify-content: center;">
                       <span>${t("صرف مكافأة", "Spot Bonus")}</span>
                     </button>
                   </div>
@@ -1887,7 +1887,7 @@ export default function dashboard(ctx) {
                 </thead>
                 <tbody>
                   <tr>
-                    <td><span class="badge badge--ok mono" style="border-color: var(--gold,#D4AF37); color: var(--gold,#D4AF37);">0x00 ROOT</span></td>
+                    <td><span class="badge badge--ok mono" style="border-color: var(--gold); color: var(--gold);">0x00 ROOT</span></td>
                     <td><b>${t("المالك وكبير المعماريين", "Sovereign Owner & Chief Architect")}</b></td>
                     <td><span class="chip chip--sm">${isEn ? "Eng. Ahmed Ashraf" : "م. أحمد أشرف"}</span></td>
                     <td>${t("تحكم مطلق في كافة الخوادم والبنى والإنتاج", "Full Infrastructure & Mutation")}</td>
@@ -2361,7 +2361,7 @@ export default function dashboard(ctx) {
                 </div>
                 <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px dashed rgba(255,255,255,0.08); font-size:0.85rem;">
                   <span class="text-muted">${t("بدل الاتصال الفضائي والإنترنت السيادي (Satellite Uplink)", "Satellite & Comms Allowance")}</span>
-                  <span class="mono" style="color:#10B981; font-weight:700;" id="slip-comms-amount">+$350.00</span>
+                  <span class="mono" style="color:var(--live); font-weight:700;" id="slip-comms-amount">+$350.00</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px dashed rgba(255,255,255,0.08); font-size:0.85rem;">
                   <span class="text-muted">${t("حافز الإنجاز وسرعة السبرنت (Sprint Milestone Bonus)", "Milestone Delivery Bonus")}</span>
@@ -2421,7 +2421,7 @@ export default function dashboard(ctx) {
                 <div>
                   <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.25rem;">
                     <span>${t("الالتزام بمناوبات الطوارئ وزمن الاستجابة (SLA Response)", "Incident SLA & Response Time")}</span>
-                    <span class="mono" style="font-weight:700; color:#10B981;" id="meter-sla-val">99.2%</span>
+                    <span class="mono" style="font-weight:700; color:var(--live);" id="meter-sla-val">99.2%</span>
                   </div>
                   <div class="progress-bar-bg" style="height:6px; background:rgba(255,255,255,0.06); border-radius:999px; overflow:hidden;">
                     <div id="meter-sla-bar" style="height:100%; width:99.2%; background:#10B981; border-radius:999px;"></div>
@@ -2725,7 +2725,7 @@ export default function dashboard(ctx) {
                     </div>
                   </div>
                   <div style="display:flex; gap:0.4rem; align-items:center;">
-                    <span class="badge badge--ok" style="background:rgba(212,175,55,0.15); color:var(--gold,#d4af37);">Regional Hub</span>
+                    <span class="badge badge--ok" style="background:rgba(212,175,55,0.15); color:var(--gold);">Regional Hub</span>
                     <button type="button" class="btn btn--outline btn--xs btn-inspect-node" data-node="Node-BY05"><span>${t("فحص العقدة", "Inspect")}</span></button>
                     <button type="button" class="btn btn--primary btn--xs btn-quick-dispatch" data-node="Node-BY05"><span>${t("إمداد", "Supply")}</span></button>
                   </div>
@@ -2829,7 +2829,7 @@ export default function dashboard(ctx) {
                   <div class="text-muted small">${t("صفحة مبنية / لغتين", "Pages · 2 Locales")}</div>
                 </div>
                 <div style="padding:0.85rem; border-radius:8px; background:rgba(16,185,129,0.04); border:1px solid rgba(16,185,129,0.12); text-align:center;">
-                  <div class="mono" style="font-size:1.8rem; font-weight:800; color:#10B981;">0</div>
+                  <div class="mono" style="font-size:1.8rem; font-weight:800; color:var(--live);">0</div>
                   <div class="text-muted small">${t("تبعيات npm خارجية", "npm Dependencies")}</div>
                 </div>
                 <div style="padding:0.85rem; border-radius:8px; background:rgba(245,158,11,0.04); border:1px solid rgba(245,158,11,0.12); text-align:center;">
@@ -2845,7 +2845,7 @@ export default function dashboard(ctx) {
                   <div class="text-muted small">${t("حجم CSS الكامل", "Total CSS Bundle")}</div>
                 </div>
                 <div style="padding:0.85rem; border-radius:8px; background:rgba(16,185,129,0.04); border:1px solid rgba(16,185,129,0.12); text-align:center;">
-                  <div class="mono" style="font-size:1.8rem; font-weight:800; color:#10B981;">99.99%</div>
+                  <div class="mono" style="font-size:1.8rem; font-weight:800; color:var(--live);">99.99%</div>
                   <div class="text-muted small">${t("اعتمادية SLA الحية", "Live SLA Uptime")}</div>
                 </div>
               </div>
@@ -3135,11 +3135,11 @@ export default function dashboard(ctx) {
             </div>
             <div style="background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.06);">
               <div style="font-size: 0.68rem; color: var(--text-muted);">${t("حصة الإيراد", "Rev Share")}</div>
-              <div class="mono" id="modal-venture-share" style="font-size: 0.85rem; font-weight: var(--w-bold); color: var(--gold,#D4AF37); margin-top: 2px;"></div>
+              <div class="mono" id="modal-venture-share" style="font-size: 0.85rem; font-weight: var(--w-bold); color: var(--gold); margin-top: 2px;"></div>
             </div>
             <div style="background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.06);">
               <div style="font-size: 0.68rem; color: var(--text-muted);">${t("زمن الاستجابة", "Global Latency")}</div>
-              <div class="mono" id="modal-venture-lat" style="font-size: 0.85rem; font-weight: var(--w-bold); color: #10B981; margin-top: 2px;"></div>
+              <div class="mono" id="modal-venture-lat" style="font-size: 0.85rem; font-weight: var(--w-bold); color:var(--live); margin-top: 2px;"></div>
             </div>
             <div style="background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.06);">
               <div style="font-size: 0.68rem; color: var(--text-muted);">${t("الموازنة التشغيلية", "Monthly Budget")}</div>
@@ -3262,7 +3262,7 @@ export default function dashboard(ctx) {
             </div>
             <div>
               <div class="text-muted" style="font-size:0.72rem;">${t("حالة التحويل", "Disbursement Status")}</div>
-              <div style="font-weight:700; color:#10B981;">${t("تم التحويل المعتمد ✔", "Disbursed & Verified ✔")}</div>
+              <div style="font-weight:700; color:var(--live);">${t("تم التحويل المعتمد ✔", "Disbursed & Verified ✔")}</div>
             </div>
           </div>
 
@@ -3285,7 +3285,7 @@ export default function dashboard(ctx) {
               </tr>
               <tr>
                 <td>${t("بدل الاتصالات والربط الفضائي المشفر (Mesh Uplink)", "Encrypted Satellite & Comms Allowance")}</td>
-                <td class="mono" style="text-align:end; color:#10B981; font-weight:700;" id="modal-slip-comms">+$350.00</td>
+                <td class="mono" style="text-align:end; color:var(--live); font-weight:700;" id="modal-slip-comms">+$350.00</td>
               </tr>
               <tr>
                 <td>${t("مكافأة تسليم مخرجات السبرنت وتصفير التأخير (Zero-Defect Bonus)", "Sprint Milestone Delivery Bonus")}</td>
@@ -3334,7 +3334,7 @@ export default function dashboard(ctx) {
         <div class="dash-modal-header" style="border-bottom:1px solid rgba(212,175,55,0.25);">
           <div style="display:flex; align-items:center; gap:0.5rem;">
             <span style="font-size:1.3rem;"></span>
-            <h3 class="dash-modal-title" id="modal-bonus-title" style="color:var(--gold,#D4AF37); margin:0;">${t("صرف مكافأة تميز وإنجاز استثنائي", "Authorize Spot Excellence Bonus")}</h3>
+            <h3 class="dash-modal-title" id="modal-bonus-title" style="color:var(--gold); margin:0;">${t("صرف مكافأة تميز وإنجاز استثنائي", "Authorize Spot Excellence Bonus")}</h3>
           </div>
           <button type="button" class="dash-modal-close" id="btn-close-bonus-modal" aria-label="${t("إغلاق", "Close")}">✕</button>
         </div>
@@ -3367,7 +3367,7 @@ export default function dashboard(ctx) {
 
           <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
             <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-bonus">${t("إلغاء", "Cancel")}</button>
-            <button type="submit" class="btn btn--primary btn--sm" style="background:var(--gold,#D4AF37); border-color:var(--gold,#D4AF37); color:#000; font-weight:700;">
+            <button type="submit" class="btn btn--primary btn--sm" style="background:var(--gold); border-color:var(--gold); color:#000; font-weight:700;">
               <span>${t("اعتماد وصرف فوري من الخزينة السيادية", "Authorize & Disburse Immediately")}</span>
             </button>
           </div>
@@ -3456,7 +3456,7 @@ export default function dashboard(ctx) {
             </div>
             <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:0.75rem;">
               <span class="dash-kpi-label">${t("طاقم الأطباء المتصل محلياً", "Local Physicians Active")}</span>
-              <div style="font-size:0.85rem; font-weight:600; margin-top:0.25rem; color:#10b981;" id="modal-node-docs">${t("42 استشاري وطبيب مقيم", "42 Active Physicians")}</div>
+              <div style="font-size:0.85rem; font-weight:600; margin-top:0.25rem; color:var(--live);" id="modal-node-docs">${t("42 استشاري وطبيب مقيم", "42 Active Physicians")}</div>
             </div>
             <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:0.75rem;">
               <span class="dash-kpi-label">${t("زمن الاستجابة الحقيقي (Latency)", "Real-time Ping Latency")}</span>
@@ -3466,7 +3466,7 @@ export default function dashboard(ctx) {
 
           <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:0.65rem 0.85rem; margin-bottom:1.25rem;">
             <div class="dash-kpi-label" style="margin-bottom:0.25rem;">Merkle Tree Root Anchor</div>
-            <div class="mono" style="font-size:0.75rem; color:var(--gold,#d4af37); word-break:break-all;" id="modal-node-merkle">SHA256: 7f4d92a188bc0291ffca710924bce81109a1 · ROOT ATTESTED</div>
+            <div class="mono" style="font-size:0.75rem; color:var(--gold); word-break:break-all;" id="modal-node-merkle">SHA256: 7f4d92a188bc0291ffca710924bce81109a1 · ROOT ATTESTED</div>
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
@@ -3475,7 +3475,7 @@ export default function dashboard(ctx) {
             </button>
             <div style="display:flex; gap:0.5rem;">
               <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-node-modal">${t("إغلاق", "Close")}</button>
-              <button type="button" class="btn btn--primary btn--sm" id="btn-node-dispatch-drop" style="background:var(--gold,#d4af37); border-color:var(--gold,#d4af37); color:#000; font-weight:700;">
+              <button type="button" class="btn btn--primary btn--sm" id="btn-node-dispatch-drop" style="background:var(--gold); border-color:var(--gold); color:#000; font-weight:700;">
                 <span>${t("توجيه شحنة إمداد عاجلة للعقدة", "Dispatch Supply to Node")}</span>
               </button>
             </div>
@@ -3490,7 +3490,7 @@ export default function dashboard(ctx) {
         <div class="dash-modal-header" style="border-bottom:1px solid rgba(212,175,55,0.25);">
           <div style="display:flex; align-items:center; gap:0.5rem;">
             <span style="font-size:1.3rem;"></span>
-            <h3 class="dash-modal-title" id="modal-dispatch-title" style="color:var(--gold,#d4af37); margin:0;">${t("صرف وتوجيه إمداد طبي عاجل", "Emergency Medical Supply Dispatch")}</h3>
+            <h3 class="dash-modal-title" id="modal-dispatch-title" style="color:var(--gold); margin:0;">${t("صرف وتوجيه إمداد طبي عاجل", "Emergency Medical Supply Dispatch")}</h3>
           </div>
           <button type="button" class="dash-modal-close" id="btn-close-dispatch-modal" aria-label="${t("إغلاق", "Close")}">✕</button>
         </div>
@@ -3532,7 +3532,7 @@ export default function dashboard(ctx) {
 
           <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
             <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-dispatch">${t("إلغاء", "Cancel")}</button>
-            <button type="submit" class="btn btn--primary btn--sm" style="background:var(--gold,#d4af37); border-color:var(--gold,#d4af37); color:#000; font-weight:700;">
+            <button type="submit" class="btn btn--primary btn--sm" style="background:var(--gold); border-color:var(--gold); color:#000; font-weight:700;">
               <span>${t("اعتماد الشحنة والتوجيه الفوري", "Authorize & Dispatch Medical Supplies")}</span>
             </button>
           </div>

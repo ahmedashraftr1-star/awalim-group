@@ -32,7 +32,13 @@
   --bad:           #B42318;
   --bad-soft:      rgba(180, 35, 24, .10);
   --bad-line:      rgba(180, 35, 24, .34);
-  --live:          #1C8A3F;
+  --live:          #177A36;      /* 5.4:1 on white (was 4.41 at #1C8A3F) */
+  /* Aliases later components read without defining (they fell back to
+     dark-only literals and broke on the light default). Real tokens now. */
+  --gold:          #86650F;      /* 5.3:1 on white */
+  --fg:            var(--text);
+  --dim:           var(--text-muted);
+  --muted:         var(--text-muted);
 
   --btn-bg:        #111112;
   --btn-fg:        #FFFFFF;
@@ -169,6 +175,7 @@
   --bad-soft:      rgba(240, 122, 110, .14);
   --bad-line:      rgba(240, 122, 110, .38);
   --live:          #4CC08A;
+  --gold:          #D6B25E;
 
   --btn-bg:        #F1F0EB;
   --btn-fg:        #0E1111;
