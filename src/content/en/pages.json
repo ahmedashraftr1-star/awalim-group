@@ -92,7 +92,7 @@
       {
         "id": "systems",
         "t": "Enterprise systems",
-        "h": "Systems that handle money cannot afford «roughly right»",
+        "h": "Systems that handle money cannot afford \"roughly right\"",
         "d": "Built to the standard of people who manage money: numbers that always balance, access matched to each person's role, a record of every change and who made it, and updates that can be rolled back.",
         "includes": [
           "Finance and accounting: general ledger, receivables, inventory, fixed assets, and reports to international standards",

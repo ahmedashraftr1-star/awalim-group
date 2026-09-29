@@ -2770,3 +2770,53 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
    already carries its own glass. Painting the rim + shadow on the square
    group drew a stray hairline under the header buttons. */
 .pillnav .pillnav__act { box-shadow: none; background-image: none; }
+
+/* ---------- «ماذا نبني» — the home page's focal moment (2026-09-29) ----------
+   Four rows of type, no cards: a quiet numeral, the area at display size, the
+   promise beside it. Scale does the work — the area name is ~4× the text
+   around it — and the hover answers with a tint that rises from the rule. */
+.bindex__head { display: grid; gap: var(--space-4); margin-block-end: clamp(var(--space-7), 5vw, 72px); }
+.bindex__head h2 { max-inline-size: 20ch; }
+.bindex { list-style: none; margin: 0; padding: 0; border-block-start: 1px solid var(--border-2); }
+.bindex__row {
+  position: relative; isolation: isolate;
+  display: grid; grid-template-columns: 4.5rem minmax(0, 1.15fr) minmax(0, 1fr) 2.75rem;
+  align-items: center; gap: var(--space-5) clamp(var(--space-5), 3vw, var(--space-8));
+  padding-block: clamp(28px, 3.4vw, 48px); padding-inline: var(--space-3);
+  border-block-end: 1px solid var(--border-2); color: var(--text);
+}
+.bindex__row::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--accent-soft);
+  transform: scaleY(0); transform-origin: bottom; transition: transform var(--d-base) var(--ease-out);
+}
+.bindex__n { font-family: var(--font-latin); font-size: clamp(1rem, 1.3vw, 1.2rem); font-weight: var(--w-medium); color: var(--accent-text); font-variant-numeric: tabular-nums; }
+.bindex__t { font-family: var(--font-display-ar); font-weight: var(--w-black); font-size: clamp(2rem, 4.4vw, 4.1rem); line-height: 1.3; }
+[dir="ltr"] .bindex__t { letter-spacing: -.025em; line-height: 1.05; }
+.bindex__h { font-size: var(--fs-lg); line-height: var(--lh-lg); color: var(--text-2); max-inline-size: 38ch; }
+.bindex__go { justify-self: end; display: grid; place-items: center; inline-size: 44px; block-size: 44px; border-radius: 50%; border: 1px solid var(--border-2); color: var(--text); transition: background-color var(--d-fast) ease, color var(--d-fast) ease, border-color var(--d-fast) ease, transform var(--d-base) var(--ease-out); }
+.bindex__go .btn__arrow { display: grid; }
+.bindex__row:hover::before, .bindex__row:focus-visible::before { transform: scaleY(1); }
+.bindex__row:hover .bindex__go, .bindex__row:focus-visible .bindex__go { background: var(--btn-bg); color: var(--btn-fg); border-color: var(--btn-bg); transform: translateX(-6px); }
+[dir="ltr"] .bindex__row:hover .bindex__go, [dir="ltr"] .bindex__row:focus-visible .bindex__go { transform: translateX(6px); }
+.bindex__row:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -2px; }
+@media (max-width: 760px) {
+  .bindex__row { grid-template-columns: 2.5rem minmax(0, 1fr) 2.75rem; row-gap: var(--space-2); }
+  .bindex__h { grid-column: 2 / 3; grid-row: 2; font-size: var(--fs-body); }
+  .bindex__go { grid-column: 3; grid-row: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bindex__row::before, .bindex__go { transition: none; }
+  .bindex__row:hover .bindex__go, [dir="ltr"] .bindex__row:hover .bindex__go { transform: none; }
+}
+
+/* ---------- a case's own results, on the home work cards ---------- */
+.hcard__impact { grid-column: 1 / -1; position: relative; z-index: 2; }
+.hfacts {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-5) var(--space-6); margin: 0;
+  padding-block-start: clamp(var(--space-5), 2.5vw, var(--space-6));
+  border-block-start: 1px solid color-mix(in srgb, var(--card-fg) 14%, transparent);
+}
+.hfacts__i { display: grid; gap: var(--space-2); align-content: start; min-width: 0; }
+.hfacts__v { font-family: var(--font-display-ar); font-weight: var(--w-black); font-size: clamp(1.5rem, 2.4vw, 2.25rem); line-height: 1.15; color: var(--card-fg); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.hfacts__l { margin: 0; font-size: var(--fs-sm); line-height: 1.55; color: var(--card-dim); }
+@media (max-width: 760px) { .hfacts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

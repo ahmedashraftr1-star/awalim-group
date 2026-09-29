@@ -290,7 +290,25 @@ export const scopeEstimator = (site, isEn = false) => `
 export const themeStyle = (t) => `--l-bg:${t.bg};--l-fg:${t.fg};--l-dim:${t.dim};--l-accent:${t.accent};--d-bg:${t.dark.bg};--d-fg:${t.dark.fg};--d-dim:${t.dark.dim};--d-accent:${t.dark.accent}`;
 
 /* ---------- HERO CARD (case / product) — section 3.4 #5 ---------- */
-export const heroCard = ({ theme, themes, code, status = "live", kind, title, headline, summary, href, device: dev, image, mock = null, alt, metric, ctaLabel = "دراسة الحالة", stats = {}, id = "", tags = [], lazy = true, center = false, tilt = true, level = 3 }) => {
+/* A case's own results, as the case study states them (cases.json → impact):
+   a number with its affix, a word (AA, RTL, IAS 19), or a signed stat.
+   Items with nothing to show are dropped rather than printed empty. */
+export const impactList = (impact = [], stats = {}) => {
+  const rows = impact.map((x) => {
+    if (x.stat) {
+      const s = stats[x.stat];
+      if (!s) return null;
+      return { v: `${s.prefix || ""}${Number(s.value).toLocaleString("en-US")}${s.suffix || ""}`, l: s.label };
+    }
+    if (typeof x.n === "number") return { v: `${x.prefix || ""}${x.n.toLocaleString("en-US")}${x.suffix || ""}`, l: x.label };
+    if (x.text) return { v: x.text, l: x.label };
+    return null;
+  }).filter((r) => r && r.l);
+  if (!rows.length) return "";
+  return `<dl class="hfacts">${rows.map((r) => `<div class="hfacts__i"><dt class="hfacts__v"><bdi>${esc(r.v)}</bdi></dt><dd class="hfacts__l">${esc(r.l)}</dd></div>`).join("")}</dl>`;
+};
+
+export const heroCard = ({ theme, themes, code, status = "live", kind, title, headline, summary, href, device: dev, image, mock = null, alt, metric, ctaLabel = "دراسة الحالة", stats = {}, id = "", tags = [], lazy = true, center = false, tilt = true, level = 3, impact = [], showImpact = false }) => {
   const t = themes[theme] || themes.accounting;
   const slug = href.split("/").filter(Boolean).pop();
   const style = `${themeStyle(t)};view-transition-name:vt-${slug};view-transition-class:vt-card`;
@@ -308,6 +326,7 @@ export const heroCard = ({ theme, themes, code, status = "live", kind, title, he
       ${tags.length ? chips(tags, "card") : ""}
     </div>
     ${media ? `<div class="hcard__media">${media}</div>` : ""}
+    ${showImpact ? `<div class="hcard__impact">${impactList(impact, stats)}</div>` : ""}
     <div class="hcard__bar">${metricBar({ metric, href, ctaLabel, stats })}</div>
   </article>`;
 };

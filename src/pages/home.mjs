@@ -56,12 +56,35 @@ export default function render(ctx) {
       <div class="wrap wrap--wide">${C.statBar(h.statBar, stats, { size: "xl", cls: "statbar--hero", verify: true, signing: ctx.signing })}</div>
     </section>`,
 
+    /* 3 — WHAT WE BUILD
+       The first thing a buyer asks, and the home page had stopped answering
+       it. One typographic index — the page's focal moment — read straight
+       from the services content, so it can't drift from /services. */
+    `<section class="sec" id="build" aria-labelledby="build-h">
+      <div class="wrap wrap--wide">
+        <div class="bindex__head rv">
+          ${C.eyebrow("ماذا نبني", "WHAT WE BUILD")}
+          <h2 class="d-1" id="build-h">أربعة مجالات. في كلٍّ منها عمق حقيقي.</h2>
+        </div>
+        <ol class="bindex" data-stagger>
+          ${pages.services.items.map((it) => `<li class="bindex__i rv">
+            <a class="bindex__row" href="/services#${it.id}">
+              <span class="bindex__n" aria-hidden="true">${esc(it.n)}</span>
+              <span class="bindex__t">${esc(it.t)}</span>
+              <span class="bindex__h">${it.h}</span>
+              <span class="bindex__go" aria-hidden="true">${C.arrow()}</span>
+            </a>
+          </li>`).join("")}
+        </ol>
+      </div>
+    </section>`,
+
     /* 6 — SELECTED WORK */
     `<section class="sec" id="work">
       <div class="wrap wrap--wide">
         ${C.sectionHead({ eyebrowAr: "الأعمال", eyebrowEn: "SELECTED WORK", h: "ما بنيناه فعلاً", lede: "أنظمة وتطبيقات وهويات سُلِّمت لعملاء حقيقيين." })}
         <div class="hcards">
-          ${selected.map((c) => C.heroCard({ ...c, themes, href: `/work/${c.slug}`, alt: c.heroAlt, stats, lazy: true })).join("")}
+          ${selected.map((c) => C.heroCard({ ...c, themes, href: `/work/${c.slug}`, alt: c.heroAlt, stats, lazy: true, showImpact: true })).join("")}
         </div>
         ${C.btnRow([C.btn({ href: "/work", label: "كل الأعمال", kind: "primary" })], "btn-row--after")}
       </div>
