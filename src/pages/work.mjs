@@ -64,10 +64,10 @@ export function renderCase(ctx, c, i) {
   const next = cases[(i + 1) % cases.length];
   const heroMedia = c.device === "cockpit" ? C.cockpit({ tilt: false, live: true }) : c.mock ? C.device({ kind: c.device === "laptop" ? "laptop" : "browser", inner: C.mockScreen(c.mock), alt: c.heroAlt, tilt: false, label: c.title }) : c.hero ? C.device({ kind: "frame", src: c.hero, alt: c.heroAlt, tilt: false, lazy: false }) : "";
   const toc = [
+    { id: "impact", label: "النتائج" },
     { id: "challenge", label: "التحدّي" },
     { id: "approach", label: "المقاربة" },
     { id: "solution", label: "الحل" },
-    { id: "impact", label: "النتائج" },
     ...(c.testimonial ? [{ id: "testimonial", label: "شهادة العميل" }] : []),
     { id: "next", label: "المشروع التالي" }
   ];
@@ -97,6 +97,11 @@ export function renderCase(ctx, c, i) {
         <div class="indexed">
           ${C.sideIndex([{ title: "في هذه الدراسة", items: toc }], "فهرس دراسة الحالة")}
           <div class="indexed__col case">
+
+            <div class="case__sec" id="impact">
+              ${C.sectionHead({ eyebrowAr: "النتائج", eyebrowEn: "IMPACT", h: "ما الذي تغيّر", lede: "النتيجة أولاً، ثم كيف وصلنا إليها. أرقام يمكن تتبّع مصدرها — لا صفات." })}
+              <div class="impact rv" data-stagger>${c.impact.map((x) => C.impactTile(x, stats)).join("")}</div>
+            </div>
 
             <div class="case__sec" id="challenge">
               ${C.sectionHead({ eyebrowAr: "التحدّي", eyebrowEn: "THE CHALLENGE", h: "ما المشكلة التي جئنا لحلّها" })}
@@ -131,10 +136,6 @@ export function renderCase(ctx, c, i) {
               ${c.device === "cockpit" ? `<div class="rv" data-parallax data-parallax-amount="16">${C.cockpit({ tilt: true, live: true })}</div>` : c.mock ? `<div class="rv" data-parallax data-parallax-amount="16">${C.device({ kind: c.device === "laptop" ? "laptop" : "browser", inner: C.mockScreen(c.mock), alt: c.heroAlt, tilt: true, label: c.title })}</div>` : C.gallery(c.gallery)}
             </div>
 
-            <div class="case__sec" id="impact">
-              ${C.sectionHead({ eyebrowAr: "النتائج", eyebrowEn: "IMPACT", h: "ما الذي تغيّر", lede: "أرقام يمكن تتبّع مصدرها — لا صفات." })}
-              <div class="impact rv" data-stagger>${c.impact.map((x) => C.impactTile(x, stats)).join("")}</div>
-            </div>
 
             ${c.testimonial ? `
             <div class="case__sec" id="testimonial">

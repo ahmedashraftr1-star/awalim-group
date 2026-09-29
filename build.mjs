@@ -648,3 +648,12 @@ write("_headers", [
 write("src/routes.json", JSON.stringify(allRoutes, null, 2));
 
 console.log(`✔ built ${count} pages (${LOCALES.length} locales) · css ${(cssBytes / 1024).toFixed(1)}KB (critical ${(criticalBytes / 1024).toFixed(1)}KB inline) · build ${buildStamp} · ${new Date().toLocaleTimeString("en-GB")}`);
+/* Proof is content only the owner can supply. Say what's still empty on every
+   build, so the gap is visible to whoever runs it — never filled with a sample. */
+{
+  const ok = (l) => (l || []).filter((x) => x && x.consent === true).length;
+  const pr = site.proof || {};
+  const caseQuotes = read("src/content/cases.json").cases.filter((c) => c.testimonial).length;
+  const logos = ok(pr.clients), quotes = ok(pr.testimonials);
+  if (logos < 3 || !quotes || !caseQuotes) console.log(`ℹ proof: ${logos} client logos (wall shows at 3+), ${quotes} testimonials, ${caseQuotes} case-study quotes — add consented items in src/content/site.json → proof and cases.json → testimonial`);
+}

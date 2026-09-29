@@ -2826,3 +2826,19 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
 .estimator__steps li:last-child { border-block-end: 0; }
 .estimator__steps b { font-weight: var(--w-semibold); white-space: nowrap; }
 .estimator__note { margin: 0; }
+
+/* ---------- proof: client wall + testimonials ---------- */
+.clients__h { font-size: var(--fs-sm); font-weight: var(--w-medium); color: var(--text-muted); margin-block-end: var(--space-6); }
+.clients { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-6) var(--space-8); align-items: center; }
+.clients__i img { display: block; max-inline-size: 100%; block-size: 40px; inline-size: auto; margin-inline: auto; object-fit: contain; filter: grayscale(1); opacity: .72; transition: filter var(--d-base) ease, opacity var(--d-base) ease; }
+.clients__i a:hover img, .clients__i a:focus-visible img { filter: none; opacity: 1; }
+:root[data-theme="dark"] .clients__i img { filter: grayscale(1) invert(1); }
+.tq { margin: 0; display: grid; gap: var(--space-5); }
+.tq p { font-size: var(--fs-lg); line-height: var(--lh-lg); color: var(--text); }
+.tq--lead { margin-block: var(--space-5) var(--space-8); max-inline-size: 60rem; }
+.tq--lead p { font-family: var(--font-display-ar); font-weight: var(--w-bold); font-size: clamp(1.6rem, 3.2vw, 2.9rem); line-height: 1.45; }
+[dir="ltr"] .tq--lead p { line-height: 1.2; letter-spacing: -.02em; }
+.tq__who { display: flex; align-items: center; gap: var(--space-3); font-size: var(--fs-sm); color: var(--text-muted); }
+.tq__who img { inline-size: 48px; block-size: 48px; border-radius: 50%; object-fit: cover; }
+.tq__who b { display: block; color: var(--text); font-weight: var(--w-semibold); }
+.tq__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: var(--space-7); padding-block-start: var(--space-7); border-block-start: 1px solid var(--border-2); }

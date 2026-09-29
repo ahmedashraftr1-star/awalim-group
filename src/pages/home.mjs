@@ -90,6 +90,11 @@ export default function render(ctx) {
       </div>
     </section>`,
 
+    /* 6b — PROOF: a client wall and testimonials, straight after the work.
+       Both render nothing until site.json → proof holds consented items. */
+    C.clientWall(site.proof && site.proof.clients),
+    C.testimonials(site.proof && site.proof.testimonials),
+
     /* 5 — MANIFESTO */
     `<section class="sec sec--alt">
       <div class="wrap wrap--wide">

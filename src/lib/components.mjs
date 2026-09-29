@@ -1502,3 +1502,36 @@ export const sovereignDisciplines = (ctx) => {
   </div>
 </section>`;
 };
+
+/* ---------- proof: client wall + testimonials (2026-09-29) ----------
+   Designed and wired before the content exists, so the owner's first real
+   testimonial lands on a finished page. Every item needs `consent: true`
+   (the client agreed to be named); anything else is not rendered. With no
+   consented items the whole section renders nothing — never a placeholder. */
+const consented = (list = []) => list.filter((x) => x && x.consent === true);
+
+export const clientWall = (clients = []) => {
+  const list = consented(clients).filter((c) => c.name && c.logo);
+  if (list.length < 3) return ""; // a wall of one or two logos reads as thin, not as proof
+  return `<section class="sec sec--tight" aria-labelledby="clients-h">
+    <div class="wrap wrap--wide">
+      <h2 class="clients__h rv" id="clients-h">يعمل معنا</h2>
+      <ul class="clients rv" data-stagger>${list.map((c) => `<li class="clients__i">${c.url ? `<a href="${esc(c.url)}" rel="noopener" target="_blank">` : ""}<img src="${esc(c.logo)}" alt="${esc(c.name)}" loading="lazy" decoding="async">${c.url ? "</a>" : ""}</li>`).join("")}</ul>
+    </div>
+  </section>`;
+};
+
+export const testimonials = (items = []) => {
+  const list = consented(items).filter((t) => t.quote && t.name);
+  if (!list.length) return "";
+  const [lead, ...rest] = list;
+  const who = (t) => `<footer class="tq__who">${t.photo ? `<img src="${esc(t.photo)}" alt="" width="48" height="48" loading="lazy" decoding="async">` : ""}<span><b>${esc(t.name)}</b>${[t.role, t.company].filter(Boolean).map(esc).join("، ") ? `<span>${[t.role, t.company].filter(Boolean).map(esc).join("، ")}</span>` : ""}</span></footer>`;
+  return `<section class="sec" aria-labelledby="tq-h">
+    <div class="wrap wrap--wide">
+      ${eyebrow("بكلمات عملائنا", "", "rv")}
+      <h2 class="sr-only" id="tq-h">بكلمات عملائنا</h2>
+      <blockquote class="tq tq--lead rv"><p>${esc(lead.quote)}</p>${who(lead)}${lead.case ? `<a class="lnk tq__case" href="/work/${esc(lead.case)}"><span>اقرأ دراسة الحالة</span>${arrow()}</a>` : ""}</blockquote>
+      ${rest.length ? `<div class="tq__grid" data-stagger>${rest.map((t) => `<blockquote class="tq rv"><p>${esc(t.quote)}</p>${who(t)}</blockquote>`).join("")}</div>` : ""}
+    </div>
+  </section>`;
+};

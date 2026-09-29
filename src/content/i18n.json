@@ -1,4 +1,7 @@
 {
+  "يعمل معنا": "Working with us",
+  "بكلمات عملائنا": "In our clients' words",
+  "اقرأ دراسة الحالة": "Read the case study",
   "ماذا نبني": "What we build",
   "أربعة مجالات. في كلٍّ منها عمق حقيقي.": "Four areas. Real depth in each.",
   "_note": "قاموس واجهة المستخدم: كل نص عربي مكتوب داخل القوالب (لا داخل المحتوى) وما يقابله بالإنجليزية. البناء يولّد صفحات /en بمحتوى src/content/en/*.json ثم يطبّق هذا القاموس على الناتج، ثم يفحص ألّا يتبقّى حرف عربي واحد — فالترجمة مضمونة الاكتمال، لا مأمولة. الاستبدال يبدأ بالأطول فالأقصر. رتّب أي إضافة هنا فقط.",
@@ -260,6 +263,7 @@
   "ما الذي سُلِّم فعلاً": "What was actually delivered",
   "ما الذي تغيّر": "What changed",
   "أرقام يمكن تتبّع مصدرها — لا صفات.": "Numbers you can trace to a source — not adjectives.",
+  "النتيجة أولاً، ثم كيف وصلنا إليها. أرقام يمكن تتبّع مصدرها — لا صفات.": "The result first, then how we got there. Numbers you can trace to a source — not adjectives.",
   "عندك مشروع بهذا الحجم؟": "Have a project of this size?",
   "احكِ لنا عن العملية، ونعود إليك بتشخيص أوّلي وتقدير نطاق — دون التزام.": "Tell us about the process, and we come back with a first diagnosis and a scope estimate — no commitment.",
   "دراسة حالة · عوالِم قروب": "Case study · Awalim Group",
