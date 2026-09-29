@@ -3814,6 +3814,8 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
 
 .prod-search-box:focus-within {
   border-color: var(--accent-text);
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
 }
 
 .prod-search-icon {
