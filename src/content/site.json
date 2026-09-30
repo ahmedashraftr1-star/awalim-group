@@ -257,10 +257,6 @@
         "title": "المجموعة",
         "links": [
           {
-            "href": "/dashboard",
-            "label": "لوحة التحكم والعمليات"
-          },
-          {
             "href": "/group",
             "label": "عن عوالِم"
           },

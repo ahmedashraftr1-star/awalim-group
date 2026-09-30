@@ -68,10 +68,6 @@ const header = (site, active) => `
       <button class="icon-btn" data-theme-toggle type="button" aria-label="تبديل الوضع الليلي والنهاري" aria-pressed="false">
         ${icon("moon", "i-moon")}${icon("sun", "i-sun")}
       </button>
-      <button class="icon-btn admin-gate-btn" id="btn-admin-gate" type="button" aria-label="بوابة يوزر الإدارة — أحمد أشرف" title="بوابة يوزر الإدارة — أحمد أشرف" data-admin-gate>
-        ${icon("lock", "i-admin-lock")}
-        <span class="admin-gate-dot" aria-hidden="true"></span>
-      </button>
       ${btn({ href: "/contact", label: "ابدأ مشروعك", kind: "primary", size: "sm", arrow: true, attrs: { class: "btn btn--primary btn--sm pillnav__cta" } })}
       <button class="icon-btn burger" type="button" data-drawer-open aria-expanded="false" aria-controls="drawer" aria-label="فتح القائمة">${icon("menu")}</button>
     </div>
@@ -85,7 +81,6 @@ const header = (site, active) => `
   </div>
   <nav class="drawer__nav" aria-label="التنقل للجوال">
     ${site.nav.map((n, i) => `<a href="${n.href}" style="--i:${i}"${active === n.key ? ' aria-current="page"' : ""}>${esc(n.label)}</a>`).join("")}
-    <a href="/dashboard" class="drawer__admin-link" data-admin-gate style="--i:${site.nav.length};color:var(--acc);">${icon("lock")} <span>بوابة يوزر الإدارة (أحمد أشرف)</span></a>
   </nav>
   <div class="btn-row">
     ${btn({ href: "/contact", label: "ابدأ مشروعك", kind: "primary", arrow: true })}
@@ -155,6 +150,7 @@ export const page = ({ site, seo, active = "", body, schema = [], bodyClass = ""
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+${seo && seo.noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 <title>${esc(fitTitle(seo.title))}</title>
 <meta name="description" content="${esc(fitDesc(seo.description))}">
 <meta name="color-scheme" content="light dark">
@@ -207,6 +203,9 @@ ${body}
 </main>
 ${footer(site)}
 
+${/* The owner's admin bar and sign-in live on the panel page only: the panel
+   runs locally through serve.mjs and is not part of the public site. */ ""}
+${active === "dashboard" ? `
 <!-- Global Floating Sovereign Admin Bar (Visible when Admin User is active) -->
 <aside class="sovereign-admin-bar" id="sovereign-admin-bar" style="display: none;" aria-label="شريط تحكم يوزر الإدارة" aria-hidden="true" inert>
   <div class="sovereign-admin-bar__inner">
@@ -255,6 +254,7 @@ ${footer(site)}
     </div>
   </div>
 </div>
+` : ""}
 <script src="/assets/vendor/lenis.min.js" defer></script>
 <script src="/assets/js/awalim.js?v=${buildStamp}" defer></script>
 <script src="/assets/js/motion.js?v=${buildStamp}" defer></script>

@@ -169,10 +169,6 @@
         "title": "Group",
         "links": [
           {
-            "href": "/dashboard",
-            "label": "Operations Dashboard"
-          },
-          {
             "href": "/group",
             "label": "About Awalim"
           },

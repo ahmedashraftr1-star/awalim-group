@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /src/
+Disallow: /dashboard
+Disallow: /en/dashboard
 
 Sitemap: https://awalimgroup.com/sitemap.xml

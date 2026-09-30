@@ -3549,7 +3549,7 @@ export default function dashboard(ctx) {
     path: "/dashboard",
     html: page({
       site,
-      seo: {
+      seo: { noindex: true,
         title: t("لوحة التحكم المركزية وإدارة المنظومة الشاملة | عوالِم قروب", "Master Executive Control Suite & Site Operations | Awalim Group"),
         description: t("لوحة تحكم تنفيذية شاملة لإدارة كافة أقسام عوالِم قروب، فحص 84 صفحة حية، وتتبع سجلات التدقيق الجنائي.", "Complete executive command suite for managing all Awalim Group domains, auditing 84 live routes, and tracking cryptographic operations."),
         path: "/dashboard",

@@ -125,9 +125,13 @@ if (!existsSync(smPath)) add("sitemap", "/", "مفقود");
 else {
   const sm = readFileSync(smPath, "utf8");
   const listed = new Set([...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].replace(/^https?:\/\/[^/]+/, "").replace(/\/$/, "") || "/"));
+  /* صفحة تحمل noindex (لوحة المالك) يجب ألّا تكون في الخريطة؛ وكل ما عداها يجب أن يكون. */
+  const noindex = (r) => { const f = fileFor(r); return !!f && existsSync(f) && /<meta name="robots" content="[^"]*noindex/.test(readFileSync(f, "utf8")); };
   for (const r of routes) {
     if (UTILITY.has(r)) continue;                 /* 404 وoffline لا تُفهرَسان بقصد */
-    if (!listed.has(r === "/" ? "/" : r.replace(/\/$/, ""))) add("sitemap-ناقص", r, "غير مذكور");
+    const inMap = listed.has(r === "/" ? "/" : r.replace(/\/$/, ""));
+    if (noindex(r)) { if (inMap) add("sitemap-noindex", r, "صفحة noindex مذكورة في الخريطة"); continue; }
+    if (!inMap) add("sitemap-ناقص", r, "غير مذكور");
   }
   for (const l of listed) if (!routes.includes(l) && !routes.includes(l + "/")) add("sitemap-زائد", l, "ليس مساراً مبنيّاً");
 }

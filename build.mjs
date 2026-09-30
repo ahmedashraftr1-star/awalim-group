@@ -598,11 +598,12 @@ const today = new Date().toISOString().slice(0, 10);
 const prio = (p) => (p === "/" ? "1.0" : p.split("/").length > 2 ? "0.7" : "0.9");
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${allRoutes.filter((p) => !p.endsWith("/404") && !p.endsWith("/offline")).map((p) => `  <url><loc>${site.brand.url}${p === "/" ? "/" : p}</loc><lastmod>${today}</lastmod><priority>${prio(p)}</priority><xhtml:link rel="alternate" hreflang="${p.startsWith("/en") ? "en" : "ar"}" href="${site.brand.url}${p}"/></url>`).join("\n")}
+${allRoutes.filter((p) => !p.endsWith("/404") && !p.endsWith("/offline") && !/\/dashboard$/.test(p)).map((p) => `  <url><loc>${site.brand.url}${p === "/" ? "/" : p}</loc><lastmod>${today}</lastmod><priority>${prio(p)}</priority><xhtml:link rel="alternate" hreflang="${p.startsWith("/en") ? "en" : "ar"}" href="${site.brand.url}${p}"/></url>`).join("\n")}
 </urlset>
 `;
 write("sitemap.xml", sitemap);
-write("robots.txt", `User-agent: *\nAllow: /\nDisallow: /src/\n\nSitemap: ${site.brand.url}/sitemap.xml\n`);
+/* the owner's panel runs locally (it rebuilds through serve.mjs) and is not part of the public site */
+write("robots.txt", `User-agent: *\nAllow: /\nDisallow: /src/\nDisallow: /dashboard\nDisallow: /en/dashboard\n\nSitemap: ${site.brand.url}/sitemap.xml\n`);
 
 /* ---------- security headers, written into both hosts' formats ----------
    One source of truth here; _headers (Netlify/Cloudflare) and vercel.json are
