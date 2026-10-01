@@ -87,6 +87,16 @@ const hydrate = (v) => {
 };
 
 /** Everything a locale needs, assembled fresh so the two passes never share state. */
+/* Reading time is measured from the article as it renders in that language,
+   not typed by hand: the hand-typed values claimed 10 minutes for 114 words.
+   ~180 words a minute; code blocks count line by line. */
+const readLabel = (a, locale) => {
+  const text = (a.body || []).map((b) => [b.p, b.h2, b.quote, b.code, ...(Array.isArray(b.ul) ? b.ul : [])].filter(Boolean).join(" ")).join(" ").replace(/<[^>]+>/g, " ");
+  const n = Math.max(1, Math.round(text.split(/\s+/).filter(Boolean).length / 180));
+  if (locale === "en") return `${n} min read`;
+  return n === 1 ? "قراءة دقيقة" : n === 2 ? "قراءة دقيقتين" : n <= 10 ? `قراءة ${n} دقائق` : `قراءة ${n} دقيقة`;
+};
+
 const buildCtx = (locale) => {
   const s = hydrate(readLocale("site.json", locale));
   const casesJson = hydrate(readLocale("cases.json", locale));
@@ -125,7 +135,7 @@ const buildCtx = (locale) => {
     filters: casesJson.filters,
     products: productsJson.products,
     articles: journalJson.articles.slice().sort((a, b) => (a.date < b.date ? 1 : -1))
-      .map((a) => ({ ...a, readLabel: locale === "en" ? `${a.minutes} min read` : `قراءة ${a.minutes} دقائق` })),
+      .map((a) => ({ ...a, readLabel: readLabel(a, locale) })),
     categories: journalJson.categories
   };
 };

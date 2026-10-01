@@ -109,7 +109,7 @@
 <section class="chero themed chero--ink chero--article sbd7597b">
       <div class="wrap wrap--wide">
         <nav class="crumbs rv" aria-label="مسار التنقّل"><a href="/">الرئيسية</a><span aria-hidden="true">/</span><a href="/journal">رؤى</a><span aria-hidden="true">/</span><span aria-current="page">مقال</span></nav>
-        <p class="chero__meta rv s9918e7e"><span>هندسة واجهات · موبايل</span><span aria-hidden="true">·</span><time datetime="2026-01-28">28 يناير 2026</time><span aria-hidden="true">·</span><span>قراءة 9 دقائق</span></p>
+        <p class="chero__meta rv s9918e7e"><span>هندسة واجهات · موبايل</span><span aria-hidden="true">·</span><time datetime="2026-01-28">28 يناير 2026</time><span aria-hidden="true">·</span><span>قراءة دقيقتين</span></p>
         <h1 class="d-1 chero__title rv s8e390cd">Flutter ومعايير Apple: كيف تبني تجربة بمستوى iOS الرسمي</h1>
         <p class="lede rv sf61af31">الفروق التي يلاحظها المستخدم ولا يسمّيها: منحنيات الحركة، ارتداد التمرير، وتوقيت اللمس — ومن أين تأتي حين لا تكون أصلية.</p>
         <p class="chero__by rv sd09643c">بقلم <b>فريق الموبايل — عوالِم</b></p>
@@ -125,18 +125,22 @@
           <article class="prose indexed__col rv">
             <p>مستخدم iPhone لا يقول «هذا التطبيق ليس أصلياً». يقول «فيه شيء غريب» ويحذفه. الشيء الغريب هو عادةً واحد من خمسة تفاصيل يمكن قياسها — وكلّها قابلة للإصلاح في Flutter إن عرفت أين تنظر.</p>
 <h2 id="s-1-منحنيات-الحركة">1. منحنيات الحركة</h2>
-<p>iOS لا يستخدم ease-in-out القياسي. الانتقالات بين الشاشات تستخدم منحنى نابضاً (spring) بتخميد محدّد، والقوائم تُفتح بمنحنى مختلف عن الأزرار. Flutter يشحن بـ <code>Curves.easeInOut</code> افتراضياً، وهذا أول ما يبدو غريباً.</p>
-<pre class="code" dir="ltr" lang="en" tabindex="0"><code class="lang-dart">// بدل Curves.easeInOut — منحنى أقرب لسلوك UIKit
-final iosCurve = Cubic(0.25, 0.1, 0.25, 1.0);
-
-// وللانتقال بين الشاشات: CupertinoPageRoute لا MaterialPageRoute
+<p>الانتقالات بين الشاشات في iOS تستخدم منحنى نابضاً (spring) بتخميد محدّد، والقوائم تُفتح بمنحنى مختلف عن الأزرار. أما Flutter فيستخدم في أغلب حركاته الافتراضية منحنيات Material، وهذا أول ما يبدو غريباً لمستخدم iPhone.</p>
+<pre class="code" dir="ltr" lang="en" tabindex="0"><code class="lang-dart">// للانتقال بين الشاشات: CupertinoPageRoute لا MaterialPageRoute
 Navigator.of(context).push(
   CupertinoPageRoute(builder: (_) =&gt; const DetailsScreen()),
+);
+
+// وللحركات داخل الشاشة: تباطؤ ناعم بدل easeInOut المتماثل
+AnimatedContainer(
+  duration: const Duration(milliseconds: 350),
+  curve: Curves.easeOutCubic,
+  // ...
 );</code></pre>
 <h2 id="s-2-ارتداد-التمرير">2. ارتداد التمرير</h2>
-<p>القوائم في iOS ترتدّ عند الحافة وتُبطئ بمعامل احتكاك محدّد. <code>BouncingScrollPhysics</code> موجود في Flutter لكنه لا يُطبَّق تلقائياً على كل القوائم إن لم تضبط <code>ScrollBehavior</code> على مستوى التطبيق. اضبطه مرّة واحدة في الجذر لا في كل قائمة.</p>
+<p>القوائم في iOS ترتدّ عند الحافة وتُبطئ بمعامل احتكاك محدّد. Flutter يطبّق <code>BouncingScrollPhysics</code> تلقائياً على iOS — المشكلة تظهر حين يفرض أحدهم <code>ClampingScrollPhysics</code> على قائمة بعينها، أو حين تُبنى القائمة على منصّة واحدة ثم يُفترض أن السلوك نفسه سيظهر على الأخرى. اترك الفيزياء للمنصّة، ولا تفرضها على قائمة إلا لسبب مكتوب.</p>
 <h2 id="s-3-توقيت-اللمس">3. توقيت اللمس</h2>
-<p>الزر في iOS يستجيب عند الرفع لا عند الضغط، ويُلغى إن تحرّك الإصبع أكثر من مسافة معيّنة. <code>CupertinoButton</code> يفعل هذا؛ <code>ElevatedButton</code> لا. والفرق يُحسّ في أول ثانية استخدام.</p>
+<p>الزر في iOS يُعطي تغذيته البصرية بتعتيم خفيف لا بموجة، ويُلغى الضغط إن تحرّك الإصبع خارجه قبل الرفع. <code>CupertinoButton</code> يفعل هذا؛ <code>ElevatedButton</code> يرسم موجة Material — وكلاهما يُنفّذ عند الرفع، لكن الإحساس مختلف تماماً، والفرق يُلاحَظ في أول ثانية استخدام.</p>
 <h2 id="s-4-الطباعة-والحروف-العربية">4. الطباعة والحروف العربية</h2>
 <p>SF Pro هو خط النظام، وFlutter لا يستطيع شحنه. لكن استخدام <code>.SF Pro Text</code> عبر عائلة الخط الافتراضية للمنصّة يعمل على iOS. أما العربية فتحتاج خطاً تشحنه أنت — ونستخدم IBM Plex Sans Arabic بأوزانه الحقيقية، لا وزناً واحداً مُصنَّعاً بالسماكة.</p>
 <ul><li>لا <code>letterSpacing</code> على النصّ العربي أبداً — يقطع اتّصال الحروف</li><li>ارتفاع سطر أعلى للعربية (⁦1.6⁩ فما فوق) لأن التشكيل والامتدادات تحتاج مساحة</li><li>أرقام جدولية (<code>tabularFigures</code>) في أي عمود أرقام</li></ul>
@@ -165,7 +169,7 @@ Navigator.of(context).push(
   <a class="post rv sd2947d7" href="/journal/ai-agents-revolution" data-cat="ai" data-cursor="اقرأ">
     <span class="post__img"><img src="/assets/img/journal/cover-ai-agents-revolution.webp" alt="" width="800" height="500" loading="lazy" decoding="async"></span>
     <span class="post__body">
-      <span class="post__meta">ذكاء اصطناعي · تحليل · قراءة 8 دقائق</span>
+      <span class="post__meta">ذكاء اصطناعي · تحليل · قراءة دقيقتين</span>
       <span class="post__h">ثورة وكلاء الذكاء الاصطناعي: من الأدوات إلى الأنظمة المستقلة</span>
       <span class="post__p">لماذا انتقلت الصناعة من نموذج يُجيب إلى وكيلٍ ينفّذ — وما الذي يتغيّر في الهندسة حين يصبح النظام هو من يقرّر الخطوة التالية.</span>
     </span>
@@ -173,7 +177,7 @@ Navigator.of(context).push(
   <a class="post rv s2550d23" href="/journal/building-ai-agents" data-cat="ai" data-cursor="اقرأ">
     <span class="post__img"><img src="/assets/img/journal/cover-building-ai-agents.webp" alt="" width="800" height="500" loading="lazy" decoding="async"></span>
     <span class="post__body">
-      <span class="post__meta">ذكاء اصطناعي · تطبيق · قراءة 12 دقائق</span>
+      <span class="post__meta">ذكاء اصطناعي · تطبيق · قراءة 3 دقائق</span>
       <span class="post__h">دليل بناء وكلاء AI: من الصفر إلى النشر في الإنتاج</span>
       <span class="post__p">المسار الكامل: اختيار النموذج، تصميم الأدوات، إدارة الذاكرة، ثم ما الذي ينكسر فعلاً حين يخرج الوكيل إلى مستخدمين حقيقيّين.</span>
     </span>
@@ -181,7 +185,7 @@ Navigator.of(context).push(
   <a class="post rv s8416780" href="/journal/serverless-on-aws" data-cat="infra" data-cursor="اقرأ">
     <span class="post__img"><img src="/assets/img/journal/cover-serverless-on-aws.webp" alt="" width="800" height="500" loading="lazy" decoding="async"></span>
     <span class="post__body">
-      <span class="post__meta">بنية سحابية · قراءة 10 دقائق</span>
+      <span class="post__meta">بنية سحابية · قراءة دقيقتين</span>
       <span class="post__h">بنية Serverless على AWS: هندسة تتمدّد بلا حدود</span>
       <span class="post__p">متى يكون بلا خادم القرار الصحيح ومتى يكون فخّاً — بحساب التكلفة والبرود والحدّ الأقصى، لا بالحماس.</span>
     </span>

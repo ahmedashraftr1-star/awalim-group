@@ -109,7 +109,7 @@
 <section class="chero themed chero--ink chero--article sbd7597b">
       <div class="wrap wrap--wide">
         <nav class="crumbs rv" aria-label="Breadcrumb"><a href="/en/">Home</a><span aria-hidden="true">/</span><a href="/en/journal">Journal</a><span aria-hidden="true">/</span><span aria-current="page">Article</span></nav>
-        <p class="chero__meta rv s9918e7e"><span>Interface engineering · Mobile</span><span aria-hidden="true">·</span><time datetime="2026-01-28">28 January 2026</time><span aria-hidden="true">·</span><span>9 min read</span></p>
+        <p class="chero__meta rv s9918e7e"><span>Interface engineering · Mobile</span><span aria-hidden="true">·</span><time datetime="2026-01-28">28 January 2026</time><span aria-hidden="true">·</span><span>3 min read</span></p>
         <h1 class="d-1 chero__title rv s8e390cd">Flutter and Apple's standards: building an experience at the level of official iOS</h1>
         <p class="lede rv sf61af31">The differences a user notices without naming them: motion curves, scroll bounce and touch timing — and where they come from when they are not native.</p>
         <p class="chero__by rv sd09643c">By <b>Awalim mobile team</b></p>
@@ -125,18 +125,22 @@
           <article class="prose indexed__col rv">
             <p>An iPhone user does not say «this app is not native». They say «something feels off» and delete it. That something is usually one of five details that can be measured — and all of them are fixable in Flutter if you know where to look.</p>
 <h2 id="s-1-motion-curves">1. Motion curves</h2>
-<p>iOS does not use the standard ease-in-out. Screen transitions use a spring curve with a specific damping, and menus open on a different curve than buttons. Flutter ships with <code>Curves.easeInOut</code> by default, and that is the first thing that feels wrong.</p>
-<pre class="code" dir="ltr" lang="en" tabindex="0"><code class="lang-dart">// instead of Curves.easeInOut — a curve closer to UIKit's behaviour
-final iosCurve = Cubic(0.25, 0.1, 0.25, 1.0);
-
-// and for screen transitions: CupertinoPageRoute, not MaterialPageRoute
+<p>Screen transitions in iOS use a spring curve with a specific damping, and menus open on a different curve than buttons. Flutter, by default, animates most things with Material curves, and that is the first thing that feels wrong to an iPhone user.</p>
+<pre class="code" dir="ltr" lang="en" tabindex="0"><code class="lang-dart">// Between screens: CupertinoPageRoute, not MaterialPageRoute
 Navigator.of(context).push(
   CupertinoPageRoute(builder: (_) =&gt; const DetailsScreen()),
+);
+
+// Inside a screen: a soft deceleration instead of a symmetric easeInOut
+AnimatedContainer(
+  duration: const Duration(milliseconds: 350),
+  curve: Curves.easeOutCubic,
+  // ...
 );</code></pre>
 <h2 id="s-2-scroll-bounce">2. Scroll bounce</h2>
-<p>Lists in iOS bounce at the edge and decelerate with a specific friction coefficient. <code>BouncingScrollPhysics</code> exists in Flutter but is not applied to every list unless you set <code>ScrollBehavior</code> at the app level. Set it once at the root, not in every list.</p>
+<p>Lists in iOS bounce at the edge and decelerate with a specific friction coefficient. Flutter applies <code>BouncingScrollPhysics</code> on iOS automatically; the trouble starts when someone forces <code>ClampingScrollPhysics</code> on a single list, or builds on one platform and assumes the other behaves the same. Leave the physics to the platform, and only override it for a written reason.</p>
 <h2 id="s-3-touch-timing">3. Touch timing</h2>
-<p>A button in iOS responds on release, not on press, and cancels if the finger moves beyond a certain distance. <code>CupertinoButton</code> does this; <code>ElevatedButton</code> does not. The difference is felt in the first second of use.</p>
+<p>A button in iOS gives feedback by dimming, not with a ripple, and cancels if the finger leaves it before release. <code>CupertinoButton</code> does this; <code>ElevatedButton</code> draws a Material ripple. Both fire on release, but they feel completely different, and the difference shows in the first second of use.</p>
 <h2 id="s-4-typography-and-arabic-letterforms">4. Typography and Arabic letterforms</h2>
 <p>SF Pro is the system font and Flutter cannot ship it. But using <code>.SF Pro Text</code> through the platform's default font family works on iOS. Arabic, though, needs a font you ship yourself — and we use IBM Plex Sans Arabic at its real weights, not one weight faked with a stroke.</p>
 <ul><li>Never apply <code>letterSpacing</code> to Arabic text — it severs the joins between letters</li><li>A taller line height for Arabic (1.6 and up), because diacritics and extenders need the room</li><li>Tabular figures (<code>tabularFigures</code>) in any column of numbers</li></ul>
@@ -165,7 +169,7 @@ Navigator.of(context).push(
   <a class="post rv sd2947d7" href="/en/journal/ai-agents-revolution" data-cat="ai" data-cursor="Read">
     <span class="post__img"><img src="/assets/img/journal/cover-ai-agents-revolution.webp" alt="" width="800" height="500" loading="lazy" decoding="async"></span>
     <span class="post__body">
-      <span class="post__meta">AI · Analysis · 8 min read</span>
+      <span class="post__meta">AI · Analysis · 3 min read</span>
       <span class="post__h">The agent revolution: from tools to systems that act</span>
       <span class="post__p">Why the industry moved from a model that answers to an agent that executes — and what changes in engineering once the system is the one deciding the next step.</span>
     </span>
@@ -173,7 +177,7 @@ Navigator.of(context).push(
   <a class="post rv s2550d23" href="/en/journal/building-ai-agents" data-cat="ai" data-cursor="Read">
     <span class="post__img"><img src="/assets/img/journal/cover-building-ai-agents.webp" alt="" width="800" height="500" loading="lazy" decoding="async"></span>
     <span class="post__body">
-      <span class="post__meta">AI · Practice · 12 min read</span>
+      <span class="post__meta">AI · Practice · 4 min read</span>
       <span class="post__h">Building AI agents: from zero to production</span>
       <span class="post__p">The full path: choosing the model, designing the tools, managing memory — then what actually breaks when the agent meets real users.</span>
     </span>
@@ -181,7 +185,7 @@ Navigator.of(context).push(
   <a class="post rv s8416780" href="/en/journal/serverless-on-aws" data-cat="infra" data-cursor="Read">
     <span class="post__img"><img src="/assets/img/journal/cover-serverless-on-aws.webp" alt="" width="800" height="500" loading="lazy" decoding="async"></span>
     <span class="post__body">
-      <span class="post__meta">Cloud architecture · 10 min read</span>
+      <span class="post__meta">Cloud architecture · 3 min read</span>
       <span class="post__h">Serverless on AWS: architecture that scales without limits</span>
       <span class="post__p">When serverless is the right call and when it is a trap — by the cost, the cold start and the ceiling, not by enthusiasm.</span>
     </span>

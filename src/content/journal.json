@@ -36,7 +36,6 @@
       "excerpt": "لماذا انتقلت الصناعة من نموذج يُجيب إلى وكيلٍ ينفّذ — وما الذي يتغيّر في الهندسة حين يصبح النظام هو من يقرّر الخطوة التالية.",
       "image": "/assets/img/journal/cover-ai-agents-revolution.webp",
       "date": "2026-03-14",
-      "minutes": 8,
       "author": "أحمد أشرف",
       "body": [
         {
@@ -97,7 +96,6 @@
       "excerpt": "المسار الكامل: اختيار النموذج، تصميم الأدوات، إدارة الذاكرة، ثم ما الذي ينكسر فعلاً حين يخرج الوكيل إلى مستخدمين حقيقيّين.",
       "image": "/assets/img/journal/cover-building-ai-agents.webp",
       "date": "2026-02-20",
-      "minutes": 12,
       "author": "أحمد أشرف",
       "body": [
         {
@@ -178,7 +176,6 @@
       "excerpt": "الفروق التي يلاحظها المستخدم ولا يسمّيها: منحنيات الحركة، ارتداد التمرير، وتوقيت اللمس — ومن أين تأتي حين لا تكون أصلية.",
       "image": "/assets/img/journal/cover-flutter-apple-standards.webp",
       "date": "2026-01-28",
-      "minutes": 9,
       "author": "فريق الموبايل — عوالِم",
       "body": [
         {
@@ -188,23 +185,23 @@
           "h2": "1. منحنيات الحركة"
         },
         {
-          "p": "iOS لا يستخدم ease-in-out القياسي. الانتقالات بين الشاشات تستخدم منحنى نابضاً (spring) بتخميد محدّد، والقوائم تُفتح بمنحنى مختلف عن الأزرار. Flutter يشحن بـ <code>Curves.easeInOut</code> افتراضياً، وهذا أول ما يبدو غريباً."
+          "p": "الانتقالات بين الشاشات في iOS تستخدم منحنى نابضاً (spring) بتخميد محدّد، والقوائم تُفتح بمنحنى مختلف عن الأزرار. أما Flutter فيستخدم في أغلب حركاته الافتراضية منحنيات Material، وهذا أول ما يبدو غريباً لمستخدم iPhone."
         },
         {
-          "code": "// بدل Curves.easeInOut — منحنى أقرب لسلوك UIKit\nfinal iosCurve = Cubic(0.25, 0.1, 0.25, 1.0);\n\n// وللانتقال بين الشاشات: CupertinoPageRoute لا MaterialPageRoute\nNavigator.of(context).push(\n  CupertinoPageRoute(builder: (_) => const DetailsScreen()),\n);",
+          "code": "// للانتقال بين الشاشات: CupertinoPageRoute لا MaterialPageRoute\nNavigator.of(context).push(\n  CupertinoPageRoute(builder: (_) => const DetailsScreen()),\n);\n\n// وللحركات داخل الشاشة: تباطؤ ناعم بدل easeInOut المتماثل\nAnimatedContainer(\n  duration: const Duration(milliseconds: 350),\n  curve: Curves.easeOutCubic,\n  // ...\n);",
           "lang": "dart"
         },
         {
           "h2": "2. ارتداد التمرير"
         },
         {
-          "p": "القوائم في iOS ترتدّ عند الحافة وتُبطئ بمعامل احتكاك محدّد. <code>BouncingScrollPhysics</code> موجود في Flutter لكنه لا يُطبَّق تلقائياً على كل القوائم إن لم تضبط <code>ScrollBehavior</code> على مستوى التطبيق. اضبطه مرّة واحدة في الجذر لا في كل قائمة."
+          "p": "القوائم في iOS ترتدّ عند الحافة وتُبطئ بمعامل احتكاك محدّد. Flutter يطبّق <code>BouncingScrollPhysics</code> تلقائياً على iOS — المشكلة تظهر حين يفرض أحدهم <code>ClampingScrollPhysics</code> على قائمة بعينها، أو حين تُبنى القائمة على منصّة واحدة ثم يُفترض أن السلوك نفسه سيظهر على الأخرى. اترك الفيزياء للمنصّة، ولا تفرضها على قائمة إلا لسبب مكتوب."
         },
         {
           "h2": "3. توقيت اللمس"
         },
         {
-          "p": "الزر في iOS يستجيب عند الرفع لا عند الضغط، ويُلغى إن تحرّك الإصبع أكثر من مسافة معيّنة. <code>CupertinoButton</code> يفعل هذا؛ <code>ElevatedButton</code> لا. والفرق يُحسّ في أول ثانية استخدام."
+          "p": "الزر في iOS يُعطي تغذيته البصرية بتعتيم خفيف لا بموجة، ويُلغى الضغط إن تحرّك الإصبع خارجه قبل الرفع. <code>CupertinoButton</code> يفعل هذا؛ <code>ElevatedButton</code> يرسم موجة Material — وكلاهما يُنفّذ عند الرفع، لكن الإحساس مختلف تماماً، والفرق يُلاحَظ في أول ثانية استخدام."
         },
         {
           "h2": "4. الطباعة والحروف العربية"
@@ -246,7 +243,6 @@
       "excerpt": "متى يكون بلا خادم القرار الصحيح ومتى يكون فخّاً — بحساب التكلفة والبرود والحدّ الأقصى، لا بالحماس.",
       "image": "/assets/img/journal/cover-serverless-on-aws.webp",
       "date": "2025-12-10",
-      "minutes": 10,
       "author": "فريق البنية — عوالِم",
       "body": [
         {
@@ -312,7 +308,6 @@
       "excerpt": "جدول زمنيّ حقيقيّ لما يُبنى ولما يُؤجَّل، ولماذا يقتل النطاقُ المنتجاتِ الصغيرة أسرع من أي خطأ تقنيّ.",
       "image": "/assets/img/journal/cover-idea-to-mrr-8-weeks.webp",
       "date": "2025-11-05",
-      "minutes": 11,
       "author": "أحمد أشرف",
       "body": [
         {
@@ -381,7 +376,6 @@
       "excerpt": "الزجاج ليس تأثيراً بل قراراً عن الضوء والعمق والأرضية — وما الذي يجعله يقرأ كمادة لا كمرشّح.",
       "image": "/assets/img/journal/cover-sovereign-glass-design.webp",
       "date": "2025-10-02",
-      "minutes": 7,
       "author": "استوديو الهوية — عوالِم",
       "body": [
         {
@@ -400,7 +394,7 @@
           "p": "التباين لا يُقاس على خلفية متغيّرة. لذلك كل نصّ في سطح زجاجي عندنا يقع فوق طبقة داكنة ثابتة داخل اللوح — لا فوق الضبابية مباشرة. الضبابية للحواف والفراغات؛ النصّ له أرضيته."
         },
         {
-          "code": "/* اللوح: ضبابية للسطح، أرضية ثابتة للنص */\n.glass {\n  background: rgba(10, 12, 16, .55);      /* الأرضية التي يُقاس عليها التباين */\n  -webkit-backdrop-filter: blur(18px) saturate(140%);\n          backdrop-filter: blur(18px) saturate(140%);\n  border: 1px solid rgba(255,255,255,.12); /* السُّمك */\n  box-shadow: 0 24px 60px -30px rgba(0,0,0,.6); /* العمق */\n}\n.glass p { color: #F2F0EC; } /* 4.5:1 على الأرضية — مُقاس لا مُقدَّر */",
+          "code": "/* اللوح: ضبابية للسطح، أرضية ثابتة للنص */\n.glass {\n  background: rgba(10, 12, 16, .82);      /* الأرضية التي يُقاس عليها التباين */\n  -webkit-backdrop-filter: blur(18px) saturate(140%);\n          backdrop-filter: blur(18px) saturate(140%);\n  border: 1px solid rgba(255,255,255,.12); /* السُّمك */\n  box-shadow: 0 24px 60px -30px rgba(0,0,0,.6); /* العمق */\n}\n.glass p { color: #F2F0EC; } /* ≥ 10:1 حتى فوق خلفية بيضاء — محسوب على أسوأ حالة */",
           "lang": "css"
         },
         {

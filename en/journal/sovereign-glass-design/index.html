@@ -109,7 +109,7 @@
 <section class="chero themed chero--article scce44fb">
       <div class="wrap wrap--wide">
         <nav class="crumbs rv" aria-label="Breadcrumb"><a href="/en/">Home</a><span aria-hidden="true">/</span><a href="/en/journal">Journal</a><span aria-hidden="true">/</span><span aria-current="page">Article</span></nav>
-        <p class="chero__meta rv s9918e7e"><span>Design · Systems</span><span aria-hidden="true">·</span><time datetime="2025-10-02">2 October 2025</time><span aria-hidden="true">·</span><span>7 min read</span></p>
+        <p class="chero__meta rv s9918e7e"><span>Design · Systems</span><span aria-hidden="true">·</span><time datetime="2025-10-02">2 October 2025</time><span aria-hidden="true">·</span><span>3 min read</span></p>
         <h1 class="d-1 chero__title rv s8e390cd">Sovereign Glass Design: beyond the blur</h1>
         <p class="lede rv sf61af31">Glass is not an effect but a decision about light, depth and ground — and what makes it read as a material rather than as a filter.</p>
         <p class="chero__by rv sd09643c">By <b>Awalim Brand Studio</b></p>
@@ -130,13 +130,13 @@
 <p>Contrast cannot be measured against a changing background. So every piece of text on a glass surface here sits over a fixed dark layer inside the panel — not over the blur directly. The blur is for edges and empty space; the text has its own ground.</p>
 <pre class="code" dir="ltr" lang="en" tabindex="0"><code class="lang-css">/* the panel: blur for the surface, a fixed ground for the text */
 .glass {
-  background: rgba(10, 12, 16, .55);      /* the ground contrast is measured against */
+  background: rgba(10, 12, 16, .82);      /* the ground contrast is measured against */
   -webkit-backdrop-filter: blur(18px) saturate(140%);
           backdrop-filter: blur(18px) saturate(140%);
   border: 1px solid rgba(255,255,255,.12); /* the thickness */
   box-shadow: 0 24px 60px -30px rgba(0,0,0,.6); /* the depth */
 }
-.glass p { color: #F2F0EC; } /* 4.5:1 on the ground — measured, not assumed */</code></pre>
+.glass p { color: #F2F0EC; } /* ≥ 10:1 even over pure white — computed for the worst case */</code></pre>
 <h2 id="s-rule-two-arabic-needs-height-not-opacity">Rule two: Arabic needs height, not opacity</h2>
 <p>Joined Arabic letterforms lose their clarity when their edges blend into the background. The fix is not more weight — it is a taller line height (1.7 and up), a size one step larger, and no letter-spacing at all. Glass keeps its effect in the space around the text, not in the text itself.</p>
 <h2 id="s-rule-three-motion-reveals-depth">Rule three: motion reveals depth</h2>
@@ -165,7 +165,7 @@
   <a class="post rv sd2947d7" href="/en/journal/ai-agents-revolution" data-cat="ai" data-cursor="Read">
     <span class="post__img"><img src="/assets/img/journal/cover-ai-agents-revolution.webp" alt="" width="800" height="500" loading="lazy" decoding="async"></span>
     <span class="post__body">
-      <span class="post__meta">AI · Analysis · 8 min read</span>
+      <span class="post__meta">AI · Analysis · 3 min read</span>
       <span class="post__h">The agent revolution: from tools to systems that act</span>
       <span class="post__p">Why the industry moved from a model that answers to an agent that executes — and what changes in engineering once the system is the one deciding the next step.</span>
     </span>
@@ -173,7 +173,7 @@
   <a class="post rv s2550d23" href="/en/journal/building-ai-agents" data-cat="ai" data-cursor="Read">
     <span class="post__img"><img src="/assets/img/journal/cover-building-ai-agents.webp" alt="" width="800" height="500" loading="lazy" decoding="async"></span>
     <span class="post__body">
-      <span class="post__meta">AI · Practice · 12 min read</span>
+      <span class="post__meta">AI · Practice · 4 min read</span>
       <span class="post__h">Building AI agents: from zero to production</span>
       <span class="post__p">The full path: choosing the model, designing the tools, managing memory — then what actually breaks when the agent meets real users.</span>
     </span>
@@ -181,7 +181,7 @@
   <a class="post rv sdc6fc53" href="/en/journal/flutter-apple-standards" data-cat="mobile" data-cursor="Read">
     <span class="post__img"><img src="/assets/img/journal/cover-flutter-apple-standards.webp" alt="" width="800" height="500" loading="lazy" decoding="async"></span>
     <span class="post__body">
-      <span class="post__meta">Interface engineering · Mobile · 9 min read</span>
+      <span class="post__meta">Interface engineering · Mobile · 3 min read</span>
       <span class="post__h">Flutter and Apple's standards: building an experience at the level of official iOS</span>
       <span class="post__p">The differences a user notices without naming them: motion curves, scroll bounce and touch timing — and where they come from when they are not native.</span>
     </span>
