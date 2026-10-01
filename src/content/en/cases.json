@@ -720,12 +720,17 @@
       "title": "Island Haven",
       "headline": "a tech incubator whose numbers can be verified",
       "summary": "An incubator platform in Gaza: every public number is cryptographically signed with Ed25519, and the visitor's own browser verifies it through WebCrypto — no trust in the server required.",
-      "heroAlt": "The verification page at Island Haven: a public Ed25519 key and three checks running in the browser — the hash matches, the signature is valid, the key is published",
+      "heroAlt": "Island Haven's home page as it runs today at islandhavengaza.com: a skills incubator and digital community from Gaza",
       "gallery": [
         {
           "src": "/assets/img/work/islandhaven-verify.webp",
           "alt": "The verification page",
           "cap": "The verification page — three checks running in the visitor's browser, not on our server"
+        },
+        {
+          "src": "/assets/img/work/island-haven-live.webp",
+          "alt": "Island Haven's home page",
+          "cap": "The site as it runs today at islandhavengaza.com — a real capture, not a mock-up"
         }
       ],
       "facts": [

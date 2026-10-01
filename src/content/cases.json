@@ -1071,14 +1071,19 @@
       "title": "آيلاند هيفن",
       "headline": "حاضنة تقنية أرقامها قابلة للتحقّق",
       "summary": "منصّة حاضنة في غزّة: كل رقم عامّ موقّع تشفيريّاً بـEd25519، ويتحقّق منه متصفّح الزائر نفسه عبر WebCrypto — لا ثقة مطلوبة بالخادم.",
-      "image": "/assets/img/work/islandhaven-verify.webp",
-      "hero": "/assets/img/work/islandhaven-verify.webp",
-      "heroAlt": "صفحة التحقّق في آيلاند هيفن: مفتاح Ed25519 عام، وثلاثة فحوص تجري في المتصفّح — الهاش يطابق، التوقيع صحيح، المفتاح منشور",
+      "image": "/assets/img/work/island-haven-live.webp",
+      "hero": "/assets/img/work/island-haven-live.webp",
+      "heroAlt": "الصفحة الرئيسية لآيلاند هيفن كما تعمل اليوم على islandhavengaza.com: حاضنة كفاءات ومجتمع رقمي من غزة",
       "gallery": [
         {
           "src": "/assets/img/work/islandhaven-verify.webp",
           "alt": "صفحة التحقّق",
           "cap": "صفحة التحقّق — ثلاثة فحوص تجري في متصفّح الزائر لا على خادمنا"
+        },
+        {
+          "src": "/assets/img/work/island-haven-live.webp",
+          "alt": "الصفحة الرئيسية لآيلاند هيفن",
+          "cap": "الموقع كما يعمل اليوم على islandhavengaza.com — لقطة حقيقية لا تصوّر"
         }
       ],
       "facts": [
