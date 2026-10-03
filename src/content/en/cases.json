@@ -10,11 +10,6 @@
       "heroAlt": "The general ledger in RahmaCare: entries in sequence, each with a serial number and a hash",
       "gallery": [
         {
-          "src": "/assets/img/work/rahmacare-ui.webp",
-          "alt": "RahmaCare home screen",
-          "cap": "The home screen — every family member's file in a single card"
-        },
-        {
           "src": "/assets/img/work/rahmacare-ledger.webp",
           "alt": "The general ledger: a verifiable record",
           "cap": "The general ledger — every action is sequenced and hashed, so nothing changes quietly"

@@ -7,19 +7,14 @@
       "kind": "صحّة",
       "cat": "apps",
       "theme": "rahmacare",
-      "device": "phone",
+      "device": "browser",
       "title": "RahmaCare",
       "headline": "رعاية صحية ذكية بين يدي العائلة",
       "summary": "تطبيق Flutter متكامل لإدارة صحة العائلة بالذكاء الاصطناعي: تشخيص فوري، متابعة دقيقة، وتجربة مبنية على الإنسان قبل الشاشة.",
-      "image": "/assets/img/work/rahmacare-ui.webp",
+      "image": "/assets/img/work/rahmacare-ledger.webp",
       "hero": "/assets/img/work/rahmacare-ledger.webp",
       "heroAlt": "الدفتر العام في RahmaCare: قيود مسلسلة برقم تسلسل وتجزئة لكل إجراء",
       "gallery": [
-        {
-          "src": "/assets/img/work/rahmacare-ui.webp",
-          "alt": "الشاشة الرئيسية لتطبيق RahmaCare",
-          "cap": "الشاشة الرئيسية — ملف كل فرد من العائلة في بطاقة واحدة"
-        },
         {
           "src": "/assets/img/work/rahmacare-ledger.webp",
           "alt": "الدفتر العام: سجل قابل للتحقّق",
@@ -78,8 +73,7 @@
       "approach": [
         {
           "t": "ملف صحّي للعائلة كلها",
-          "d": "سجل لكل فرد بمواعيده وأدويته وتقاريره، بصلاحيات عرض مختلفة لكل دور داخل العائلة. الأب يرى ما يخصّه، والأمّ ترى الأطفال، والطبيب يرى ما سُمح له به فقط.",
-          "img": "/assets/img/work/rahmacare-ui.webp"
+          "d": "سجل لكل فرد بمواعيده وأدويته وتقاريره، بصلاحيات عرض مختلفة لكل دور داخل العائلة. الأب يرى ما يخصّه، والأمّ ترى الأطفال، والطبيب يرى ما سُمح له به فقط."
         },
         {
           "t": "مساعد يقرأ الحالة لا يجيب فقط",

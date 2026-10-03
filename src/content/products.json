@@ -230,7 +230,7 @@
       "code": "SYS-RAHM-02",
       "status": "live",
       "theme": "rahmacare",
-      "device": "phone",
+      "device": "browser",
       "kind": "صحّة",
       "title": "RahmaCare",
       "headline": "رعاية صحية ذكية بين يدي العائلة — وسجلّ لا رقم فيه بلا مصدر",
@@ -241,7 +241,7 @@
         "AI",
         "WCAG 2.1 AA"
       ],
-      "image": "/assets/img/work/rahmacare-ui.webp",
+      "image": "/assets/img/work/rahmacare-ledger.webp",
       "caseSlug": "rahmacare",
       "features": [
         {
