@@ -618,7 +618,7 @@ export const facts = (list) => `
 /* ---------- gallery ---------- */
 export const gallery = (items) =>
   items.length
-    ? `<div class="gallery rv" data-stagger>${items.map((g) => `<figure class="gallery__it"><div class="dev dev--frame"><div class="dev__screen dev__screen--frame">${img(g.src, g.alt, { w: 1200, h: 800 })}</div></div>${g.cap ? `<figcaption>${g.cap}</figcaption>` : ""}</figure>`).join("")}</div>`
+    ? `<div class="gallery rv" data-stagger>${items.map((g) => `<figure class="gallery__it${g.h > g.w ? " gallery__it--tall" : ""}"><div class="dev dev--frame"><div class="dev__screen dev__screen--frame">${img(g.src, g.alt, { w: g.w || 1200, h: g.h || 800 })}</div></div>${g.cap ? `<figcaption>${g.cap}</figcaption>` : ""}</figure>`).join("")}</div>`
     : "";
 
 /* ---------- next project card ---------- */

@@ -4236,3 +4236,10 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
    on the always-dark code block, so it carries its own light ink. */
 .raqib-copy-code-btn.btn { --fg: #F1F0EB; --bd: rgba(241, 240, 235, 0.3); --bg: transparent; }
 .raqib-copy-code-btn.btn:hover { --fg: #0E1111; --bg: #F1F0EB; --bd: #F1F0EB; }
+/* a phone capture in the gallery keeps phone proportions instead of filling the column */
+.gallery__it--tall { max-inline-size: 360px; margin-inline: auto; }
+.chero__live { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); margin-block-start: var(--space-5); }
+.chero__url { font-size: var(--fs-sm); color: var(--card-dim, var(--text-muted)); }
+/* gallery captures keep their own proportions (width/height attributes carry
+   the ratio): the frame's 3:2 crop cut a phone capture down to its top sixth */
+.gallery .dev__screen--frame img { aspect-ratio: auto; block-size: auto; object-fit: contain; }

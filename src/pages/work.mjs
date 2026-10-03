@@ -79,6 +79,8 @@ export function renderCase(ctx, c, i) {
         <div class="chero__eyebrow rv" style="--i:1">${C.syscode(c.code, "live")}<span class="chero__kind">${esc(c.kind)}</span></div>
         <h1 class="d-hero rv" style="--i:2"><span ${/[A-Za-z]/.test(c.title) ? 'lang="en"' : ""}>${esc(c.title)}</span><span class="chero__sub">${c.headline}</span></h1>
         <p class="lede rv" style="--i:3">${c.summary}</p>
+        ${/* the strongest proof is the product itself: a case with a live address links to it */""}
+        ${c.url ? `<p class="chero__live rv" style="--i:3"><a class="btn btn--primary" href="${esc(c.url)}" target="_blank" rel="noopener"><span>زُر الموقع الحي</span>${C.arrow()}</a><span class="chero__url" lang="en" dir="ltr">${esc(c.url.replace(/^https?:\/\//, ""))}</span></p>` : ""}
         <div class="chero__media rv" style="--i:4" data-parallax data-parallax-amount="24">${heroMedia}</div>
       </div>
     </section>`,

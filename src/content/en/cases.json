@@ -730,7 +730,30 @@
         {
           "src": "/assets/img/work/island-haven-live.webp",
           "alt": "Island Haven's home page",
-          "cap": "The site as it runs today at islandhavengaza.com — a real capture, not a mock-up"
+          "cap": "The site as it runs today at islandhavengaza.com — a real capture, not a mock-up",
+          "w": 2160,
+          "h": 1350
+        },
+        {
+          "src": "/assets/img/work/island-haven-programs.webp",
+          "w": 2160,
+          "h": 1350,
+          "alt": "Island Haven's incubation tracks page",
+          "cap": "Incubation tracks, from idea to launch, as they appear on the live site"
+        },
+        {
+          "src": "/assets/img/work/island-haven-visit.webp",
+          "w": 2160,
+          "h": 1350,
+          "alt": "Island Haven's workspace visit page",
+          "cap": "The workspace: opening hours and how to visit, from the live site"
+        },
+        {
+          "src": "/assets/img/work/island-haven-mobile.webp",
+          "w": 780,
+          "h": 1688,
+          "alt": "Island Haven's home page on a phone",
+          "cap": "On a phone: a real capture at 390px wide"
         }
       ],
       "facts": [
