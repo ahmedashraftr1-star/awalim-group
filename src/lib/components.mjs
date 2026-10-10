@@ -756,6 +756,17 @@ export const mockScreen = (kind) => {
         <div class="mk__win" style="inset-inline-end:22%;inset-block-end:18%;inline-size:40%"><div class="mk__win-t"><span>جدول الرواتب</span><i></i></div><div class="mk__row"><span>سبتمبر</span><b>رُحِّل ✓</b></div></div>
         <div class="mk__dock"><i></i><i></i><i></i><i></i><i></i></div>
       </div>`;
+    case "close":
+      return `<div class="mk mk--agent" aria-hidden="true">
+        <div class="mk__hd"><span>منسّق الإقفال الذكي · دورة الإقفال الشهري</span><span class="mk__chip">قيد التنفيذ</span></div>
+        <div class="mk__log">
+          <div class="mk__ln"><span class="k">▶</span><span>مطابقة حركات البنك — 42 حركة</span></div>
+          <div class="mk__ln"><span class="k"></span><span>تسوية الحسابات — 3 فروقات تحتاج مراجعة</span></div>
+          <div class="mk__ln is-wait"><span class="k">⏸</span><span>قيد تسوية بأثر مالي — بانتظار اعتماد بشري</span></div>
+          <div class="mk__ln is-ok"><span class="k">✓</span><span>اعتُمد بواسطة م. سارة · سُجِّل القرار في السجل</span></div>
+          <div class="mk__ln"><span class="k">▶</span><span>تجميع تقرير الإقفال<span class="mk__cursor"></span></span></div>
+        </div>
+      </div>`;
     case "agent":
     default:
       return `<div class="mk mk--agent" aria-hidden="true">

@@ -58,6 +58,14 @@ const PRODUCT_META = {
     domainAr: "تصميم وهويات بصرية",
     domainEn: "Design & Brand Systems",
     icon: ""
+  },
+  "close-orchestrator": {
+    category: "os-ai",
+    badgeAr: "بوابة اعتماد بشري · يعمل فوق محاسب ذكي",
+    badgeEn: "HUMAN APPROVAL GATE · RUNS ON SMART ACCOUNTANT",
+    domainAr: "وكلاء وإقفال محاسبي",
+    domainEn: "AI Agents & Month-End Close",
+    icon: ""
   }
 };
 
@@ -81,7 +89,7 @@ export function renderIndex(ctx) {
     <div class="prod-filter-bar wrap wrap--wide rv" id="prod-filter-suite" style="--i:3">
       <div class="prod-filter-tabs" role="tablist" aria-label="${t("تصفية الأنظمة والمنتجات", "Filter Systems & Products")}">
         <button type="button" class="prod-tab is-active active" data-filter="all" role="tab" aria-selected="true" aria-pressed="true">
-          ${t("الكل", "All")} <span class="prod-tab-badge">7</span>
+          ${t("الكل", "All")} <span class="prod-tab-badge">8</span>
         </button>
         <button type="button" class="prod-tab" data-filter="fintech" role="tab" aria-selected="false" aria-pressed="false">
           ${t("الأنظمة المالية والمحاسبية", "FinTech & ERP")} <span class="prod-tab-badge">1</span>
@@ -90,7 +98,7 @@ export function renderIndex(ctx) {
           ${t("الصحة وشبكات الطوارئ", "Health & Mesh")} <span class="prod-tab-badge">1</span>
         </button>
         <button type="button" class="prod-tab" data-filter="os-ai" role="tab" aria-selected="false" aria-pressed="false">
-          ${t("أنظمة التشغيل والذكاء", "OS & Private AI")} <span class="prod-tab-badge">2</span>
+          ${t("أنظمة التشغيل والذكاء", "OS & Private AI")} <span class="prod-tab-badge">3</span>
         </button>
         <button type="button" class="prod-tab" data-filter="commerce" role="tab" aria-selected="false" aria-pressed="false">
           ${t("المتاجر والهوية الرقمية", "Commerce & Studio")} <span class="prod-tab-badge">3</span>
@@ -102,7 +110,7 @@ export function renderIndex(ctx) {
         <div class="prod-search-box">
           <span class="prod-search-icon" aria-hidden="true"></span>
           <input type="search" id="input-prod-search" class="prod-search-input" autocomplete="off" placeholder="${t("ابحث في المنتجات: محاسبة، صحة، متجر…", "Search products: accounting, health, store…")}">
-          <span class="prod-count-pill" id="prod-counter-display">${t("عرض 7 من 7 أنظمة", "Showing 7 of 7 systems")}</span>
+          <span class="prod-count-pill" id="prod-counter-display">${t("عرض 8 من 8 أنظمة", "Showing 8 of 8 systems")}</span>
         </div>
       </div>
     </div>`,

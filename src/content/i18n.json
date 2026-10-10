@@ -1152,5 +1152,11 @@
   "إطلاق برنامج الزمالة والمسارات المتقدمة لأكاديمية عوالِم لتخريج الكفاءات": "Launch Awalim Academy advanced engineering fellowship tracks",
   "مرتفع": "High",
   "نشط ومعتمد": "Active & Approved",
-  "الاعتماد التشفيري": "Cryptographic Credentials"
+  "الاعتماد التشفيري": "Cryptographic Credentials",
+  "منسّق الإقفال الذكي · دورة الإقفال الشهري": "AI Close Orchestrator · month-end close cycle",
+  "قيد التنفيذ": "In progress",
+  "مطابقة حركات البنك — 42 حركة": "Matching bank transactions — 42 transactions",
+  "تسوية الحسابات — 3 فروقات تحتاج مراجعة": "Account settlement — 3 discrepancies need review",
+  "قيد تسوية بأثر مالي — بانتظار اعتماد بشري": "A settlement entry with financial impact — awaiting human approval",
+  "تجميع تقرير الإقفال": "Compiling the closing report"
 }

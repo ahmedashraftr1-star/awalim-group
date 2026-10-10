@@ -264,31 +264,55 @@ var T = function (ar, en) { return EN ? en : ar; };
   }
 
   /* ======================================================================
-     4. POINTER TILT (desktop) — the device leans toward the cursor
+     4. POINTER TILT & SPECULAR SHEEN (desktop) — Mercury-grade 3D physics
      ====================================================================== */
   if (fine && !reduced) {
-    $$("[data-tilt]").forEach(function (box) {
-      var dev = $(".dev", box); if (!dev) return;
-      var tx = 0, ty = 0, cx = 0, cy = 0, raf = null, on = false;
+    $$("[data-tilt], .dev--tilt").forEach(function (box) {
+      var dev = box.classList.contains("dev") ? box : ($(".dev", box) || box);
+      var tx = 0, ty = 0, cx = 0, cy = 0, mx = 50, my = 50, cmx = 50, cmy = 50, raf = null, on = false;
       var loop = function () {
-        cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
-        dev.style.setProperty("--tx", cx.toFixed(2) + "deg"); dev.style.setProperty("--ty", cy.toFixed(2) + "deg");
-        if (Math.abs(tx - cx) > 0.05 || Math.abs(ty - cy) > 0.05 || on) raf = requestAnimationFrame(loop); else raf = null;
+        cx += (tx - cx) * 0.14;
+        cy += (ty - cy) * 0.14;
+        cmx += (mx - cmx) * 0.18;
+        cmy += (my - cmy) * 0.18;
+        dev.style.setProperty("--tx", cx.toFixed(2) + "deg");
+        dev.style.setProperty("--ty", cy.toFixed(2) + "deg");
+        dev.style.setProperty("--mx", cmx.toFixed(1) + "%");
+        dev.style.setProperty("--my", cmy.toFixed(1) + "%");
+        if (Math.abs(tx - cx) > 0.04 || Math.abs(ty - cy) > 0.04 || Math.abs(mx - cmx) > 0.1 || on) {
+          raf = requestAnimationFrame(loop);
+        } else {
+          raf = null;
+        }
       };
       box.addEventListener("pointermove", function (e) {
-        var r = box.getBoundingClientRect(), nx = (e.clientX - r.left) / r.width * 2 - 1, ny = (e.clientY - r.top) / r.height * 2 - 1;
-        tx = nx * 9; ty = -ny * 7; on = true; if (!raf) loop();
+        var r = box.getBoundingClientRect();
+        var nx = (e.clientX - r.left) / r.width * 2 - 1;
+        var ny = (e.clientY - r.top) / r.height * 2 - 1;
+        tx = nx * 8;
+        ty = -ny * 6;
+        mx = ((e.clientX - r.left) / r.width) * 100;
+        my = ((e.clientY - r.top) / r.height) * 100;
+        dev.style.setProperty("--sheen-opacity", "1");
+        on = true;
+        if (!raf) raf = requestAnimationFrame(loop);
       });
-      box.addEventListener("pointerleave", function () { tx = 0; ty = 0; on = false; if (!raf) loop(); });
+      box.addEventListener("pointerleave", function () {
+        tx = 0;
+        ty = 0;
+        on = false;
+        dev.style.setProperty("--sheen-opacity", "0");
+        if (!raf) raf = requestAnimationFrame(loop);
+      });
     });
   }
 
-  /* ---------- magnetic primary buttons (desktop) ---------- */
+  /* ---------- magnetic primary buttons with spring bounce (desktop) ---------- */
   if (fine && !reduced) {
-    $$(".btn--primary, .btn--accent").forEach(function (b) {
+    $$(".btn--primary, .btn--accent, .chip--card").forEach(function (b) {
       b.addEventListener("pointermove", function (e) {
-        var r = b.getBoundingClientRect(), dx = (e.clientX - (r.left + r.width / 2)) * 0.22, dy = (e.clientY - (r.top + r.height / 2)) * 0.22;
-        b.style.transform = "translate(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px)";
+        var r = b.getBoundingClientRect(), dx = (e.clientX - (r.left + r.width / 2)) * 0.28, dy = (e.clientY - (r.top + r.height / 2)) * 0.28;
+        b.style.transform = "translate3d(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px, 0) scale(1.02)";
       });
       b.addEventListener("pointerleave", function () { b.style.transform = ""; });
     });

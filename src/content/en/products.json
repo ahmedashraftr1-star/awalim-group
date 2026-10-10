@@ -669,6 +669,127 @@
         "label": "Book a discovery session",
         "sub": "We identify the one task that deserves an agent with you — and tell you if it doesn't."
       }
+    },
+    {
+      "slug": "close-orchestrator",
+      "kind": "Agent System",
+      "title": "AI Close Orchestrator",
+      "headline": "Eight AI agents that close your accounting month with you — not instead of you",
+      "summary": "An agent layer running on top of Smart Accountant: it receives documents, reconciles banks, settles accounts, and prepares closing reports — stopping at every decision with financial impact until a human approves it.",
+      "tags": [
+        "Agents",
+        "Month-end close",
+        "Human approval gate",
+        "IFRS"
+      ],
+      "features": [
+        {
+          "t": "Document receipt and matching",
+          "d": "Invoices, receipts and bank transactions are received and matched to their source automatically."
+        },
+        {
+          "t": "Account reconciliation",
+          "d": "Balances are checked and the needed settlement entries proposed before close."
+        },
+        {
+          "t": "Human approval gate on every financial decision",
+          "d": "Any entry or settlement with financial impact stops until a human approves it — no posting without a decision."
+        },
+        {
+          "t": "Audit-ready closing reports",
+          "d": "IFRS-compliant closing statements assembled automatically from approved entries."
+        },
+        {
+          "t": "Compliance packs for each Gulf country",
+          "d": "Inherits the same country pack from Smart Accountant: VAT, zakat, and social insurance."
+        },
+        {
+          "t": "A full record of every decision",
+          "d": "Every step any agent took is logged and reviewable later."
+        }
+      ],
+      "modules": [
+        [
+          "Document intake agent",
+          "Receives invoices and receipts by mail and camera and matches them to source"
+        ],
+        [
+          "Bank reconciliation agent",
+          "Matches bank transactions to the books and flags discrepancies"
+        ],
+        [
+          "Account settlement agent",
+          "Checks balances and proposes settlement entries"
+        ],
+        [
+          "Internal audit & control agent",
+          "Checks entries against IFRS rules before posting"
+        ],
+        [
+          "Tax compliance agent",
+          "Applies the country pack: VAT, zakat, and social insurance"
+        ],
+        [
+          "Financial reporting agent",
+          "Builds audit-ready closing statements"
+        ],
+        [
+          "Human approval gate agent",
+          "Stops every decision with financial impact until a human approves"
+        ],
+        [
+          "Decision log agent",
+          "Logs every step any agent took for tracking and review"
+        ]
+      ],
+      "countriesNote": "Inherits the same country pack from Smart Accountant: currency, VAT, zakat, and social insurance.",
+      "useCases": [
+        {
+          "t": "A multi-branch group needing a fast monthly close",
+          "d": "One unified close with no accumulated errors across branches."
+        },
+        {
+          "t": "An accounting firm serving several entities",
+          "d": "One repeatable close cycle per client, with an approval gate per entity."
+        }
+      ],
+      "proof": [
+        {
+          "text": "8",
+          "label": "specialized agents actually built on the Sana platform"
+        },
+        {
+          "text": "HITL",
+          "label": "a human approval gate on every financial decision"
+        },
+        {
+          "text": "Smart Accountant",
+          "label": "runs on top of an existing, live IFRS accounting system"
+        },
+        {
+          "text": "Beta",
+          "label": "in its first pilot — on Awalim Group's own close cycle"
+        }
+      ],
+      "architecture": [
+        "An agent layer on top of Smart Accountant — one ledger, never duplicated",
+        "Each agent has a narrow permission boundary and a clear tool set",
+        "Two human approval gates: before posting, and before closing reports are approved",
+        "A reviewable decision log for every step any agent took"
+      ],
+      "cta": {
+        "label": "Book a live demo session",
+        "sub": "We run a full close cycle for you on data close to your own case, and approve every step with you watching."
+      },
+      "countries": [
+        "International",
+        "Saudi Arabia",
+        "UAE",
+        "Egypt",
+        "Kuwait",
+        "Qatar",
+        "Jordan"
+      ]
     }
   ]
 }

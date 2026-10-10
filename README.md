@@ -32,7 +32,7 @@ npm run shots      # لقطات شاشة لكل الصفحات (desktop · dark 
 src/content/          المحتوى — المصدر الوحيد للحقيقة
   site.json           العلامة، الأرقام (stats)، القائمة، الفوتر، ثيمات الأقسام، المعايير، المراحل، الأسئلة
   cases.json          8 دراسات حالة (+4 أعمال أصغر)  →  /work و /work/[slug]
-  products.json       7 منتجات                        →  /products و /products/[slug]
+  products.json       8 منتجات                        →  /products و /products/[slug]
   journal.json        6 مقالات كاملة                   →  /journal و /journal/[slug]
   pages.json          نصوص الصفحات الثابتة (الرئيسية، الخدمات، الأكاديمية، المجموعة، تواصل، 404)
 src/lib/
@@ -101,7 +101,7 @@ build.mjs             سكربت البناء
 ```
 
 ## أكواد الأنظمة (فريدة)
-`SYS-ACC-01` محاسب ذكي · `SYS-RAHM-02` RahmaCare · `SYS-ACAD-03` الأكاديمية · `SYS-LAB-04` مختبر الذكاء · `SYS-STU-05` استوديو الهوية (وأعمال الهوية مثل Maya) · `SYS-WEB-06` Vibe OS 4.0 · `SYS-IH-07` آيلاند هيفن · `SYS-APP-08` Jameel Store · `SYS-WEB-09` منصّات الويب · `STUDY-HMI` دراسة لوحة القيادة.
+`SYS-ACC-01` محاسب ذكي · `SYS-RAHM-02` RahmaCare · `SYS-ACAD-03` الأكاديمية · `SYS-LAB-04` مختبر الذكاء · `SYS-STU-05` استوديو الهوية (وأعمال الهوية مثل Maya) · `SYS-WEB-06` Vibe OS 4.0 · `SYS-IH-07` آيلاند هيفن · `SYS-APP-08` Jameel Store · `SYS-WEB-09` منصّات الويب · `SYS-AGT-10` مُنسّق الإقفال الذكي · `STUDY-HMI` دراسة لوحة القيادة.
 
 ## الأرقام — مصدر واحد
 

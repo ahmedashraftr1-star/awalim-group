@@ -221,6 +221,27 @@
       vibe: "#6366F1"
     };
 
+    var tabsWrap = $(".dev__tabs", c);
+    var pill = tabsWrap ? $(".dev__tab-indicator", tabsWrap) : null;
+    if (!pill && tabsWrap) {
+      pill = document.createElement("span");
+      pill.className = "dev__tab-indicator";
+      tabsWrap.appendChild(pill);
+    }
+    var syncPill = function (activeTab) {
+      if (!pill || !activeTab) return;
+      pill.style.insetInlineStart = activeTab.offsetLeft + "px";
+      pill.style.inlineSize = activeTab.offsetWidth + "px";
+    };
+    var activeInit = tabsWrap ? $(".dev__tab.is-active", tabsWrap) : null;
+    if (activeInit) {
+      setTimeout(function () { syncPill(activeInit); }, 50);
+    }
+    window.addEventListener("resize", function () {
+      var curActive = tabsWrap ? $(".dev__tab.is-active", tabsWrap) : null;
+      if (curActive) syncPill(curActive);
+    }, { passive: true });
+
     tabs.forEach(function (tab) {
       tab.addEventListener("click", function () {
         var mode = tab.getAttribute("data-console-tab");
@@ -229,6 +250,7 @@
           t.classList.toggle("is-active", active);
           t.setAttribute("aria-selected", active ? "true" : "false");
         });
+        syncPill(tab);
         panels.forEach(function (p) {
           p.hidden = p.getAttribute("data-panel") !== mode;
         });
@@ -441,13 +463,13 @@
 
   if (dashTabs.length > 0) {
     // -------------------------------------------------------------
-    // 0. Sovereign Root Admin Authentication & Gatekeeper (يوزر الإدارة)
+    // 0. Sovereign Executive Admin Authentication & Gatekeeper (يوزر الإدارة)
     // -------------------------------------------------------------
     var gatekeeper = document.getElementById("dash-gatekeeper");
     var gatekeeperForm = document.getElementById("dash-gatekeeper-form");
     var gatekeeperPin = document.getElementById("dash-gatekeeper-pin");
     var gatekeeperErr = document.getElementById("dash-gatekeeper-err");
-    var btnGatekeeperRoot = document.getElementById("btn-gatekeeper-root");
+    var btnTogglePin = document.getElementById("btn-toggle-pin-visibility");
     var btnAdminLogout = document.getElementById("btn-admin-logout");
 
     function setPageInert(isInert) {
@@ -467,32 +489,55 @@
         session = JSON.parse(localStorage.getItem("awalim_admin_user"));
       } catch (e) {}
 
-      if (!session || !session.user) {
-        authenticateAdmin();
-        return;
+      var masterHeader = document.querySelector(".dash-master-header");
+      var mainArea = document.getElementById("dash-main-area");
+
+      if (!session || !session.user || session.token !== "AA-VERIFIED-2026") {
+        if (gatekeeper) {
+          gatekeeper.classList.remove("hidden");
+          gatekeeper.style.display = "flex";
+        }
+        if (masterHeader) masterHeader.classList.add("dash-auth-locked");
+        if (mainArea) mainArea.classList.add("dash-auth-locked");
+        setPageInert(true);
+        return false;
       }
+
       if (gatekeeper) {
         gatekeeper.classList.add("hidden");
-        setPageInert(false);
         gatekeeper.style.display = "none";
       }
+      if (masterHeader) masterHeader.classList.remove("dash-auth-locked");
+      if (mainArea) mainArea.classList.remove("dash-auth-locked");
+      setPageInert(false);
+      return true;
     }
 
     function authenticateAdmin() {
       var payload = {
-        user: "Ahmed Ashraf",
-        role: "Founder & Principal Architect",
-        clearance: "Admin",
+        user: "Eng. Ahmed Ashraf",
+        role: "Owner & Principal Architect",
+        clearance: "Executive Admin",
         time: Date.now(),
-        token: "AA-VERIFIED"
+        token: "AA-VERIFIED-2026"
       };
       try {
         localStorage.setItem("awalim_admin_user", JSON.stringify(payload));
       } catch (e) {}
+
       if (gatekeeper) {
         gatekeeper.classList.add("hidden");
-        setPageInert(false);
-        setTimeout(function () { gatekeeper.style.display = "none"; }, 300);
+        setTimeout(function () { gatekeeper.style.display = "none"; }, 250);
+      }
+      var masterHeader = document.querySelector(".dash-master-header");
+      var mainArea = document.getElementById("dash-main-area");
+      if (masterHeader) masterHeader.classList.remove("dash-auth-locked");
+      if (mainArea) mainArea.classList.remove("dash-auth-locked");
+      setPageInert(false);
+      if (gatekeeperErr) gatekeeperErr.style.display = "none";
+      if (gatekeeperPin) gatekeeperPin.value = "";
+      if (typeof showToast === "function") {
+        showToast(EN ? "Welcome, Eng. Ahmed Ashraf — Executive Console Unlocked" : "مرحباً بك يا باشمهندس أحمد — تم فتح لوحة الإدارة والتحكم بنجاح");
       }
     }
 
@@ -501,16 +546,38 @@
         e.preventDefault();
         var pin = gatekeeperPin ? gatekeeperPin.value.trim() : "";
         if (!pin) {
-          if (gatekeeperErr) gatekeeperErr.textContent = EN ? "Please enter security PIN or use instant access" : "يرجى إدخال رمز المرور أو النقر على الدخول الفوري";
+          if (gatekeeperErr) {
+            gatekeeperErr.textContent = EN ? "Please enter security PIN" : "يرجى إدخال رمز المرور السري الخاص بالإدارة";
+            gatekeeperErr.style.display = "block";
+          }
+          if (gatekeeperPin) gatekeeperPin.focus();
           return;
         }
+        if (pin !== "2026") {
+          if (gatekeeperErr) {
+            gatekeeperErr.textContent = EN ? "Invalid Security PIN. Restricted to Executive Administration." : "رمز المرور غير صحيح. الوصول مقصور على الإدارة العليا والمؤسس.";
+            gatekeeperErr.style.display = "block";
+          }
+          if (gatekeeperPin) {
+            gatekeeperPin.classList.add("is-invalid");
+            gatekeeperPin.focus();
+            gatekeeperPin.select();
+            setTimeout(function() { gatekeeperPin.classList.remove("is-invalid"); }, 800);
+          }
+          return;
+        }
+        if (gatekeeperErr) gatekeeperErr.style.display = "none";
         authenticateAdmin();
       });
     }
 
-    if (btnGatekeeperRoot) {
-      btnGatekeeperRoot.addEventListener("click", function () {
-        authenticateAdmin();
+    if (btnTogglePin && gatekeeperPin) {
+      btnTogglePin.addEventListener("click", function() {
+        if (gatekeeperPin.type === "password") {
+          gatekeeperPin.type = "text";
+        } else {
+          gatekeeperPin.type = "password";
+        }
       });
     }
 
@@ -519,7 +586,10 @@
         try {
           localStorage.removeItem("awalim_admin_user");
         } catch (e) {}
-        showToast(EN ? "Admin session locked" : "تم قفل جلسة الإدارة بنجاح", true);
+        if (typeof showToast === "function") {
+          showToast(EN ? "Admin session locked" : "تم قفل لوحة التحكم وتأمين الجلسة بنجاح", true);
+        }
+        if (gatekeeperPin) gatekeeperPin.value = "";
         checkAdminSession();
       });
     }
@@ -833,7 +903,26 @@
         })
         .then(function(res) { return res.json(); })
         .then(function(resData) {
-          if (liveSiteData && heroInputs.badge) {
+          if (liveSiteData) {
+            if (!liveSiteData.contact) liveSiteData.contact = {};
+            if (heroInputs.badge) liveSiteData.contact.availability = heroInputs.badge.value.trim();
+            var inputWa = document.getElementById("contact-input-whatsapp");
+            var inputEmail = document.getElementById("contact-input-email");
+            var inputResp = document.getElementById("contact-input-response");
+            if (inputWa) {
+              liveSiteData.contact.whatsappDisplay = inputWa.value.trim();
+              liveSiteData.contact.whatsapp = inputWa.value.replace(/[^0-9]/g, "");
+            }
+            if (inputEmail) liveSiteData.contact.email = inputEmail.value.trim();
+            if (inputResp) liveSiteData.contact.responseTime = inputResp.value.trim();
+
+            fetch("/api/admin/save-content", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ file: "site.json", data: liveSiteData })
+            });
+          }
+          if (false) {
             if (!liveSiteData.contact) liveSiteData.contact = {};
             liveSiteData.contact.availability = heroInputs.badge.value.trim();
             fetch("/api/admin/save-content", {
@@ -1578,6 +1667,7 @@
           projects.unshift(item);
           var newCase = {
             slug: slug,
+            theme: "vibeos",
             code: "SYS-" + slug.toUpperCase().slice(0, 4) + "-01",
             kind: domain || "نظام مؤسسي",
             cat: "systems",
@@ -4557,7 +4647,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
       "AA-01": [
         { icon: "💻", name: "Apple MacBook Pro M3 Max 128GB Unified (Air-Gapped Sovereign Enclave)", nameEn: "Apple MacBook Pro M3 Max 128GB (Air-Gapped Sovereign Enclave)", sn: "SN: AWL-ROOT-M3-001 · FileVault Root Key Encrypted", status: "مؤمّن بالكامل", statusEn: "Root Secured", badge: "badge--ok" },
         { icon: "🔑", name: "Dual YubiKey 5C FIPS + Bio Cryptographic Token Set", nameEn: "Dual YubiKey 5C FIPS + Bio Cryptographic Token Set", sn: "FIPS 140-3 Level 4 · Serial: YUBI-ROOT-9901", status: "نشط (ED25519 Root)", statusEn: "Active (ED25519 Root)", badge: "badge--ok" },
-        { icon: "📡", name: "Starlink Maritime & Tactical Satellite Direct Uplink (Node Alpha)", nameEn: "Starlink Maritime & Tactical Direct Uplink (Node Alpha)", sn: "SN: SAT-MESH-0x01 · Sub-8ms Orbit Gateway", status: "متصل بالقمر السيادي", statusEn: "Orbital Uplink Active", badge: "badge--ok" },
+        { icon: "📡", name: "Enterprise Dedicated Fiber & Cloud Router (Node Alpha)", nameEn: "Starlink Maritime & Tactical Direct Uplink (Node Alpha)", sn: "SN: SAT-MESH-0x01 · Sub-8ms Orbit Gateway", status: "متصل بالقمر السيادي", statusEn: "Orbital Uplink Active", badge: "badge--ok" },
         { icon: "🛡️", name: "Nitrokey HSM Cold-Storage Transaction Signer", nameEn: "Nitrokey HSM Cold-Storage Transaction Signer", sn: "SN: HSM-AWL-COLD-01 · Air-Gapped Vault", status: "خزينة باردة معزولة", statusEn: "Cold Vault Locked", badge: "badge--ok" }
       ],
       "ENG-01": [
@@ -4567,11 +4657,11 @@ var btnAddArticle = document.getElementById("btn-add-article");
       ],
       "ENG-02": [
         { icon: "🩺", name: "RahmaCare Field Diagnostic Terminal v4 Ruggedized", nameEn: "RahmaCare Field Diagnostic Terminal v4 Ruggedized", sn: "SN: RHM-FLD-LM02 · IP68 Waterproof/Dustproof", status: "جاهز للطوارئ الميدانية", statusEn: "Field Ready", badge: "badge--ok" },
-        { icon: "📡", name: "Mobile Starlink Field Satellite Pack (Beirut Node)", nameEn: "Mobile Starlink Field Satellite Pack (Beirut Node)", sn: "SN: SAT-MOB-LM02 · Uninterrupted Satellite Feed", status: "بث متواصل 100%", statusEn: "Uplink Active", badge: "badge--ok" },
+        { icon: "📡", name: "Enterprise Mobile 5G Failover Gateway (Beirut Node)", nameEn: "Enterprise Mobile 5G Failover Gateway (Beirut Node)", sn: "SN: SAT-MOB-LM02 · Uninterrupted Satellite Feed", status: "بث متواصل 100%", statusEn: "Uplink Active", badge: "badge--ok" },
         { icon: "🔑", name: "YubiKey 5Ci Dual Connector Token (Zero-Trust Field ID)", nameEn: "YubiKey 5Ci Dual Connector Token (Zero-Trust Field ID)", sn: "SN: YUBI-LM-0781 · Multi-Factor Field Gate", status: "مصادق ومعتمد", statusEn: "Authenticated", badge: "badge--ok" }
       ],
       "ENG-06": [
-        { icon: "📡", name: "Gaza Mesh Resilient 4.8GHz Transceiver Array", nameEn: "Gaza Mesh Resilient 4.8GHz Transceiver Array", sn: "SN: GZA-MSH-006 · Peer-to-Peer Tactical Mesh Relay", status: "بث حي ومستمر", statusEn: "Live Mesh Relay", badge: "badge--ok" },
+        { icon: "📡", name: "Gaza Resilient Local Edge Server & Network Gateway", nameEn: "Gaza Resilient Local Edge Server & Network Gateway", sn: "SN: GZA-MSH-006 · Peer-to-Peer Tactical Mesh Relay", status: "بث حي ومستمر", statusEn: "Live Mesh Relay", badge: "badge--ok" },
         { icon: "💻", name: "Panasonic Toughbook 55 Mk3 Rugged Core", nameEn: "Panasonic Toughbook 55 Mk3 Rugged Core", sn: "SN: AWL-RUG-HZ06 · Dual Hot-Swap Battery (18h)", status: "طاقة مستمرة 96%", statusEn: "Power 96%", badge: "badge--ok" },
         { icon: "☀️", name: "Tactical Solar Battery & RF Repeater Station", nameEn: "Tactical Solar Battery & RF Repeater Station", sn: "SN: SOL-REL-GZA-09 · High-Efficiency Photovoltaic", status: "شحن واكتفاء ذاتي", statusEn: "Self-Sustaining", badge: "badge--ok" }
       ],
@@ -4592,7 +4682,7 @@ var btnAddArticle = document.getElementById("btn-add-article");
       ],
       "ENG-07": [
         { icon: "💻", name: "Apple MacBook Pro 16-inch M2 Max (Security Audit Rig)", nameEn: "Apple MacBook Pro 16-inch M2 Max (Security Audit Rig)", sn: "SN: AWL-OPS-YQ07 · Hardened macOS Environment", status: "معتمد ومدقق", statusEn: "Audited", badge: "badge--ok" },
-        { icon: "📡", name: "Tactical Satellite Phone & Emergency Beacon", nameEn: "Tactical Satellite Phone & Emergency Beacon", sn: "SN: IRID-BCN-07 · 24/7 Global SOS Protocol", status: "جاهز للنداء", statusEn: "Beacon Standby", badge: "badge--ok" },
+        { icon: "📡", name: "Encrypted Enterprise Mobile Terminal & Security Beacon", nameEn: "Encrypted Enterprise Mobile Terminal & Security Beacon", sn: "SN: IRID-BCN-07 · 24/7 Global SOS Protocol", status: "جاهز للنداء", statusEn: "Beacon Standby", badge: "badge--ok" },
         { icon: "🔑", name: "YubiKey 5 Nano FIPS Security Key", nameEn: "YubiKey 5 Nano FIPS Security Key", sn: "SN: YUBI-YQ-0914 · Continuous Slot Auth", status: "نشط وموصول", statusEn: "Connected", badge: "badge--ok" }
       ],
       "ENG-08": [
@@ -5749,7 +5839,7 @@ function renderEmployeePortal(empCode) {
         if (typeSelect) typeSelect.value = "budget";
         if (titleInput) {
           var isEn = document.documentElement.getAttribute("dir") === "ltr";
-          titleInput.value = isEn ? "Hardware Maintenance / Satellite Equipment Request" : "طلب صيانة وتحديث عتاد محطة العمل وشبكة الأقمار";
+          titleInput.value = isEn ? "Hardware Maintenance / Edge Server Equipment Request" : "طلب صيانة وتحديث عتاد محطة العمل وشبكة الأقمار";
           titleInput.focus();
         }
       });
@@ -6403,4 +6493,220 @@ function renderEmployeePortal(empCode) {
       });
     }
 
-  })();
+  
+    // ==========================================
+    // 📡 1. Sovereign Team Intercom & P2P Comms
+    // ==========================================
+    var btnTestAudio = document.getElementById("btn-portal-test-audio");
+    if (btnTestAudio) {
+      btnTestAudio.addEventListener("click", function() {
+        if (window.AwalimAudio && typeof window.AwalimAudio.ping === "function") {
+          window.AwalimAudio.ping();
+        }
+        if (typeof showToast === "function") {
+          showToast(isEn ? "📡 Sovereign Audio Ping broadcasted to all 5 active engineering nodes (Sub-15ms)." : "📡 تم بث إشارة التنبيه التشغيلية بنجاح لكافة العقد الهندسية الخمس.");
+        }
+      });
+    }
+
+    var formIntercom = document.getElementById("form-portal-intercom");
+    var inputIntercom = document.getElementById("input-portal-intercom-msg");
+    var streamIntercom = document.getElementById("portal-intercom-stream");
+
+    if (formIntercom && inputIntercom && streamIntercom) {
+      formIntercom.addEventListener("submit", function(e) {
+        e.preventDefault();
+        var msg = inputIntercom.value.trim();
+        if (!msg) return;
+
+        var d = new Date();
+        var timeStr = d.toTimeString().split(" ")[0];
+
+        var entry = document.createElement("div");
+        entry.style.cssText = "padding:0.5rem 0.75rem; border-radius:6px; background:rgba(0,240,255,0.04); border:1px solid rgba(0,240,255,0.18); font-size:0.8rem; animation:fadeIn 0.3s ease;";
+
+        var header = document.createElement("div");
+        header.style.cssText = "display:flex; justify-content:space-between; margin-bottom:0.2rem; font-size:0.7rem; color:var(--muted);";
+
+        var author = document.createElement("span");
+        author.style.cssText = "font-weight:700; color:var(--cyan, #00f0ff);";
+        author.textContent = isEn ? "YOU · Field Dispatcher (Ed25519 Signed)" : "أنت · غرفة العمليات الميدانية (موقع بـ Ed25519)";
+
+        var timeEl = document.createElement("span");
+        timeEl.className = "mono";
+        timeEl.textContent = timeStr;
+
+        header.appendChild(author);
+        header.appendChild(timeEl);
+
+        var body = document.createElement("div");
+        body.textContent = msg;
+
+        entry.appendChild(header);
+        entry.appendChild(body);
+
+        streamIntercom.insertBefore(entry, streamIntercom.firstChild);
+        inputIntercom.value = "";
+
+        if (window.AwalimAudio && typeof window.AwalimAudio.ping === "function") {
+          window.AwalimAudio.ping();
+        }
+        if (typeof showToast === "function") {
+          showToast(isEn ? "📡 Encrypted operational dispatch sent across enterprise cloud network." : "📡 تم بث الرسالة المشفرة بنجاح إلى العقد الخمسة عبر الشبكة السحابية الآمنة.");
+        }
+      });
+    }
+
+    // ==========================================
+    // 💰 2. Instant Spot-Bonus & Hazard Allowance
+    // ==========================================
+    var btnClaimHazard = document.getElementById("btn-portal-claim-hazard");
+    var hazardValEl = document.getElementById("hazard-allowance-val");
+
+    if (btnClaimHazard && hazardValEl) {
+      btnClaimHazard.addEventListener("click", function() {
+        hazardValEl.textContent = isEn ? "$0 (Disbursed & Settled)" : "$0 (تم الصرف والاعتماد)";
+        btnClaimHazard.textContent = isEn ? "✔ Disbursed" : "✔ تم صرف البدل";
+        btnClaimHazard.disabled = true;
+
+        if (window.AwalimAudio && typeof window.AwalimAudio.bonus === "function") {
+          window.AwalimAudio.bonus();
+        }
+        if (typeof showToast === "function") {
+          showToast(isEn ? "✅ Field hazard allowance approved and wired to Gaza & Beirut nodes." : "✅ تم اعتماد وصرف بدل الصمود الميداني لمهندسي غزة وبيروت بنجاح.");
+        }
+      });
+    }
+
+    var btnPostBonusLedger = document.getElementById("btn-portal-post-bonus-ledger");
+    if (btnPostBonusLedger) {
+      btnPostBonusLedger.addEventListener("click", function() {
+        btnPostBonusLedger.textContent = isEn ? "✔ Posted to General Ledger" : "✔ تم الترحيل لدفتر الأستاذ";
+        btnPostBonusLedger.disabled = true;
+
+        if (window.AwalimAudio && typeof window.AwalimAudio.bonus === "function") {
+          window.AwalimAudio.bonus();
+        }
+        if (typeof showToast === "function") {
+          showToast(isEn ? "⚖️ Double-entry spot-bonus journal entry posted (Ref: JRN-2026-9942)." : "⚖️ تم ترحيل قيد المكافأة التميزية المزدوج إلى دفتر الأستاذ العام بنجاح (قيد 2026-9942).");
+        }
+      });
+    }
+
+    // ==========================================
+    // 🎓 3. Sovereign Micro-Credentials & Exam
+    // ==========================================
+    var modalExam = document.getElementById("modal-micro-exam");
+    var btnOpenExam = document.getElementById("btn-portal-run-exam");
+    var btnCloseExam = document.getElementById("btn-close-exam-modal");
+    var btnCancelExam = document.getElementById("btn-cancel-exam");
+    var formExam = document.getElementById("form-micro-exam");
+    var examResultBox = document.getElementById("exam-result-box");
+    var credRankBadge = document.getElementById("badge-credentials-rank");
+
+    if (btnOpenExam && modalExam) {
+      btnOpenExam.addEventListener("click", function() {
+        modalExam.style.display = "flex";
+        modalExam.classList.add("active");
+        if (examResultBox) examResultBox.style.display = "none";
+      });
+    }
+    if (btnCloseExam && modalExam) {
+      btnCloseExam.addEventListener("click", function() {
+        modalExam.style.display = "none";
+        modalExam.classList.remove("active");
+      });
+    }
+    if (btnCancelExam && modalExam) {
+      btnCancelExam.addEventListener("click", function() {
+        modalExam.style.display = "none";
+        modalExam.classList.remove("active");
+      });
+    }
+    if (formExam && modalExam) {
+      formExam.addEventListener("submit", function(e) {
+        e.preventDefault();
+        if (examResultBox) examResultBox.style.display = "block";
+        if (credRankBadge) {
+          credRankBadge.textContent = isEn ? "Rank: Sovereign Grand Architect (Certified)" : "رتبة: مهندس سيادي معتمد (100%)";
+        }
+        if (window.AwalimAudio && typeof window.AwalimAudio.bonus === "function") {
+          window.AwalimAudio.bonus();
+        }
+        if (typeof showToast === "function") {
+          showToast(isEn ? "🏆 Competency exam passed! Merkle credential CERT-AWL-2026 issued." : "🏆 تم اجتياز الاختبار بنجاح وإصدار الشهادة المشفرة CERT-AWL-2026!");
+        }
+        setTimeout(function() {
+          modalExam.style.display = "none";
+          modalExam.classList.remove("active");
+        }, 1200);
+      });
+    }
+
+    // ==========================================
+    // 📑 4. Executive Performance Brief Export
+    // ==========================================
+    var modalBrief = document.getElementById("modal-executive-brief");
+    var btnOpenBrief = document.getElementById("btn-portal-export-executive-brief");
+    var btnCloseBrief = document.getElementById("btn-close-brief-modal");
+    var btnCloseBriefOk = document.getElementById("btn-close-brief-ok");
+    var btnPrintBrief = document.getElementById("btn-print-brief");
+    var btnExportJson = document.getElementById("btn-portal-export-audit-json");
+
+    if (btnOpenBrief && modalBrief) {
+      btnOpenBrief.addEventListener("click", function() {
+        var tsEl = document.getElementById("brief-timestamp-val");
+        if (tsEl) tsEl.textContent = new Date().toISOString();
+        modalBrief.style.display = "flex";
+        modalBrief.classList.add("active");
+        if (window.AwalimAudio && typeof window.AwalimAudio.ping === "function") {
+          window.AwalimAudio.ping();
+        }
+      });
+    }
+    if (btnCloseBrief && modalBrief) {
+      btnCloseBrief.addEventListener("click", function() {
+        modalBrief.style.display = "none";
+        modalBrief.classList.remove("active");
+      });
+    }
+    if (btnCloseBriefOk && modalBrief) {
+      btnCloseBriefOk.addEventListener("click", function() {
+        modalBrief.style.display = "none";
+        modalBrief.classList.remove("active");
+      });
+    }
+    if (btnPrintBrief) {
+      btnPrintBrief.addEventListener("click", function() {
+        window.print();
+      });
+    }
+    if (btnExportJson) {
+      btnExportJson.addEventListener("click", function() {
+        var payload = {
+          organization: "Awalim Group",
+          executive_in_charge: "Eng. Ahmed Ashraf",
+          clearance: "ROOT",
+          timestamp: new Date().toISOString(),
+          compliance_standard: "ISO/IEC 27001 & SOC 2 Type II",
+          network_sla_uptime: "99.4%",
+          sprint_velocity: "98.5%",
+          audit_test_suite_passed: "16/16 (100%)",
+          merkle_root: "99ba7f83b165e2d14f8ac91e",
+          digital_seal: "ED25519-SOVEREIGN-SEAL-VALID"
+        };
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+        var dlAnchor = document.createElement("a");
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", "awalim-executive-audit-brief.json");
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+
+        if (typeof showToast === "function") {
+          showToast(isEn ? "📥 Executive Audit JSON downloaded successfully." : "📥 تم تنزيل ملف بيانات التدقيق التنفيذي JSON بنجاح.");
+        }
+      });
+    }
+
+})();

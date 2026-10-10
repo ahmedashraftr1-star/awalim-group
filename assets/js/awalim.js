@@ -345,6 +345,46 @@
     else legacy();
   });
 
+  /* ---------- executive dossier modal ---------- */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("#btn-export-dossier, [data-open-dossier]");
+    if (b) {
+      e.preventDefault();
+      var m = $("#modal-executive-dossier");
+      if (m) {
+        var open = !m.classList.contains("is-open");
+        m.classList.toggle("is-open", open);
+        m.classList.toggle("active", open);
+        b.setAttribute("aria-expanded", open ? "true" : "false");
+        if (open) {
+          var c = $(".dash-modal-close", m);
+          if (c) c.focus();
+        }
+      }
+      return;
+    }
+    var close = e.target.closest("#modal-executive-dossier .dash-modal-close");
+    if (close) {
+      e.preventDefault();
+      var m2 = $("#modal-executive-dossier");
+      if (m2) {
+        m2.classList.remove("is-open", "active");
+        var b2 = $("#btn-export-dossier");
+        if (b2) {
+          b2.setAttribute("aria-expanded", "false");
+          b2.focus();
+        }
+      }
+      return;
+    }
+    var pr = e.target.closest('#modal-executive-dossier [data-action="print-dossier"]');
+    if (pr) {
+      e.preventDefault();
+      window.print();
+      return;
+    }
+  });
+
   /* ---------- misc ---------- */
   $$("[data-year]").forEach(function (el) { el.textContent = String(new Date().getFullYear()); });
   document.addEventListener("click", function (e) {

@@ -443,7 +443,12 @@
 
     // Attach subtle acoustic feedback to all glass clicks
     document.addEventListener("click", function (e) {
-      var interactive = e.target.closest("button, .btn, .dash-tab-btn, .pillnav__links a, .icon-btn, .dash-view-btn, .dash-filter-pill");
+      var chimeTrigger = e.target.closest(".dossier-btn-download, [data-brief-open], #btn-dossier-download");
+      if (chimeTrigger) {
+        playChime();
+        return;
+      }
+      var interactive = e.target.closest("button, .btn, .dash-tab-btn, .pillnav__links a, .icon-btn, .dash-view-btn, .dash-filter-pill, [data-theme-toggle], .chip, .syscode, .lnk");
       if (interactive) {
         playGlassTap(2800, 0.025);
       }

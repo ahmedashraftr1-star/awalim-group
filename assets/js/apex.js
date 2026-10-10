@@ -671,6 +671,46 @@
         return;
       }
 
+      // 1.5. Executive Dossier triggers (CSP-compliant modal lifecycle)
+      const dossierBtn = e.target.closest("#btn-export-dossier, [data-open-dossier]");
+      if (dossierBtn) {
+        e.preventDefault();
+        const m = document.getElementById("modal-executive-dossier");
+        if (m) {
+          const open = !m.classList.contains("is-open");
+          m.classList.toggle("is-open", open);
+          m.classList.toggle("active", open);
+          dossierBtn.setAttribute("aria-expanded", open ? "true" : "false");
+          if (open) {
+            const c = m.querySelector(".dash-modal-close");
+            if (c) c.focus();
+          }
+        }
+        return;
+      }
+
+      const dossierClose = e.target.closest("#modal-executive-dossier .dash-modal-close");
+      if (dossierClose) {
+        e.preventDefault();
+        const m = document.getElementById("modal-executive-dossier");
+        if (m) {
+          m.classList.remove("is-open", "active");
+          const b = document.getElementById("btn-export-dossier");
+          if (b) {
+            b.setAttribute("aria-expanded", "false");
+            b.focus();
+          }
+        }
+        return;
+      }
+
+      const dossierPrint = e.target.closest('#modal-executive-dossier [data-action="print-dossier"]');
+      if (dossierPrint) {
+        e.preventDefault();
+        window.print();
+        return;
+      }
+
       // 2. Tactile tap audio on buttons & links
       if (e.target.closest('.btn, .icon-btn, .pillnav__links a, .sov-currency-btn, .comms-quick-chip')) {
         playTap();
@@ -683,7 +723,7 @@
   // WhatsApp. It replaces a chat panel that pretended to receive messages.
   function mountContactFab() {
     if (document.getElementById('contactFab')) return;
-    if (/^\/(en\/)?contact\/?$/.test(location.pathname)) return;
+    if (/^\/(en\/)?(contact|dashboard)\/?$/.test(location.pathname)) return;
     const label = isEn ? 'Message us on WhatsApp' : 'راسلنا على واتساب';
     const a = h('a', { id: 'contactFab', className: 'contact-fab', href: 'https://wa.me/970593636136', target: '_blank', rel: 'noopener', 'aria-label': label, title: label });
     const NS = 'http://www.w3.org/2000/svg';
