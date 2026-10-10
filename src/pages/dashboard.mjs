@@ -17,36 +17,39 @@ export default function dashboard(ctx) {
   const t = (ar, en) => isEn ? en : ar;
 
   const body = [
-    `<!-- Sovereign Root Admin Gatekeeper Wall (Active when not authenticated) -->
-    <div class="dash-gatekeeper" id="dash-gatekeeper" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="gatekeeper-title">
+    `<!-- Sovereign Executive Admin Gatekeeper Wall (Active when not authenticated) -->
+    <div class="dash-gatekeeper" id="dash-gatekeeper" role="dialog" aria-modal="true" aria-labelledby="gatekeeper-title">
       <div class="dash-gatekeeper-card">
-        <div class="dash-gatekeeper-icon">
+        <div class="dash-gatekeeper-icon" aria-hidden="true">
           <span class="dash-gatekeeper-crown">${icon("crown", "dash-gatekeeper-crown-svg")}</span>
         </div>
-        <span class="chip chip--accent"><span class="dot dot--live"></span>${t("بوابة إدارة المنظومة", "SYSTEM OPERATIONS GATEWAY")}</span>
-        <h2 class="dash-gatekeeper-title" id="gatekeeper-title">${t("لوحة التحكم المركزية وإدارة العمليات", "Executive Operations Console")}</h2>
-        <p class="dash-gatekeeper-desc">${t("لوحة تحكم تنفيذية مخصصة لإدارة منصات عوالِم قروب، تدقيق المسارات، ومتابعة العمليات الهندسية والمهام.", "Centralized operations console for managing Awalim platforms, telemetry, and engineering workflows.")}</p>
+        <span class="chip chip--accent"><span class="dot dot--live"></span>${t("بوابة الدخول الإدارية الآمنة", "SECURE OPERATIONS GATEWAY")}</span>
+        <h2 class="dash-gatekeeper-title" id="gatekeeper-title">${t("لوحة التحكم المركزية وإدارة المنظومة", "Executive Operations Console")}</h2>
+        <p class="dash-gatekeeper-desc">${t("مرحباً بك. هذه المنطقة مخصصة لإدارة العمليات وتعديل محتوى موقع عوالِم قروب ومتابعة المشاريع والطلبات.", "Protected console for managing Awalim platforms, editing live content, and overseeing enterprise operations.")}</p>
 
         <form class="dash-gatekeeper-form" id="dash-gatekeeper-form">
-          <div class="dash-gatekeeper-pin-wrap">
-            <input type="password" name="pin" class="dash-input dash-gatekeeper-pin" id="dash-gatekeeper-pin" placeholder="••••" maxlength="8" autocomplete="current-password" aria-label="${t("رمز دخول الإدارة", "Admin Security PIN")}" aria-describedby="dash-gatekeeper-err">
-            <button type="submit" class="btn btn--primary btn--sm" id="btn-gatekeeper-submit">${t("فتح لوحة التحكم", "Unlock Console")}</button>
+          <div class="dash-gatekeeper-field">
+            <label for="dash-gatekeeper-pin" class="dash-gatekeeper-label">${t("رمز الدخول السري (PIN)", "Admin Security PIN")}</label>
+            <div class="dash-gatekeeper-pin-wrap">
+              <input type="password" name="pin" class="dash-input dash-gatekeeper-pin" id="dash-gatekeeper-pin" placeholder="••••" maxlength="8" autocomplete="current-password" aria-label="${t("رمز دخول الإدارة", "Admin Security PIN")}" aria-describedby="dash-gatekeeper-err" required>
+              <button type="button" class="dash-gatekeeper-toggle" id="btn-toggle-pin-visibility" aria-label="${t("إظهار أو إخفاء الرمز", "Toggle PIN visibility")}">
+                ${icon("eye", "dash-pin-eye-svg")}
+              </button>
+            </div>
           </div>
-          <div class="dash-gatekeeper-err" id="dash-gatekeeper-err" role="alert"></div>
-          <div class="dash-gatekeeper-quick">
-            <button type="button" class="btn btn--gold btn--sm" id="btn-gatekeeper-root">
-              <span>${icon("bolt", "dash-btn-svg")} ${t("دخول فوري كمسؤول (المهندس أحمد أشرف)", "Admin Quick Access (Eng. Ahmed Ashraf)")}</span>
-            </button>
-          </div>
+          <button type="submit" class="btn btn--primary btn--md" id="btn-gatekeeper-submit">
+            <span>${icon("lock", "dash-btn-svg")} ${t("تسجيل الدخول إلى لوحة الإدارة", "Unlock Admin Console")}</span>
+          </button>
+          <div class="dash-gatekeeper-err" id="dash-gatekeeper-err" role="alert" style="display:none;"></div>
           <div class="dash-gatekeeper-note">
-            <span>${t("مشفّر بالكامل عبر WebCrypto API · مطابق لمعايير CSP Level 3", "Encrypted via WebCrypto API · Strict CSP Level 3 Compliant")}</span>
+            <span>${t("جلسة مشفّرة بالكامل · مقتصرة على الإدارة العليا والمؤسس (م. أحمد أشرف)", "Encrypted Session · Restricted to Executive Leadership (Eng. Ahmed Ashraf)")}</span>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- Apple Silicon Pro Executive Header -->
-    <header class="dash-master-header" data-ledger="dashboard" aria-label="${t("لوحة التحكم المركزية", "Sovereign Executive Command Suite")}">
+    <!-- Apple Silicon Pro Executive Header (Locked until authenticated) -->
+    <header class="dash-master-header dash-auth-locked" data-ledger="dashboard" aria-label="${t("لوحة التحكم المركزية", "Sovereign Executive Command Suite")}">
       <div class="wrap wrap--wide">
         <div class="dash-apple-header" id="dash-admin-user-card">
           <div class="dash-apple-header__profile">
@@ -222,7 +225,7 @@ export default function dashboard(ctx) {
     </header>`,
 
     `<!-- Content Body: 11 Dedicated Panels -->
-    <main class="dash-main-area" id="dash-main-area">
+    <main class="dash-main-area dash-auth-locked" id="dash-main-area">
       <div class="wrap wrap--wide">
 
         <!-- ================= PANEL 0: OWNER APEX COCKPIT ================= -->
@@ -902,6 +905,18 @@ export default function dashboard(ctx) {
               <div class="dash-field-group">
                 <label class="dash-label">${t("شارة التوفر وحالة التعاقد", "Availability Badge Text")}</label>
                 <input type="text" class="dash-input" id="hero-input-badge" value="${t("متاح للتعاقدات الهندسية المؤسسية الكبرى", "Available for Enterprise Flagship Deployments")}">
+              </div>
+              <div class="dash-field-group">
+                <label class="dash-label">${t("رقم الواتساب للتواصل والتعاقد", "Official WhatsApp Number")}</label>
+                <input type="text" class="dash-input" id="contact-input-whatsapp" value="${site.contact?.whatsappDisplay || "+970 59 363 6136"}">
+              </div>
+              <div class="dash-field-group">
+                <label class="dash-label">${t("البريد الإلكتروني الرسمي للاستفسارات", "Official Contact Email")}</label>
+                <input type="email" class="dash-input" id="contact-input-email" value="${site.contact?.email || "hello@awalimgroup.com"}">
+              </div>
+              <div class="dash-field-group">
+                <label class="dash-label">${t("التزام مدة الرد على طلبات التعاقد", "Response Time Commitment")}</label>
+                <input type="text" class="dash-input" id="contact-input-response" value="${site.contact?.responseTime || t("نعود إليك خلال يومَي عمل", "Within 2 business days")}">
               </div>
               <div class="dash-field-group">
                 <label class="dash-label">${t("الكبسولة الأولى — العنوان", "Action Pod 1 Title")}</label>
@@ -1948,7 +1963,7 @@ export default function dashboard(ctx) {
                     <label class="dash-label" for="select-emp-discipline">${t("التخصص / القسم", "Discipline")}</label>
                     <select name="emp_discipline" class="dash-select" id="select-emp-discipline" aria-label="${t("التخصص / القسم", "Discipline")}">
                       <option value="core_systems">${t("هندسة النواة والمصارف", "Core & Banking")}</option>
-                      <option value="mesh_field">${t("شبكات الإغاثة والبث الفضائي", "Field Mesh & Satellite")}</option>
+                      <option value="mesh_field">${t("البنية التحتية السحابية والشبكات", "Cloud Infrastructure & Networking")}</option>
                       <option value="ai_systems">${t("نظم الذكاء الاصطناعي والأتمتة", "AI & Autonomous Systems")}</option>
                       <option value="cyber_sec">${t("الأمن السيبراني وعقود التشفير", "Cybersecurity & Cryptography")}</option>
                       <option value="academy_mentors">${t("الأكاديمية والتوجيه", "Academy Mentors")}</option>
@@ -2360,7 +2375,7 @@ export default function dashboard(ctx) {
                   <span class="mono" style="color:var(--accent); font-weight:700;" id="slip-hardship-amount">+$2,200.00</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px dashed rgba(255,255,255,0.08); font-size:0.85rem;">
-                  <span class="text-muted">${t("بدل الاتصال الفضائي والإنترنت السيادي (Satellite Uplink)", "Satellite & Comms Allowance")}</span>
+                  <span class="text-muted">${t("بدل الاتصالات والإنترنت السريع للأعمال (Business Fiber & Comms)", "High-Speed Business Internet & Comms Allowance")}</span>
                   <span class="mono" style="color:var(--live); font-weight:700;" id="slip-comms-amount">+$350.00</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px dashed rgba(255,255,255,0.08); font-size:0.85rem;">
@@ -2452,7 +2467,7 @@ export default function dashboard(ctx) {
               <!-- Executive Commendation Note -->
               <div style="padding:0.75rem; border-radius:8px; background:rgba(0,240,255,0.03); border:1px solid rgba(0,240,255,0.12); font-size:0.8rem; line-height:1.5;">
                 <div style="font-weight:700; color:var(--accent); margin-bottom:0.2rem;">${t("ملاحظة القيادة التنفيذية (Executive Feedback):", "Executive Leadership Feedback:")}</div>
-                <span id="perf-feedback-text">${t("أداء استثنائي في تأمين استقرار شبكة البث الفضائي بين غزة ودبي وتصفير زمن التأخير تحت 15 ملي ثانية.", "Exceptional delivery on sub-15ms satellite uplink and resilient node synchronization under adverse conditions.")}</span>
+                <span id="perf-feedback-text">${t("أداء استثنائي في تأمين استقرار الخوادم السحابية والربط الشبكي عالي السرعة بين غزة ودبي وتصفير زمن الاستجابة تحت 15 ملي ثانية.", "Exceptional delivery on high-availability cloud infrastructure and sub-15ms secure latency under heavy traffic.")}</span>
               </div>
             </div>
 
@@ -2485,7 +2500,7 @@ export default function dashboard(ctx) {
                     <span class="badge badge--ok" id="hardware-status-badge">${t("4 أجهزة معتمدة ومسجلة", "4 Active Devices")}</span>
                   </div>
                   <h3 style="margin:0; font-size:1.15rem; font-weight:700;">${t("سجل العهد التقنية والأجهزة الميدانية (Hardware Custody)", "Assigned Sovereign Hardware & Tokens")}</h3>
-                  <p class="text-muted small" style="margin:0.25rem 0 0 0;">${t("الأجهزة المشفرة ومفاتيح الأمان الصلبة المخصصة لجلستك ومهامك الميدانية.", "Encrypted workstation, hardware security keys, and satellite transceivers in active custody.")}</p>
+                  <p class="text-muted small" style="margin:0.25rem 0 0 0;">${t("الأجهزة المشفرة ومفاتيح الأمان الصلبة المخصصة لجلستك ومهامك الميدانية.", "Encrypted workstation, hardware security keys, and high-speed network gateways in active custody.")}</p>
                 </div>
               </div>
 
@@ -2506,11 +2521,11 @@ export default function dashboard(ctx) {
                   <div style="display:flex; align-items:center; gap:0.65rem;">
                     <span style="font-size:1.2rem;"></span>
                     <div>
-                      <div style="font-weight:700; font-size:0.85rem;" id="hw-sat-name">Sovereign Mesh Satellite Transceiver 4.8GHz</div>
-                      <div class="mono text-muted small" style="font-size:0.7rem;" id="hw-sat-serial">SN: SAT-MESH-NODE-08 · Sub-15ms Latency</div>
+                      <div style="font-weight:700; font-size:0.85rem;" id="hw-sat-name">Enterprise Cloud Edge Router 10Gbps</div>
+                      <div class="mono text-muted small" style="font-size:0.7rem;" id="hw-sat-serial">SN: EDGE-RTR-AWL-08 · Sub-15ms Enterprise Uplink</div>
                     </div>
                   </div>
-                  <span class="badge badge--ok" style="font-size:0.7rem;">${t("متصل بالقمر", "Uplink Active")}</span>
+                  <span class="badge badge--ok" style="font-size:0.7rem;">${t("متصل بالشبكة", "Cloud Connected")}</span>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:0.65rem 0.85rem; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);">
@@ -2535,6 +2550,211 @@ export default function dashboard(ctx) {
                 </button>
               </div>
             </div>
+            <!-- 5. Sovereign Team Intercom & P2P Comms Card -->
+            <div class="dash-card" id="portal-intercom-card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+                <div>
+                  <div class="dash-badge-row" style="margin-bottom:0.25rem;">
+                    <span class="chip chip--accent"><span class="dot dot--live"></span>${t("مركز التنسيق والاتصال الإداري الفوري", "Operational Team Dispatch & Comms")}</span>
+                    <span class="badge badge--ok" id="intercom-nodes-badge">${t("5 عقد متصلة بنجاح", "5 Active Nodes")}</span>
+                  </div>
+                  <h3 style="margin:0; font-size:1.15rem; font-weight:700;">${t("مركز التنسيق والاتصال الإداري الفوري (Team Dispatch Feed)", "Operational Team Dispatch & Internal Comms Feed")}</h3>
+                  <p class="text-muted small" style="margin:0.25rem 0 0 0;">${t("قناة اتصال مشفرة بتقنية E2EE وتوقيع Ed25519 للتواصل الفوري بين مهندسي العقد الميدانية والمقر الرئيسي.", "End-to-end encrypted channel with Ed25519 signatures for instant tactical coordination across Gaza, Dubai, and Riyadh nodes.")}</p>
+                </div>
+                <button type="button" class="btn btn--outline btn--xs" id="btn-portal-test-audio" aria-label="${t("اختبار إشارة التنبيه التشغيلية", "Test Operational Audio Alert")}">
+                  <span>${icon("pulse", "dash-btn-svg")} ${t("نغمة تنبيه", "Audio Alert")}</span>
+                </button>
+              </div>
+
+              <!-- Live Node Status Radar -->
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:0.5rem; margin-bottom:0.85rem;" id="intercom-node-radar">
+                <div style="padding:0.5rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); text-align:center;">
+                  <div style="font-size:0.7rem; color:var(--muted);">${t("غزة الشمال GZ-04", "Gaza North GZ-04")}</div>
+                  <div class="mono" style="font-size:0.8rem; font-weight:700; color:#10B981;"><bdi dir="ltr">12ms · Fiber</bdi></div>
+                </div>
+                <div style="padding:0.5rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); text-align:center;">
+                  <div style="font-size:0.7rem; color:var(--muted);">${t("خان يونس KH-01", "Khan Younis KH-01")}</div>
+                  <div class="mono" style="font-size:0.8rem; font-weight:700; color:#10B981;"><bdi dir="ltr">14ms · Net</bdi></div>
+                </div>
+                <div style="padding:0.5rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); text-align:center;">
+                  <div style="font-size:0.7rem; color:var(--muted);">${t("دبي HQ-DXB", "Dubai HQ-DXB")}</div>
+                  <div class="mono" style="font-size:0.8rem; font-weight:700; color:var(--accent);"><bdi dir="ltr">22ms · Cloud</bdi></div>
+                </div>
+                <div style="padding:0.5rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); text-align:center;">
+                  <div style="font-size:0.7rem; color:var(--muted);">${t("الرياض HUB-RUH", "Riyadh HUB-RUH")}</div>
+                  <div class="mono" style="font-size:0.8rem; font-weight:700; color:var(--accent);"><bdi dir="ltr">18ms · Cloud</bdi></div>
+                </div>
+              </div>
+
+              <!-- Message Stream -->
+              <div id="portal-intercom-stream" style="display:flex; flex-direction:column; gap:0.5rem; max-height:180px; overflow-y:auto; padding-inline-end:0.25rem; margin-bottom:0.75rem;">
+                <div style="padding:0.5rem 0.75rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); font-size:0.8rem;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:0.2rem; font-size:0.7rem; color:var(--muted);">
+                    <span style="font-weight:700; color:var(--accent);">GZ-04 · Eng. Tareq</span>
+                    <span class="mono"><bdi dir="ltr">11:15:20</bdi></span>
+                  </div>
+                  <div>${t("العقدة الشمالية تعمل بكامل طاقتها بنسبة استقرار 100%. خط الربط السحابي والألياف الضوئية مستقر.", "Northern node operating at 100% capacity. Cloud fiber uplink is rock solid.")}</div>
+                </div>
+                <div style="padding:0.5rem 0.75rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); font-size:0.8rem;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:0.2rem; font-size:0.7rem; color:var(--muted);">
+                    <span style="font-weight:700; color:var(--gold);">ROOT · Eng. Ahmed Ashraf</span>
+                    <span class="mono"><bdi dir="ltr">11:18:45</bdi></span>
+                  </div>
+                  <div>${t("مستمرون بدعم كامل العقد، والبدلات الميدانية المصروفة معتمدة فورياً على دفتر الأستاذ.", "Standing by all nodes. Field allowances are pre-approved and logged on ledger.")}</div>
+                </div>
+              </div>
+
+              <!-- Intercom Send Input Form -->
+              <form id="form-portal-intercom" style="display:flex; gap:0.5rem;">
+                <input type="text" id="input-portal-intercom-msg" name="intercom_msg" class="dash-input" style="flex:1; font-size:0.82rem;" placeholder="${t("اكتب رسالة مشفرة لبثها للعقد الميدانية...", "Broadcast encrypted telemetry or tactical ping...")}" aria-label="${t("رسالة الاتصال المشفر", "Encrypted message text")}" required>
+                <button type="submit" class="btn btn--primary btn--sm" id="btn-portal-send-intercom">
+                  <span>${icon("bolt", "dash-btn-svg")} ${t("إرسال", "Send")}</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- 6. Instant Spot-Bonus & Hazard Allowance Ledger Card -->
+            <div class="dash-card" id="portal-bonus-ledger-card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+                <div>
+                  <div class="dash-badge-row" style="margin-bottom:0.25rem;">
+                    <span class="chip chip--accent"><span class="dot dot--live"></span>${t("المكافآت التميزية الفورية", "Instant Spot-Bonus Ledger")}</span>
+                    <span class="badge badge--ok" id="bonus-pool-status">${t("رصيد معتمد ومتاح", "Available Pool")}</span>
+                  </div>
+                  <h3 style="margin:0; font-size:1.15rem; font-weight:700;">${t("محفظة المكافآت التميزية وبدل المخاطر (Spot-Bonus Ledger)", "Instant Spot-Bonus & Hazard Allowance Stream")}</h3>
+                  <p class="text-muted small" style="margin:0.25rem 0 0 0;">${t("سجل المكافآت الاستثنائية الفورية وبدل الصمود لمهندسي الميدان مربوط مباشرة بدفتر الأستاذ المحاسبي الذكي.", "Autonomous disbursement and real-time ledger settlement for high-impact milestones and hazard duty.")}</p>
+                </div>
+              </div>
+
+              <!-- Balance Overview Grid -->
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+                <div style="padding:0.75rem; border-radius:8px; background:rgba(212,175,55,0.05); border:1px solid rgba(212,175,55,0.2);">
+                  <div style="font-size:0.75rem; color:var(--gold); margin-bottom:0.25rem;">${t("رصيد المكافآت التميزية (Spot Pool)", "Spot-Bonus Pool")}</div>
+                  <div class="mono" style="font-size:1.25rem; font-weight:700; color:var(--gold);" id="spot-bonus-balance-val"><bdi dir="ltr">$4,500 USD</bdi></div>
+                  <div style="font-size:0.7rem; color:var(--muted);">${t("يعادل 16,875 ر.س معتمد للصرف", "Equivalent to 16,875 SAR")}</div>
+                </div>
+                <div style="padding:0.75rem; border-radius:8px; background:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.2);">
+                  <div style="font-size:0.75rem; color:#10B981; margin-bottom:0.25rem;">${t("بدل الصمود والمخاطر الميدانية", "Field Hazard Allowance")}</div>
+                  <div class="mono" style="font-size:1.25rem; font-weight:700; color:#10B981;" id="hazard-allowance-val"><bdi dir="ltr">$1,250 USD</bdi></div>
+                  <div style="font-size:0.7rem; color:var(--muted);">${t("مخصص لمهندسي شبكة غزة وبيروت", "Allocated for Gaza & Beirut teams")}</div>
+                </div>
+              </div>
+
+              <!-- Action buttons -->
+              <div style="display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:space-between; align-items:center;">
+                <button type="button" class="btn btn--outline btn--xs" id="btn-portal-claim-hazard" style="border-color:#10B981; color:#10B981;">
+                  <span>${icon("check", "dash-btn-svg")} ${t("طلب صرف بدل الصمود الفوري", "Claim Field Hazard Allowance")}</span>
+                </button>
+                <button type="button" class="btn btn--primary btn--xs" id="btn-portal-post-bonus-ledger" style="background:var(--gold); border-color:var(--gold); color:#000; font-weight:700;">
+                  <span>${icon("clipboard", "dash-btn-svg")} ${t("ترحيل المحفظة لدفتر الأستاذ", "Post to General Ledger")}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 7. Sovereign Micro-Credentials & Skill Matrix Card -->
+            <div class="dash-card" id="portal-credentials-card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+                <div>
+                  <div class="dash-badge-row" style="margin-bottom:0.25rem;">
+                    <span class="chip chip--accent"><span class="dot dot--live"></span>${t("الاعتماد الهندسي السيادي", "Sovereign Engineering Matrix")}</span>
+                    <span class="badge badge--ok" id="badge-credentials-rank">${t("رتبة: كبير مهندسي النظم", "Rank: Principal Architect")}</span>
+                  </div>
+                  <h3 style="margin:0; font-size:1.15rem; font-weight:700;">${t("مسار الاعتماد الهندسي والشارات الرقمية (Micro-Credentials)", "Micro-Credentials & Sovereign Skill Matrix")}</h3>
+                  <p class="text-muted small" style="margin:0.25rem 0 0 0;">${t("شواهد الكفاءة والاعتماد البرمجي الموثقة بختم Merkle Proof وتوقيعات النزاهة الرقمية.", "Cryptographically verifiable credentials, FIPS standards mastery, and offline architecture competency.")}</p>
+                </div>
+              </div>
+
+              <!-- 4 Skill Badges Matrix -->
+              <div style="display:flex; flex-direction:column; gap:0.65rem; margin-bottom:1rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0.75rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);">
+                  <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <span style="font-size:1.1rem;">🛡️</span>
+                    <div>
+                      <div style="font-weight:700; font-size:0.82rem;">${t("معمارية الصمود دون إنترنت (Offline-First CRDT)", "Offline-First CRDT & Merkle Arch")}</div>
+                      <div class="text-muted small" style="font-size:0.7rem;">${t("الاعتماد السيادي الشامل · معيار عوالِم", "Sovereign Master Tier · Zero-Drop")}</div>
+                    </div>
+                  </div>
+                  <span class="badge badge--ok mono">100%</span>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0.75rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);">
+                  <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <span style="font-size:1.1rem;">🔐</span>
+                    <div>
+                      <div style="font-weight:700; font-size:0.82rem;">${t("التشفير ما بعد الكمي ومفاتيح Ed25519", "Post-Quantum & Ed25519 Security")}</div>
+                      <div class="text-muted small" style="font-size:0.7rem;">${t("معيار FIPS 140-2 Level 3 ومصادقة PGP", "FIPS 140-2 Level 3 & PGP Sig")}</div>
+                    </div>
+                  </div>
+                  <span class="badge badge--ok mono">98%</span>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0.75rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);">
+                  <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <span style="font-size:1.1rem;">🛰️</span>
+                    <div>
+                      <div style="font-weight:700; font-size:0.82rem;">${t("هندسة النظم الموزعة والسحابية عالية التوافر", "High-Availability Distributed Systems & Cloud Arch")}</div>
+                      <div class="text-muted small" style="font-size:0.7rem;">${t("استقرار الخوادم وزمن استجابة < 15ms", "Sub-15ms Cloud Latency & Zero-Downtime")}</div>
+                    </div>
+                  </div>
+                  <span class="badge badge--ok mono">95%</span>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0.75rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);">
+                  <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <span style="font-size:1.1rem;">🏥</span>
+                    <div>
+                      <div style="font-weight:700; font-size:0.82rem;">${t("إدارة غرف العمليات والفرز الطبي الطارئ", "Crisis Triage & Emergency Response")}</div>
+                      <div class="text-muted small" style="font-size:0.7rem;">${t("بروتوكول رحمة كير الميداني الحرج", "RahmaCare Field Commander Protocol")}</div>
+                    </div>
+                  </div>
+                  <span class="badge badge--ok mono">92%</span>
+                </div>
+              </div>
+
+              <!-- Button to Run Exam -->
+              <div style="display:flex; justify-content:flex-end;">
+                <button type="button" class="btn btn--outline btn--xs" id="btn-portal-run-exam">
+                  <span>${icon("award", "dash-btn-svg")} ${t("إجراء اختبار كفاءة هندسية فوري", "Take Micro-Competency Exam")}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 8. One-Click Executive Audit & Performance Export Card -->
+            <div class="dash-card" id="portal-executive-export-card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+                <div>
+                  <div class="dash-badge-row" style="margin-bottom:0.25rem;">
+                    <span class="chip chip--accent"><span class="dot dot--live"></span>${t("التوثيق والاعتماد التنفيذي", "Executive Attestation")}</span>
+                    <span class="badge badge--ok">${t("فحوص آلية داخلية", "Internal automated checks")}</span>
+                  </div>
+                  <h3 style="margin:0; font-size:1.15rem; font-weight:700;">${t("مولد التقارير التنفيذية والاعتماد الشامل (Executive Export)", "One-Click Executive Audit & Performance Brief")}</h3>
+                  <p class="text-muted small" style="margin:0.25rem 0 0 0;">${t("توليد وتصدير تقرير تنفيذي رسمي شامل وموقع تشفيرياً بضغطة زر واحدة يشمل سجلات الإنتاجية، التدقيق، والامتثال.", "Instantly compile and export an official, cryptographically sealed executive brief summarizing workforce uptime, sprint deliverables, and cryptographic compliance.")}</p>
+                </div>
+              </div>
+
+              <!-- Compliance & Audit Summary Badges -->
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:1rem;">
+                <div style="padding:0.6rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); font-size:0.75rem;">
+                  <div style="color:var(--muted);">${t("معدل الامتثال العام", "Total Compliance Rate")}</div>
+                  <div class="mono" style="font-weight:700; color:#10B981; font-size:1rem;"><bdi dir="ltr">100.0% AAA</bdi></div>
+                </div>
+                <div style="padding:0.6rem; border-radius:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); font-size:0.75rem;">
+                  <div style="color:var(--muted);">${t("الختم الجنائي المشفر", "Audit Cryptographic Seal")}</div>
+                  <div class="mono" style="font-weight:700; color:var(--accent); font-size:0.75rem;"><bdi dir="ltr">SHA-256: VALID</bdi></div>
+                </div>
+              </div>
+
+              <!-- Export Buttons -->
+              <div style="display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:space-between; align-items:center;">
+                <button type="button" class="btn btn--outline btn--xs" id="btn-portal-export-audit-json">
+                  <span>${icon("download", "dash-btn-svg")} ${t("تنزيل بيانات التدقيق (JSON)", "Export Audit Data (JSON)")}</span>
+                </button>
+                <button type="button" class="btn btn--primary btn--xs" id="btn-portal-export-executive-brief" style="font-weight:700;">
+                  <span>${icon("clipboard", "dash-btn-svg")} ${t("توليد التقرير التنفيذي الشامل", "Generate Executive Brief")}</span>
+                </button>
+              </div>
+            </div>
+
 </div>
 
         </section>
@@ -3284,7 +3504,7 @@ export default function dashboard(ctx) {
                 <td class="mono" style="text-align:end; color:var(--accent); font-weight:700;" id="modal-slip-hardship">+$2,200.00</td>
               </tr>
               <tr>
-                <td>${t("بدل الاتصالات والربط الفضائي المشفر (Mesh Uplink)", "Encrypted Satellite & Comms Allowance")}</td>
+                <td>${t("بدل الاتصالات والإنترنت السريع للأعمال (High-Speed Fiber & Comms)", "High-Speed Business Internet & Comms Allowance")}</td>
                 <td class="mono" style="text-align:end; color:var(--live); font-weight:700;" id="modal-slip-comms">+$350.00</td>
               </tr>
               <tr>
@@ -3389,7 +3609,7 @@ export default function dashboard(ctx) {
           <div class="dash-field-group" style="margin-bottom:0.85rem;">
             <label class="dash-label" for="select-ping-type">${t("نوع الحادث أو الطارئ الميداني", "Incident Classification")}</label>
             <select name="ping_type" class="dash-select" id="select-ping-type" aria-label="${t("نوع الحادث أو الطارئ الميداني", "Incident Classification")}" required>
-              <option value="comms_outage">${t("انقطاع شبكة واتصال فضائي ميداني (Mesh/Sat Outage)", "Field Comms / Mesh Satellite Outage")}</option>
+              <option value="comms_outage">${t("عطل أو انقطاع في خوادم الاستضافة والشبكة (Cloud / Network Outage)", "Cloud Hosting / Network Outage")}</option>
               <option value="cyber_breach">${t("تهديد أمني أو محاولة اختراق سيبراني (Security Breach)", "Security Breach / Cyber Threat")}</option>
               <option value="medical_evac">${t("حالة إخلاء طبي طارئة - منظومة رحمة كير", "RahmaCare Critical Medical Evacuation")}</option>
               <option value="node_failure">${t("خلل في عقدة السيرفرات والبث الميداني", "Node Hardware / Generator Failure")}</option>
@@ -3534,6 +3754,132 @@ export default function dashboard(ctx) {
             <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-dispatch">${t("إلغاء", "Cancel")}</button>
             <button type="submit" class="btn btn--primary btn--sm" style="background:var(--gold); border-color:var(--gold); color:#000; font-weight:700;">
               <span>${t("اعتماد الشحنة والتوجيه الفوري", "Authorize & Dispatch Medical Supplies")}</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    
+    <!-- ================= MODAL: EXECUTIVE PERFORMANCE BRIEF ================= -->
+    <div class="dash-modal-overlay" id="modal-executive-brief" style="display:none;">
+      <div class="dash-modal" role="dialog" aria-modal="true" aria-labelledby="modal-brief-title" style="max-width:720px;">
+        <div class="dash-modal-header" style="border-bottom:1px solid rgba(0,240,255,0.25);">
+          <div>
+            <div class="dash-badge-row">
+              <span class="chip chip--accent"><span class="dot dot--live"></span>${t("الوثيقة الرسمية الصادرة", "OFFICIAL EXECUTIVE RECORD")}</span>
+              <span class="badge badge--ok" id="brief-serial-badge">EXEC-AWL-2026-Q3</span>
+            </div>
+            <h3 class="dash-modal-title" id="modal-brief-title" style="color:var(--accent); margin:0.25rem 0 0 0;">${t("التقرير التنفيذي والاعتماد الإداري الشامل — عوالِم قروب", "Executive Performance & Cryptographic Brief — Awalim Group")}</h3>
+          </div>
+          <button type="button" class="dash-modal-close" id="btn-close-brief-modal" aria-label="${t("إغلاق", "Close")}">✕</button>
+        </div>
+        <div class="dash-modal-body" style="padding:1.25rem;" id="brief-print-content">
+          <div style="border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:1rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div style="font-weight:800; font-size:1.15rem; letter-spacing:0.04em;">AWALIM GROUP · GLOBAL EXECUTIVE COMMAND</div>
+              <div class="text-muted small" style="margin-top:0.2rem;">${t("المسؤول التنفيذي: م. أحمد أشرف (Clearance ROOT)", "Executive In-Charge: Eng. Ahmed Ashraf (ROOT Clearance)")}</div>
+            </div>
+            <div style="text-align:inline-end;">
+              <span class="badge badge--ok mono">SIGNED STATS · Ed25519</span>
+              <div class="mono text-muted small" style="margin-top:0.2rem;" id="brief-timestamp-val">2026-10-07T12:00:00Z</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:0.75rem; margin-bottom:1rem;">
+            <div style="padding:0.75rem; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:0.75rem; color:var(--muted);">${t("استقرار شبكة العمليات (SLA)", "Network SLA")}</div>
+              <div class="mono" style="font-size:1.15rem; font-weight:700; color:#10B981;"><bdi dir="ltr">99.4% UPTIME</bdi></div>
+            </div>
+            <div style="padding:0.75rem; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:0.75rem; color:var(--muted);">${t("المخرجات الهندسية المنجزة", "Sprint Delivery")}</div>
+              <div class="mono" style="font-size:1.15rem; font-weight:700; color:var(--accent);"><bdi dir="ltr">98.5% VELOCITY</bdi></div>
+            </div>
+            <div style="padding:0.75rem; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:0.75rem; color:var(--muted);">${t("معدل تدقيق النزاهة (Audit)", "Cryptographic Proof")}</div>
+              <div class="mono" style="font-size:1.15rem; font-weight:700; color:var(--gold);"><bdi dir="ltr">100% 16/16 PASS</bdi></div>
+            </div>
+          </div>
+
+          <div style="padding:0.85rem; border-radius:8px; background:rgba(0,240,255,0.03); border:1px solid rgba(0,240,255,0.12); margin-bottom:1rem; font-size:0.82rem; line-height:1.6;">
+            <strong>${t("شهادة الاعتماد الرسمي:", "Official Attestation Certification:")}</strong>
+            ${t("تشهد القيادة المركزية لعوالِم قروب بأن كافة السجلات الحسابية، سجلات الدوام، والعقد الميدانية الموزعة في غزة ودبي والرياض تعمل بكفاءة مطلقة، ومحمية تشفيرياً بأشجار ميركل المتزامنة دون أي وسيط خارجي.", "The executive board certifies that all general ledgers, engineering workforce rosters, and active mesh nodes across Gaza, Dubai, and Riyadh maintain verified compliance, zero data loss, and cryptographic attestation.")}
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:var(--muted); border-top:1px solid rgba(255,255,255,0.06); padding-top:0.75rem;">
+            <div class="mono"><bdi dir="ltr">Ed25519: 4f8a...c91e · MERKLE-ROOT: 99ba...01af</bdi></div>
+            <div style="font-weight:700; color:var(--gold);">${t("ختم عوالِم السيادي المعتمد", "AWALIM SOVEREIGN SEAL")}</div>
+          </div>
+        </div>
+        <div class="dash-modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+          <button type="button" class="btn btn--outline btn--sm" id="btn-print-brief">
+            <span>${icon("download", "dash-btn-svg")} ${t("طباعة / حفظ كـ PDF", "Print / Save PDF")}</span>
+          </button>
+          <button type="button" class="btn btn--primary btn--sm" id="btn-close-brief-ok">
+            <span>${icon("check", "dash-btn-svg")} ${t("تم والاعتماد سارٍ", "Acknowledge & Close")}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MODAL: MICRO-CREDENTIALS EXAM ================= -->
+    <div class="dash-modal-overlay" id="modal-micro-exam" style="display:none;">
+      <div class="dash-modal" role="dialog" aria-modal="true" aria-labelledby="modal-exam-title" style="max-width:640px;">
+        <div class="dash-modal-header" style="border-bottom:1px solid rgba(212,175,55,0.25);">
+          <div>
+            <div class="dash-badge-row">
+              <span class="chip chip--accent"><span class="dot dot--live"></span>${t("اختبار الكفاءة الهندسية المباشر", "SOVEREIGN EXAM")}</span>
+              <span class="badge badge--ok">CRDT &amp; CRYPTO 2026</span>
+            </div>
+            <h3 class="dash-modal-title" id="modal-exam-title" style="color:var(--gold); margin:0.25rem 0 0 0;">${t("اختبار الاعتماد الهندسي السيادي (Competency Verification)", "Sovereign Engineering Competency Exam")}</h3>
+          </div>
+          <button type="button" class="dash-modal-close" id="btn-close-exam-modal" aria-label="${t("إغلاق", "Close")}">✕</button>
+        </div>
+        <form id="form-micro-exam">
+          <div class="dash-modal-body" style="padding:1.25rem;">
+            <p class="small text-muted" style="margin-top:0;">${t("أجب عن الأسئلة المعمارية التالية لإصدار الشهادة المشفرة وتحديث رتبتك في مصفوفة الكفاءة:", "Answer the technical questions below to generate your verified cryptographic credential:")}</p>
+
+            <div style="margin-bottom:1rem; padding:0.75rem; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);">
+              <label class="form-label" style="font-weight:700; font-size:0.85rem; margin-bottom:0.5rem; display:block;" for="exam-q1-a">
+                1. ${t("كيف تحافظ عقد شبكة غزة على تزامن البيانات عند انقطاع الإنترنت الكامل؟", "How do Gaza mesh nodes maintain ledger consensus during complete Internet cutoffs?")}
+              </label>
+              <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.8rem;">
+                <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                  <input type="radio" name="q1" id="exam-q1-a" value="crdt" checked>
+                  <span>${t("عبر أشجار ميركل وبروتوكول CRDT المقاوم للتعارضات محلياً", "Using Merkle Trees and conflict-free CRDT protocol locally")}</span>
+                </label>
+                <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                  <input type="radio" name="q1" id="exam-q1-b" value="cloud">
+                  <span>${t("تعتمد على خوادم سحابية مركزية في الخارج", "Relying on external centralized cloud servers")}</span>
+                </label>
+              </div>
+            </div>
+
+            <div style="margin-bottom:1rem; padding:0.75rem; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);">
+              <label class="form-label" style="font-weight:700; font-size:0.85rem; margin-bottom:0.5rem; display:block;" for="exam-q2-a">
+                2. ${t("ما هو خوارزمية التوقيع الرقمي المستخدمة لتوثيق قيود ومعاملات المنظومة؟", "Which digital signature algorithm secures system attestation & transactions?")}
+              </label>
+              <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.8rem;">
+                <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                  <input type="radio" name="q2" id="exam-q2-a" value="ed25519" checked>
+                  <span>${t("Ed25519 المنحنيات الإهليلجية المعتمدة وفق FIPS 140-2", "Ed25519 Elliptic Curve under FIPS 140-2 Level 3")}</span>
+                </label>
+                <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                  <input type="radio" name="q2" id="exam-q2-b" value="md5">
+                  <span>${t("تجزئة MD5 الكلاسيكية القديمة", "Legacy MD5 hash")}</span>
+                </label>
+              </div>
+            </div>
+
+            <div id="exam-result-box" style="display:none; padding:0.75rem; border-radius:8px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); text-align:center;">
+              <div style="font-weight:700; color:#10B981; margin-bottom:0.25rem;">✔ ${t("اجتياز كامل بنسبة 100% (Passed with Distinction)", "Passed with 100% Distinction!")}</div>
+              <div class="mono small" style="font-size:0.75rem;"><bdi dir="ltr">MERKLE CREDENTIAL ISSUED: CERT-AWL-2026-ARCH</bdi></div>
+            </div>
+          </div>
+          <div class="dash-modal-footer" style="display:flex; justify-content:flex-end; gap:0.5rem;">
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-exam">${t("إلغاء", "Cancel")}</button>
+            <button type="submit" class="btn btn--primary btn--sm" id="btn-submit-exam" style="background:var(--gold); border-color:var(--gold); color:#000; font-weight:700;">
+              <span>${icon("award", "dash-btn-svg")} ${t("اعتماد النتيجة وإصدار الشهادة", "Submit & Verify Credential")}</span>
             </button>
           </div>
         </form>

@@ -1,3 +1,4 @@
+import { icon } from "../lib/icons.mjs";
 import { esc, fill, join } from "../lib/html.mjs";
 import { page, orgSchema, siteSchema } from "../lib/layout.mjs";
 import * as C from "../lib/components.mjs";
@@ -5,6 +6,8 @@ import * as C from "../lib/components.mjs";
 export default function render(ctx) {
   const { site, stats, themes, pages, cases, products, articles } = ctx;
   const h = pages.home;
+  const isEn = ctx.locale === "en";
+  const t = (ar, en) => isEn ? en : ar;
 
   const heroLines = h.hero.lines
     .map((l, i) => `<span class="kl" style="--i:${i}"><span class="kl__in">${l}</span></span>`)
@@ -31,12 +34,20 @@ export default function render(ctx) {
     `<section class="hero" data-hero>
       <div class="wrap wrap--wide hero__in">
         <div class="hero__t">
-          ${C.eyebrow(h.hero.eyebrow, "", "eyebrow--hero rv")}
+          <div class="sovereign-badge rv" style="--i:0.5; margin-bottom: 1.15rem;">
+            <span class="chip chip--accent" style="display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.4rem 1.05rem; font-size: 0.85rem; font-weight: 700; border-radius: 999px;">
+              <span class="dot" aria-hidden="true"></span>
+              ${esc(h.hero.eyebrow)}
+            </span>
+          </div>
           <h1 class="d-hero">${heroLines}</h1>
           <p class="lede hero__lede rv" style="--i:3">${h.hero.lede}</p>
-          <div class="btn-row hero__cta rv" style="--i:4">
-            ${C.btn({ href: "/contact", label: "ابدأ مشروعك", kind: "primary" })}
-            ${C.btn({ href: "/work", label: "شاهد الأعمال", kind: "ghost", arrow: false })}
+          <div class="btn-row hero__cta rv" style="--i:4; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+            ${C.btn({ href: "/contact", label: t("ابدأ مشروعك", "Start Your Project"), kind: "primary" })}
+            <a href="${isEn ? "/assets/dossier/Awalim_Group_Executive_Dossier_2026_EN.pdf" : "/assets/dossier/Awalim_Group_Executive_Dossier_2026.pdf"}" download class="btn btn--outline" title="${t("تحميل ملف الأعمال التنفيذي 2026 PDF", "Download Executive Portfolio 2026 PDF")}">
+              <span>${icon("pdf", "dash-btn-svg")} ${t("ملف الأعمال التنفيذي (PDF)", "Executive Portfolio (PDF)")}</span>
+            </a>
+            ${C.btn({ href: "/work", label: t("شاهد الأعمال", "View Work"), kind: "ghost", arrow: false })}
             <span class="chip chip--accent chip--pulse"><span class="dot" aria-hidden="true"></span>${esc(site.contact.availability)}</span>
           </div>
           <div class="hero__meta rv" style="--i:5">

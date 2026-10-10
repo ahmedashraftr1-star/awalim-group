@@ -57,10 +57,11 @@
   --shadow-dev:    0 40px 90px -36px rgba(0, 0, 0, .32);
 
   /* ---- sovereign glass & spring physics ---- */
-  --glass-bg:      color-mix(in srgb, var(--surface) 78%, transparent);
-  --glass-border:  color-mix(in srgb, var(--border) 60%, transparent);
-  --glass-sheen:   inset 0 1px 1px 0 rgba(255, 255, 255, 0.5);
-  --shadow-glass:  0 12px 36px -10px rgba(0, 0, 0, 0.08);
+  --glass-bg:      color-mix(in srgb, var(--surface) 82%, transparent);
+  --glass-border:  color-mix(in srgb, var(--border) 70%, transparent);
+  --glass-sheen:   inset 0 1px 1px 0 rgba(255, 255, 255, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  --apple-specular: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  --shadow-glass:  0 16px 40px -10px rgba(0, 0, 0, 0.09), 0 0 0 1px rgba(0, 0, 0, 0.04);
   --ease-spring:   cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ---- type ---- */
@@ -186,10 +187,11 @@
   --shadow-pill:   0 0 0 1px rgba(241,240,235,.06), 0 10px 30px -14px rgba(0,0,0,.7);
   --shadow-dev:    0 40px 90px -36px rgba(0, 0, 0, .8);
 
-  --glass-bg:      color-mix(in srgb, var(--surface) 80%, transparent);
-  --glass-border:  rgba(241, 240, 235, 0.10);
-  --glass-sheen:   inset 0 1px 0 0 rgba(241, 240, 235, 0.06);
-  --shadow-glass:  0 16px 48px -12px rgba(0, 0, 0, 0.6);
+  --glass-bg:      color-mix(in srgb, var(--surface) 82%, transparent);
+  --glass-border:  rgba(241, 240, 235, 0.12);
+  --glass-sheen:   inset 0 1px 0 0 rgba(255, 255, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --apple-specular: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+  --shadow-glass:  0 20px 54px -14px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06);
   --ease-spring:   cubic-bezier(0.16, 1, 0.3, 1);
 
   color-scheme: dark;

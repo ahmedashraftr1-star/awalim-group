@@ -93,7 +93,7 @@
 /* ---------- 2 & 3. BUTTONS ---------- */
 .btn { --bg: transparent; --fg: var(--text); --bd: var(--border-2); display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); padding: 16px 28px; border-radius: var(--r-pill); background: var(--bg); color: var(--fg); border: 1px solid var(--bd); font-size: var(--fs-sm); font-weight: var(--w-semibold); white-space: nowrap; cursor: pointer; text-align: center; line-height: 1.2; transition: background-color var(--d-fast) var(--ease-spring), border-color var(--d-fast) ease, color var(--d-fast) ease, transform var(--d-fast) var(--ease-spring), box-shadow var(--d-fast) ease; }
 .btn:hover { transform: translateY(-2px); }
-.btn:active { transform: translateY(0); }
+.btn:active { transform: scale(0.97); }
 .btn--primary { --bg: var(--btn-bg); --fg: var(--btn-fg); --bd: transparent; box-shadow: var(--shadow-pill), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
 .btn--primary:hover { --bg: var(--btn-bg-h); box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
 .btn--primary:hover { --bg: var(--btn-bg-h); }
@@ -216,7 +216,7 @@
   position: relative; display: grid; gap: clamp(var(--space-5), 3vw, var(--space-7));
   background: var(--card-bg); color: var(--card-fg);
   border-radius: var(--r-xl); padding: clamp(var(--space-6), 4vw, 56px);
-  box-shadow: var(--shadow-card); overflow: hidden; isolation: isolate;
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.16); overflow: hidden; isolation: isolate;
   transition: transform var(--d-slow) var(--ease-out), box-shadow var(--d-slow) ease;
 }
 .hcard::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 50% at var(--gx, 85%) 0%, color-mix(in srgb, var(--card-accent) 22%, transparent), transparent 70%); pointer-events: none; z-index: -1; }
@@ -265,7 +265,8 @@
 .dev__bar i { inline-size: 9px; block-size: 9px; border-radius: 50%; background: #3B3B44; }
 .dev__bar i:nth-child(1) { background: #FF5F57; } .dev__bar i:nth-child(2) { background: #FEBC2E; } .dev__bar i:nth-child(3) { background: #28C840; }
 .dev__url, .dev__tab { margin-inline-start: auto; font-family: var(--font-mono); font-size: .68rem; padding: 3px 10px; border-radius: var(--r-pill); background: #26262C; direction: ltr; }
-.dev--browser, .dev--figma, .dev--cockpit { border-radius: var(--r-md); overflow: hidden; box-shadow: var(--shadow-dev); border: 1px solid rgba(0,0,0,.25); background: #1B1B1F; }
+.dev--browser, .dev--figma, .dev--cockpit { border-radius: var(--r-md); overflow: hidden; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2), var(--shadow-dev); border: 1px solid rgba(0, 0, 0, 0.35); background: #1B1B1F; position: relative; }
+.dev--browser::before, .dev--figma::before { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.01) 30%, transparent 60%); pointer-events: none; z-index: 3; }
 .dev--frame .dev__screen--frame { border-radius: var(--r-md); box-shadow: var(--shadow-dev); }
 .dev--frame .dev__screen--frame img { aspect-ratio: 3 / 2; }
 /* phone */
@@ -277,9 +278,10 @@
 [dir="rtl"] .dev__notch { transform: translateX(50%); }
 /* laptop */
 .dev--laptop { padding-inline: 4%; }   /* the base is 8% wider than the lid, so the lid gives that width back — nothing overflows the container */
-.dev--laptop .dev__lid { border-radius: var(--r-md) var(--r-md) 4px 4px; overflow: hidden; border: 1px solid rgba(0,0,0,.3); box-shadow: var(--shadow-dev); background: #1B1B1F; }
+.dev--laptop .dev__lid { border-radius: var(--r-md) var(--r-md) 4px 4px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.14); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.22), var(--shadow-dev); background: #1B1B1F; position: relative; }
+.dev--laptop .dev__lid::before { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.01) 32%, transparent 60%); pointer-events: none; z-index: 3; }
 .dev--laptop .dev__screen img { aspect-ratio: 16 / 10; }
-.dev__base { block-size: 14px; margin-inline: -4%; border-radius: 0 0 14px 14px; background: linear-gradient(#2A2A30, #141418); box-shadow: 0 12px 30px -14px rgba(0,0,0,.6); }
+.dev__base { block-size: 14px; margin-inline: -4%; border-radius: 0 0 14px 14px; background: linear-gradient(180deg, #34343C 0%, #1A1A20 60%, #0E0E12 100%); box-shadow: 0 14px 32px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.22); }
 /* figma */
 .dev__figma { display: grid; grid-template-columns: 34px 1fr; background: #2C2C2C; }
 .dev__tools { display: grid; align-content: start; gap: 10px; padding: 12px 8px; }
@@ -355,12 +357,21 @@
 .ftr__top:hover { transform: translateY(-3px); border-color: var(--text); }
 .ftr__top svg { inline-size: 16px; block-size: 16px; }
 
-/* ---------- CTA BAND ---------- */
-.band { text-align: center; padding-block: calc(var(--sec-y) / 1.6); border-block: 1px solid var(--border); background: var(--surface-2); position: relative; overflow: hidden; max-width: 100%; }
-.band::before { content: ""; position: absolute; inset-inline-start: 50%; inset-block-end: -60%; inline-size: min(900px, 100vw); aspect-ratio: 1; transform: translateX(-50%); background: radial-gradient(circle, var(--accent-glow), transparent 62%); pointer-events: none; }
+/* ---------- CTA BAND (closing band: lead copy + executive dossier card) ---------- */
+.band { text-align: start; padding-block: clamp(var(--space-8), 6vw, var(--space-10)); border-block: 1px solid var(--border); background: var(--surface-2); position: relative; overflow: hidden; max-width: 100%; isolation: isolate; }
+.band::before { content: ""; position: absolute; inset-inline-start: 50%; inset-block-end: -60%; inline-size: min(900px, 100vw); aspect-ratio: 1; transform: translateX(-50%); background: radial-gradient(circle, var(--accent-glow), transparent 62%); pointer-events: none; z-index: -1; }
 [dir="rtl"] .band::before { transform: translateX(50%); }
-.band .wrap { position: relative; display: grid; gap: var(--space-5); justify-items: center; max-width: 100%; }
-.band .lede { text-align: center; }
+.band .wrap { position: relative; max-width: 100%; }
+.band__grid { display: grid; gap: clamp(var(--space-6), 4vw, var(--space-9)); align-items: center; }
+@media (min-width: 960px) { .band__grid { grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.75fr); } }
+.band__lead { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); min-inline-size: 0; }
+.band__h { max-inline-size: 22ch; margin: 0; }
+.band__lede { max-inline-size: 62ch; margin: 0; text-align: start; }
+.band__actions { margin-block-start: var(--space-2); }
+.band__trust { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); font-size: var(--fs-sm); color: var(--text-muted); }
+.band__trust li { display: inline-flex; align-items: center; gap: .45rem; }
+.band__trust .dot { inline-size: 6px; block-size: 6px; border-radius: 50%; background: var(--accent); flex: none; }
+.band__card { min-inline-size: 0; }
 
 /* ---------- CARD (generic surface) ---------- */
 .card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: clamp(var(--space-5), 2.5vw, var(--space-7)); display: grid; gap: var(--space-3); align-content: start; box-shadow: var(--shadow-glass), var(--glass-sheen); transition: border-color var(--d-fast) ease, transform var(--d-fast) var(--ease-spring), box-shadow var(--d-fast) ease, background-color var(--d-base) ease; }

@@ -46,7 +46,7 @@
       "lat": 31.282,
       "lng": 34.254,
       "status": "ACTIVE",
-      "powerSource": "Direct Satellite Link (91%)",
+      "powerSource": "Dedicated 5G & Fiber Link (91%)",
       "meshPeers": 5,
       "bandwidthKbps": 512,
       "priority": "urgent",

@@ -5,6 +5,11 @@
    colour come from tokens via CSS custom properties.
    ========================================================================== */
 import { esc, attrs, join, num, fill, bdi } from "./html.mjs";
+import { readFileSync, existsSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { join as joinPath, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+const ROOT = joinPath(dirname(fileURLToPath(import.meta.url)), "..", "..");
 import { icon } from "./icons.mjs";
 
 /* ---------- inline pieces ---------- */
@@ -124,7 +129,7 @@ const img = (src, alt, { w = 1000, h = 750, lazy = true } = {}) =>
   `<img src="${src}" alt="${esc(alt)}" width="${w}" height="${h}" ${lazy ? 'loading="lazy"' : 'fetchpriority="high"'} decoding="async">`;
 
 export const device = ({ kind = "browser", src, alt = "", tilt = true, parallax = true, lazy = true, label = "", inner = "" }) => {
-  const a = attrs({ class: `dev dev--${kind}${tilt ? " dev--tilt" : ""}`, "data-parallax": parallax ? "" : null, role: inner ? "img" : null, "aria-label": inner ? alt : null });
+  const a = attrs({ class: `dev dev--${kind}${tilt ? " dev--tilt" : ""}`, "data-tilt": tilt ? "" : null, "data-parallax": parallax ? "" : null, role: inner ? "img" : null, "aria-label": inner ? alt : null });
   const screen = inner ? inner : src ? img(src, alt, { lazy }) : "";
   switch (kind) {
     case "phone":
@@ -143,7 +148,7 @@ export const device = ({ kind = "browser", src, alt = "", tilt = true, parallax 
 
 /** Live sovereign multi-console — interactive mock used in hero, product and case pages. */
 export const cockpit = ({ tilt = true, parallax = true, live = true, cls = "", interactive = false } = {}) => `
-  <div${attrs({ class: `dev dev--cockpit${tilt ? " dev--tilt" : ""}${cls ? " " + cls : ""}`, "data-parallax": parallax ? "" : null, "data-cockpit": live ? "" : null, "data-ledger": interactive ? "" : null, "data-cursor": interactive ? "جرّب" : null, role: interactive ? "group" : "img", "aria-label": interactive ? "لوحة قيادة تفاعلية لمحاسب ذكي: صوِّر فاتورة أو سجّل مبيعة ليقترح النظام قيداً مزدوجاً متوازناً تعتمده" : "لقطة توضيحية من لوحة قيادة محاسب ذكي تعرض الإيرادات والمصروفات وصافي التدفّق وآخر قيد مُسجَّل متوازناً" })}>
+  <div${attrs({ class: `dev dev--cockpit${tilt ? " dev--tilt" : ""}${cls ? " " + cls : ""}`, "data-tilt": tilt ? "" : null, "data-parallax": parallax ? "" : null, "data-cockpit": live ? "" : null, "data-ledger": interactive ? "" : null, "data-cursor": interactive ? "جرّب" : null, role: interactive ? "group" : "img", "aria-label": interactive ? "لوحة قيادة تفاعلية لمحاسب ذكي: صوِّر فاتورة أو سجّل مبيعة ليقترح النظام قيداً مزدوجاً متوازناً تعتمده" : "لقطة توضيحية من لوحة قيادة محاسب ذكي تعرض الإيرادات والمصروفات وصافي التدفّق وآخر قيد مُسجَّل متوازناً" })}>
     <div class="dev__bar" aria-hidden="false">
       <div class="dev__dots" aria-hidden="true"><i></i><i></i><i></i></div>
       ${interactive ? `
@@ -280,7 +285,7 @@ export const scopeEstimator = (site, isEn = false) => `
   </div>
 </section>`;
 
-export const themeStyle = (t) => `--l-bg:${t.bg};--l-fg:${t.fg};--l-dim:${t.dim};--l-accent:${t.accent};--d-bg:${t.dark.bg};--d-fg:${t.dark.fg};--d-dim:${t.dark.dim};--d-accent:${t.dark.accent}`;
+export const themeStyle = (t) => (!t || !t.bg || !t.dark) ? "" : `--l-bg:${t.bg};--l-fg:${t.fg};--l-dim:${t.dim};--l-accent:${t.accent};--d-bg:${t.dark.bg};--d-fg:${t.dark.fg};--d-dim:${t.dark.dim};--d-accent:${t.dark.accent}`;
 
 /* ---------- HERO CARD (case / product) — section 3.4 #5 ---------- */
 /* A case's own results, as the case study states them (cases.json → impact):
@@ -311,7 +316,7 @@ export const heroCard = ({ theme, themes, code, status = "live", kind, title, he
     : image ? device({ kind: dev || "browser", src: image, alt: alt || title, lazy, tilt, label: title })
     : "";
   return `
-  <article${attrs({ class: `hcard themed rv${t.ink ? " hcard--ink" : ""}${center || !media ? " hcard--center" : ""}`, id: id || null, style, "data-cursor": "افتح", "data-tilt": media && dev !== "cockpit" ? "" : null })} data-theme-card="${theme}">
+  <article${attrs({ class: `hcard themed rv${t.ink ? " hcard--ink" : ""}${center || !media ? " hcard--center" : ""}`, id: id || null, style, "data-cursor": "افتح", "data-tilt": media ? "" : null })} data-theme-card="${theme}">
     <div class="hcard__t">
       <div class="hcard__eyebrow">${syscode(code, status)}${kind ? `<span class="hcard__kind">${esc(kind)}</span>` : ""}</div>
       <h${level} class="hcard__h d-2"><a href="${href}"><span class="hcard__name" ${/[A-Za-z]/.test(title) ? 'lang="en"' : ""}>${esc(title)}</span> <span class="hcard__sub">— ${headline}</span></a></h${level}>
@@ -358,15 +363,66 @@ export const accordion = (items, { name = "faq", cls = "" } = {}) => `
   </div>`;
 
 /* ---------- CTA band ---------- */
-export const ctaBand = ({ eyebrowAr = "الخطوة التالية", h, lede, primary, site, wa = true, cls = "" }) => `
-  <section class="band rv${cls ? " " + cls : ""}">
-    <div class="wrap">
-      ${eyebrow(eyebrowAr, "", "eyebrow--center")}
-      <h2 class="d-1">${h}</h2>
-      ${lede ? `<p class="lede">${lede}</p>` : ""}
-      ${btnRow([btn(primary), wa ? waLink(site) : ""], "btn-row--center")}
+/* The executive dossier is a real file: its size and SHA-256 are read from
+   disk at build time so the card can never claim a hash it does not have. */
+const DOSSIER = (() => {
+  const out = {};
+  for (const [k, file] of [["ar", "Awalim_Group_Executive_Dossier_2026.pdf"], ["en", "Awalim_Group_Executive_Dossier_2026_EN.pdf"]]) {
+    const p = joinPath(ROOT, "assets/dossier", file);
+    if (!existsSync(p)) continue;
+    const buf = readFileSync(p);
+    const sha = createHash("sha256").update(buf).digest("hex");
+    out[k] = { href: `/assets/dossier/${file}`, mb: (buf.length / 1048576).toFixed(1), sha, short: `${sha.slice(0, 4)}…${sha.slice(-4)}` };
+  }
+  return out;
+})();
+export const dossier = (isEn = false) => DOSSIER[isEn ? "en" : "ar"] || DOSSIER.ar || null;
+
+export const ctaBand = ({ eyebrowAr = "الخطوة التالية", h, lede, primary, site, wa = true, cls = "" }) => {
+  const d = dossier(!!(site && site.locale === "en"));
+  const st = (site && site.stats) || {};
+  const sv = (k) => (st[k] ? `${st[k].prefix || ""}${num(st[k].value)}${st[k].suffix || ""}` : "");
+  const stat = (k) => st[k] ? `<div class="dossier-stat"><span class="dossier-stat__val mono" dir="ltr">${sv(k)}</span><span class="dossier-stat__lbl">${esc(st[k].label)}</span></div>` : "";
+  return `
+  <section class="band rv${cls ? " " + cls : ""}" data-sovereign-band>
+    <div class="wrap wrap--wide">
+      <div class="band__grid">
+        <div class="band__lead">
+          ${eyebrow(eyebrowAr, "", "")}
+          <h2 class="d-1 band__h">${h}</h2>
+          ${lede ? `<p class="lede band__lede">${lede}</p>` : ""}
+          ${btnRow([btn(primary), wa ? waLink(site) : "", d ? `<a href="${d.href}" download class="btn btn--outline"><span>${icon("pdf", "btn__ic")} ملف الأعمال التنفيذي (PDF)</span></a>` : ""], "band__actions")}
+          <ul class="band__trust" aria-label="ما نلتزم به">
+            <li><span class="dot" aria-hidden="true"></span>${esc((site && site.contact && site.contact.responseTime) || "نعود إليك خلال يومَي عمل")}</li>
+            <li><span class="dot" aria-hidden="true"></span>الكود ملك لك بالكامل</li>
+            <li><span class="dot" aria-hidden="true"></span>أرقام منشورة موقّعة وقابلة للتحقّق</li>
+          </ul>
+        </div>
+        ${d ? `
+        <aside class="band__card" aria-label="ملف الأعمال التنفيذي">
+          <div class="dossier-card">
+            <div class="dossier-card__hd">
+              <span class="mono dossier-card__code" dir="ltr">DOSSIER · 2026</span>
+              <span class="dossier-card__seal"><span class="dot" aria-hidden="true"></span>PDF · ${d.mb} MB</span>
+            </div>
+            <h3 class="d-2 dossier-card__title">ملف الأعمال التنفيذي</h3>
+            <p class="dossier-card__sub">دراسات الحالة والمنتجات كما بُنيت، في ملف واحد يُقرأ دون اتصال. الأرقام فيه هي الأرقام الموقّعة نفسها المنشورة على الموقع.</p>
+            <div class="dossier-card__stats">
+              ${["systemsDelivered", "clientCountries", "engineersTrained", "yearsBuilding"].map((k) => stat(k)).join("")}
+            </div>
+            <div class="dossier-card__ft">
+              <a href="${d.href}" download class="dossier-btn-download">${icon("download", "btn__ic")}<span>تنزيل ملف الأعمال (PDF)</span></a>
+              <div class="dossier-card__meta">
+                <span class="small mono" dir="ltr" title="SHA-256: ${d.sha}">SHA-256 ${d.short}</span>
+                <a href="/verify" class="small">تحقّق من الأرقام الموقّعة ←</a>
+              </div>
+            </div>
+          </div>
+        </aside>` : ""}
+      </div>
     </div>
   </section>`;
+};
 
 /* ---------- journal post card ---------- */
 export const postCard = (a, { lazy = true } = {}) => `
@@ -1527,7 +1583,7 @@ export const clientWall = (clients = []) => {
   return `<section class="sec sec--tight" aria-labelledby="clients-h">
     <div class="wrap wrap--wide">
       <h2 class="clients__h rv" id="clients-h">يعمل معنا</h2>
-      <ul class="clients rv" data-stagger>${list.map((c) => `<li class="clients__i">${c.url ? `<a href="${esc(c.url)}" rel="noopener" target="_blank">` : ""}<img src="${esc(c.logo)}" alt="${esc(c.name)}" loading="lazy" decoding="async">${c.url ? "</a>" : ""}</li>`).join("")}</ul>
+      <ul class="clients rv" data-stagger>${list.map((c) => `<li class="clients__i">${c.url ? `<a href="${esc(c.url)}" rel="noopener" target="_blank">` : ""}<img src="${esc(c.logo)}" alt="${esc(c.name)}" width="160" height="40" loading="lazy" decoding="async">${c.url ? "</a>" : ""}</li>`).join("")}</ul>
     </div>
   </section>`;
 };

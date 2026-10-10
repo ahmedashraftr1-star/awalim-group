@@ -112,6 +112,10 @@
           {
             "href": "/journal",
             "label": "Journal"
+          },
+          {
+            "href": "/assets/dossier/Awalim_Group_Executive_Dossier_2026_EN.pdf",
+            "label": "Executive Portfolio (PDF)"
           }
         ]
       },

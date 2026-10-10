@@ -99,6 +99,7 @@ const readLabel = (a, locale) => {
 
 const buildCtx = (locale) => {
   const s = hydrate(readLocale("site.json", locale));
+  s.locale = locale; /* components that receive `site` (ctaBand) pick the locale-specific asset from this */
   const casesJson = hydrate(readLocale("cases.json", locale));
   const productsJson = hydrate(readLocale("products.json", locale));
   const journalJson = hydrate(readLocale("journal.json", locale));

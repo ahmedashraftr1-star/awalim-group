@@ -1158,5 +1158,13 @@
   "مطابقة حركات البنك — 42 حركة": "Matching bank transactions — 42 transactions",
   "تسوية الحسابات — 3 فروقات تحتاج مراجعة": "Account settlement — 3 discrepancies need review",
   "قيد تسوية بأثر مالي — بانتظار اعتماد بشري": "A settlement entry with financial impact — awaiting human approval",
-  "تجميع تقرير الإقفال": "Compiling the closing report"
+  "تجميع تقرير الإقفال": "Compiling the closing report",
+  "ملف الأعمال التنفيذي (PDF)": "Executive Portfolio (PDF)",
+  "ملف الأعمال التنفيذي": "Executive Portfolio",
+  "ما نلتزم به": "What we commit to",
+  "الكود ملك لك بالكامل": "The code is entirely yours",
+  "أرقام منشورة موقّعة وقابلة للتحقّق": "Published numbers, signed and verifiable",
+  "دراسات الحالة والمنتجات كما بُنيت، في ملف واحد يُقرأ دون اتصال. الأرقام فيه هي الأرقام الموقّعة نفسها المنشورة على الموقع.": "The case studies and products as they were built, in one file that reads offline. Its numbers are the same signed figures published on this site.",
+  "تنزيل ملف الأعمال (PDF)": "Download the portfolio (PDF)",
+  "تحقّق من الأرقام الموقّعة ←": "Verify the signed numbers →"
 }
