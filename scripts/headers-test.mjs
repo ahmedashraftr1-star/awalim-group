@@ -52,6 +52,25 @@ for (const p of SAMPLES) {
   ok(!diff.length, `${p}`, diff.join("\n     "));
 }
 
+/* ---- .htaccess: the production host (Hostinger/LiteSpeed) reads only this ---- */
+console.log("\n.htaccess carries the same headers and redirects");
+{
+  const ht = readFileSync(join(ROOT, ".htaccess"), "utf8");
+  const set = Object.fromEntries([...ht.matchAll(/^\s*Header always set (\S+) "((?:[^"\\]|\\.)*)"\s*$/gm)].map((m) => [m[1], m[2].replace(/\\"/g, '"')]));
+  const root = applied(headersRules, "/");
+  ok(Object.keys(set).length > 0, `.htaccess parsed: ${Object.keys(set).length} 'Header always set' lines`);
+  ok(!!set["Content-Security-Policy"] && set["Content-Security-Policy"] === root["Content-Security-Policy"],
+    ".htaccess CSP equals _headers CSP",
+    `.htaccess «${(set["Content-Security-Policy"] || "—").slice(0, 120)}…»`);
+  const diff = Object.keys(root).filter((k) => k !== "Cache-Control" && set[k] !== root[k]).map((k) => `${k}: _headers «${root[k]}» vs .htaccess «${set[k] ?? "—"}»`);
+  ok(!diff.length, "every security header in _headers is set identically in .htaccess", diff.join("\n     "));
+  const redirects = readFileSync(join(ROOT, "_redirects"), "utf8").split("\n").filter((l) => l.trim() && !l.startsWith("#")).map((l) => l.trim().split(/\s+/));
+  const missingR = redirects.filter(([from, to, s]) => !ht.includes(`RewriteRule ^${from.slice(1).replace(/\./g, "\\.")}`) || !ht.includes(` ${to} [R=${s},L]`)).map((r) => r.join(" "));
+  ok(redirects.length > 0 && !missingR.length, `all ${redirects.length} _redirects rules are in .htaccess`, missingR.join("\n     "));
+  ok(/ErrorDocument 404 \/404\.html/.test(ht) && /ErrorDocument 404 \/en\/404\/index\.html/.test(ht), "Arabic and English ErrorDocument 404 declared");
+  ok(/RedirectMatch 404 .*\\\.keys/.test(ht), "private paths (.keys, src, …) answer 404");
+}
+
 /* ---- the policy has to be able to run the pages ---- */
 console.log("\nthe policy can run the pages it ships with");
 const csp = applied(headersRules, "/")["Content-Security-Policy"] || "";

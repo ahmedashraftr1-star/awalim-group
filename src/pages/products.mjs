@@ -2,72 +2,11 @@ import { esc, fill, join, seoTitle } from "../lib/html.mjs";
 import { page, breadcrumbSchema } from "../lib/layout.mjs";
 import * as C from "../lib/components.mjs";
 
-const PRODUCT_META = {
-  "smart-accountant": {
-    category: "fintech",
-    badgeAr: "معتمد IFRS · جاهز للعزل التام (Air-Gapped)",
-    badgeEn: "IFRS ACCREDITED · AIR-GAPPED READY",
-    domainAr: "أنظمة مالية ومحاسبة",
-    domainEn: "Sovereign FinTech & ERP",
-    icon: ""
-  },
-  "rahmacare": {
-    category: "mesh",
-    badgeAr: "شبكة هجينة P2P · صفرية التبعية للإنترنت",
-    badgeEn: "P2P LORA MESH · ZERO INTERNET DEPENDENCY",
-    domainAr: "رعاية صحية وشبكات طوارئ",
-    domainEn: "Emergency Mesh & Health",
-    icon: ""
-  },
-  "vibe-os": {
-    category: "os-ai",
-    badgeAr: "نظام تشغيل زجاجي سيادي · فيزياء نابضية حية",
-    badgeEn: "GLASS MATRIX OS · MASS & MAGNETISM",
-    domainAr: "أنظمة تشغيل وواجهات",
-    domainEn: "Glass OS & Web Physics",
-    icon: ""
-  },
-  "ai-lab": {
-    category: "os-ai",
-    badgeAr: "استدلال محلي مشفر · حماية تامة من التسريب",
-    badgeEn: "LOCAL LLM INFERENCE · ZERO DATA LEAK",
-    domainAr: "ذكاء اصطناعي سيادي",
-    domainEn: "Private AI & Local LLM",
-    icon: ""
-  },
-  "jameel-store": {
-    category: "commerce",
-    badgeAr: "تجارة فائقة السرعة · كاش غير متزامن",
-    badgeEn: "SUB-MILLISECOND COMMERCE · ED25519 SIGNED",
-    domainAr: "متاجر ومنصات تجارية",
-    domainEn: "High-Velocity Commerce",
-    icon: ""
-  },
-  "web-platforms": {
-    category: "commerce",
-    badgeAr: "منصات ويب سيادية · صفرية الديون البرمجية",
-    badgeEn: "SOVEREIGN WEB ARCHITECTURE",
-    domainAr: "منصات وبوابات رقمية",
-    domainEn: "Sovereign Web Portals",
-    icon: ""
-  },
-  "brand-studio": {
-    category: "commerce",
-    badgeAr: "هوية رقمية قياسية · معايير آبل العالمية",
-    badgeEn: "APPLE STANDARDS DESIGN SUITE",
-    domainAr: "تصميم وهويات بصرية",
-    domainEn: "Design & Brand Systems",
-    icon: ""
-  },
-  "close-orchestrator": {
-    category: "os-ai",
-    badgeAr: "بوابة اعتماد بشري · يعمل فوق محاسب ذكي",
-    badgeEn: "HUMAN APPROVAL GATE · RUNS ON SMART ACCOUNTANT",
-    domainAr: "وكلاء وإقفال محاسبي",
-    domainEn: "AI Agents & Month-End Close",
-    icon: ""
-  }
-};
+/* The index used to carry a category/badge table (PRODUCT_META) feeding filter
+   chips, a live search and claim badges («IFRS ACCREDITED», «SUB-MILLISECOND
+   COMMERCE»…) nobody had certified. Eight products don't need a search box,
+   and an unbacked badge costs a CFO's trust; the list now reads straight from
+   products.json, one card per product. */
 
 export function renderIndex(ctx) {
   const { site, stats, themes, pages, products } = ctx;
@@ -78,81 +17,32 @@ export function renderIndex(ctx) {
   const body = join([
     `<section class="phero">
       <div class="wrap wrap--wide">
-        ${C.eyebrow(t("المنتجات", "Products"), "SYS INDEX · ZERO DEBT PLATFORMS", "rv")}
+        ${C.eyebrow(t("المنتجات", "Products"), "PRODUCTS", "rv")}
         <h1 class="d-hero rv" style="--i:1">${p.h}</h1>
         <p class="lede rv" style="--i:2">${p.lede}</p>
 
       </div>
     </section>`,
 
-    `<!-- Interactive Filter & Live Search Bar -->
-    <div class="prod-filter-bar wrap wrap--wide rv" id="prod-filter-suite" style="--i:3">
-      <div class="prod-filter-tabs" role="tablist" aria-label="${t("تصفية الأنظمة والمنتجات", "Filter Systems & Products")}">
-        <button type="button" class="prod-tab is-active active" data-filter="all" role="tab" aria-selected="true" aria-pressed="true">
-          ${t("الكل", "All")} <span class="prod-tab-badge">8</span>
-        </button>
-        <button type="button" class="prod-tab" data-filter="fintech" role="tab" aria-selected="false" aria-pressed="false">
-          ${t("الأنظمة المالية والمحاسبية", "FinTech & ERP")} <span class="prod-tab-badge">1</span>
-        </button>
-        <button type="button" class="prod-tab" data-filter="mesh" role="tab" aria-selected="false" aria-pressed="false">
-          ${t("الصحة وشبكات الطوارئ", "Health & Mesh")} <span class="prod-tab-badge">1</span>
-        </button>
-        <button type="button" class="prod-tab" data-filter="os-ai" role="tab" aria-selected="false" aria-pressed="false">
-          ${t("أنظمة التشغيل والذكاء", "OS & Private AI")} <span class="prod-tab-badge">3</span>
-        </button>
-        <button type="button" class="prod-tab" data-filter="commerce" role="tab" aria-selected="false" aria-pressed="false">
-          ${t("المتاجر والهوية الرقمية", "Commerce & Studio")} <span class="prod-tab-badge">3</span>
-        </button>
-      </div>
-
-      <div class="prod-search-wrapper">
-        <label for="input-prod-search" class="sr-only">${t("بحث فوري في مواصفات الأنظمة", "Instant search in system specifications")}</label>
-        <div class="prod-search-box">
-          <span class="prod-search-icon" aria-hidden="true"></span>
-          <input type="search" id="input-prod-search" class="prod-search-input" autocomplete="off" placeholder="${t("ابحث في المنتجات: محاسبة، صحة، متجر…", "Search products: accounting, health, store…")}">
-          <span class="prod-count-pill" id="prod-counter-display">${t("عرض 8 من 8 أنظمة", "Showing 8 of 8 systems")}</span>
-        </div>
-      </div>
-    </div>`,
-
     `<section class="sec sec--tight">
       <div class="wrap wrap--wide">
-        <div class="hcards hcards--grid" id="prod-items-grid">
-          ${products.map((x, i) => {
-            const meta = PRODUCT_META[x.slug] || { category: "commerce", badgeAr: "نظام سيادي", badgeEn: "Sovereign System", icon: "" };
-            const cardMarkup = C.heroCard({
-              ...x,
-              themes,
-              href: `/products/${x.slug}`,
-              image: x.image,
-              alt: x.title,
-              metric: { platform: x.tags[0], standard: x.tags[1], honor: x.kind },
-              ctaLabel: t("استعرض", "Explore"),
-              stats,
-              lazy: i > 0,
-              tags: x.tags,
-              level: 2
-            });
-
-            const searchTokens = [
-              x.slug,
-              x.title,
-              x.headline,
-              x.summary,
-              ...(x.tags || []),
-              isEn ? meta.domainEn : meta.domainAr
-            ].join(" ").toLowerCase();
-
-            return `
-              <div class="prod-card-wrapper" data-category="${meta.category}" data-search="${esc(searchTokens)}">
-                <div class="prod-card-topbar">
-                  <span class="prod-card-domain">${esc(isEn ? meta.domainEn : meta.domainAr)}</span>
-                  <span class="prod-card-icon">${meta.icon}</span>
-                </div>
-                ${cardMarkup}
-              </div>
-            `;
-          }).join("")}
+        <div class="hcards hcards--grid">
+          ${products.map((x, i) => C.heroCard({
+            ...x,
+            themes,
+            href: `/products/${x.slug}`,
+            /* the cockpit mockup is the home hero's; here a product shows its
+               real capture or mock screen, or no picture at all */
+            device: x.device === "cockpit" ? null : x.device,
+            image: x.image,
+            alt: x.title,
+            metric: { platform: x.tags[0], standard: x.tags[1], honor: x.kind },
+            ctaLabel: t("استعرض", "Explore"),
+            stats,
+            lazy: i > 1,
+            tags: x.tags,
+            level: 2
+          })).join("")}
         </div>
       </div>
     </section>`,
@@ -182,6 +72,11 @@ export function renderIndex(ctx) {
 
 /* /products/[slug] — the rich product template (section 6.5) */
 export function renderProduct(ctx, p) {
+  /* a product whose headline opens like its own case study's would share its
+     title — the product page then names its kind instead */
+  const caseOf = (ctx.cases || []).find((c) => c.slug === p.slug);
+  const lead = (x) => String(x || "").split(/\s[—–]\s/)[0].trim();
+  const sameAsCase = !!(caseOf && lead(caseOf.headline) === lead(p.headline));
   const { site, stats, themes, cases } = ctx;
   const t = themes[p.theme] || themes.blue;
   const relatedCase = p.caseSlug ? cases.find((c) => c.slug === p.caseSlug) : null;
@@ -295,7 +190,7 @@ export function renderProduct(ctx, p) {
     path: `/products/${p.slug}`,
     html: page({
       site,
-      seo: { title: seoTitle(p.title, p.headline, "عوالِم قروب"), description: p.summary, path: `/products/${p.slug}`, ogImage: `/assets/img/og/products-${p.slug}.png`, type: "product" },
+      seo: { title: seoTitle(p.title, sameAsCase ? "" : p.headline, ctx.locale === "en" ? "Awalim Group" : "عوالِم قروب", 565, ctx.locale === "en" ? "Product" : "منتج"), description: p.summary, path: `/products/${p.slug}`, ogImage: `/assets/img/og/products-${p.slug}.png`, type: "product" },
       active: "products",
       body,
       schema: [productSchema, breadcrumbSchema(site, [{ name: "الرئيسية", path: "/" }, { name: "المنتجات", path: "/products" }, { name: p.title, path: `/products/${p.slug}` }])],

@@ -116,6 +116,10 @@
    every button on the site is inline-sized, so anchor it to the start edge */
 :is(.card, .story__card, .svc__col, .acad, .price, .track, .value, .pcard, .frow__b) > .btn { justify-self: start; align-self: start; }
 .btn-row--center { justify-content: center; }
+/* a button row never touches the paragraph above it (academy «why», home FAQ) */
+:where(p, ul, ol, blockquote) + .btn-row { margin-block-start: var(--space-5); }
+/* a list that follows a lede paragraph («The challenge» on case studies) gets air */
+:where(p) + .bullets { margin-block-start: var(--space-5); }
 .btn-row--after { margin-block-start: var(--space-7); }
 
 /* underline link grows from the inline-start (logical) side */
@@ -291,7 +295,7 @@
 /* cockpit (live accounting mock) */
 .dev--cockpit { background: var(--surface); border-color: var(--border); }
 .dev--cockpit .dev__bar { background: var(--surface-2); color: var(--text-muted); border-block-end: 1px solid var(--border); }
-.dev--cockpit .dev__url { background: var(--surface-3); color: var(--text-2); direction: rtl; }
+.dev--cockpit .dev__url { background: var(--surface-3); color: var(--text-2); }
 .cockpit { padding: clamp(var(--space-4), 1.6vw, var(--space-5)); display: grid; gap: var(--space-3); background: var(--surface); }
 .cockpit__kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
 .cockpit__kpi { padding: var(--space-3); border-radius: var(--r-sm); background: var(--surface-2); border: 1px solid var(--border); min-width: 0; }
@@ -741,6 +745,14 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
 .mk__code b { color: #7FE0D2; font-weight: 500; }
 .mk__note { font-size: 10.5px; color: var(--mk-fg); padding-inline-start: 8px; border-inline-start: 2px solid var(--mk-acc); }
 .mk__note small { display: block; color: var(--mk-dim); }
+/* the academy screen fills its frame: rows stretch, and a 12-week strip sits
+   at the foot (it was a 4:3 screen with content in the top half only) */
+.mk--academy .mk__body { grid-template-rows: auto 1fr auto; align-content: stretch; }
+.mk--academy .mk__list { grid-auto-rows: 1fr; }
+.mk__weeks { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 4px; direction: ltr; }
+.mk__weeks i { display: grid; place-items: center; block-size: 26px; border-radius: 6px; border: 1px solid var(--mk-line); background: var(--mk-card); font-style: normal; font-family: var(--font-mono); font-size: 9px; color: var(--mk-dim); }
+.mk__weeks i.is-done { background: color-mix(in srgb, var(--mk-acc) 14%, var(--mk-card)); border-color: color-mix(in srgb, var(--mk-acc) 30%, transparent); color: var(--mk-acc); }
+.mk__weeks i.is-now { background: var(--mk-acc); border-color: var(--mk-acc); color: #fff; }
 /* vibe os surface */
 .mk--vibe { background: radial-gradient(80% 70% at 20% 10%, #1E2C7A 0%, #111C4E 45%, #0B1233 100%); grid-template-rows: auto 1fr auto; }
 .mk--vibe .mk__hd { border: 0; font-family: var(--font-mono); font-size: 10px; color: #B8C2F0; }
@@ -761,7 +773,7 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
 .mk__dock i:nth-child(2) { background: linear-gradient(135deg, #F5E7DA, #D8B98F); } .mk__dock i:nth-child(3) { background: linear-gradient(135deg, #7FE0D2, #0E7A6F); } .mk__dock i:nth-child(4) { background: linear-gradient(135deg, #C9BBFF, #6C5CE7); } .mk__dock i:nth-child(5) { background: #F5F5F3; }
 /* agent console */
 .mk--agent { --mk-bg: #0B0C0E; grid-template-rows: auto 1fr; font-family: var(--font-mono); }
-.mk__log { padding: 10px 14px; display: grid; gap: 7px; align-content: start; font-size: 11px; direction: rtl; }
+.mk__log { padding: 10px 14px; display: grid; gap: 7px; align-content: start; font-size: 11px; }
 .mk__ln { display: grid; grid-template-columns: 18px 1fr; gap: 8px; align-items: start; color: #C9CCD2; }
 .mk__ln .k { color: var(--mk-acc); }
 .mk__ln .j { font-family: var(--font-mono); direction: ltr; unicode-bidi: isolate; color: #9DB4FF; }
@@ -2764,16 +2776,30 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
 /* One quiet contact affordance: a round WhatsApp button, out of the reading
    column's way. Replaces a wide floating chat pill that covered content. */
 .contact-fab {
-  position: fixed; inset-block-end: 20px; inset-inline-start: 20px; z-index: 90;
+  position: fixed; z-index: 90;
+  inset-block-end: max(20px, calc(env(safe-area-inset-bottom) + 12px));
+  inset-inline-end: max(20px, calc(env(safe-area-inset-right) + 12px));
   display: grid; place-items: center; inline-size: 52px; block-size: 52px; border-radius: 50%;
   background: var(--surface); color: var(--accent-text); border: 1px solid var(--border-2);
   box-shadow: var(--shadow-pill);
-  transition: transform var(--d-fast) var(--ease-out), border-color var(--d-fast) ease;
+  transition: translate var(--d-fast) var(--ease-out), border-color var(--d-fast) ease;
 }
-.contact-fab:hover { transform: translateY(-2px); border-color: var(--accent-line); }
+.contact-fab:hover { translate: 0 -2px; border-color: var(--accent-line); }
 .contact-fab:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
 .contact-fab svg { inline-size: 24px; block-size: 24px; }
 @media print { .contact-fab { display: none; } }
+/* The button waits until the reader has scrolled past the first screen, so it
+   never sits on the hero's primary actions (it covered «Start Your Project» /
+   «شاهد الأعمال» at 390px). Scroll-driven where supported; elsewhere it stays
+   visible in the inline-end corner, which is clear of the start-aligned CTAs. */
+@supports (animation-timeline: scroll()) {
+  .contact-fab { animation: fab-reveal linear both; animation-timeline: scroll(root block); animation-range: 0 100vh; }
+  @keyframes fab-reveal {
+    0%, 70% { opacity: 0; visibility: hidden; }
+    100% { opacity: 1; visibility: visible; }
+  }
+}
+@media (max-width: 480px) { .contact-fab { inline-size: 48px; block-size: 48px; } .contact-fab svg { inline-size: 22px; block-size: 22px; } }
 /* Internal system codes (SYS-ACC-01…) are for us, not for a buyer: the chip
    keeps its status dot and word, the code itself is not painted. */
 .syscode__code { display: none; }
@@ -2835,7 +2861,8 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
 .estimator__steps { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: grid; }
 .estimator__steps li { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); padding-block: var(--space-3); border-block-end: 1px solid var(--border); font-size: var(--fs-body); }
 .estimator__steps li:last-child { border-block-end: 0; }
-.estimator__steps b { font-weight: var(--w-semibold); white-space: nowrap; }
+.estimator__steps b { font-weight: var(--w-semibold); text-align: end; min-inline-size: 0; max-inline-size: 55%; }
+.estimator__steps li > span { min-inline-size: 0; }
 .estimator__note { margin: 0; }
 
 /* ---------- proof: client wall + testimonials ---------- */
@@ -2853,3 +2880,26 @@ body:not(.has-subnav) .pillnav[data-stuck="true"]::after { opacity: 1; pointer-e
 .tq__who img { inline-size: 48px; block-size: 48px; border-radius: 50%; object-fit: cover; }
 .tq__who b { display: block; color: var(--text); font-weight: var(--w-semibold); }
 .tq__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: var(--space-7); padding-block-start: var(--space-7); border-block-start: 1px solid var(--border-2); }
+
+/* Horizontal scrollers announce themselves (2026-10-22): a soft shadow sits on
+   whichever edge still has content behind it, and disappears once that edge is
+   reached (the covers scroll with the content, the shadows do not). Works in
+   both directions because it paints both edges. */
+.tbl-wrap, .cmp__scroll {
+  background:
+    linear-gradient(to right, var(--surface) 30%, transparent) left center / 32px 100% no-repeat local,
+    linear-gradient(to left, var(--surface) 30%, transparent) right center / 32px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, color-mix(in srgb, var(--text) 18%, transparent), transparent) left center / 12px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--text) 18%, transparent), transparent) right center / 12px 100% no-repeat scroll,
+    var(--surface);
+}
+
+/* Home hero actions on a phone: one action per row, the availability chip on
+   its own line beneath them — not squeezed beside «شاهد الأعمال». */
+@media (max-width: 600px) {
+  .hero__cta.btn-row { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: stretch; }
+  .hero__cta.btn-row > .chip { justify-self: start; margin-block-start: var(--space-1); }
+}
+/* at the very end of a page the fixed WhatsApp button would sit on the footer's
+   back-to-top control; the footer keeps a quiet strip clear for it */
+body:has(.contact-fab) .ftr__btm { margin-block-end: 64px; }

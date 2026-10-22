@@ -67,11 +67,11 @@
   },
   "work": {
     "seo": {
-      "title": "Work — systems, apps and identities delivered to real clients | Awalim Group",
+      "title": "Work — systems, apps and identities we built | Awalim Group",
       "description": "Case studies explained the way they were built: RahmaCare, Jameel Store, Vibe OS 4.0, Smart Accountant, Maya, Awalim Academy, an automotive HMI study, and Island Haven."
     },
     "h": "Work",
-    "lede": "Systems, apps and identities delivered to real clients. Not a grid of images without context — every project is explained the way it was built: what the problem was, what we decided, and why."
+    "lede": "Systems, apps and identities we built — for our clients and as our own products. Not a grid of images without context — every project is explained the way it was built: what the problem was, what we decided, and why."
   },
   "products": {
     "seo": {
@@ -92,7 +92,7 @@
       {
         "id": "systems",
         "t": "Enterprise systems",
-        "h": "Systems that handle money cannot afford \"roughly right\"",
+        "h": "Money cannot afford \"roughly right\"",
         "d": "Built to the standard of people who manage money: numbers that always balance, access matched to each person's role, a record of every change and who made it, and updates that can be rolled back.",
         "includes": [
           "Finance and accounting: general ledger, receivables, inventory, fixed assets, and reports to international standards",
@@ -111,7 +111,7 @@
       {
         "id": "ai",
         "t": "Agentic AI",
-        "h": "The difference between a chatbot and an agent is responsibility",
+        "h": "An agent acts; a chatbot suggests",
         "d": "The first suggests text; the second changes state inside your system. We build the second — with explicit limits, a full log, and a human in the approval loop on every decision with a financial or legal effect.",
         "includes": [
           "Document extraction: invoices, receipts and contracts from an image into structured fields",
@@ -190,7 +190,7 @@
   },
   "academy": {
     "seo": {
-      "title": "Awalim Academy — engineering tracks taught the way we work | SYS-ACAD-03",
+      "title": "Awalim Academy — engineering tracks taught the way we work | Awalim Group",
       "description": "A real project, code review and tests — not a video series. Four engineering tracks, each ending in a published product."
     },
     "h": "Awalim Academy",
@@ -307,7 +307,7 @@
   },
   "group": {
     "seo": {
-      "title": "The Group — from a room in Gaza to systems running in 14 countries | Awalim Group",
+      "title": "The Group — from a room in Gaza to 14 countries | Awalim Group",
       "description": "The story of Awalim Group: founded 2021 in Palestine. The timeline, the values, and a note from founder Ahmed Ashraf."
     },
     "h": "The Group",

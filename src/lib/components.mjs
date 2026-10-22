@@ -4,7 +4,7 @@
    assets/css/components.css. No magic numbers here: spacing, radius and
    colour come from tokens via CSS custom properties.
    ========================================================================== */
-import { esc, attrs, join, num, fill, bdi } from "./html.mjs";
+import { esc, attrs, join, num, fill, bdi, affix, isLatinText } from "./html.mjs";
 import { readFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join as joinPath, dirname } from "node:path";
@@ -51,21 +51,25 @@ export const statTile = (s, { size = "", key = "" } = {}) => {
   const v = s.count
     ? `<span data-count="${s.value}">${num(s.value)}</span>`
     : `<span class="num">${esc(String(s.value))}</span>`;
-  return `<div class="stat${size ? ` stat--${size}` : ""}"${key ? ` data-stat="${key}"` : ""}><div class="stat__n"><span class="stat__pre">${esc(s.prefix || "")}</span>${v}<span class="stat__suf">${esc(s.suffix || "")}</span></div><div class="stat__l">${esc(s.label)}</div></div>`;
+  const a = affix(s, isLatinText(s.label));
+  return `<div class="stat${size ? ` stat--${size}` : ""}"${key ? ` data-stat="${key}"` : ""}><div class="stat__n"><span class="stat__pre">${esc(a.pre)}</span>${v}<span class="stat__suf">${esc(a.suf)}</span></div><div class="stat__l">${esc(s.label)}</div></div>`;
 };
 export const statBar = (keys, stats, { size = "lg", cls = "", verify = false, signing = null, autorun = false, sixWide = false } = {}) => {
   const bar = `<div class="statbar rv${cls ? " " + cls : ""}${sixWide ? " statbar--6" : ""}" data-stagger>${keys.map((k) => statTile(stats[k], { size, key: k })).join("")}</div>`;
   if (!verify || !signing) return bar;
-  return `<div class="statwrap">${bar}${verifyPanel(signing, { autorun })}</div>`;
+  const en = keys.length ? isLatinText(stats[keys[0]]?.label) : false;
+  return `<div class="statwrap">${bar}${verifyPanel(signing, { autorun, en })}</div>`;
 };
 
 /** In-browser verification panel: SHA-256 + Ed25519 + published key + DOM==payload. */
-export const verifyPanel = (signing, { autorun = false } = {}) => `
+/* Outside /verify (autorun) the button speaks plainly — «أرقام قابلة للتحقق» —
+   and the algorithm name stays on /verify, where the visitor came for it. */
+export const verifyPanel = (signing, { autorun = false, en = false } = {}) => `
   <div class="verify rv" data-verify data-pubkey="${esc(signing.publicKey)}" data-issued="${esc(signing.issued)}"${autorun ? " data-verify-auto" : ""}${signing.unsigned ? " data-unsigned" : ""}>
     <button class="verify__btn" type="button" data-verify-run aria-expanded="false" aria-controls="verify-panel">
       <span class="verify__lock" aria-hidden="true">${icon("lock")}</span>
-      <span>${signing.unsigned ? "الأرقام تغيّرت ولم تُوقَّع بعد" : "هذه الأرقام موقّعة تشفيريّاً — تحقّق منها في متصفّحك"}</span>
-      <span class="verify__meta mono" lang="en">Ed25519 · ${esc(signing.issued)}</span>
+      <span>${signing.unsigned ? "الأرقام تغيّرت ولم تُوقَّع بعد" : autorun ? "هذه الأرقام موقّعة تشفيريّاً — تحقّق منها في متصفّحك" : en ? "Verifiable figures" : "أرقام قابلة للتحقق"}</span>
+      ${autorun ? `<span class="verify__meta mono" lang="en">Ed25519 · ${esc(signing.issued)}</span>` : ""}
     </button>
     <div class="verify__panel" id="verify-panel" hidden>
       <ol class="verify__checks">
@@ -125,12 +129,39 @@ export const metricBar = ({ metric = {}, href, ctaLabel = "دراسة الحال
 };
 
 /* ---------- device mockups (section 3.5) ---------- */
-const img = (src, alt, { w = 1000, h = 750, lazy = true } = {}) =>
-  `<img src="${src}" alt="${esc(alt)}" width="${w}" height="${h}" ${lazy ? 'loading="lazy"' : 'fetchpriority="high"'} decoding="async">`;
+/* Downscaled siblings (name-<w>.webp) for images whose original is far wider
+   than any box it fills. Widths listed smallest first; the last is the
+   original. "auto" lets Chromium pick by the laid-out width of lazy images;
+   other engines skip it and use the fallback, which errs toward sharp. */
+const IMG_WIDTHS = {
+  "/assets/img/work/rahmacare-ledger.webp": [600, 1200, 1760],
+  "/assets/img/work/islandhaven-verify.webp": [600, 1200, 1760],
+  "/assets/img/work/island-haven-live.webp": [600, 1200, 2160],
+  "/assets/img/work/island-haven-programs.webp": [600, 1200, 2160],
+  "/assets/img/work/island-haven-visit.webp": [600, 1200, 2160],
+  "/assets/img/work/jameel-store-ui.webp": [600, 1024],
+  "/assets/img/work/maya-brand.webp": [600, 1024],
+  "/assets/img/work/card_1.webp": [600, 1024],
+  "/assets/img/work/social-design.webp": [600, 1024],
+  "/assets/img/ahmed-personal.webp": [[96, 171], 768, 1024]
+};
+export const srcset = (src) => {
+  const ws = IMG_WIDTHS[src];
+  if (!ws) return "";
+  return ws.map((w, i) => {
+    const [name, real] = Array.isArray(w) ? w : [w, w];
+    return `${i === ws.length - 1 ? src : src.replace(/\.webp$/, `-${name}.webp`)} ${real}w`;
+  }).join(", ");
+};
+/* sizes fallback: cards top out near 570px; a full-width frame (case hero,
+   gallery) at 1000px. "auto" is only valid on lazy images. */
+const imgSizes = (lazy, wide) => `${lazy ? "auto, " : ""}${wide ? "(min-width: 1100px) 1000px, 92vw" : "(min-width: 1200px) 600px, 92vw"}`;
+const img = (src, alt, { w = 1000, h = 750, lazy = true, wide = true } = {}) =>
+  `<img src="${src}"${srcset(src) ? ` srcset="${srcset(src)}" sizes="${imgSizes(lazy, wide)}"` : ""} alt="${esc(alt)}" width="${w}" height="${h}" ${lazy ? 'loading="lazy"' : 'fetchpriority="high"'} decoding="async">`;
 
 export const device = ({ kind = "browser", src, alt = "", tilt = true, parallax = true, lazy = true, label = "", inner = "" }) => {
   const a = attrs({ class: `dev dev--${kind}${tilt ? " dev--tilt" : ""}`, "data-tilt": tilt ? "" : null, "data-parallax": parallax ? "" : null, role: inner ? "img" : null, "aria-label": inner ? alt : null });
-  const screen = inner ? inner : src ? img(src, alt, { lazy }) : "";
+  const screen = inner ? inner : src ? img(src, alt, { lazy, wide: kind === "frame" }) : "";
   switch (kind) {
     case "phone":
       return `<div${a}><div class="dev__phone"><span class="dev__notch" aria-hidden="true"></span><div class="dev__screen">${screen}</div></div></div>`;
@@ -152,12 +183,7 @@ export const cockpit = ({ tilt = true, parallax = true, live = true, cls = "", i
     <div class="dev__bar" aria-hidden="false">
       <div class="dev__dots" aria-hidden="true"><i></i><i></i><i></i></div>
       ${interactive ? `
-      <div class="dev__tabs" role="tablist" aria-label="أنظمة عوالِم التفاعلية">
-        <button class="dev__tab is-active" type="button" role="tab" data-console-tab="ledger" aria-selected="true"><span>محاسب ذكي</span></button>
-        <button class="dev__tab" type="button" role="tab" data-console-tab="rahma" aria-selected="false"><span>رحمة كير</span></button>
-        <button class="dev__tab" type="button" role="tab" data-console-tab="vibe" aria-selected="false"><span>طرفية Vibe OS</span></button>
-      </div>
-      <span class="dev__url" data-console-badge>SYS-ACC-01 · حيّ</span>
+      <span class="dev__url">محاسب ذكي · تجربة تفاعلية</span>
       ` : `<span class="dev__url">cockpit · محاسب ذكي</span>`}
     </div>
     <div class="cockpit"${interactive ? "" : ' aria-hidden="true"'}>
@@ -187,45 +213,6 @@ export const cockpit = ({ tilt = true, parallax = true, live = true, cls = "", i
         <p class="sr-only" aria-live="polite" data-ledger-live></p>` : ""}
       </div>
 
-      ${interactive ? `
-      <!-- Mode 2: RahmaCare -->
-      <div class="cockpit__panel" data-panel="rahma" hidden>
-        <div class="cockpit__kpis">
-          <div class="cockpit__kpi"><span>عقد غزة المتصلة</span><b class="num"><span class="dot dot--live" aria-hidden="true"></span><span data-rahma-nodes>14</span> عقدة</b></div>
-          <div class="cockpit__kpi"><span>مطابقة الحالات الذكية</span><b class="num" data-rahma-cases>4,892 حالة</b></div>
-          <div class="cockpit__kpi cockpit__kpi--acc"><span>المزامنة</span><b class="mono" data-rahma-sync>100% ✓</b></div>
-        </div>
-        <div class="cockpit__rows" data-rahma-feed>
-          <div class="cockpit__row"><span>حالة فرز عاجلة · خانيونس #9842</span><b class="cockpit__ok">مطابقة استشاري جراحة خلال 12 ثانية</b></div>
-          <div class="cockpit__row"><span>مخزون الإغاثة الحيوي · رفح / دير البلح</span><b class="mono">أنسولين ومحاليل وريدية</b></div>
-          <div class="cockpit__row"><span>سجل Merkle المشفر</span><b class="mono" lang="en">Ed25519 Anchor Verified ✓</b></div>
-        </div>
-        <div class="ledger__act">
-          <button class="btn btn--sm btn--accent" type="button" data-rahma-action="triage">${icon("check")}<span>محاكاة فرز ذكي</span></button>
-          <button class="btn btn--sm btn--ghost" type="button" data-rahma-action="sync">${icon("arrow")}<span>فحص مزامنة العقد</span></button>
-          <span class="ledger__hint">شبكة صحية تعمل تحت الحصار وبلا إنترنت</span>
-        </div>
-      </div>
-
-      <!-- Mode 3: Vibe OS Terminal -->
-      <div class="cockpit__panel" data-panel="vibe" hidden>
-        <div class="vibe-term">
-          <div class="vibe-term__body" data-term-log>
-            <div class="vibe-term__line"><span class="vibe-term__prompt">guest@sovereign:~$</span> <span class="vibe-term__cmd">vibe-os --init</span></div>
-            <div class="vibe-term__out">Vibe OS 4.0 [Sovereign Glass Kernel] initialized.</div>
-            <div class="vibe-term__out">Autonomous AI agents: active. System uptime: 99.99%.</div>
-            <div class="vibe-term__line"><span class="vibe-term__prompt">guest@sovereign:~$</span> <span class="vibe-term__cur">_</span></div>
-          </div>
-          <div class="vibe-term__chips">
-            <button class="chip chip--ghost" type="button" data-term-run="status">status</button>
-            <button class="chip chip--ghost" type="button" data-term-run="rahma">rahma</button>
-            <button class="chip chip--ghost" type="button" data-term-run="vibe">vibe</button>
-            <button class="chip chip--ghost" type="button" data-term-run="quote">quote</button>
-            <button class="chip chip--ghost" type="button" data-term-run="contact">contact</button>
-            <button class="chip chip--ghost" type="button" data-term-run="clear">clear</button>
-          </div>
-        </div>
-      </div>` : ""}
     </div>
   </div>`;
 
@@ -268,7 +255,7 @@ export const scopeEstimator = (site, isEn = false) => `
             <div class="estimator__kpis">
               <div class="estimator__kpi"><span>${isEn ? "How it starts" : "كيف يبدأ"}</span><ol class="estimator__steps">${(site.process || []).slice(0, 3).map((p) => `<li><span>${esc(p.t)}</span><b>${esc(p.dur).replace(/(\d+\s*[–-]\s*\d+|\d+)/g, '<bdi dir="ltr">$1</bdi>')}</b></li>`).join("")}</ol></div>
               <p class="small muted estimator__note">${isEn ? "The full timeline is set in the scope document after diagnosis. We don't quote a number before we've seen the work." : "المدة الكاملة تُحدَّد في وثيقة النطاق بعد التشخيص — لا نعطي رقماً قبل أن نرى العمل."}</p>
-              <div class="estimator__kpi"><span>${isEn ? "Guaranteed Standards" : "المعايير المضمونة"}</span><b>${isEn ? "Each client's data kept apart · Usable by everyone (WCAG AA) · Fast on any device" : "بيانات كل عميل معزولة · يستخدمه الجميع (WCAG AA) · سريع على أي جهاز"}</b></div>
+              <div class="estimator__kpi"><span>${isEn ? "Standards we work to" : "المعايير التي نعمل بها"}</span><b>${isEn ? "Each client's data kept apart · Usable by everyone (WCAG AA) · Fast on any device" : "بيانات كل عميل معزولة · يستخدمه الجميع (WCAG AA) · سريع على أي جهاز"}</b></div>
             </div>
             <div class="estimator__actions">
               <a class="btn btn--primary btn--full" href="https://wa.me/970593636136" target="_blank" rel="noopener" data-est-wa>
@@ -296,7 +283,8 @@ export const impactList = (impact = [], stats = {}) => {
     if (x.stat) {
       const s = stats[x.stat];
       if (!s) return null;
-      return { v: `${s.prefix || ""}${Number(s.value).toLocaleString("en-US")}${s.suffix || ""}`, l: s.label };
+      const a = affix(s, isLatinText(s.label));
+      return { v: `${a.pre}${Number(s.value).toLocaleString("en-US")}${a.suf}`, l: s.label };
     }
     if (typeof x.n === "number") return { v: `${x.prefix || ""}${x.n.toLocaleString("en-US")}${x.suffix || ""}`, l: x.label };
     if (x.text) return { v: x.text, l: x.label };
@@ -656,7 +644,7 @@ export const marquee = (items) => `
 export const founder = ({ site, quote, lede = "", h = "", cta = true, big = false }) => `
   <div class="founder rv${big ? " founder--big" : ""}" data-stagger>
     <div class="founder__img">
-      <img src="${site.brand.founder.photo}" alt="${esc(site.brand.founder.name)}، ${esc(site.brand.founder.role)}" width="560" height="700" loading="lazy" decoding="async">
+      <img src="${site.brand.founder.photo}" srcset="${srcset(site.brand.founder.photo)}" sizes="(min-width: 900px) 680px, 200vw" alt="${esc(site.brand.founder.name)}، ${esc(site.brand.founder.role)}" width="1024" height="575" loading="lazy" decoding="async">
     </div>
     <div class="founder__b">
       ${eyebrow(h || "كلمة المؤسّس")}
@@ -802,6 +790,7 @@ export const mockScreen = (kind) => {
   ON invoices (tenant_id, issued_at DESC);</pre>
             <p class="mk__note">فهرس مركّب صحيح — لكن رتّب الأعمدة بحسب الانتقائية.<small>المراجع · قبل 20 دقيقة</small></p>
           </div>
+          <div class="mk__weeks">${Array.from({ length: 12 }, (_, i) => `<i class="${i < 6 ? "is-done" : i === 6 ? "is-now" : ""}"><span>${String(i + 1).padStart(2, "0")}</span></i>`).join("")}</div>
         </div>
       </div>`;
     case "vibe":
@@ -839,736 +828,6 @@ export const mockScreen = (kind) => {
   }
 };
 
-
-export const bentoHighlights = (ctx) => {
-  const { site, stats, themes, pages, locale } = ctx;
-  const isEn = locale === "en";
-  const demoLbl = isEn ? "▶ 60fps Live Demo" : "▶ تجربة حية 60fps";
-  const vibeLbl = isEn ? "▶ Test Vibe OS" : "▶ تجربة Vibe OS";
-  const h = pages.home;
-
-  return `<div class="bento-grid rv" data-stagger>
-    <!-- TILE 1: FEATURED FOUNDER & SOVEREIGN REACH (SPAN 12) -->
-    <div class="bento-card bento-card--featured themed" style="${themeStyle(themes.rahmacare)}">
-      <div class="bento-card__main">
-        <span class="chip chip--accent chip--bento"><span class="dot" aria-hidden="true"></span>النشأة والامتداد السيادي · 2021–2026</span>
-        <h3 class="bento-card__h d-2">${h.story.big}</h3>
-        <p class="bento-card__p">${h.story.p}</p>
-        <div class="bento-card__actions">
-          ${btn({ href: "/group", label: "القصّة الكاملة والمسار", kind: "light", arrow: true })}
-        </div>
-      </div>
-      <div class="bento-telemetry">
-        <div class="bento-telemetry__item">
-          <span class="bento-telemetry__val mono"><bdi dir="ltr">10+</bdi></span>
-          <span class="bento-telemetry__lbl">دول يعمل فيها الكود</span>
-        </div>
-        <div class="bento-telemetry__item">
-          <span class="bento-telemetry__val mono"><bdi dir="ltr">100%</bdi></span>
-          <span class="bento-telemetry__lbl">كود سيادي بلا مكتبات</span>
-        </div>
-        <div class="bento-telemetry__item">
-          <span class="bento-telemetry__val mono"><bdi dir="ltr">Ed25519</bdi></span>
-          <span class="bento-telemetry__lbl">تدقيق تشفيري لحظي</span>
-        </div>
-        <div class="bento-telemetry__item">
-          <span class="bento-telemetry__val mono"><bdi dir="ltr">99.99%</bdi></span>
-          <span class="bento-telemetry__lbl">جاهزية تشغيلية مستمرة</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- TILE 2: RAHMACARE HUMANITARIAN PLATFORM (SPAN 6) -->
-    <div class="bento-card bento-card--col-6 themed" style="${themeStyle(themes.rahmacare)}">
-      <div class="bento-card__top">
-        <span class="bento-badge bento-badge--cyan">SYS-RAHM-02 · غزة & الطوارئ</span>
-        <span class="trust-badge-pill mono"><span class="badge-dot"></span>VERIFIED SYSTEM</span>
-      </div>
-      <h4 class="bento-card__subh">رحمة كير — الرعاية الطبية تحت الحصار</h4>
-      <p class="bento-card__subp">نظام فرز طبي وتشخيص ميداني بالذكاء الاصطناعي يعمل في أشد البيئات انقطاعاً عن الإنترنت مع مزامنة تشفيرية Merkle Tree.</p>
-      <div class="bento-stats-row">
-        <div class="bento-stat"><span class="bento-stat__num mono"><bdi dir="ltr">98.4%</bdi></span><span class="bento-stat__txt">دقة الفرز الطبي</span></div>
-        <div class="bento-stat-sep" aria-hidden="true"></div>
-        <div class="bento-stat"><span class="bento-stat__num mono"><bdi dir="ltr">+1,420</bdi></span><span class="bento-stat__txt">حالة حرجة مُعالجة</span></div>
-      </div>
-      <div class="bento-card__ft">
-        ${btn({ href: "/work/rahmacare", label: "استكشف دراسة الحالة", kind: "ghost", arrow: true })}
-        <button type="button" class="btn-demo-trigger" data-demo-target="rahmacare"><span>${demoLbl}</span></button>
-      </div>
-    </div>
-
-    <!-- TILE 3: AWALIM ACADEMY (SPAN 6) -->
-    <div class="bento-card bento-card--col-6 themed" style="${themeStyle(themes.academy)}">
-      <div class="bento-card__top">
-        <span class="bento-badge bento-badge--blue">SYS-ACAD-03 · هندسة النظم</span>
-        <span class="trust-badge-pill mono"><span class="badge-dot"></span>VERIFIED SYSTEM</span>
-      </div>
-      <h4 class="bento-card__subh">أكاديمية عوالِم — مصنع مهندسي النخبة</h4>
-      <p class="bento-card__subp">تأهيل هندسي شاق قائم على بناء أنظمة إنتاجية حقيقية بصفر أطر عمل جاهزة. تخريج معماريين يقودون هندسة البرمجيات إقليمياً.</p>
-      <div class="bento-stats-row">
-        <div class="bento-stat"><span class="bento-stat__num mono"><bdi dir="ltr">+1,200</bdi></span><span class="bento-stat__txt">مهندس متدرّب</span></div>
-        <div class="bento-stat-sep" aria-hidden="true"></div>
-        <div class="bento-stat"><span class="bento-stat__num mono"><bdi dir="ltr">84</bdi></span><span class="bento-stat__txt">خريج معتمد للمشاريع</span></div>
-      </div>
-      <div class="bento-card__ft">
-        ${btn({ href: "/academy", label: "مسارات الأكاديمية", kind: "ghost", arrow: true })}
-        <button type="button" class="btn-demo-trigger" data-demo-target="vibe"><span>${vibeLbl}</span></button>
-      </div>
-    </div>
-
-    <!-- TILE 4: SMART ACCOUNTANT & VIBE OS (SPAN 12) -->
-    <div class="bento-card bento-card--col-12 bento-card--dual">
-      <div class="bento-card__half">
-        <span class="bento-badge bento-badge--gold">SYS-ACC-01 · المحاسبة السيادية</span>
-        <h4 class="bento-card__subh">محاسب ذكي — تدقيق مالي وقيد مزدوج لحظي</h4>
-        <p class="bento-card__subp">نواة دفتر أستاذ متوافقة مع معايير IFRS العالمية، إثباتات شجرة ميركل وتوليد قيود آلي دون تسريب بيانات الشركة.</p>
-        <div class="bento-stats-row">
-          <div class="bento-stat"><span class="bento-stat__num mono"><bdi dir="ltr">0.4ms</bdi></span><span class="bento-stat__txt">سرعة ترحيل القيد</span></div>
-          <div class="bento-stat-sep" aria-hidden="true"></div>
-          <div class="bento-stat"><span class="bento-stat__num mono"><bdi dir="ltr">IFRS</bdi></span><span class="bento-stat__txt">مطابقة معيارية تامة</span></div>
-        </div>
-        <div class="bento-card__ft">
-          ${btn({ href: "/products/smart-accountant", label: "تفاصيل النظام المحاسبي", kind: "ghost", arrow: true })}
-          <button type="button" class="btn-demo-trigger" data-demo-target="accountant"><span>${demoLbl}</span></button>
-        </div>
-      </div>
-      <div class="bento-card__divider" aria-hidden="true"></div>
-      <div class="bento-card__half">
-        <span class="bento-badge bento-badge--purple">SYS-WEB-06 · نظام تشغيل ويب</span>
-        <h4 class="bento-card__subh">Vibe OS 4.0 — نظام تشغيل سيادي داخل المتصفح</h4>
-        <p class="bento-card__subp">بيئة سطح مكتب متكاملة متعددة المهام مبنية بصفر مكتبات خارجية، باستهلاك ذاكرة أقل من 15MB ومعدل 60 إطار بالثانية.</p>
-        <div class="bento-stats-row">
-          <div class="bento-stat"><span class="bento-stat__num mono"><bdi dir="ltr">60 FPS</bdi></span><span class="bento-stat__txt">أداء رسومي فائق</span></div>
-          <div class="bento-stat-sep" aria-hidden="true"></div>
-          <div class="bento-stat"><span class="bento-stat__num mono"><bdi dir="ltr">&lt; 15 MB</bdi></span><span class="bento-stat__txt">استهلاك الذاكرة الكلي</span></div>
-        </div>
-        <div class="bento-card__ft">
-          ${btn({ href: "/work/vibe-os", label: "استكشف Vibe OS", kind: "ghost", arrow: true })}
-        </div>
-      </div>
-    </div>
-  </div>`;
-};
-
-
-export const sovereignArchitecture = (ctx) => {
-  return `<section class="sec sec--arch" id="sovereign-architecture" aria-label="معمارية النواة السيادية">
-  <div class="wrap wrap--wide">
-    <div class="arch-head rv" data-stagger>
-      <span class="chip chip--accent"><span class="dot" aria-hidden="true"></span>معمارية النواة السيادية · SOVEREIGN ARCHITECTURE</span>
-      <h2 class="d-1 arch-title">هندسة تفوق معايير الصناعة. بلا مكتبات. بلا سحاب خارجي.</h2>
-      <p class="lede arch-lede">بنينا محركاتنا من الصفر على أسس رياضية وتشفيرية صارمة لا تتأثر بحصار، ولا تسرب بيانات، ولا تتوقف بانهيار الشبكات.</p>
-    </div>
-
-    <!-- THE 4 ARCHITECTURAL CORES (Apple Silicon Style Grid) -->
-    <div class="arch-grid rv" data-stagger>
-      <!-- CORE 01: SOVEREIGN APEX KERNEL -->
-      <div class="arch-card arch-card--core">
-        <div class="arch-card__badge">
-          <span class="arch-chip arch-chip--teal">CORE 01 · النواة المركزية</span>
-          <span class="mono arch-card__spec">ZERO-DEP / 60FPS</span>
-        </div>
-        <h3 class="arch-card__h">نواة عوالِم البرمجية (Apex Kernel)</h3>
-        <p class="arch-card__p">محرك تشغيل فائق الخفة مكتوب بمعايير الويب الأصيلة بصفر مكتبات خارجية. تحكم مباشر في دورة حياة الذاكرة وسرعة تنفيذ خوارزمية فورية.</p>
-        <div class="arch-specs">
-          <div class="arch-spec"><bdi class="mono" dir="ltr">0 KB</bdi><span>اعتماديات خارجية</span></div>
-          <div class="arch-spec"><bdi class="mono" dir="ltr">&lt; 15 MB</bdi><span>استهلاك الذاكرة</span></div>
-          <div class="arch-spec"><bdi class="mono" dir="ltr">100%</bdi><span>تحكم برمجي سيادي</span></div>
-        </div>
-      </div>
-
-      <!-- CORE 02: GAZA OFFLINE MESH -->
-      <div class="arch-card arch-card--core">
-        <div class="arch-card__badge">
-          <span class="arch-chip arch-chip--cyan">CORE 02 · الصمود والشبكات</span>
-          <span class="mono arch-card__spec">OFFLINE-FIRST / MERKLE</span>
-        </div>
-        <h3 class="arch-card__h">شبكة غزة المقاومة للانقطاع (Mesh Core)</h3>
-        <p class="arch-card__p">معمارية لامركزية صُممت تحت نيران الحصار وانقطاع الإنترنت التام. تعمل محلياً بنسبة 100% وتزامن السجلات عبر أشجار ميركل فور توفر أي اتصال.</p>
-        <div class="arch-specs">
-          <div class="arch-spec"><bdi class="mono" dir="ltr">0 bps</bdi><span>إنترنت مطلوب للعمل</span></div>
-          <div class="arch-spec"><bdi class="mono" dir="ltr">P2P</bdi><span>مزامنة مشفرة محلية</span></div>
-          <div class="arch-spec"><bdi class="mono" dir="ltr">100%</bdi><span>صمود في الطوارئ</span></div>
-        </div>
-      </div>
-
-      <!-- CORE 03: IFRS MATHEMATICAL LEDGER -->
-      <div class="arch-card arch-card--core">
-        <div class="arch-card__badge">
-          <span class="arch-chip arch-chip--gold">CORE 03 · المحاسبة الجنائية</span>
-          <span class="mono arch-card__spec">IFRS / SHA-256</span>
-        </div>
-        <h3 class="arch-card__h">محرك القيد المزدوج والتدقيق (Ledger Engine)</h3>
-        <p class="arch-card__p">نواة دفتر أستاذ حسابي دقيق يطبق معايير IFRS المحاسبية العالمية، مع تدقيق جنائي لحظي وتوقيع تشفيري لكل عملية مالية يمنع التلاعب نهائياً.</p>
-        <div class="arch-specs">
-          <div class="arch-spec"><bdi class="mono" dir="ltr">0.4ms</bdi><span>زمن ترحيل القيد</span></div>
-          <div class="arch-spec"><bdi class="mono" dir="ltr">IAS / IFRS</bdi><span>مطابقة معيارية تامة</span></div>
-          <div class="arch-spec"><bdi class="mono" dir="ltr">SHA-256</bdi><span>سلسلة إثبات غير قابلة للتعديل</span></div>
-        </div>
-      </div>
-
-      <!-- CORE 04: SOVEREIGN AGENT SWARM -->
-      <div class="arch-card arch-card--core">
-        <div class="arch-card__badge">
-          <span class="arch-chip arch-chip--purple">CORE 04 · الذكاء السيادي</span>
-          <span class="mono arch-card__spec">AUTONOMOUS / VERIFIED</span>
-        </div>
-        <h3 class="arch-card__h">سرب الوكلاء المستقلين (Agent Swarm)</h3>
-        <p class="arch-card__p">وكلاء ذكاء اصطناعي ينفذون مهام المؤسسات الحساسة، مدعومين بتدقيق قرارات مشفر وفصل تام للبيانات يضمن عدم تسريب أسرار العمل لأي خوادم خارجية.</p>
-        <div class="arch-specs">
-          <div class="arch-spec"><bdi class="mono" dir="ltr">Zero</bdi><span>تسريب لبيانات العميل</span></div>
-          <div class="arch-spec"><bdi class="mono" dir="ltr">Audit</bdi><span>سجل قرارات مبرهن</span></div>
-          <div class="arch-spec"><bdi class="mono" dir="ltr">Local</bdi><span>تنفيذ محلي آمن</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>`;
-};
-
-export const sovereignVsBigTech = (ctx) => {
-  return `<section class="sec sec--cmp" id="sovereign-matrix" aria-label="مقارنة عوالِم مع السحاب التجاري">
-  <div class="wrap wrap--wide">
-    <div class="matrix-head rv" data-stagger>
-      <span class="chip chip--accent"><span class="dot" aria-hidden="true"></span>المقارنة المعيارية · THE SOVEREIGN DIFFERENCE</span>
-      <h2 class="d-1 matrix-title">عوالِم قروب مقابل السحاب التجاري (Big Tech Cloud)</h2>
-      <p class="lede matrix-lede">لماذا تختار المنشآت السيادية والشركات الكبرى البناء مع عوالِم بدلاً من الارتهان للخدمات السحابية المؤجرة.</p>
-    </div>
-
-    <div class="matrix-table-wrap rv" data-stagger>
-      <table class="matrix-table" aria-label="جدول المقارنة السيادية">
-        <thead>
-          <tr>
-            <th scope="col" class="matrix-th-metric">المعيار التقني</th>
-            <th scope="col" class="matrix-th-awalim">
-              <span class="matrix-brand">عوالِم قروب (Awalim Group)</span>
-              <span class="matrix-badge">معمارية سيادية 100%</span>
-            </th>
-            <th scope="col" class="matrix-th-cloud">
-              <span class="matrix-brand">السحاب التجاري (AWS / GCP / Vercel)</span>
-              <span class="matrix-badge matrix-badge--dim">اعتمادية مؤجرة</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row" class="matrix-row-title">
-              <b>ملكية البيانات والمفاتيح التشفيرية</b>
-              <small>أين تُخزّن المفاتيح ومن يملك فك تشفير بياناتك؟</small>
-            </th>
-            <td class="matrix-val matrix-val--win">
-              <span class="matrix-val__icon" aria-hidden="true">✓</span>
-              <b>مفاتيح العميل الخاصة (Client-Side Ed25519)</b>
-              <span>تشفير تام بصفر معرفة، لا نملك مفاتيحك ولا تستطيع أي جهة الوصول إليها.</span>
-            </td>
-            <td class="matrix-val matrix-val--loss">
-              <span class="matrix-val__icon" aria-hidden="true">✕</span>
-              <b>المفاتيح تحت تصرف مزود الخدمة السحابية</b>
-              <span>بياناتك مكشوفة للمزود وتخضع لسياسات وقوانين الشركات الأجنبية.</span>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row" class="matrix-row-title">
-              <b>الاعتمادية الخارجية (Dependency Tree)</b>
-              <small>كم مكتبة خارجية تفصلك عن الانهيار الأمني؟</small>
-            </th>
-            <td class="matrix-val matrix-val--win">
-              <span class="matrix-val__icon" aria-hidden="true">✓</span>
-              <b><bdi dir="ltr">0</bdi> مكتبة خارجية (100% Zero-Dep)</b>
-              <span>كود نقي مبني على معايير الويب القياسية؛ صفر ثغرات سلاسل توريد.</span>
-            </td>
-            <td class="matrix-val matrix-val--loss">
-              <span class="matrix-val__icon" aria-hidden="true">✕</span>
-              <b>أكثر من <bdi dir="ltr">400+</bdi> حزمة <bdi dir="ltr">npm</bdi> خارجية</b>
-              <span>ثقل برمجي ومئات الثغرات الأمنية المحتملة في مكتبات الطرف الثالث.</span>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row" class="matrix-row-title">
-              <b>الصمود أثناء انقطاع الإنترنت والحصار</b>
-              <small>هل يستمر النظام بالعمل عند انقطاع الاتصال؟</small>
-            </th>
-            <td class="matrix-val matrix-val--win">
-              <span class="matrix-val__icon" aria-hidden="true">✓</span>
-              <b>يعمل محلياً بنسبة <bdi dir="ltr">100%</bdi> (Offline-First)</b>
-              <span>صُمم في غزة ليعمل وينقذ الأرواح ويدير المبيعات بدون إنترنت نهائياً.</span>
-            </td>
-            <td class="matrix-val matrix-val--loss">
-              <span class="matrix-val__icon" aria-hidden="true">✕</span>
-              <b>توقف وانهيار تام للخدمة</b>
-              <span>أي انقطاع في الشبكة أو عطل في خوادم المزود يعطّل أعمال الشركة بالكامل.</span>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row" class="matrix-row-title">
-              <b>زمن استجابة النواة (Execution Latency)</b>
-              <small>كم يستغرق تنفيذ المعاملة أو القيد؟</small>
-            </th>
-            <td class="matrix-val matrix-val--win">
-              <span class="matrix-val__icon" aria-hidden="true">✓</span>
-              <b>أقل من <bdi dir="ltr">0.4ms</bdi> (فوري محلياً)</b>
-              <span>استجابة فائقة السرعة بدون أي تأخير شبكي أو انتظار خوادم.</span>
-            </td>
-            <td class="matrix-val matrix-val--loss">
-              <span class="matrix-val__icon" aria-hidden="true">✕</span>
-              <b>من <bdi dir="ltr">250ms</bdi> إلى <bdi dir="ltr">1,200ms</bdi></b>
-              <span>تأخير السيرفرات والـ Cold Starts وتراسل البيانات عبر المحيطات.</span>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row" class="matrix-row-title">
-              <b>التكلفة التشغيلية والارتهان التجاري</b>
-              <small>فواتير سحابية شهرية متصاعدة أم أصل برمجي ملكك للأبد؟</small>
-            </th>
-            <td class="matrix-val matrix-val--win">
-              <span class="matrix-val__icon" aria-hidden="true">✓</span>
-              <b>نظام ملكك بالكامل بصفر فواتير اشتراك</b>
-              <span>أصل استثماري تملكه منشأتك مدى الحياة بدون أي رسوم تراخيص شهرية.</span>
-            </td>
-            <td class="matrix-val matrix-val--loss">
-              <span class="matrix-val__icon" aria-hidden="true">✕</span>
-              <b>فواتير سحابية متضخمة شهرياً</b>
-              <span>ارتهان دائم (Vendor Lock-in) وتهديد بوقف الخدمة عند أي نزاع تجاري.</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>`;
-};
-
-
-export const executiveEndorsements = (ctx) => {
-  return `<section class="sec sec--alt" id="endorsements" aria-label="شهادات الشركاء والمؤسسات">
-  <div class="wrap wrap--wide">
-    <div class="sec-head rv" data-stagger>
-      <span class="chip chip--accent"><span class="dot" aria-hidden="true"></span>شهادات الشركاء · VERIFIED ENDORSEMENTS</span>
-      <h2 class="d-1">أنظمة لا تحتمل الخطأ. يثق بها القادة في أصعب الظروف.</h2>
-      <p class="lede">من مشافي الطوارئ الميدانية إلى كبرى المجموعات المالية والتجارية — شهادات موثقة لمن يقودون عملياتهم الحساسة بأنظمتنا السيادية.</p>
-    </div>
-    <div class="endorse-grid rv" data-stagger>
-      <!-- Card 1: RahmaCare -->
-      <article class="endorse-card">
-        <div class="endorse-card__top">
-          <span class="endorse-chip endorse-chip--teal">الرعاية الصحية الطارئة</span>
-          <span class="mono endorse-metric"><span dir="ltr">+4,800</span> سجل مزامن أوفلاين</span>
-        </div>
-        <blockquote class="endorse-quote">«نظام رحمة كير عمل في المستشفى الميداني 14 يوماً متواصلة أثناء انقطاع الإنترنت التام، وزامن أكثر من 4,800 سجل طبي فور توفر أي اتصال بدقة 100% ودون فقدان ملف مريض واحد.»</blockquote>
-        <div class="endorse-author">
-          <div class="endorse-avatar endorse-avatar--teal">ع.ك</div>
-          <div class="endorse-meta">
-            <b class="endorse-name">د. عمر الكردي</b>
-            <span class="endorse-role">المدير الطبي والتشغيلي · شبكة الرعاية الطارئة</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 2: Smart Accountant -->
-      <article class="endorse-card">
-        <div class="endorse-card__top">
-          <span class="endorse-chip endorse-chip--gold">الأنظمة المالية المؤسسية</span>
-          <span class="mono endorse-metric"><span dir="ltr">$180,000</span> وفر سنوي في التراخيص</span>
-        </div>
-        <blockquote class="endorse-quote">«محاسب ذكي وفر علينا أكثر من 180 ألف دولار سنوياً من رسوم الاشتراكات السحابية المعقدة، مع مطابقة جنائية كاملة لمعايير IFRS المحاسبية وسجل قيود مشفر يستحيل التلاعب به.»</blockquote>
-        <div class="endorse-author">
-          <div class="endorse-avatar endorse-avatar--gold">ط.ن</div>
-          <div class="endorse-meta">
-            <b class="endorse-name">أ. طارق الناظر</b>
-            <span class="endorse-role">الرئيس التنفيذي للشؤون المالية (CFO) · مجموعة المشرق القابضة</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 3: Jameel Store -->
-      <article class="endorse-card">
-        <div class="endorse-card__top">
-          <span class="endorse-chip endorse-chip--cyan">التجارة الإلكترونية والتجزئة</span>
-          <span class="mono endorse-metric"><span dir="ltr">+34%</span> نسبة إتمام الطلبات</span>
-        </div>
-        <blockquote class="endorse-quote">«ثبات أداء التطبيق على 60 إطاراً في الثانية وسرعة استجابته المذهلة جعلت تجربة الشراء تضاهي تطبيقات أبل الرسمية، مما رفع نسبة إتمام الطلبات بنسبة 34% خلال أول 30 يوماً.»</blockquote>
-        <div class="endorse-author">
-          <div class="endorse-avatar endorse-avatar--cyan">س.م</div>
-          <div class="endorse-meta">
-            <b class="endorse-name">سارة المهندس</b>
-            <span class="endorse-role">مديرة المنتجات الرقمية · سلسلة متاجر جميل الإقليمية</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 4: Island Haven & Sovereign Infrastructure -->
-      <article class="endorse-card">
-        <div class="endorse-card__top">
-          <span class="endorse-chip endorse-chip--purple">الأمن والسيادة الرقمية</span>
-          <span class="mono endorse-metric"><span dir="ltr">0</span> ثغرات سلاسل توريد</span>
-        </div>
-        <blockquote class="endorse-quote">«بناء المنظومة بصفر مكتبات خارجية (Zero-Dep) جعل نظامنا محصناً تماماً من ثغرات سلاسل التوريد والانهيارات السحابية المفاجئة. عوالِم تفهم السيادة الرقمية بمعناها الحقيقي الصارم.»</blockquote>
-        <div class="endorse-author">
-          <div class="endorse-avatar endorse-avatar--purple">إ.ح</div>
-          <div class="endorse-meta">
-            <b class="endorse-name">م. إياد الحلبي</b>
-            <span class="endorse-role">قائد أمن المعلومات والبنية التحتية · منصة آيلاند هيفن</span>
-          </div>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>`;
-};
-
-export const vibeOsCapabilities = (ctx) => {
-  return `<section class="sec" id="capabilities" aria-label="محركات وقدرات Vibe OS">
-  <div class="wrap wrap--wide">
-    <div class="sec-head rv" data-stagger>
-      <span class="chip chip--accent"><span class="dot" aria-hidden="true"></span>محركات المنظومة · SYSTEM CAPABILITIES</span>
-      <h2 class="d-1">ستة محركات سيادية تشكل عماد كل نظام نبنيه</h2>
-      <p class="lede">كل منتج مؤسسي يخرج من عوالِم يعتمد على هذه المحركات المشتركة — سرعة قياسية، أمان رياضي، واستقلالية برمجية مطلقة.</p>
-    </div>
-    <div class="cap-grid rv" data-stagger>
-      <div class="cap-card">
-        <span class="cap-num mono">01</span>
-        <h3 class="cap-h">محرك الزجاج والفيزياء الحية</h3>
-        <p class="cap-p">واجهات رقمية سائلة تتنفس بحركة نابضة حقيقية (Spring Physics) ومعدل 60 إطاراً في الثانية ثابتاً في الوضعين الداكن والفاتح.</p>
-        <span class="cap-badge">Spring Physics · 60 FPS</span>
-      </div>
-      <div class="cap-card">
-        <span class="cap-num mono">02</span>
-        <h3 class="cap-h">نواة الذكاء الاصطناعي المستقل</h3>
-        <p class="cap-p">سرب وكلاء مدرك لسياق المؤسسة وينفذ المهام المعقدة محلياً دون تسريب أي بيانات حساسة لأي خوادم أو شركات خارجية.</p>
-        <span class="cap-badge">Local Agents · Zero-Leak</span>
-      </div>
-      <div class="cap-card">
-        <span class="cap-num mono">03</span>
-        <h3 class="cap-h">النظام ثنائي اللغة الفوري</h3>
-        <p class="cap-p">تبديل لحظي وتام بين العربية والإنجليزية دون وميض (Zero-FOUC) مع تبديل تلقائي للخطوط واحتواء صارم لاتجاه النص ثنائي الاتجاه.</p>
-        <span class="cap-badge">Zero-FOUC · Full BiDi</span>
-      </div>
-      <div class="cap-card">
-        <span class="cap-num mono">04</span>
-        <h3 class="cap-h">طبقة الأمان والتشفير الصفري</h3>
-        <p class="cap-p">توليد مفاتيح التشفير محلياً لدى العميل (Ed25519) مع فرض سياسات أمان صارمة (Strict CSP) وخلو تام من أي ثغرات حقن.</p>
-        <span class="cap-badge">Ed25519 · Trusted Types</span>
-      </div>
-      <div class="cap-card">
-        <span class="cap-num mono">05</span>
-        <h3 class="cap-h">شبكة الصمود ومزامنة الطوارئ</h3>
-        <p class="cap-p">تصميم يعمل محلياً بالكامل (Offline-First) مع مزامنة تشفيرية عبر أشجار ميركل فور عودة الاتصال، مقاوم للانقطاع والحصار.</p>
-        <span class="cap-badge">Merkle DAG · P2P Sync</span>
-      </div>
-      <div class="cap-card">
-        <span class="cap-num mono">06</span>
-        <h3 class="cap-h">لوحة القيادة والتدقيق الجنائي</h3>
-        <p class="cap-p">سجل تدقيق غير قابل للتلاعب يوثق كل عملية مالية وإدارية بلحظتها مع صلاحيات صارمة متعددة الأدوار وفق معايير IFRS.</p>
-        <span class="cap-badge">IFRS Audit · Multi-Role</span>
-      </div>
-    </div>
-  </div>
-</section>`;
-};
-
-
-/* ---------- 7c — TRUST ACCREDITATIONS STRIP ---------- */
-export const trustAccreditationStrip = (ctx) => {
-  return `<section class="trust-strip" aria-label="الاعتمادات والتراخيص السيادية">
-  <div class="wrap wrap--wide">
-    <div class="trust-strip__grid rv" data-stagger>
-      <div class="trust-item">
-        <span class="trust-item__icon mono" aria-label="الإمارات">UAE</span>
-        <div class="trust-item__txt">
-          <b class="trust-item__title">ترخيص تجاري رسمي — الإمارات</b>
-          <span class="trust-item__sub">شركة مسجلة ذات مسؤولية محدودة · Awalim Group LLC</span>
-        </div>
-      </div>
-      <div class="trust-item">
-        <span class="trust-item__icon mono" aria-label="فلسطين">PS</span>
-        <div class="trust-item__txt">
-          <b class="trust-item__title">هندسة سيادية مستقلة من غزة</b>
-          <span class="trust-item__sub">ملكية فكرية وكود عربي أصيل 100% بدون تبعيات</span>
-        </div>
-      </div>
-      <div class="trust-item">
-        <span class="trust-item__icon" aria-label="حماية وتشفير"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
-        <div class="trust-item__txt">
-          <b class="trust-item__title">تشفير <span dir="ltr">Ed25519</span> & <span dir="ltr">Local-First</span></b>
-          <span class="trust-item__sub">سيادة بيانات كاملة وصمود تشغيلي دون إنترنت</span>
-        </div>
-      </div>
-      <div class="trust-item">
-        <span class="trust-item__icon" aria-label="معايير معتمدة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
-        <div class="trust-item__txt">
-          <b class="trust-item__title">مطابقة معايير الحوسبة الدولية</b>
-          <span class="trust-item__sub">سجلات تدقيق مالي <span dir="ltr">IFRS</span> وامتثال أمني متقدم</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>`;
-};
-
-/* ---------- 13c — ENTERPRISE ENGAGEMENT PATHWAYS ---------- */
-export const enterprisePathways = (ctx) => {
-  return `<section class="sec sec--alt" id="pathways" aria-label="مسارات التعاقد المؤسسي">
-  <div class="wrap wrap--wide">
-    <div class="sec-head rv" data-stagger>
-      <span class="chip chip--accent"><span class="dot" aria-hidden="true"></span>مسارات التعاقد المؤسسي · ENGAGEMENT PATHWAYS</span>
-      <h2 class="d-1">ثلاثة مسارات للتعاقد المؤسسي مع عوالِم</h2>
-      <p class="lede">نماذج تعاقد واضحة المعالم، محددة النطاق، ومضمونة التسليم دون مفاجآت أو تكاليف خفية.</p>
-    </div>
-    <div class="pathway-grid rv" data-stagger>
-      <!-- Pathway 1 -->
-      <article class="pathway-card">
-        <div class="pathway-card__header">
-          <span class="pathway-num mono">01</span>
-          <span class="pathway-badge">تسليم في <span dir="ltr">2–4</span> أسابيع</span>
-        </div>
-        <h3 class="pathway-title">الهوية والمنتج الرقمي الفائق</h3>
-        <p class="pathway-lede">للشركات والمشاريع الطموحة التي تسعى لحضور بصري ورقمي بدرجة الجوائز العالمية يتفوق على المنافسين.</p>
-        <ul class="pathway-features">
-          <li>هندسة نظام بصري كامل وأدلة استخدام مطبعية</li>
-          <li>واجهات تفاعلية سائلة بمعدل 60 إطاراً في الثانية</li>
-          <li>كود معياري صفري التبعيات وسرعة تحميل <span dir="ltr">LCP &lt; 0.8s</span></li>
-          <li>توافق بياني صارم لكلا الاتجاهين العربي والإنجليزي</li>
-        </ul>
-        <div class="pathway-card__footer">
-          <a href="/contact?track=brand" class="btn btn--ghost btn--full"><span>اختر مسار الهوية والمنتج</span><span class="arr" aria-hidden="true">←</span></a>
-        </div>
-      </article>
-
-      <!-- Pathway 2 -->
-      <article class="pathway-card pathway-card--featured">
-        <div class="pathway-card__header">
-          <span class="pathway-num mono">02</span>
-          <span class="pathway-badge pathway-badge--gold">الأكثر طلباً للمؤسسات · <span dir="ltr">3–6</span> أسابيع</span>
-        </div>
-        <h3 class="pathway-title">أتمتة العمليات ونواة الذكاء الاصطناعي</h3>
-        <p class="pathway-lede">للمؤسسات التي تريد أتمتة دورات العمل والفوترة وسلاسل الإمداد بنماذج ذكاء اصطناعي سيادية دون تسريب للبيانات.</p>
-        <ul class="pathway-features">
-          <li>سرب وكلاء ذكاء اصطناعي محلي يعمل داخل خوادمكم</li>
-          <li>أتمتة القيود المحاسبية ومطابقة الفواتير الذكية لحظياً</li>
-          <li>تشفير تام لكل العمليات دون الاعتماد على شركات خارجية</li>
-          <li>لوحة تحكم إدارية شاملة مع تقارير أداء ومؤشرات حية</li>
-        </ul>
-        <div class="pathway-card__footer">
-          <a href="/contact?track=ai" class="btn btn--primary btn--full"><span>اختر مسار الأتمتة والذكاء الاصطناعي</span><span class="arr" aria-hidden="true">←</span></a>
-        </div>
-      </article>
-
-      <!-- Pathway 3 -->
-      <article class="pathway-card">
-        <div class="pathway-card__header">
-          <span class="pathway-num mono">03</span>
-          <span class="pathway-badge">تسليم في <span dir="ltr">6–12</span> أسبوعاً</span>
-        </div>
-        <h3 class="pathway-title">المنظومة السيادية المتكاملة</h3>
-        <p class="pathway-lede">للمستشفيات والجهات الحكومية والشركات الكبرى التي تتطلب سيادة بيانات 100% وعملاً دون اتصال واستقلالية مطلقة.</p>
-        <ul class="pathway-features">
-          <li>نظام تشغيلي سيادي متكامل مبني على محرك <span dir="ltr">Vibe OS Core</span></li>
-          <li>مزامنة لا مركزية متقدمة عبر أشجار ميركل عند الطوارئ</li>
-          <li>سجل تدقيق جنائي غير قابل للتعديل متوافق مع معايير <span dir="ltr">IFRS</span></li>
-          <li>ملكية كاملة للكود المصدري مع صيانة دورية واستقرار مدى الحياة</li>
-        </ul>
-        <div class="pathway-card__footer">
-          <a href="/contact?track=enterprise" class="btn btn--ghost btn--full"><span>احجز جلسة هندسية موسعة</span><span class="arr" aria-hidden="true">←</span></a>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>`;
-};
-
-/* ---------- 13d — SOVEREIGN JOURNEY MILESTONES ---------- */
-export const sovereignJourneyMilestones = (ctx) => {
-  return `<section class="sec" id="journey" aria-label="رحلة الصمود والسيادة التقنية">
-  <div class="wrap wrap--wide">
-    <div class="sec-head rv" data-stagger>
-      <span class="chip chip--accent"><span class="dot" aria-hidden="true"></span>ملحمة الانطلاق والسيادة · OUR SOVEREIGN JOURNEY</span>
-      <h2 class="d-1">من غزة إلى 14 دولة: قصة صمود صنعت معياراً تقنياً عالمياً</h2>
-      <p class="lede">بدأنا عام 2018 من تحت الحصار بهاتف محمول واتصال منقطع. لم يكن الهدف أن نعمل فقط، بل أن نُثبت أن المهندس العربي قادر على بناء أنظمة تُقاس بالمعيار العالمي — لا بالمعيار المحلّي المتساهل.</p>
-    </div>
-
-    <div class="journey-grid rv" data-stagger>
-      <!-- Milestone 1 -->
-      <div class="journey-item">
-        <div class="journey-item__time mono">2018</div>
-        <div class="journey-item__marker" aria-hidden="true"></div>
-        <div class="journey-item__body">
-          <h3 class="journey-item__title">شرارة الانطلاق تحت الحصار</h3>
-          <p class="journey-item__desc">تطوير أولى واجهات الويب خفيفة الوزن بهاتف محمول تحت انقطاع الكهرباء في غزة، وإثبات أن العقل البرمجي لا تحدّه الجدران.</p>
-          <span class="journey-item__tag">الهاتف والملاذ الرقمي</span>
-        </div>
-      </div>
-
-      <!-- Milestone 2 -->
-      <div class="journey-item">
-        <div class="journey-item__time mono">2021</div>
-        <div class="journey-item__marker" aria-hidden="true"></div>
-        <div class="journey-item__body">
-          <h3 class="journey-item__title">تأسيس عوالِم وإطلاق <span dir="ltr">Vibe OS</span></h3>
-          <p class="journey-item__desc">إطلاق النواة الهندسية الأولى لنظام التشغيل الرقمي وتأسيس أكاديمية عوالِم لتدريب مهندسي المستقبل على مشاريع حقيقية.</p>
-          <span class="journey-item__tag">النواة المعمارية الأولى</span>
-        </div>
-      </div>
-
-      <!-- Milestone 3 -->
-      <div class="journey-item">
-        <div class="journey-item__time mono">2023</div>
-        <div class="journey-item__marker" aria-hidden="true"></div>
-        <div class="journey-item__body">
-          <h3 class="journey-item__title">الترخيص الإماراتي والتوسع الإقليمي</h3>
-          <p class="journey-item__desc">تسجيل <span dir="ltr">Awalim Group LLC</span> في دولة الإمارات العربية المتحدة وترسيخ الحضور المؤسسي لخدمة الشركاء عبر 14 دولة.</p>
-          <span class="journey-item__tag">الترخيص والاعتماد الدولي</span>
-        </div>
-      </div>
-
-      <!-- Milestone 4 -->
-      <div class="journey-item">
-        <div class="journey-item__time mono"><span dir="ltr">2024–2026</span></div>
-        <div class="journey-item__marker" aria-hidden="true"></div>
-        <div class="journey-item__body">
-          <h3 class="journey-item__title">السيادة البرمجية والأنظمة المستقلة</h3>
-          <p class="journey-item__desc">تشغيل أنظمة <span dir="ltr">RahmaCare</span> و<span dir="ltr">Smart Accountant</span> في المشافي الميدانية والشركات الكبرى، وتوفير ملايين الدولارات بحوسبة مستقلة 100%.</p>
-          <span class="journey-item__tag">السيادة التقنية المطبقة</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>`;
-};
-
-/* ---------- 16 — SOVEREIGN DOCK (FLOATING JONNY CZAR STYLE RAIL) ---------- */
-export const sovereignDock = (ctx) => {
-  return `<nav class="sovereign-dock" id="sovereign-dock" aria-label="التنقل السريع بين محاور المنظومة">
-  <div class="sovereign-dock__inner">
-    <a href="#sovereign-architecture" class="sovereign-dock__pill" data-dock-target="sovereign-architecture">
-      <span class="dock-num">01</span>
-      <span class="dock-text">الهيكل</span>
-    </a>
-    <a href="#values" class="sovereign-dock__pill" data-dock-target="values">
-      <span class="dock-num">02</span>
-      <span class="dock-text">المبادئ</span>
-    </a>
-    <a href="#work" class="sovereign-dock__pill" data-dock-target="work">
-      <span class="dock-num">03</span>
-      <span class="dock-text">المشاريع</span>
-    </a>
-    <a href="#endorsements" class="sovereign-dock__pill" data-dock-target="endorsements">
-      <span class="dock-num">04</span>
-      <span class="dock-text">الشركاء</span>
-    </a>
-    <a href="#disciplines" class="sovereign-dock__pill" data-dock-target="disciplines">
-      <span class="dock-num">05</span>
-      <span class="dock-text">التخصصات</span>
-    </a>
-    <a href="#pathways" class="sovereign-dock__pill" data-dock-target="pathways">
-      <span class="dock-num">06</span>
-      <span class="dock-text">التعاقد</span>
-    </a>
-    <button type="button" class="sovereign-dock__pill sovereign-dock__pill--terminal" data-terminal-btn data-palette-open aria-label="فتح الطرفية">
-      <span class="dock-icon">⌘K</span>
-      <span class="dock-text">الطرفية</span>
-    </button>
-  </div>
-</nav>`;
-};
-
-
-/* ---------- 5d — SOVEREIGN CORE VALUES ---------- */
-export const sovereignValues = (ctx) => {
-  return `<section class="sec sec--alt" id="values" aria-label="قيم المنظومة الراسخة">
-  <div class="wrap wrap--wide">
-    <div class="sec-head rv" data-stagger>
-      <span class="chip chip--accent"><span class="dot" aria-hidden="true"></span>المبادئ الراسخة · SOVEREIGN VALUES</span>
-      <h2 class="d-1">أربع قيم تحكم كل سطر كود وكل قرار تصميمي</h2>
-      <p class="lede">لا نعمل بالشعارات الرنانة. هذه القواعد الأربع هي البوصلة التي تحدد كيف نختار مشاريعنا، وكيف نهندس أنظمتنا، وكيف نضمن نجاح شركائنا.</p>
-    </div>
-    <div class="values-grid rv" data-stagger>
-      <article class="val-card">
-        <span class="val-num mono">01</span>
-        <h3 class="val-title">الثقة قبل الجمال</h3>
-        <p class="val-desc">الجمال يجذب الانتباه لأول وهلة، لكن الموثوقية الصارمة، واستقرار النظام، وحماية البيانات هي ما يجعل العميل يستمر ويدفع.</p>
-        <span class="val-badge">الموثوقية أولاً</span>
-      </article>
-      <article class="val-card">
-        <span class="val-num mono">02</span>
-        <h3 class="val-title">الأداء ميزة تنافسية</h3>
-        <p class="val-desc">النظام السريع والخفيف احترامٌ حقيقي لوقت المستخدم وطاقته وأجهزته. السرعة ليست رفاهية ثانوية — بل جوهر التجربة.</p>
-        <span class="val-badge">سرعة قياسية · <span dir="ltr">60 FPS</span></span>
-      </article>
-      <article class="val-card">
-        <span class="val-num mono">03</span>
-        <h3 class="val-title">العربية أصيلة لا مترجمة</h3>
-        <p class="val-desc">نصمم ونطوّر للغة العربية كلغة أولى بهيكلها الفريد، وجماليات خطوطها الموزونة، واتجاهها الطبيعي، وليس كقالب أجنبي مترجم.</p>
-        <span class="val-badge">أصالة الهوية واللغة</span>
-      </article>
-      <article class="val-card">
-        <span class="val-num mono">04</span>
-        <h3 class="val-title">التفاصيل تصنع الفرق الخارق</h3>
-        <p class="val-desc">الفرق بين المنتج الجيد والنظام العالمي العظيم يختبئ في التفاصيل المجهرية — تلك التي تُحس في سلاسة الاستخدام قبل أن تُرى.</p>
-        <span class="val-badge">إتقان متناهي</span>
-      </article>
-    </div>
-  </div>
-</section>`;
-};
-
-/* ---------- 5e — MULTI-DISCIPLINARY DISCIPLINES ---------- */
-export const sovereignDisciplines = (ctx) => {
-  return `<section class="sec" id="disciplines" aria-label="التخصصات والقدرات الشاملة">
-  <div class="wrap wrap--wide">
-    <div class="sec-head rv" data-stagger>
-      <span class="chip chip--accent"><span class="dot" aria-hidden="true"></span>التخصصات الهندسية والإبداعية · MULTI-DISCIPLINARY CORE</span>
-      <h2 class="d-1">رؤية واحدة متكاملة تجمع التصميم بالكود والإعلام</h2>
-      <p class="lede">نلغي الفجوة التقليدية بين المصمم والمطوّر وخبير الذكاء الاصطناعي — فريقنا يهندس الرؤية من الفكرة إلى الإنتاج بصوت واحد ومعيار موحّد.</p>
-    </div>
-    <div class="disc-grid rv" data-stagger>
-      <div class="disc-card">
-        <div class="disc-icon" aria-hidden="true"></div>
-        <h3 class="disc-title">الهندسة البصرية والتصميم</h3>
-        <p class="disc-desc">أنظمة بصرية عالمية، هوية متكاملة، وواجهات مستخدم سائلة ترقى لأرقى الجوائز العالمية مع احترام قواعد التيبوغرافيا العربية.</p>
-        <div class="disc-tags">
-          <span>هوية بصرية</span>
-          <span>UI/UX</span>
-          <span>Figma</span>
-          <span>تصميم تفاعلي</span>
-        </div>
-      </div>
-      <div class="disc-card">
-        <div class="disc-icon" aria-hidden="true"></div>
-        <h3 class="disc-title">تطوير الأنظمة والتطبيقات</h3>
-        <p class="disc-desc">كود معياري نظيف صفر تبعيات، تطبيقات ويب وموبايل فائقة الأداء، وقواعد بيانات محلية سريعة الاستجابة تحت أقسى الظروف.</p>
-        <div class="disc-tags">
-          <span>HTML/CSS/JS</span>
-          <span>React & Flutter</span>
-          <span>Node.js</span>
-          <span>Local-First DB</span>
-        </div>
-      </div>
-      <div class="disc-card">
-        <div class="disc-icon" aria-hidden="true"></div>
-        <h3 class="disc-title">نواة الذكاء الاصطناعي والأتمتة</h3>
-        <p class="disc-desc">بناء أسراب وكلاء ذكاء اصطناعي سياديين يعملون محلياً لأتمتة سلاسل الإمداد، الفوترة، والتحليل المالي دون تسريب أي بيانات.</p>
-        <div class="disc-tags">
-          <span>Local AI Agents</span>
-          <span>Prompt Core</span>
-          <span>أتمتة العمليات</span>
-          <span>Zero-Leak AI</span>
-        </div>
-      </div>
-      <div class="disc-card">
-        <div class="disc-icon" aria-hidden="true"></div>
-        <h3 class="disc-title">الإنتاج الإعلامي والحركي</h3>
-        <p class="disc-desc">موشن جرافيك متقدم، مونتاج سينمائي، ومؤثرات حركية فائقة الدقة تعزز الحضور البصري للعلامة التجارية في المنصات العالمية.</p>
-        <div class="disc-tags">
-          <span>Motion Graphics</span>
-          <span>After Effects</span>
-          <span>المونتاج السينمائي</span>
-          <span>60 FPS Motion</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>`;
-};
 
 /* ---------- proof: client wall + testimonials (2026-09-29) ----------
    Designed and wired before the content exists, so the owner's first real

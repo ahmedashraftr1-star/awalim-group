@@ -215,7 +215,7 @@
       "slug": "rahmacare",
       "kind": "Health",
       "title": "RahmaCare",
-      "headline": "Smart healthcare in the family's hands — and a record with no number without a source",
+      "headline": "Healthcare in the family's hands — and a record with no number without a source",
       "summary": "A Flutter app for managing family health with AI, and a relief platform linking a case to a donor through a record that can be verified.",
       "tags": [
         "Flutter",
@@ -265,17 +265,16 @@
           "label": "platforms from one codebase"
         },
         {
-          "n": 100,
-          "suffix": "%",
-          "label": "of published numbers tied to a source"
+          "text": "Source",
+          "label": "behind every published number — a rule built into the design"
         },
         {
           "text": "AA",
           "label": "WCAG 2.1 accessibility"
         },
         {
-          "text": "Ed",
-          "label": "a sequenced, hashed record"
+          "text": "1",
+          "label": "general ledger, sequenced and hashed"
         }
       ],
       "architecture": [
@@ -293,7 +292,7 @@
       "slug": "jameel-store",
       "kind": "E-commerce",
       "title": "Jameel Store",
-      "headline": "A luxury store with a world-class shopping experience — Arabic from the root",
+      "headline": "A luxury store template — Arabic from the root",
       "summary": "A Flutter store template over Firebase: from browsing to payment in one flow that never breaks, and a cart that is not lost when the network drops.",
       "tags": [
         "Flutter",
@@ -445,7 +444,7 @@
       "slug": "web-platforms",
       "kind": "Product line",
       "title": "Web Platforms",
-      "headline": "Sites and dashboards built to a strict performance budget",
+      "headline": "Sites and dashboards built to a performance budget",
       "summary": "Because every 100 milliseconds has a price. Web platforms and dashboards built on Vibe OS, Arabic from the root, and measured on every release.",
       "tags": [
         "React",
@@ -521,8 +520,8 @@
       "slug": "brand-studio",
       "kind": "Studio",
       "title": "Brand Studio",
-      "headline": "An identity that never reaches the code is not an identity",
-      "summary": "A complete visual identity and design system: tokens, colour, Arabic typography, and a component library ready to build with — understood by developer and designer alike.",
+      "headline": "A visual identity that reaches the code",
+      "summary": "A complete visual identity and design system: tokens, colour, Arabic type, and a component library ready to build with — clear to developer and designer alike.",
       "tags": [
         "Visual identity",
         "Design system",
@@ -674,7 +673,7 @@
       "slug": "close-orchestrator",
       "kind": "Agent System",
       "title": "AI Close Orchestrator",
-      "headline": "Eight AI agents that close your accounting month with you — not instead of you",
+      "headline": "Closes your month with you, not instead of you",
       "summary": "An agent layer running on top of Smart Accountant: it receives documents, reconciles banks, settles accounts, and prepares closing reports — stopping at every decision with financial impact until a human approves it.",
       "tags": [
         "Agents",
@@ -697,7 +696,7 @@
         },
         {
           "t": "Audit-ready closing reports",
-          "d": "IFRS-compliant closing statements assembled automatically from approved entries."
+          "d": "Closing statements prepared to IFRS, assembled automatically from approved entries."
         },
         {
           "t": "Compliance packs for each Gulf country",

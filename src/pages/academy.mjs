@@ -11,35 +11,36 @@ export default function render(ctx) {
   const isEn = ctx.locale === "en";
   const t = (ar, en) => (isEn ? en : ar);
 
-  // 4-Sprint curriculum plans per track
+  // Four curriculum stages per track — order of study only, no week ranges
+  // (track lengths differ: see pages.json academy.tracks[].duration).
   const sprintRoadmaps = [
-    // 01 Systems
+    // 01 Systems — capstone: multi-tenant billing system
     [
-      { num: "01", weeks: t("الأسابيع 1-4", "Weeks 1-4"), title: t("معمارية النواة ونماذج البيانات", "Kernel Architecture & Schemas"), desc: t("تصميم بنية البيانات وتطبيع الجداول ومعايير الأمان وتحديد حدود العمليات المعزولة.", "Data modeling, ACID invariants, and zero-trust isolated execution boundaries.") },
-      { num: "02", weeks: t("الأسابيع 5-8", "Weeks 5-8"), title: t("محرك المعاملات والقيد المزدوج IFRS", "IFRS Double-Entry Ledger Engine"), desc: t("بناء آلة الحالة المالية غير القابلة للتراجع وعزل الأخطاء وتأمين سلامة السجلات.", "Deterministic state machines, cryptographic commit logs, and concurrency safety.") },
-      { num: "03", weeks: t("الأسابيع 9-12", "Weeks 9-12"), title: t("فحص الضغط ومزامنة العقد الموزعة", "Distributed Stress Testing"), desc: t("اختبار 50,000 عملية في الثانية وتحقيق زمن استجابة دون 10ms تحت الضغط.", "50k tx/sec benchmarking, load balancing, and sub-10ms p99 latency verification.") },
-      { num: "04", weeks: t("الأسابيع 13-16", "Weeks 13-16"), title: t("المراجعة النهائية والاعتماد", "Final review & certification"), desc: t("مراجعة كود شاملة مع المهندس أحمد أشرف واعتماد ونشر المشروع النهائي حياً.", "Zero-defect code defense with Eng. Ahmed Ashraf and live production launch.") }
+      { num: "01", title: t("نمذجة البيانات", "Data modelling"), desc: t("تصمّم جداول المشروع وتطبّعها، وتحدّد ما يخصّ كل مستأجر وما هو مشترك بينهم.", "Design and normalise the project's tables, and decide what belongs to each tenant and what is shared.") },
+      { num: "02", title: t("الهجرات والمعاملات", "Migrations & transactions"), desc: t("تكتب الهجرات والفهارس، وتتعلّم متى تحتاج معاملة وأيّ مستوى عزل يناسبها.", "Write migrations and indexes, and learn when a transaction is needed and which isolation level fits it.") },
+      { num: "03", title: t("الأداء والأمان", "Performance & security"), desc: t("تقيس الاستعلامات البطيئة بأدوات PostgreSQL نفسها وتحسّنها، وتضيف الأمان على مستوى الصفوف.", "Measure slow queries with PostgreSQL's own tools, improve them, and add row-level security.") },
+      { num: "04", title: t("المراجعة النهائية والتسليم", "Final review & hand-in"), desc: t("مراجعة كود نهائية على مشروعك، ثم نشره وتسليمه.", "A final code review of your project, then you deploy it and hand it in.") }
     ],
-    // 02 AI
+    // 02 AI — capstone: document-extraction agent with a human in the loop
     [
-      { num: "01", weeks: t("الأسابيع 1-4", "Weeks 1-4"), title: t("هندسة النماذج والاستدلال المحلي", "Model Engineering & Local Inference"), desc: t("تجهيز بيئات LLM المدمجة وخطوط استخراج المتجهات الحسابية الدقيقة.", "Edge LLM orchestration, embedding pipelines, and semantic retrieval systems.") },
-      { num: "02", weeks: t("الأسابيع 5-8", "Weeks 5-8"), title: t("بناء الوكلاء المستقلين (Agents)", "Autonomous Agent Tooling"), desc: t("ربط حلقات التفكير، الأدوات الخارجية، واستراتيجيات التراجع الآمن.", "Multi-agent coordination, deterministic fallback routines, and memory layers.") },
-      { num: "03", weeks: t("الأسابيع 9-12", "Weeks 9-12"), title: t("نظام الإنسان في الحلقة (HITL)", "Human-in-the-Loop Governance"), desc: t("حوكمة القرارات الحرجة ومنع الهلوسة في تدقيق المستندات الرسمية.", "Fail-safe verification workflows and zero-hallucination document extraction.") },
-      { num: "04", weeks: t("الأسابيع 13-16", "Weeks 13-16"), title: t("اختبارات الأمان السيبراني والنشر", "Adversarial Hardening & Launch"), desc: t("مقاومة هجمات حقن الأوامر (Prompt Injection) والنشر السحابي المقسى.", "Prompt-injection red teaming, sandbox hardening, and live production deployment.") }
+      { num: "01", title: t("تعريف المهمّة وحدود الصلاحية", "Task definition & permissions"), desc: t("تحدّد بدقّة ما يفعله الوكيل وما لا يُسمح له به، وتجهّز المستندات التي سيعمل عليها.", "Define exactly what the agent does and what it may not do, and prepare the documents it will work on.") },
+      { num: "02", title: t("الأدوات والذاكرة", "Tools & memory"), desc: t("تربط الوكيل بالأدوات التي يحتاجها، وتقرّر ما يتذكّره بين الخطوات وماذا يفعل حين تفشل خطوة.", "Connect the agent to the tools it needs, decide what it remembers between steps, and what it does when a step fails.") },
+      { num: "03", title: t("الإنسان في الحلقة والتقييم", "Human review & evaluation"), desc: t("تضيف مراجعة بشرية للقرارات الحسّاسة، وتقيس دقّة الاستخراج على مستندات حقيقية قبل الاعتماد عليه.", "Add a human review step for sensitive decisions, and measure extraction accuracy on real documents before relying on it.") },
+      { num: "04", title: t("الأمان والنشر", "Security & deployment"), desc: t("تختبر الوكيل ضد حقن الأوامر (Prompt Injection)، وتسجّل ما يفعله، ثم تنشره.", "Test the agent against prompt injection, log what it does, then deploy it.") }
     ],
-    // 03 Flutter
+    // 03 Flutter — capstone: offline-capable app on both stores
     [
-      { num: "01", weeks: t("الأسابيع 1-4", "Weeks 1-4"), title: t("معمارية التطبيق وقاعدة البيانات المحلية", "State Architecture & Local DB"), desc: t("تصميم بنية BLoC الصارمة ومزامنة SQLite مشفرة محلياً دون تسريب بيانات.", "Strict BLoC state boundaries, encrypted local SQLite, and clean memory models.") },
-      { num: "02", weeks: t("الأسابيع 5-8", "Weeks 5-8"), title: t("محرك الصمود دون إنترنت (Offline-First)", "Offline-First Sync Engine"), desc: t("بروتوكول تجميع الحزم والمزامنة الصامتة فور توفر الاتصال في الميدان.", "Conflict-free replicated data types and silent background mesh queuing.") },
-      { num: "03", weeks: t("الأسابيع 9-12", "Weeks 9-12"), title: t("الأداء الفيزيائي 120 FPS والواجهات", "120 FPS Fluid Micro-Physics"), desc: t("تحسين استخدام الذاكرة والرسومات المخصصة للميدان وحالات الطوارئ.", "Zero-jank render pipelines, canvas optimizations, and field-ready UI.") },
-      { num: "04", weeks: t("الأسابيع 13-16", "Weeks 13-16"), title: t("النشر التلقائي على المتاجر (CI/CD)", "Automated Dual App Store Release"), desc: t("أتمتة التوقيع الرقمي، فحص المتطلبات الصارمة، والإطلاق المزدوج في المتاجر.", "Cryptographic APK/IPA signing, automated pipelines, and production release.") }
+      { num: "01", title: t("من التصميم إلى المكوّنات", "From design to widgets"), desc: t("تحوّل تصميم Figma إلى مكوّنات، وتختار طريقة لإدارة الحالة تبقى واضحة مع نموّ التطبيق.", "Turn the Figma design into widgets, and choose a state-management approach that stays clear as the app grows.") },
+      { num: "02", title: t("العمل دون اتصال", "Working offline"), desc: t("يحفظ التطبيق بياناته محلياً ويعمل دون إنترنت، ثم يزامنها حين يعود الاتصال ويعالج التعارض.", "The app stores its data locally and works without a connection, then syncs when it returns and resolves conflicts.") },
+      { num: "03", title: t("العربية والأداء", "Arabic & performance"), desc: t("دعم كامل للعربية واتجاه الكتابة، وقياس الأداء على أجهزة حقيقية وإصلاح ما يبطئه.", "Full Arabic and right-to-left support, and performance measured on real devices with the slow parts fixed.") },
+      { num: "04", title: t("النشر على المتجرين", "Publishing to both stores"), desc: t("توقيع التطبيق، وتجهيز ما تطلبه مراجعة المتاجر، ثم النشر على App Store وGoogle Play.", "Sign the app, prepare what store review asks for, then publish to the App Store and Google Play.") }
     ],
-    // 04 Design
+    // 04 Design — capstone: Arabic design system exported to code
     [
-      { num: "01", weeks: t("الأسابيع 1-4", "Weeks 1-4"), title: t("قواعد التيبوغرافيا والأنظمة البصرية", "Arabic Typography Foundations"), desc: t("معايرة نسب الحروف، السطور، والمقاييس المتوافقة مع العين العربية.", "Glyph proportion science, baseline geometry, and culturally resonant optics.") },
-      { num: "02", weeks: t("الأسابيع 5-8", "Weeks 5-8"), title: t("هندسة الرموز التصميمية (Design Tokens)", "Executable Design Token Engineering"), desc: t("بناء نظام ألوان HSL، زجاجية الإضاءة، وتوليد متغيرات CSS برمجياً.", "HSL light physics, semantic elevation layers, and automated CSS export.") },
-      { num: "03", weeks: t("الأسابيع 9-12", "Weeks 9-12"), title: t("مكتبة المكونات التفاعلية المزدوجة", "Bi-Directional Component Systems"), desc: t("بناء 40 مكوناً عالي الدقة يراعي اتجاه القراءة وحركات اللمس الحية.", "40 production-grade components engineered for zero-compromise RTL/LTR parity.") },
-      { num: "04", weeks: t("الأسابيع 13-16", "Weeks 13-16"), title: t("توثيق المنظومة وتصدير الحزمة", "Design System NPM Release"), desc: t("إطلاق نظام تصميم متكامل بمعايير عالمية مع دليل مطورين تفاعلي.", "Packaging, comprehensive developer documentation, and public design launch.") }
+      { num: "01", title: t("الطباعة العربية", "Arabic typography"), desc: t("اختيار الخطوط وأحجامها وتباعد الأسطر بما يناسب القارئ العربي.", "Choosing Arabic typefaces, sizes and line spacing that suit Arabic readers.") },
+      { num: "02", title: t("رموز التصميم", "Design tokens"), desc: t("تحويل الألوان والمسافات والخطوط إلى رموز تصميم (Design Tokens) تُصدَّر إلى CSS.", "Turn colours, spacing and type into design tokens that export to CSS.") },
+      { num: "03", title: t("المكوّنات والوصولية", "Components & accessibility"), desc: t("بناء مكوّنات تعمل في الاتجاهين (RTL/LTR) وتستوفي متطلبات التباين والوصولية WCAG.", "Build components that work in both directions (RTL/LTR) and meet WCAG contrast and accessibility requirements.") },
+      { num: "04", title: t("التصدير إلى الكود والتوثيق", "Export to code & documentation"), desc: t("تصدير النظام إلى الكود مع دليل استخدام للمطوّرين.", "Export the system to code with a usage guide for developers.") }
     ]
   ];
 
@@ -55,23 +56,22 @@ export default function render(ctx) {
               <span>${t("قدّم للمسار القادم", "Apply for Next Cohort")}</span>
             </button>
             ${C.btn({ href: "#tracks", label: t("استكشف المسارات", "Explore Tracks"), kind: "ghost", arrow: true })}
-            ${C.btn({ href: "#cert-verify", label: t("التحقق من الشهادات", "Verify Credentials"), kind: "ghost", arrow: true })}
           </div>
         </div>
-        <div class="hero__media rv" style="--i:2" data-tilt>${C.device({ kind: "laptop", inner: C.mockScreen("academy"), alt: t("منصّة أكاديمية عوالِم: مشروع المسار ومهامّه ومراجعة الكود", "Awalim Academy Platform: Sprint reviews and production grade code"), tilt: true, label: "academy.awalimgroup.com" })}</div>
+        <div class="hero__media rv" style="--i:2" data-tilt>${C.device({ kind: "laptop", inner: C.mockScreen("academy"), alt: t("منصّة أكاديمية عوالِم: مشروع المسار ومهامّه ومراجعة الكود", "Awalim Academy platform: track project, tasks and code review"), tilt: true, label: "academy.awalimgroup.com" })}</div>
       </div>
     </section>`,
 
-    `<section class="sec sec--tight" aria-label="${t("أرقام الأكاديمية", "Academy Verified Metrics")}">
+    `<section class="sec sec--tight" aria-label="${t("أرقام الأكاديمية", "Academy figures")}">
       <div class="wrap wrap--wide">
         ${C.statBar(a.stats, stats, { size: "xl", cls: "statbar--hero", verify: true, signing: ctx.signing })}
-        <p class="small muted rv statbar__note">${fill(t("«{engineersTrained}» هم كل من دخل مساراً في الأكاديمية؛ «{certifiedGraduates}» هم من أنهوا المسار كاملاً بمشروع منشور. الدول الست هي التي يعمل فيها خرّيجونا اليوم — أما «{clientCountries} دولة» في الرئيسية فهي دول عملاء المجموعة.", "'{engineersTrained}' entered our engineering tracks; '{certifiedGraduates}' completed the capstone project live in production. Graduates operate across 6 countries today."), stats)}</p>
+        <p class="small muted rv statbar__note">${fill(t("«{engineersTrained}» هم كل من دخل مساراً في الأكاديمية؛ «{certifiedGraduates}» هم من أنهوا المسار كاملاً بمشروع منشور. و«{graduateCountries} دول» هي التي يعمل فيها خرّيجونا اليوم — أما «{clientCountries} دولة» في الرئيسية فهي دول عملاء المجموعة.", "'{engineersTrained}' is everyone who has started an Academy track; '{certifiedGraduates}' is those who finished a whole track with a deployed project. '{graduateCountries} countries' is where our graduates work today — the {clientCountries} countries on the home page are where the Group's clients are."), stats)}</p>
       </div>
     </section>`,
 
     `<section class="sec" id="tracks">
       <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: "المسارات", eyebrowEn: "TRACKS", h: `${stats.tracks.value} ${t("مسارات هندسية مكثفة", "Rigorous Engineering Tracks")}`, lede: t("كل مسار يُبنى حول مشروع إنتاجي واحد تُسلّمه وتدافع عن كوده في النهاية — لا حول مجرد محاضرات نظرية.", "Each track centers on a single production-grade capstone you engineer, defend, and deploy live.") })}
+        ${C.sectionHead({ eyebrowAr: "المسارات", eyebrowEn: "TRACKS", h: `${stats.tracks.value} ${t("مسارات هندسية مكثفة", "Rigorous Engineering Tracks")}`, lede: t("كل مسار يُبنى حول مشروع إنتاجي واحد تُسلّمه وتدافع عن كوده في النهاية — لا حول مجرد محاضرات نظرية.", "Each track is built around one real project that you deliver and defend the code of at the end — not around lectures alone.") })}
         <div class="tracks">
           ${a.tracks.map((tr, i) => `
             <article class="track rv" id="track-${i + 1}" data-stagger>
@@ -94,22 +94,21 @@ export default function render(ctx) {
                   <span>${t("التقديم لهذا المسار", "Apply for Track")}</span>
                 </button>
                 <button type="button" class="btn btn--outline btn--sm btn-toggle-sprint-plan" data-sprint-target="track-sprints-${i + 1}" style="padding:8px 18px; border-radius:8px; height:auto; width:auto; font-size:0.85rem; display:inline-flex;">
-                  <span>${t("خطة السبرنتات الـ 4", "4-Sprint Roadmap")}</span>
+                  <span>${t("مراحل المسار الأربع", "The four stages")}</span>
                 </button>
               </div>
 
               <!-- Collapsible 4-Sprint Roadmap -->
               <div id="track-sprints-${i + 1}" class="track-sprints-drawer" style="display:none; padding:1.25rem; border-radius:var(--radius-md, 10px); background:var(--surface-2); border:1px solid var(--border-2);">
                 <div style="font-weight:700; font-size:0.9rem; margin-bottom:0.85rem; color:var(--gold);">
-                  ${t("خطة السبرنتات الـ 4 والمخرجات الهندسية للمشروع", "4-Sprint Execution Roadmap & Technical Deliverables")}
+                  ${t("مراحل المسار الأربع، بترتيب دراستها", "The track's four stages, in the order you study them")}
                 </div>
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.75rem;">
                   ${(sprintRoadmaps[i] || []).map(sp => `
                     <div style="padding:0.75rem; border-radius:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);">
                       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
-                        <span class="mono" style="font-size:0.75rem; color:var(--gold); font-weight:700;">Sprint ${sp.num}</span>
-                        <span style="font-size:0.72rem; color:var(--muted);">${sp.weeks}</span>
-                      </div>
+                        <span class="mono" style="font-size:0.75rem; color:var(--gold); font-weight:700;">${t("المرحلة", "Stage")} ${sp.num}</span>
+                                              </div>
                       <div style="font-weight:700; font-size:0.85rem; margin-bottom:0.25rem;">${sp.title}</div>
                       <div style="font-size:0.78rem; color:var(--muted); line-height:1.4;">${sp.desc}</div>
                     </div>
@@ -117,90 +116,6 @@ export default function render(ctx) {
                 </div>
               </div>
             </article>`).join("")}
-        </div>
-      </div>
-    </section>`,
-
-    `<!-- Interactive Graduate Certificate Verification Suite -->
-    <section class="sec sec--alt" id="cert-verify" aria-label="${t("التحقق من الشهادات", "Certificate Verification")}">
-      <div class="wrap wrap--wide">
-        ${C.sectionHead({
-          eyebrowAr: "الاعتماد التشفيري",
-          eyebrowEn: "CRYPTOGRAPHIC CREDENTIALS",
-          h: t("التحقق الفوري من شهادات خريجي الأكاديمية", "Instant Cryptographic Graduate Certificate Verification"),
-          lede: t("كل شهادة تخرج معتمدة صادرة من أكاديمية عوالِم موثقة بتوقيع Ed25519 ومربوطة بالهاش المشفر للمشروع النهائي المنشور على GitHub.", "Every accredited graduation certificate issued by Awalim Academy is cryptographically sealed with Ed25519 and verifiable in the visitor browser.")
-        })}
-
-        <div style="max-width:820px; margin:0 auto; padding:1.75rem; border-radius:var(--radius-lg, 16px); background:var(--surface-2); border:1px solid var(--border-2); box-shadow:var(--shadow-card);">
-          
-          <form id="form-verify-cert" aria-label="${t("نموذج فحص الشهادة", "Certificate Verification Form")}" style="margin-bottom:1.25rem;">
-            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-              <div style="flex:1; min-width:240px;">
-                <label for="input-cert-search" class="dash-label" style="display:block; margin-bottom:0.35rem; font-size:0.85rem;">
-                  ${t("أدخل رقم الشهادة أو المعرف الرقمي (Certificate ID)", "Enter Certificate Serial ID")}
-                </label>
-                <input type="text" name="cert_id" id="input-cert-search" class="dash-input" aria-label="${t("أدخل رقم الشهادة أو المعرف الرقمي", "Enter Certificate Serial ID")}" aria-describedby="cert-verify-error" placeholder="AWL-CERT-2026-ENG01" required style="width:100%;">
-              </div>
-              <div style="display:flex; align-items:flex-end;">
-                <button type="submit" class="btn btn--primary btn--sm" id="btn-submit-verify-cert" style="height:42px;">
-                  <span>${t("فحص ومصادقة الشهادة", "Verify Signature")}</span>
-                </button>
-              </div>
-            </div>
-            <div id="cert-verify-error" role="alert" aria-live="polite" class="dash-form-error" style="color:var(--bad); font-size:0.85rem; margin-top:0.35rem; min-height:1rem;"></div>
-          </form>
-
-          <!-- Quick presets -->
-          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; font-size:0.78rem; margin-bottom:1.5rem;">
-            <span class="text-muted">${t("شهادات تجريبية سريعة:", "Preset Graduate Credentials:")}</span>
-            <button type="button" class="chip chip--sm btn-preset-cert" data-cert-id="AWL-CERT-2026-ENG01">ENG-01 (${t("م. طارق الناصر", "Tariq Al-Nasser")})</button>
-            <button type="button" class="chip chip--sm btn-preset-cert" data-cert-id="AWL-CERT-2026-ENG06">ENG-06 (${t("م. هناء الزعبي", "Hana Al-Zoubi")})</button>
-            <button type="button" class="chip chip--sm btn-preset-cert" data-cert-id="AWL-CERT-2026-ENG02">ENG-02 (${t("د. ليلى منصور", "Dr. Layla Mansour")})</button>
-          </div>
-
-          <!-- Certificate Verification Result Container -->
-          <div id="cert-verification-result" style="padding:1.5rem; border-radius:12px; background:radial-gradient(circle at top right, rgba(212,175,55,0.08), transparent 70%), rgba(255,255,255,0.02); border:1px solid rgba(212,175,55,0.4);">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-              <div style="display:flex; align-items:center; gap:0.75rem;">
-                <span style="font-size:2rem;"></span>
-                <div>
-                  <div class="mono" style="font-size:0.75rem; color:var(--gold); font-weight:700;" id="cert-out-id">AWL-CERT-2026-ENG01</div>
-                  <h3 style="margin:0.2rem 0; font-size:1.2rem; font-weight:800;" id="cert-out-name">${t("المهندس طارق الناصر", "Eng. Tariq Al-Nasser")}</h3>
-                  <div style="font-size:0.85rem; color:var(--muted);" id="cert-out-track">${t("مسار 01: هندسة الأنظمة وقواعد البيانات", "Track 01: Systems & Database Architecture")}</div>
-                </div>
-              </div>
-              <span class="badge badge--ok" style="font-size:0.75rem; border-color:var(--gold); color:var(--gold);" id="cert-out-badge">
-                ✔ ${t("شهادة رسمية معتمدة Ed25519", "Ed25519 Verified")}
-              </span>
-            </div>
-
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:0.85rem; padding:1rem; border-radius:8px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.06); margin-bottom:1rem; font-size:0.82rem;">
-              <div>
-                <span class="text-muted" style="display:block; font-size:0.72rem;">${t("مشروع التخرج المعتمد", "Verified Capstone Project")}</span>
-                <b id="cert-out-project">${t("محرك القيد المحاسبي المزدوج IFRS (Island Haven)", "IFRS Double-Entry Ledger Engine")}</b>
-              </div>
-              <div>
-                <span class="text-muted" style="display:block; font-size:0.72rem;">${t("التقدير والمرتبة", "Honors & Grade")}</span>
-                <b style="color:#10B981;" id="cert-out-grade">${t("امتياز مع مرتبة الشرف 99.4%", "Summa Cum Laude (99.4%)")}</b>
-              </div>
-              <div>
-                <span class="text-muted" style="display:block; font-size:0.72rem;">${t("المشرف العام ورئيس المعمارية", "Apex Reviewer")}</span>
-                <b id="cert-out-mentor">${t("المهندس أحمد أشرف", "Eng. Ahmed Ashraf")}</b>
-              </div>
-              <div>
-                <span class="text-muted" style="display:block; font-size:0.72rem;">${t("تاريخ الاعتماد", "Date of Conferral")}</span>
-                <b id="cert-out-date">2026-09-20</b>
-              </div>
-            </div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; font-size:0.72rem; color:var(--muted);">
-              <div class="mono" id="cert-out-hash">SHA-256: 7c129f40b311...tn02 · ED25519 ROOT ATTESTED</div>
-              <button type="button" class="btn btn--outline btn--xs" id="btn-print-academic-cert">
-                <span>${t("طباعة / تصدير الشهادة", "Print Official Credential")}</span>
-              </button>
-            </div>
-          </div>
-
         </div>
       </div>
     </section>`,
@@ -306,7 +221,7 @@ export default function render(ctx) {
           <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
             <button type="button" class="btn btn--ghost btn--sm" id="btn-cancel-academy-apply">${t("إلغاء", "Cancel")}</button>
             <button type="submit" class="btn btn--primary btn--sm">
-              <span>${t("إرسال طلب الالتحاق ومراجعة المعمارية", "Submit Application for Review")}</span>
+              <span>${t("أرسل الطلب عبر واتساب", "Send application via WhatsApp")}</span>
             </button>
           </div>
         </form>

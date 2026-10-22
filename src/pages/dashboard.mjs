@@ -54,7 +54,7 @@ export default function dashboard(ctx) {
         <div class="dash-apple-header" id="dash-admin-user-card">
           <div class="dash-apple-header__profile">
             <div class="dash-apple-avatar-wrap">
-              <img src="/assets/img/ahmed-personal.webp" alt="Ahmed Ashraf" class="dash-apple-avatar" width="52" height="52">
+              <img src="/assets/img/ahmed-personal.webp" srcset="${C.srcset("/assets/img/ahmed-personal.webp")}" sizes="93px" alt="Ahmed Ashraf" class="dash-apple-avatar" width="52" height="52">
               <span class="dash-apple-crown-badge" aria-hidden="true">${icon("crown", "dash-apple-crown-svg")}</span>
             </div>
             <div class="dash-apple-profile-info">
@@ -1791,7 +1791,7 @@ export default function dashboard(ctx) {
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
                 <div style="display: flex; gap: 0.75rem; align-items: center;">
                   <div style="position: relative;">
-                    <img src="/assets/img/ahmed-personal.webp" alt="Ahmed Ashraf" width="46" height="46" style="width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold);">
+                    <img src="/assets/img/ahmed-personal.webp" srcset="${C.srcset("/assets/img/ahmed-personal.webp")}" sizes="82px" alt="Ahmed Ashraf" width="46" height="46" style="width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold);">
                     <span class="live-dot" style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; border: 2px solid #000;" aria-hidden="true"></span>
                   </div>
                   <div>

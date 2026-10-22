@@ -10,7 +10,7 @@ import { btn, arrow } from "./components.mjs";
 
 const FONT_PRELOADS = [
   "/assets/fonts/ibm-plex-sans-arabic-400-arabic.woff2",
-  "/assets/fonts/alexandria-800-arabic.woff2"
+  "/assets/fonts/ibm-plex-sans-arabic-700-arabic.woff2"
 ];
 
 /* Every page ships Lenis (13KB); scroll-driven effects use the 40-line scrub
@@ -30,7 +30,7 @@ export const orgSchema = (site) => ({
   logo: `${site.brand.url}${site.brand.logo}`,
   foundingDate: String(site.stats.founded.value),
   description: site.brand.shortDescription,
-  founder: { "@type": "Person", name: site.brand.founder.latin, jobTitle: "Founder & Chief Engineer" },
+  founder: { "@type": "Person", name: site.brand.founder.latin, jobTitle: "Founder & Chief Engineer", ...(site.brand.founder.linkedin ? { sameAs: [site.brand.founder.linkedin] } : {}) },
   address: { "@type": "PostalAddress", addressCountry: "PS", addressRegion: "Palestine" },
   contactPoint: [{ "@type": "ContactPoint", telephone: `+${site.contact.whatsapp}`, contactType: "sales", availableLanguage: ["ar", "en"] }],
   knowsAbout: ["IFRS Accounting Software", "Agentic AI", "Flutter Engineering", "Design Systems", "Web Platforms"]
@@ -102,18 +102,26 @@ const header = (site, active) => `
   </div>
 </div>`;
 
-const footer = (site) => `
+/* The live Web-Vitals readout lives on /verify only — the page a visitor opens
+   to check our claims. Everywhere else the footer keeps one quiet line. */
+const vitalsStrip = `<p class="ftr__vitals mono" data-vitals lang="ar">
+      <span class="ftr__vitals-l">هذه الصفحة الآن — قياس حيّ من متصفّحك:</span>
+      <span>LCP <b data-audit="lcp">—</b></span><span>CLS <b data-audit="cls">—</b></span><span>INP <b data-audit="inp">—</b></span><span>الوزن <b data-audit="weight">—</b></span>
+    </p>`;
+const footer = (site, path = "") => `
 <footer class="ftr">
   <div class="wrap wrap--wide">
     <div class="ftr__grid">
       <div class="ftr__brand">
-        <a class="brand brand--lockup" href="/">
-          <img src="${site.brand.logo}" alt="${esc(site.brand.latin)}" width="1024" height="540" loading="lazy">
+        <a class="brand ftr__lockup" href="/">
+          <img src="${site.brand.mark}" alt="" width="34" height="34" loading="lazy">
+          <span class="brand__txt"><span class="brand__name">${esc(site.brand.name)}</span><span class="brand__sub" lang="en">${esc(site.brand.latin)}</span></span>
         </a>
         <p class="ftr__desc">${esc(site.brand.shortDescription)}</p>
         <div class="btn-row">
           ${btn({ href: `https://wa.me/${site.contact.whatsapp}`, label: `${icon("whatsapp")} واتساب`, kind: "ghost", size: "sm", arrow: false, external: true })}
           ${btn({ href: `mailto:${site.contact.email}`, label: `${icon("mail")} بريد`, kind: "ghost", size: "sm", arrow: false })}
+          ${site.brand?.founder?.linkedin ? btn({ href: site.brand.founder.linkedin, label: `${icon("linkedin")} لينكد إن`, kind: "ghost", size: "sm", arrow: false, external: true }) : ""}
         </div>
       </div>
       ${site.footer.columns.map((c) => `
@@ -122,11 +130,7 @@ const footer = (site) => `
         <ul>${c.links.map((l) => `<li><a href="${l.href}">${esc(l.label)}</a></li>`).join("")}</ul>
       </nav>`).join("")}
     </div>
-    <p class="ftr__vitals mono" data-vitals lang="ar">
-      <span class="ftr__vitals-l">هذه الصفحة الآن — قياس حيّ من متصفّحك:</span>
-      <span>LCP <b data-audit="lcp">—</b></span><span>CLS <b data-audit="cls">—</b></span><span>INP <b data-audit="inp">—</b></span><span>الوزن <b data-audit="weight">—</b></span>
-      <a href="/verify" class="ftr__vitals-a">الأرقام موقّعة ${icon("lock")}</a>
-    </p>
+    ${/^\/verify\/?$/.test(path) ? vitalsStrip : `<p class="ftr__note"><a href="/verify" class="ftr__vitals-a">الأرقام موقّعة ${icon("lock")}</a></p>`}
     <div class="ftr__btm">
       <span>© <span data-year>2026</span> ${esc(site.brand.name)} · جميع الحقوق محفوظة</span>
       <span class="ftr__origin mono" lang="en">${esc(site.brand.origin)}</span>
@@ -150,7 +154,7 @@ export const page = ({ site, seo, active = "", body, schema = [], bodyClass = ""
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-${seo && seo.noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
+${seo && seo.noindex ? '<meta name="robots" content="noindex, nofollow">' : /* utility pages: reachable, never a search result */ ["/404", "/offline"].includes(seo.path) ? '<meta name="robots" content="noindex">' : ""}
 <title>${esc(fitTitle(seo.title))}</title>
 <meta name="description" content="${esc(fitDesc(seo.description))}">
 <meta name="color-scheme" content="light dark">
@@ -201,7 +205,7 @@ ${header(site, active)}
 <main id="main">
 ${body}
 </main>
-${footer(site)}
+${footer(site, seo.path)}
 
 ${/* The owner's admin bar and sign-in live on the panel page only: the panel
    runs locally through serve.mjs and is not part of the public site. */ ""}
@@ -260,7 +264,11 @@ ${active === "dashboard" ? `
 <script src="/assets/js/motion.js?v=${buildStamp}" defer></script>
 <script src="/assets/js/extras.js?v=${buildStamp}" defer></script>
 <script src="/assets/js/apex.js?v=${buildStamp}" defer></script>
-${/data-ledger/.test(body) ? `<script src="/assets/js/ledger.js?v=${buildStamp}" defer></script>` : ""}
+${/* ledger.js (~320KB) is NOT loaded eagerly on public pages: awalim.js
+   injects it once a [data-ledger] cockpit nears the viewport or is touched
+   (TrustedScriptURL via the "awalim-ledger" policy). Only the owner's panel,
+   whose gatekeeper lives in the same file, still loads it up front. */
+   active === "dashboard" && /data-ledger|data-dash-tab/.test(body) ? `<script src="/assets/js/ledger.js?v=${buildStamp}" defer></script>` : ""}
 ${/data-sec\b/.test(body) ? `<script src="/assets/js/security.js?v=${buildStamp}" defer></script>` : ""}
 </body>
 </html>`;

@@ -11,3 +11,6 @@ test-results/
 CLAUDE.md
 .panel-backups/
 *.zip
+
+# upload packages built by `npm run pack`
+dist/

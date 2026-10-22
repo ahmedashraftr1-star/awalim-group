@@ -5,8 +5,8 @@
       "slug": "rahmacare",
       "kind": "Healthcare",
       "title": "RahmaCare",
-      "headline": "smart healthcare in the family's hands",
-      "summary": "A complete Flutter app for managing a family's health with AI: instant triage, close follow-up, and an experience built around the person before the screen.",
+      "headline": "healthcare in the family's hands",
+      "summary": "A Flutter app for managing a family's health with AI assistance: initial triage, regular follow-up, and an experience built around the person before the screen. The product is in development.",
       "heroAlt": "The general ledger in RahmaCare: entries in sequence, each with a serial number and a hash",
       "gallery": [
         {
@@ -18,7 +18,7 @@
       "facts": [
         {
           "k": "Client",
-          "v": "An Awalim product"
+          "v": "Our own product — not a client project"
         },
         {
           "k": "Sector",
@@ -38,7 +38,7 @@
         },
         {
           "k": "Status",
-          "v": "Live"
+          "v": "In development"
         }
       ],
       "metric": {
@@ -69,16 +69,15 @@
           "d": "Every action — appointment, medicine, aid — is recorded with a serial number and a hash chained to the one before it. The beneficiary sees who viewed their file and when, and consent is explicit and revocable."
         }
       ],
-      "solution": "A Flutter app with one codebase for iOS and Android, over a Firebase backend, with an AI layer that works inside the task flow rather than in a side panel. Accessibility is not an add-on: the full path is tested with a screen reader, with a dedicated path for deaf and non-speaking users.",
+      "solution": "A Flutter app with one codebase for iOS and Android, over AWS with Cognito for authentication, with an AI layer that works inside the task flow rather than in a side panel. Accessibility is not an add-on: the full path is tested with a screen reader, with a dedicated path for deaf and non-speaking users.",
       "impact": [
         {
           "n": 2,
           "label": "platforms from one codebase"
         },
         {
-          "n": 100,
-          "suffix": "%",
-          "label": "of published numbers tied to a source"
+          "text": "Source",
+          "label": "behind every published number — a rule built into the design"
         },
         {
           "n": 1,
@@ -108,7 +107,7 @@
       "slug": "jameel-store",
       "kind": "E-commerce",
       "title": "Jameel Store",
-      "headline": "a luxury store with a world-class shopping experience",
+      "headline": "a luxury, Arabic-first store template",
       "summary": "From browsing to payment in one flow that never breaks — a Flutter interface over a Firebase backend, designed Arabic-first.",
       "heroAlt": "The Jameel Store interface: a product page and a cart, rendered Arabic-first",
       "gallery": [
@@ -121,7 +120,7 @@
       "facts": [
         {
           "k": "Client",
-          "v": "A luxury retail brand"
+          "v": "An Awalim product — a ready store template"
         },
         {
           "k": "Sector",
@@ -141,13 +140,13 @@
         },
         {
           "k": "Status",
-          "v": "Live"
+          "v": "Available as a template"
         }
       ],
       "metric": {
         "platform": "iOS · Android",
         "standard": "Native Arabic rendering",
-        "honor": "A complete store, live"
+        "honor": "A complete store template"
       },
       "challenge": {
         "p": "Arabic stores are usually built on a Latin template and then flipped. The result: reversed prices, strange dates, and a cart that is lost when the network drops — and it does drop.",
@@ -210,7 +209,7 @@
       "slug": "vibe-os",
       "kind": "Platform",
       "title": "Vibe OS 4.0",
-      "headline": "an operating system for the web, not just a website",
+      "headline": "an operating system for the web",
       "summary": "Rebuilding the interface layer from zero: a design system of independent components and a glass surface that reads what is behind it, delivered as the base the group's products are built on.",
       "heroAlt": "The Vibe OS 4.0 surface: independent glass windows, an in-task assistant, and an app dock",
       "facts": [
@@ -305,7 +304,7 @@
       "slug": "smart-accountant",
       "kind": "Enterprise system",
       "title": "Smart Accountant",
-      "headline": "an IFRS accounting system, Arabic from the root",
+      "headline": "an Arabic accounting system built to IFRS",
       "summary": "A complete double-entry accounting system built on IFRS that reads your invoices, proposes the balanced entry and closes the month with you — built to replace manual data entry, not the accountant.",
       "heroAlt": "The Smart Accountant cockpit: revenue, expenses, net cash flow and the last balanced entry",
       "facts": [
@@ -404,8 +403,8 @@
       "slug": "maya",
       "kind": "Brand identity",
       "title": "Maya",
-      "headline": "an identity where eastern heritage meets modernity",
-      "summary": "A complete visual identity for a perfume brand: mark, colour palette, Arabic and Latin typography, and an application system that runs from the bottle to the screen.",
+      "headline": "an identity between heritage and modernity",
+      "summary": "A complete identity for a perfume brand: mark, colour, Arabic and Latin type, and an application system that runs from the bottle to the screen.",
       "heroAlt": "The Maya identity: the mark and the hand-drawn Arabic name on the bottle",
       "gallery": [
         {
@@ -513,7 +512,7 @@
       "slug": "academy-platform",
       "kind": "Education",
       "title": "Awalim Academy",
-      "headline": "a learning platform for the next generation of engineers",
+      "headline": "engineering taught the way it is practised",
       "summary": "Tracks, real projects and code review — a platform built to teach engineering the way it is practised, not the way it is explained in a video.",
       "heroAlt": "The Academy platform: the track project, its tasks with their states, and a code review written on the trainee's own code",
       "gallery": [
@@ -605,7 +604,7 @@
       "slug": "car-hmi",
       "kind": "Design study",
       "title": "Automotive dashboard",
-      "headline": "instant reading in an environment that tolerates no hesitation",
+      "headline": "reading without hesitation",
       "summary": "An interface study for driving: speed, energy and route in a single visual sequence, with absolute priority for safety over decoration.",
       "heroAlt": "A dashboard: speed, energy and route in a three-level visual hierarchy",
       "gallery": [
@@ -713,8 +712,8 @@
       "slug": "island-haven",
       "kind": "Platform",
       "title": "Island Haven",
-      "headline": "a tech incubator whose numbers can be verified",
-      "summary": "An incubator platform in Gaza: every public number is cryptographically signed with Ed25519, and the visitor's own browser verifies it through WebCrypto — no trust in the server required.",
+      "headline": "an incubator with signed numbers",
+      "summary": "An incubator platform in Gaza: every public number is digitally signed, and the visitor's own browser checks it — no need to trust the server.",
       "heroAlt": "Island Haven's home page as it runs today at islandhavengaza.com: a skills incubator and digital community from Gaza",
       "gallery": [
         {

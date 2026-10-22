@@ -100,6 +100,69 @@
     });
   }
 
+  /* ---------- the cockpit demo (ledger.js, ~320KB) loads on demand ----------
+     It used to ship as a <script> on every page with a [data-ledger] cockpit,
+     parsed before the visitor did anything. Now it is injected once the cockpit
+     nears the viewport (then on idle) or the moment anyone touches it — a tap
+     that arrives before the code is replayed once the code has run. The URL is
+     taken from this file's own ?v= stamp, and under require-trusted-types-for
+     it goes through the "awalim-ledger" policy, which can mint that one path
+     and throws on anything else. */
+  (function () {
+    var cockpits = $$("[data-ledger]");
+    if (!cockpits.length || $('script[src^="/assets/js/ledger.js"]')) return;
+    var self = $('script[src^="/assets/js/awalim.js"]');
+    var m = self && /[?&]v=([0-9a-f]+)/.exec(self.getAttribute("src") || "");
+    var src = "/assets/js/ledger.js" + (m ? "?v=" + m[1] : "");
+    var state = 0; /* 0 idle · 1 loading · 2 ready */
+    var queued = null;
+    function load() {
+      if (state) return;
+      state = 1;
+      var url = src;
+      try {
+        if (window.trustedTypes && window.trustedTypes.createPolicy) {
+          url = window.trustedTypes.createPolicy("awalim-ledger", {
+            createScriptURL: function (u) { if (!/^\/assets\/js\/ledger\.js(\?v=[0-9a-f]+)?$/.test(u)) throw new TypeError("only ledger.js"); return u; }
+          }).createScriptURL(src);
+        }
+      } catch (e) { return; }
+      var s = document.createElement("script");
+      s.src = url;
+      s.async = true;
+      s.onload = function () {
+        state = 2;
+        if (queued && queued.isConnected) queued.click();
+        queued = null;
+      };
+      document.head.appendChild(s);
+    }
+    /* a press before the code exists: hold it, load, replay it */
+    cockpits.forEach(function (c) {
+      c.addEventListener("click", function (e) {
+        if (state === 2) return;
+        var b = e.target.closest && e.target.closest("[data-ledger-action]");
+        if (b) { e.preventDefault(); e.stopImmediatePropagation(); queued = b; }
+        load();
+      }, true);
+      ["pointerenter", "focusin", "touchstart"].forEach(function (t) {
+        c.addEventListener(t, load, { once: true, passive: true });
+      });
+    });
+    var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 1); };
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        if (entries.some(function (x) { return x.isIntersecting; })) {
+          io.disconnect();
+          idle(load, { timeout: 2500 });
+        }
+      }, { rootMargin: "400px 0px" });
+      cockpits.forEach(function (c) { io.observe(c); });
+    } else {
+      addEventListener("load", function () { idle(load, { timeout: 2500 }); });
+    }
+  })();
+
   /* ---------- pill nav shrink ---------- */
   var nav = $("[data-nav]");
   if (nav) {

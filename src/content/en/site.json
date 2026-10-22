@@ -29,7 +29,7 @@
       "label": "countries our graduates work in"
     },
     "yearsBuilding": {
-      "label": "years of building since 2018"
+      "label": "years the founder has been building, since 2018"
     },
     "tracks": {
       "label": "engineering tracks"
@@ -112,10 +112,6 @@
           {
             "href": "/journal",
             "label": "Journal"
-          },
-          {
-            "href": "/assets/dossier/Awalim_Group_Executive_Dossier_2026_EN.pdf",
-            "label": "Executive Portfolio (PDF)"
           }
         ]
       },
@@ -267,7 +263,7 @@
       "n": "01",
       "t": "Diagnosis",
       "d": "We sit with your real process before a line of code: who does what, with which tool, and how long it takes. We come out with a scope, risk and honest timeline document — yours to keep even if we never continue together.",
-      "dur": "5 working days",
+      "dur": "Agreed upfront",
       "out": [
         "Scope & risk document",
         "A map of your current process",
@@ -279,7 +275,7 @@
       "n": "02",
       "t": "Design & architecture",
       "d": "We map the data, how the system connects to yours, and who sees what, and you sign it off before we build. Fixing a design mistake here costs an hour; three months later it costs a rebuild.",
-      "dur": "10–15 working days",
+      "dur": "Set in the scope document",
       "out": [
         "Database schema",
         "Documented API contracts",
@@ -304,7 +300,7 @@
       "n": "04",
       "t": "Handover & care",
       "d": "Full handover of the code, the docs, the deployment accounts and the database. An agreed care period, then an optional maintenance contract — we never make your system's survival depend on it.",
-      "dur": "30 days of care",
+      "dur": "An agreed care period",
       "out": [
         "Full code and documentation",
         "Deploy accounts and the database",
@@ -317,7 +313,7 @@
   "faq": [
     {
       "q": "How long does an enterprise system take?",
-      "a": "It depends on scope. A full accounting system with its modules is built in increments over months, but a first usable version usually reaches you within a few weeks of the architecture being approved. We commit to a stated schedule in the scope document, and tell you immediately if anything changes."
+      "a": "It depends on scope. We build in increments you can see for yourself on a live environment, and the timeline is set in the scope document after diagnosis — we don't quote a number before we've seen the work. If anything changes, we tell you immediately."
     },
     {
       "q": "Do I own the code after handover?",

@@ -14,17 +14,17 @@ export function renderIndex(ctx) {
   const body = join([
     `<section class="phero">
       <span class="hero__orb" aria-hidden="true"></span>
-      <div class="wrap wrap--wide phero__dossier-grid">
+      <div class="wrap wrap--wide${d ? " phero__dossier-grid" : ""}">
         <div class="phero__main">
           <div class="sovereign-badge rv" style="--i:0.5; margin-bottom: 1rem;">
-            <span class="chip chip--accent"><span class="dot" aria-hidden="true"></span>${t("ملف الأعمال التنفيذي 2026", "Executive Portfolio 2026")}</span>
+            <span class="chip chip--accent"><span class="dot" aria-hidden="true"></span>${t("الأعمال", "Work")}</span>
           </div>
           <h1 class="d-hero rv" style="--i:1">${w.h}</h1>
           <p class="lede rv" style="--i:2">${w.lede}</p>
           <div class="phero__actions rv" style="--i:2.5; margin: 1.5rem 0; display: flex; gap: 0.85rem; flex-wrap: wrap; align-items: center;">
-            <button type="button" class="btn btn--primary btn--sm" id="btn-export-dossier" aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-executive-dossier" title="${t("عرض وتحميل ملف الأعمال التنفيذي", "View and download the executive portfolio")}">
+            ${d ? `<button type="button" class="btn btn--primary btn--sm" id="btn-export-dossier" aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-executive-dossier" title="${t("عرض وتحميل ملف الأعمال التنفيذي", "View and download the executive portfolio")}">
               <span>${icon("pdf", "dash-btn-svg")} ${t("تحميل / طباعة ملف الأعمال التنفيذي (PDF)", "Download Executive Portfolio (PDF)")}</span>
-            </button>
+            </button>` : ""}
             <a href="https://wa.me/970593636136?text=${encodeURIComponent(t("مرحباً م. أحمد أشرف، أود طلب استشارة فنية والاطلاع على تفاصيل ملف أعمال عوالِم قروب لمشروعنا.", "Hello Eng. Ahmed Ashraf, I would like to request an engineering consultation regarding our project."))}" target="_blank" rel="noopener" class="btn btn--outline btn--sm">
               <span>${icon("whatsapp", "dash-btn-svg")} ${t("طلب استشارة مباشرة عبر واتساب", "Direct WhatsApp Consultation")} ↗</span>
             </a>
@@ -35,8 +35,8 @@ export function renderIndex(ctx) {
           </div>
         </div>
 
-        <aside class="phero__card rv" style="--i:2;" aria-label="${t("ملف الأعمال التنفيذي", "Executive portfolio")}">
-          ${d ? `<div class="dossier-card">
+        ${d ? `<aside class="phero__card rv" style="--i:2;" aria-label="${t("ملف الأعمال التنفيذي", "Executive portfolio")}">
+          <div class="dossier-card">
             <div class="dossier-card__hd">
               <span class="mono dossier-card__code" dir="ltr">DOSSIER · 2026</span>
               <span class="dossier-card__seal"><span class="dot" aria-hidden="true"></span>PDF · ${d.mb} MB</span>
@@ -53,8 +53,8 @@ export function renderIndex(ctx) {
                 <a href="/verify" class="small">${t("تحقّق من الأرقام الموقّعة ←", "Verify the signed numbers →")}</a>
               </div>
             </div>
-          </div>` : ""}
-        </aside>
+          </div>
+        </aside>` : ""}
       </div>
     </section>`,
 
@@ -71,7 +71,7 @@ export function renderIndex(ctx) {
               <div class="tiles rv" data-stagger>
                 ${minor.map((m, i) => `
                   <article class="tile" data-cat="${m.cat}">
-                    <div class="tile__img"><img src="${m.img}" alt="${esc(m.title)}" width="900" height="900" loading="lazy" decoding="async"></div>
+                    <div class="tile__img"><img src="${m.img}"${C.srcset(m.img) ? ` srcset="${C.srcset(m.img)}" sizes="auto, (min-width: 900px) 360px, 92vw"` : ""} alt="${esc(m.title)}" width="900" height="900" loading="lazy" decoding="async"></div>
                     <div class="tile__body">
                       <span class="tile__idx mono">0${i + 1}</span>
                       <h3 class="tile__t">${esc(m.title)}</h3>
@@ -88,12 +88,12 @@ export function renderIndex(ctx) {
 
     C.ctaBand({ h: "مشروعك القادم يستحقّ هذا المستوى", lede: "أرسل لنا وصفاً للعملية التي تريد حلّها، ونعود إليك بتشخيص أوّلي وتقدير نطاق.", primary: { href: "/contact", label: "ابدأ محادثة", kind: "primary" }, site }),
 
-    `<div class="dash-modal-overlay" id="modal-executive-dossier" role="dialog" aria-modal="true" aria-labelledby="modal-dossier-title">
+    d ? `<div class="dash-modal-overlay" id="modal-executive-dossier" role="dialog" aria-modal="true" aria-labelledby="modal-dossier-title">
       <div class="dash-modal" style="max-width: 680px; border: 1px solid var(--accent-line); background: var(--surface);">
         <div class="dash-modal-header" style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 1.25rem 1.5rem;">
           <div style="display: flex; align-items: center; gap: 0.75rem;">
             <span class="chip chip--accent" style="font-weight: 700;">2026 DOSSIER</span>
-            <h2 id="modal-dossier-title" class="d-2" style="margin: 0; font-size: 1.15rem;">${t("الملف التنفيذي المعتمد | عوالِم قروب", "Executive Portfolio Dossier | Awalim Group")}</h2>
+            <h2 id="modal-dossier-title" class="d-2" style="margin: 0; font-size: 1.15rem;">${t("ملف الأعمال | عوالِم قروب", "Portfolio | Awalim Group")}</h2>
           </div>
           <button type="button" class="dash-modal-close" aria-label="${t("إغلاق الملف التنفيذي", "Close Executive Dossier")}" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted);">&times;</button>
         </div>
@@ -113,7 +113,6 @@ export function renderIndex(ctx) {
           </ul>
 
           <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
-            <span class="chip" style="font-size: 0.8rem;">✓ ${t("أرقام موقّعة Ed25519", "Ed25519-signed numbers")}</span>
             <span class="chip" style="font-size: 0.8rem;">✓ ${t("يُقرأ دون اتصال", "Reads offline")}</span>
             <span class="chip" style="font-size: 0.8rem;">✓ ${t(`${cases.length} دراسات حالة`, `${cases.length} case studies`)}</span>
           </div>
@@ -122,15 +121,15 @@ export function renderIndex(ctx) {
           <a href="/verify" class="btn btn--outline btn--sm" style="display: inline-flex; align-items: center; gap: 0.5rem;">
             <span>${icon("shield", "dash-btn-svg")} ${t("تحقّق من الأرقام الموقّعة", "Verify the signed numbers")}</span>
           </a>
-          ${d ? `<a href="${d.href}" download class="btn btn--primary btn--sm" style="display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 700;">
+          <a href="${d.href}" download class="btn btn--primary btn--sm" style="display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 700;">
             <span>${icon("download", "dash-btn-svg")} ${t(`تنزيل ملف الأعمال الكامل (PDF ${d.mb}MB)`, `Download the full portfolio (PDF ${d.mb}MB)`)}</span>
-          </a>` : ""}
+          </a>
           <button type="button" class="btn btn--primary btn--sm" data-action="print-dossier" style="display: inline-flex; align-items: center; gap: 0.5rem;">
             <span>${icon("pdf", "dash-btn-svg")} ${t("طباعة فورية", "Print Now")}</span>
           </button>
         </div>
       </div>
-    </div>`
+    </div>` : ""
   ]);
 
   return {
@@ -158,7 +157,7 @@ export function renderCase(ctx, c, i) {
     `<section class="chero themed${t.ink ? " chero--ink" : ""}" style="${C.themeStyle(t)};view-transition-name:vt-${c.slug};view-transition-class:vt-card">
       <div class="wrap wrap--wide">
         <nav class="crumbs rv" aria-label="مسار التنقّل"><a href="/">الرئيسية</a><span aria-hidden="true">/</span><a href="/work">الأعمال</a><span aria-hidden="true">/</span><span aria-current="page">${esc(c.title)}</span></nav>
-        <div class="chero__eyebrow rv" style="--i:1">${C.syscode(c.code, "live")}<span class="chero__kind">${esc(c.kind)}</span></div>
+        <div class="chero__eyebrow rv" style="--i:1">${C.syscode(c.code, c.status === "beta" ? "beta" : "live")}<span class="chero__kind">${esc(c.kind)}</span></div>
         <h1 class="d-hero rv" style="--i:2"><span ${/[A-Za-z]/.test(c.title) ? 'lang="en"' : ""}>${esc(c.title)}</span><span class="chero__sub">${c.headline}</span></h1>
         <p class="lede rv" style="--i:3">${c.summary}</p>
         ${/* the strongest proof is the product itself: a case with a live address links to it */""}
@@ -167,7 +166,7 @@ export function renderCase(ctx, c, i) {
       </div>
     </section>`,
 
-    C.subnav({ title: c.title, code: c.code, cta: "ابدأ مشروعاً مشابهاً", href: "/contact", secondary: { href: `/work/${next.slug}`, label: "المشروع التالي" } }),
+    C.subnav({ title: c.title, code: c.code, status: c.status === "beta" ? "beta" : "live", cta: "ابدأ مشروعاً مشابهاً", href: "/contact", secondary: { href: `/work/${next.slug}`, label: "المشروع التالي" } }),
 
     `<section class="sec sec--tight sec--after-hero">
       <div class="wrap wrap--wide">
@@ -217,7 +216,7 @@ export function renderCase(ctx, c, i) {
                     Cases with no `flow` render nothing at all rather than an
                     invented architecture. */""}
               ${c.flow ? `<div class="rv">${C.flow({ steps: c.flow.steps, label: c.flow.h || c.flow.label || `معماريّة ${c.title}` })}</div>` : ""}
-              ${c.device === "cockpit" ? `<div class="rv" data-parallax data-parallax-amount="16">${C.cockpit({ tilt: true, live: true })}</div>` : c.mock ? `<div class="rv" data-parallax data-parallax-amount="16">${C.device({ kind: c.device === "laptop" ? "laptop" : "browser", inner: C.mockScreen(c.mock), alt: c.heroAlt, tilt: true, label: c.title })}</div>` : C.gallery(c.gallery)}
+              ${c.device === "cockpit" ? `<div class="rv" data-parallax data-parallax-amount="16">${C.cockpit({ tilt: false, live: true })}</div>` : c.mock ? `<div class="rv" data-parallax data-parallax-amount="16">${C.device({ kind: c.device === "laptop" ? "laptop" : "browser", inner: C.mockScreen(c.mock), alt: c.heroAlt, tilt: false, label: c.title })}</div>` : C.gallery(c.gallery)}
             </div>
 
 
@@ -242,7 +241,7 @@ export function renderCase(ctx, c, i) {
     path: `/work/${c.slug}`,
     html: page({
       site,
-      seo: { title: seoTitle(c.title, c.headline, "دراسة حالة · عوالِم قروب"), description: c.summary, path: `/work/${c.slug}`, ogImage: `/assets/img/og/work-${c.slug}.png`, type: "article" },
+      seo: { title: seoTitle(c.title, c.headline, ctx.locale === "en" ? "Awalim Group" : "عوالِم قروب", 565, ctx.locale === "en" ? "Case study" : "دراسة حالة"), description: c.summary, path: `/work/${c.slug}`, ogImage: `/assets/img/og/work-${c.slug}.png`, type: "article" },
       active: "work",
       body,
       schema: [breadcrumbSchema(site, [{ name: "الرئيسية", path: "/" }, { name: "الأعمال", path: "/work" }, { name: c.title, path: `/work/${c.slug}` }])],

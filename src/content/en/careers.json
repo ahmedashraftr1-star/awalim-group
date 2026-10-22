@@ -1,7 +1,7 @@
 {
   "_note": "English overrides for careers.json — merged by slug.",
   "seo": {
-    "title": "Careers — join a team building systems measured by the global standard | Awalim Group",
+    "title": "Careers — join a team that builds to a global standard | Awalim Group",
     "description": "Engineering and design roles at Awalim Group: fully remote, real code review, and standards we don't trade away. Apply with a project, not a CV."
   },
   "h": "Build the systems that run companies, with us",
@@ -56,7 +56,7 @@
       "type": "Full time",
       "location": "Remote",
       "level": "2+ years",
-      "summary": "You build apps used daily in environments where the network really does drop — RahmaCare, Jameel Store and what comes next.",
+      "summary": "You build apps for environments where the network really does drop — RahmaCare, Jameel Store and what comes next.",
       "does": [
         "Turning Figma files into pixel-accurate interfaces with full Arabic support",
         "Building local storage and sync when the network returns",

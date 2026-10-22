@@ -9,3 +9,15 @@ DESIGN-TOKENS.md
 README.md
 .claude/
 CLAUDE.md
+# private or not part of the site
+.keys/
+.panel-backups/
+shots/
+dist/
+*.zip
+*.md
+*.png
+!assets/**/*.png
+dashboard/
+en/dashboard/
+serenity-spa*

@@ -35,12 +35,27 @@ export const num = (n) => Number(n).toLocaleString("en-US");
  * alt text and screen-reader output, where markup could not go.
  */
 const LRI = "\u2066", PDI = "\u2069";
-export const fill = (text, stats) =>
-  String(text ?? "").replace(/\{(\w+)\}/g, (m, k) => {
+/** True when a string carries no Arabic letters — i.e. it is English copy. */
+export const isLatinText = (t) => !/[\u0600-\u06FF]/.test(String(t ?? ""));
+/**
+ * A stat's affixes for the language it is shown in. Arabic writes «+1,200»
+ * (kept, and isolated by the caller); English writes "1,200+", so in English a
+ * leading plus moves behind the number. `en` is decided by the caller from the
+ * copy it renders into (the label, or the sentence).
+ */
+export const affix = (s, en) => {
+  const pre = s.prefix || "", suf = s.suffix || "";
+  return en && pre === "+" ? { pre: "", suf: suf + "+" } : { pre, suf };
+};
+export const fill = (text, stats) => {
+  const en = isLatinText(String(text ?? "").replace(/\{\w+\}/g, ""));
+  return String(text ?? "").replace(/\{(\w+)\}/g, (m, k) => {
     const s = stats[k];
     if (!s) return m;
-    return `${LRI}${s.prefix || ""}${num(s.value)}${s.suffix || ""}${PDI}`;
+    const a = affix(s, en);
+    return `${LRI}${a.pre}${num(s.value)}${a.suf}${PDI}`;
   });
+};
 
 /** Latin term isolated inside RTL prose. */
 export const bdi = (s) => `<bdi lang="en">${esc(s)}</bdi>`;
@@ -80,16 +95,19 @@ export const lede1 = (s = "", budget = 300) => {
 /** عنوان صفحة يتّسع في نتيجة البحث. الاسم واللاحقة أوّلاً، والوسط إن بقي له مكان.
  *  شظيّة مبتورة أسوأ من غيابها: إن ذهب أكثر من ثلث الجملة سقطت كلّها ونجا الاسم.
  *  الميزانية 580px لا 600: النموذج تقريبي (±2%)، والهامش يمتصّ خطأه. */
-export const seoTitle = (name, sub, suffix, budget = 565) => {
+export const seoTitle = (name, sub, suffix, budget = 565, kind = "") => {
   const tail = suffix ? ` | ${suffix}` : "";
   const room = budget - px20(tail);
   let head = String(name).trim();
   if (px20(head) > room) return `${lede1(head, room)}${tail}`;
-  const full = lede1(sub, 1e6);
-  if (!full) return `${head}${tail}`;
-  const cut = lede1(sub, room - px20(`${head} — `));
-  if (!cut || px20(cut) < px20(full) * 0.62) return `${head}${tail}`;
-  return `${head} — ${cut}${tail}`;
+  /* the sub-title's first sentence, whole — a comma inside it is not a stop */
+  const full = String(sub || "").split(/[.!?؟](?:\s|$)|\s[—–]\s/)[0].trim();
+  if (!full || px20(`${head} — ${full}`) > room) {
+    /* no room for the sentence: name the page's kind instead, so a product and
+       its case study never share one title */
+    return kind && px20(`${head} — ${kind}`) <= room ? `${head} — ${kind}${tail}` : `${head}${tail}`;
+  }
+  return `${head} — ${full}${tail}`;
 };
 
 /** شبكة أمان: أي عنوان يصل إلى الرأس، من محتوى أو قالب، يُقصّ على الميزانية

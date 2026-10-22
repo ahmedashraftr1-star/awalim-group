@@ -167,8 +167,12 @@ for (const r of routes) {
   await page.waitForTimeout(800);
   /* the home standards grid (with its live contrast card) left the home page
      in the calm-premium pass; the footer vitals strip carries LCP now */
+  /* 2026-10-22: the live vitals strip left the site-wide footer; it lives on /verify */
+  await page.goto(BASE + "/verify", { waitUntil: "networkidle" });
+  await page.mouse.move(200, 200); await page.mouse.click(200, 200);
+  await page.waitForTimeout(800);
   const lcp = await page.locator('b[data-audit="lcp"]').first().textContent();
-  ok(/\d/.test(lcp || ""), "live LCP readout (footer): " + lcp);
+  ok(/\d/.test(lcp || ""), "live LCP readout (/verify footer): " + lcp);
   await ctx.close();
 }
 

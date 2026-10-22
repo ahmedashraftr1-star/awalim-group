@@ -7,10 +7,14 @@
    The cache name carries the build stamp; activating a new build drops
    every older cache.
    ========================================================================== */
-const VERSION = "awalim-5ccfb278";
+const VERSION = "awalim-e4213be0";
 const OFFLINE = "/offline";
 const OFFLINE_EN = "/en/offline";
-const PRECACHE = [OFFLINE, OFFLINE_EN, "/assets/css/awalim.css", "/assets/js/awalim.js", "/assets/js/motion.js", "/assets/js/extras.js", "/assets/vendor/lenis.min.js", "/assets/img/awalim-mark.webp"];
+/* Exactly the URLs the pages request: css/js carry ?v=<build stamp> in every
+   <link>/<script>, and the cache is matched on the full URL — an unversioned
+   precache entry never matched a single real request. */
+const V = "?v=e4213be0";
+const PRECACHE = [OFFLINE, OFFLINE_EN, "/assets/css/awalim.css" + V, "/assets/js/awalim.js" + V, "/assets/js/motion.js" + V, "/assets/js/extras.js" + V, "/assets/js/apex.js" + V, "/assets/vendor/lenis.min.js", "/assets/img/awalim-mark.webp"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));

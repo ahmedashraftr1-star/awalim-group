@@ -1,4 +1,3 @@
-import { icon } from "../lib/icons.mjs";
 import { esc, fill, join } from "../lib/html.mjs";
 import { page, orgSchema, siteSchema } from "../lib/layout.mjs";
 import * as C from "../lib/components.mjs";
@@ -13,12 +12,14 @@ export default function render(ctx) {
     .map((l, i) => `<span class="kl" style="--i:${i}"><span class="kl__in">${l}</span></span>`)
     .join("");
 
-  const selected = h.selectedWork.map((slug) => cases.find((c) => c.slug === slug)).filter(Boolean);
-  const gridProducts = h.gridProducts
-    .map((slug) => (slug === "academy" ? { code: "SYS-ACAD-03", status: "live", theme: "academy", title: "أكاديمية عوالِم", summary: `مسارات تدريب هندسية في الذكاء الاصطناعي وتطوير الأنظمة. ${fill("{engineersTrained}", stats)} مهندس تدرّبوا فيها.`, href: "/academy" } : products.find((p) => p.slug === slug)))
+  /* The Smart Accountant cockpit already is the hero; repeating the same dark
+     mockup as the fourth work card made the page look like it had one screen.
+     Its slot goes to the next case that has a real capture of a live product. */
+  const selected = h.selectedWork
+    .map((slug) => cases.find((c) => c.slug === slug))
     .filter(Boolean)
-    .map((p) => ({ ...p, href: p.href || `/products/${p.slug}` }));
-  const posts = h.journal.map((s) => articles.find((a) => a.slug === s)).filter(Boolean);
+    .map((c) => (c.device === "cockpit" ? cases.find((x) => x.slug === "island-haven" && !h.selectedWork.includes(x.slug)) : c))
+    .filter(Boolean);
 
   /* Calm-premium pass (2026-09-28): the home page was 26 sections and ~32
      screens. It now answers a buyer's questions in the order they ask them —
@@ -28,7 +29,11 @@ export default function render(ctx) {
      values, product grid, engines, disciplines, standards, stack, reach,
      journal, milestones, estimator, pathways) still exist as components and
      on their own pages. The endorsements were removed outright — they quoted
-     named people who never gave them. */
+     named people who never gave them.
+     IA pass (2026-10-22): eight sections — hero, numbers, what we build, work,
+     process, founder, FAQ, close. The manifesto (its blueprint column drew
+     nothing but a caption) and the Academy teaser (it has its own page and a
+     nav link) were removed; the pinned process became a one-screen list. */
   const body = join([
     /* 1 — HERO */
     `<section class="hero" data-hero>
@@ -44,14 +49,11 @@ export default function render(ctx) {
           <p class="lede hero__lede rv" style="--i:3">${h.hero.lede}</p>
           <div class="btn-row hero__cta rv" style="--i:4; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
             ${C.btn({ href: "/contact", label: t("ابدأ مشروعك", "Start Your Project"), kind: "primary" })}
-            <a href="${isEn ? "/assets/dossier/Awalim_Group_Executive_Dossier_2026_EN.pdf" : "/assets/dossier/Awalim_Group_Executive_Dossier_2026.pdf"}" download class="btn btn--outline" title="${t("تحميل ملف الأعمال التنفيذي 2026 PDF", "Download Executive Portfolio 2026 PDF")}">
-              <span>${icon("pdf", "dash-btn-svg")} ${t("ملف الأعمال التنفيذي (PDF)", "Executive Portfolio (PDF)")}</span>
-            </a>
             ${C.btn({ href: "/work", label: t("شاهد الأعمال", "View Work"), kind: "ghost", arrow: false })}
             <span class="chip chip--accent chip--pulse"><span class="dot" aria-hidden="true"></span>${esc(site.contact.availability)}</span>
           </div>
           <div class="hero__meta rv" style="--i:5">
-            <img src="${site.brand.founder.photo}" alt="" width="44" height="44" loading="lazy" decoding="async">
+            <img src="${site.brand.founder.photo}" srcset="${C.srcset(site.brand.founder.photo)}" sizes="79px" alt="" width="44" height="44" loading="lazy" decoding="async">
             <p>أسّسها <b>${esc(site.brand.founder.name)}</b> عام ${stats.founded.value} من غزّة. اليوم فريق هندسي يخدم عملاء في ${fill("{clientCountries}", stats).replace("+", "")} دولة.</p>
           </div>
         </div>
@@ -93,7 +95,7 @@ export default function render(ctx) {
     /* 6 — SELECTED WORK */
     `<section class="sec" id="work">
       <div class="wrap wrap--wide">
-        ${C.sectionHead({ eyebrowAr: "الأعمال", eyebrowEn: "SELECTED WORK", h: "ما بنيناه فعلاً", lede: "أنظمة وتطبيقات وهويات سُلِّمت لعملاء حقيقيين." })}
+        ${C.sectionHead({ eyebrowAr: "الأعمال", eyebrowEn: "SELECTED WORK", h: "ما بنيناه فعلاً", lede: "أنظمة وتطبيقات وهويات بنيناها — لعملائنا ولمنتجاتنا الخاصة." })}
         <div class="hcards">
           ${selected.map((c) => C.heroCard({ ...c, themes, href: `/work/${c.slug}`, alt: c.heroAlt, stats, lazy: true, showImpact: true })).join("")}
         </div>
@@ -106,59 +108,32 @@ export default function render(ctx) {
     C.clientWall(site.proof && site.proof.clients),
     C.testimonials(site.proof && site.proof.testimonials),
 
-    /* 5 — MANIFESTO */
-    `<section class="sec sec--alt">
-      <div class="wrap wrap--wide">
-        <div class="manifesto rv" data-stagger>
-          ${C.eyebrow(h.manifesto.eyebrow, "MANIFESTO")}
-          <h2 class="d-1 manifesto__h">${h.manifesto.h}</h2>
-          <div class="manifesto__b">
-            <p class="lede">${h.manifesto.p1}</p>
-            <p class="lede">${h.manifesto.p2}</p>
-            ${C.btnRow([C.btn({ href: "/services#process", label: "كيف نعمل بالتفصيل", kind: "ghost", arrow: true })])}
-          </div>
-          <div class="manifesto__bp">${C.blueprint()}</div>
-        </div>
-      </div>
-    </section>`,
-
-    /* 10 — PROCESS (pinned) */
-    `<section class="sec sec--ink" id="process">
+    /* 5 — PROCESS
+       Was a pinned dark scroller ~2,600px tall that read as an empty black
+       screen until scrolled through. The same four stages, read from the same
+       site.process, now sit on one screen; the step-by-step detail (outputs,
+       "if we stop here") stays on /services#process. */
+    `<section class="sec sec--alt" id="process">
       <div class="wrap wrap--wide">
         ${C.sectionHead({ eyebrowAr: "كيف نعمل", eyebrowEn: "PROCESS", h: "أربع مراحل. لا مفاجآت.", lede: "مسار واحد لكل مشروع — تعرف فيه ما الذي يحدث الآن وما الذي يليه." })}
-      </div>
-      ${C.processPinned(site.process, { id: "process-stage" })}
-    </section>`,
-
-    /* 11 — ACADEMY GLIMPSE */
-    `<section class="sec sec--alt" id="academy">
-      <div class="wrap wrap--wide">
-        <div class="split split--rev">
-          <div class="acad rv" data-stagger>
-            <div class="acad__stats">
-              ${C.statTile(stats.certifiedGraduates, { size: "lg" })}
-              ${C.statTile(stats.graduateCountries, { size: "lg" })}
-            </div>
-            <hr class="rule">
-            <p class="small muted">${fill("{engineersTrained} مهندس دخلوا مسارات الأكاديمية؛ {certifiedGraduates} منهم أنهوا المسار كاملاً بمشروع منشور. التدريب ليس خط دخل — هو كيف نبني الفريق الذي نوظّفه لاحقاً.", stats)}</p>
-          </div>
-          <div class="rv" data-stagger>
-            ${C.eyebrow("الأكاديمية", "ACADEMY")}
-            <h2 class="d-1">أكاديمية عوالِم</h2>
-            <p class="lede">مسارات تدريب هندسية تُدرَّس بالطريقة التي نعمل بها فعلاً: مشروع حقيقي، مراجعة كود، واختبارات — لا سلسلة فيديوهات.</p>
-            ${C.btnRow([C.btn({ href: "/academy", label: "المسارات", kind: "ghost", arrow: true })])}
-          </div>
-        </div>
+        <ol class="why rv" data-stagger>
+          ${site.process.map((s) => `<li class="why__i">
+            <span class="why__n mono"><bdi>${esc(s.n)}</bdi>${s.dur ? ` · <bdi>${esc(s.dur)}</bdi>` : ""}</span>
+            <h3 class="why__t">${s.t}</h3>
+            <p class="why__d">${s.d}</p>
+          </li>`).join("")}
+        </ol>
+        ${C.btnRow([C.btn({ href: "/services#process", label: "كيف نعمل بالتفصيل", kind: "ghost", arrow: true })], "btn-row--after")}
       </div>
     </section>`,
 
     /* 13 — FOUNDER */
-    `<section class="sec sec--alt" id="founder">
+    `<section class="sec" id="founder">
       <div class="wrap wrap--wide">${C.founder({ site, quote: site.founderQuote })}</div>
     </section>`,
 
     /* 14 — FAQ */
-    `<section class="sec" id="faq">
+    `<section class="sec sec--alt" id="faq">
       <div class="wrap wrap--wide">
         <div class="split split--top">
           <div class="rv" data-stagger>

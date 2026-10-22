@@ -116,6 +116,10 @@
 .ftr__vitals { margin-block-start: var(--space-7); padding: var(--space-3) var(--space-4); border: 1px dashed var(--border); border-radius: var(--r-sm); display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-5); align-items: center; font-size: var(--fs-xs); color: var(--text-muted); }
 .ftr__vitals b { font-weight: var(--w-medium); color: var(--text); direction: ltr; unicode-bidi: isolate; }
 .ftr__vitals-l { font-family: var(--font-ar); }
+/* one quiet line instead of the live Web-Vitals strip (2026-10-22) */
+.ftr__note { margin-block-start: var(--space-7); font-size: var(--fs-xs); color: var(--text-muted); }
+.ftr__note .ftr__vitals-a { margin-inline-start: 0; }
+.ftr__lockup img { inline-size: 34px; block-size: 34px; border-radius: 9px; }
 .ftr__vitals-a { margin-inline-start: auto; font-family: var(--font-ar); color: var(--accent-text); display: inline-flex; gap: 6px; align-items: center; min-block-size: 24px; }
 .ftr__vitals-a svg { inline-size: 12px; block-size: 12px; }
 .phero--verify .d-hero { max-width: 22ch; }
@@ -4493,27 +4497,25 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
   100% { transform: scale(1.15) translate3d(24px, -24px, 0); opacity: 0.95; }
 }
 
-/* Stat bar sovereign glass elevation */
+/* Stat bar after the hero — calm ledger line, not a glass slab (2026-10-22).
+   Light: no fill, hairline rules above/below and between figures, dark ink
+   numerals, no glow. Dark: the same rules on warm charcoal, figures in light
+   ink with the affix in the accent. One quiet rule set for home/academy/group. */
 .statbar--hero {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(0, 240, 255, 0.18) !important;
-  border-radius: var(--r-xl) !important;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+  background: transparent; border: 0; border-block: 1px solid var(--border-2);
+  border-radius: 0; box-shadow: none; gap: 0;
 }
-.statbar--hero .stat {
-  background: rgba(14, 20, 32, 0.45) !important;
-  transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.3s ease !important;
+.statbar--hero .stat { background: transparent; box-shadow: none; }
+.statbar--hero .stat__n { color: var(--text); text-shadow: none; letter-spacing: -0.03em; font-weight: 800; }
+.statbar--hero .stat + .stat { border-inline-start: 1px solid var(--border); }
+@media (min-width: 480.02px) and (max-width: 799.98px) {
+  .statbar--hero .stat:nth-child(odd) { border-inline-start: 0; }
+  .statbar--hero .stat:nth-child(n+3) { border-block-start: 1px solid var(--border); }
 }
-.statbar--hero .stat:hover {
-  background: rgba(14, 20, 32, 0.75) !important;
+@media (max-width: 480px) {
+  .statbar--hero .stat + .stat { border-inline-start: 0; border-block-start: 1px solid var(--border); }
 }
-.statbar--hero .stat__n {
-  letter-spacing: -0.03em !important;
-  font-weight: 800 !important;
-  text-shadow: 0 2px 20px rgba(0, 240, 255, 0.22) !important;
-}
+:root[data-theme="dark"] .statbar--hero { background: color-mix(in srgb, var(--surface) 70%, transparent); border: 1px solid var(--border); border-radius: var(--r-lg); }
 
 /* Work phero sovereign dossier two-column grid */
 /* --- Sovereign Executive Dossier Luxury Styling --- */
@@ -4552,3 +4554,16 @@ html[dir="ltr"] .dash-staff-card.is-active-workspace::after {
 .dossier-btn-download svg { inline-size: 1em; block-size: 1em; }
 .dossier-card__meta { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); flex-wrap: wrap; font-size: var(--fs-xs); color: var(--text-muted); }
 .dossier-card__meta a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
+
+/* /services banners: one family (2026-10-22). The four areas each carried a
+   product theme (mint, purple, dark teal, beige); purple is off-brand and the
+   four together read as four companies. Every banner is now the same quiet
+   turquoise tint on the surface, in both themes — the numbers and copy differ,
+   the chrome does not. */
+:root .svc.themed, :root[data-theme="dark"] .svc.themed {
+  --card-bg: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  --card-fg: var(--text);
+  --card-dim: var(--text-2);
+  --card-accent: var(--accent-text);
+}
+.svc.themed .svc__card { border: 1px solid var(--accent-line); box-shadow: none; }

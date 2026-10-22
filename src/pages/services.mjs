@@ -125,7 +125,7 @@ export function renderService(ctx, it, i) {
     `<section class="sec">
       <div class="wrap wrap--wide">
         <div class="indexed">
-          ${C.sideIndex([{ title: it.t, items: [{ id: "includes", label: "ما يشمله" }, { id: "deliverables", label: "ما نُسلّمه" }].concat(mine.length ? [{ id: "numbers", label: "أرقام موقّعة" }] : []).concat(related.length ? [{ id: "proof", label: "أعمال" }] : []) }], `فهرس ${it.t}`)}
+          ${C.sideIndex([{ title: it.t, items: [{ id: "includes", label: "ما يشمله" }, { id: "deliverables", label: "ما نُسلّمه" }].concat(mine.length ? [{ id: "numbers", label: "أرقام" }] : []).concat(related.length ? [{ id: "proof", label: "أعمال" }] : []) }], `فهرس ${it.t}`)}
           <div class="indexed__col case">
             <div class="case__sec" id="includes">
               ${C.sectionHead({ eyebrowAr: "ما يشمله", eyebrowEn: "SCOPE", h: "المجالات التي نغطّيها" })}
@@ -136,7 +136,7 @@ export function renderService(ctx, it, i) {
               <ul class="ticks rv">${it.deliverables.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
             </div>
             ${mine.length ? `<div class="case__sec" id="numbers">
-              ${C.sectionHead({ eyebrowAr: "أرقام موقّعة", eyebrowEn: "SIGNED", h: "أرقام هذه الخدمة — موقّعة، لا مكتوبة", lede: "كل رقم هنا موقّع بمفتاح Ed25519 عند البناء، ومتصفّحك يعيد التحقّق منه في صفحة التحقّق." })}
+              ${C.sectionHead({ eyebrowAr: "أرقام", eyebrowEn: "NUMBERS", h: "أرقام هذه الخدمة", lede: "يمكنك التحقّق من كل رقم هنا بنفسك في صفحة التحقّق." })}
               ${C.statBar(mine, stats, { size: "lg", verify: !!ctx.signing, signing: ctx.signing })}
               <p class="rv"><a class="lnk" href="/verify">كل الأرقام وطريقة التحقّق ←</a></p>
             </div>` : ""}

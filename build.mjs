@@ -16,7 +16,11 @@ import { setBuild } from "./src/lib/layout.mjs";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), "utf8"));
+/* every file the build writes is recorded: scripts/pack.mjs ships exactly the
+   public part of this list, instead of guessing which directories are routes */
+const WRITTEN = new Set();
 const write = (rel, content) => {
+  WRITTEN.add(rel.replace(/\/{2,}/g, "/"));
   const abs = join(ROOT, rel);
   mkdirSync(dirname(abs), { recursive: true });
   writeFileSync(abs, content);
@@ -328,10 +332,22 @@ function localize(html, path, loc) {
         (m, a, t, b) => a + fitDesc(t) + b);
     out = out.replace(/<html\s+lang="[^"]*"\s+dir="[^"]*"/, `<html lang="${loc.code}" dir="${loc.dir}"`);
     /* internal links move under the locale prefix; assets never do */
-    out = out.replace(/(href|src)="(\/[^"#]*)"/g, (m, attr, p) => (ASSET_RE.test(p) ? m : `${attr}="${loc.prefix}${p}"`));
+    out = out.replace(/(href|src)="(\/[^"]*)"/g, (m, attr, p) => {
+      if (ASSET_RE.test(p)) return m;
+      const match = p.match(/^([^?#]*)([?#].*)?$/);
+      if (!match) return m;
+      const pathOnly = match[1];
+      const extra = match[2] || "";
+      const prefixed = pathOnly.startsWith(loc.prefix + "/") || pathOnly === loc.prefix
+        ? pathOnly
+        : `${loc.prefix}${pathOnly}`;
+      return `${attr}="${prefixed}${extra}"`;
+    });
     /* absolute URLs in canonical, og:url and JSON-LD */
     out = out.replace(new RegExp(site.brand.url.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(/[^\"']*)?", "g"),
-      (m, p) => (p && ASSET_RE.test(p) ? m : site.brand.url + loc.prefix + (p || "/")));
+      (m, p) => (p && ASSET_RE.test(p) ? m
+        : p && loc.prefix && (p === loc.prefix || p.startsWith(loc.prefix + "/") || p.startsWith(loc.prefix + "#")) ? m
+        : site.brand.url + loc.prefix + (p || "/")));
     out = out.replace(/\u0000E(\d+)\u0000/g, (m, i) => parked[+i]);
   }
 
@@ -351,8 +367,11 @@ function localize(html, path, loc) {
   }
 
   /* hreflang: both locales, on every page, plus x-default on the Arabic original */
-  const altPath = `${site.brand.url}${alt.prefix}${path === "/" ? "/" : path}`;
-  const selfPath = `${site.brand.url}${loc.prefix}${path === "/" ? "/" : path}`;
+  /* the Arabic 404 is the root file /404.html (the host's ErrorDocument), not a
+     /404/ directory, so its alternate has to name the file that exists */
+  const urlFor = (l) => `${site.brand.url}${l.prefix}${path === "/" ? "/" : path === "/404" && !l.prefix ? "/404.html" : path}`;
+  const altPath = urlFor(alt);
+  const selfPath = urlFor(loc);
   const arPath = loc.code === "ar" ? selfPath : altPath;
   out = out.replace("</head>", [
     `<link rel="alternate" hreflang="ar" href="${loc.code === "ar" ? selfPath : altPath}">`,
@@ -362,7 +381,7 @@ function localize(html, path, loc) {
   ].join("\n"));
 
   /* the language switcher points at this exact page in the other language */
-  out = out.split("__ALT_URL__").join(`${alt.prefix}${path === "/" ? "/" : path}`)
+  out = out.split("__ALT_URL__").join(urlFor(alt).slice(site.brand.url.length))
            .split("__ALT_CODE__").join(alt.code)
            .split("__ALT_SHORT__").join(alt.code === "en" ? "EN" : "ع")
            .split("__ALT_LABEL__").join(alt.name)
@@ -411,9 +430,11 @@ const cspPolicy = () => [
   /* every DOM-XSS sink was removed from our JS and the one vendored library has
      none, so this can be the strict form: no policy may be created at all */
   "require-trusted-types-for 'script'",
-  /* one named policy, not 'none': registering the service worker needs a
-     TrustedScriptURL, and that policy can mint only the literal "/sw.js" */
-  "trusted-types awalim-sw",
+  /* named policies, not 'none': registering the service worker needs a
+     TrustedScriptURL, and that policy can mint only the literal "/sw.js";
+     awalim-ledger can mint only /assets/js/ledger.js?v=<hex>, the lazy load
+     of the cockpit demo in awalim.js */
+  "trusted-types awalim-sw awalim-ledger",
   "upgrade-insecure-requests"
 ].join("; ");
 
@@ -521,7 +542,7 @@ if (leftovers.length) {
 }
 
 /* ---------- service worker (versioned by the build stamp) ---------- */
-write("sw.js", readFileSync(join(ROOT, "src/sw.template.js"), "utf8").replace("__STAMP__", buildStamp));
+write("sw.js", readFileSync(join(ROOT, "src/sw.template.js"), "utf8").replaceAll("__STAMP__", buildStamp));
 
 /* ---------- public verification manifest ---------- */
 write("verify/stats.json", JSON.stringify({ ...signing, note: "Verify: sha256(payload) == sha256 · Ed25519.verify(publicKey, signature, payload). See /verify." }, null, 2));
@@ -546,9 +567,10 @@ for (const r of ctx.careers.roles.filter((r) => r.open !== false)) add(r.title, 
 for (const c of ctx.cases) add(`${c.title} — ${c.headline}`, c.summary, `/work/${c.slug}`, "دراسة حالة", `${c.code} ${c.kind} ${c.tech.join(" ")} ${c.aliases || ""}`);
 for (const p of ctx.products) add(p.title, p.headline, `/products/${p.slug}`, "منتج", `${p.code} ${p.kind} ${p.tags.join(" ")} ${p.aliases || ""}`);
 for (const a of ctx.articles) add(a.title, a.excerpt, `/journal/${a.slug}`, "مقال", `${a.catLabel} ${a.author}`);
-for (const [id, t, d] of [["work", "الأعمال المختارة", "RahmaCare · Jameel Store · Vibe OS · محاسب ذكي"], ["ecosystem", "ستّة خطوط إنتاج", "المنظومة"], ["standards", "ثمانية شروط لا نسلّم بدونها", "المعايير الهندسية"], ["stack", "أدوات نعرفها عن ظهر قلب", "المكدّس التقني"], ["process", "أربع مراحل. لا مفاجآت.", "كيف نعمل"], ["founder", "كلمة المؤسّس", "أحمد أشرف"], ["faq", "أسئلة متكرّرة", "قبل أن تتواصل"]]) add(t, d, `/#${id}`, "قسم");
+for (const [id, t, d] of [["work", "الأعمال المختارة", "RahmaCare · Jameel Store · Vibe OS · محاسب ذكي"], ["process", "أربع مراحل. لا مفاجآت.", "كيف نعمل"], ["founder", "كلمة المؤسّس", "أحمد أشرف"], ["faq", "أسئلة متكرّرة", "قبل أن تتواصل"]]) add(t, d, `/#${id}`, "قسم");
 for (const it of pages.services.items) add(it.t, it.h, `/services#${it.id}`, "قسم", it.latin);
 add("كيف نُسعّر", pages.services.pricing.h, "/services#pricing", "قسم", "pricing تسعير");
+add("المعايير الهندسية", "الشروط التي لا نسلّم بدونها", "/services#standards", "قسم", "standards معايير");
 write("search.json", JSON.stringify(idx));
 /* English index: same shape, translated through the dictionary and prefixed */
 const enCtx = buildCtx("en");
@@ -609,17 +631,28 @@ const today = new Date().toISOString().slice(0, 10);
 const prio = (p) => (p === "/" ? "1.0" : p.split("/").length > 2 ? "0.7" : "0.9");
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${allRoutes.filter((p) => !p.endsWith("/404") && !p.endsWith("/offline") && !/\/dashboard$/.test(p)).map((p) => `  <url><loc>${site.brand.url}${p === "/" ? "/" : p}</loc><lastmod>${today}</lastmod><priority>${prio(p)}</priority><xhtml:link rel="alternate" hreflang="${p.startsWith("/en") ? "en" : "ar"}" href="${site.brand.url}${p}"/></url>`).join("\n")}
+${allRoutes.filter((p) => !p.endsWith("/404") && !p.endsWith("/offline") && !/\/dashboard$/.test(p)).map((p) => {
+  /* every URL lists the full reciprocal set — ar, en and x-default (the Arabic
+     original) — the same three alternates the page's own <head> carries */
+  const base = p.startsWith("/en/") ? p.slice(3) : p;
+  const arP = base, enP = "/en" + base;
+  const alts = allRoutes.includes(arP) && allRoutes.includes(enP)
+    ? [["ar", arP], ["en", enP], ["x-default", arP]].map(([h, q]) => `<xhtml:link rel="alternate" hreflang="${h}" href="${site.brand.url}${q}"/>`).join("")
+    : "";
+  return `  <url><loc>${site.brand.url}${p === "/" ? "/" : p}</loc><lastmod>${today}</lastmod><priority>${prio(p)}</priority>${alts}</url>`;
+}).join("\n")}
 </urlset>
 `;
 write("sitemap.xml", sitemap);
 /* the owner's panel runs locally (it rebuilds through serve.mjs) and is not part of the public site */
 write("robots.txt", `User-agent: *\nAllow: /\nDisallow: /src/\nDisallow: /dashboard\nDisallow: /en/dashboard\n\nSitemap: ${site.brand.url}/sitemap.xml\n`);
 
-/* ---------- security headers, written into both hosts' formats ----------
-   One source of truth here; _headers (Netlify/Cloudflare) and vercel.json are
-   both rewritten from it, because two hand-maintained copies of a policy drift
-   and the drift is invisible until a browser blanks the page. */
+/* ---------- response headers, redirects and caching — one source, three hosts ----------
+   One source of truth here; _headers (Netlify/Cloudflare + scripts/serve.mjs),
+   vercel.json, and .htaccess (Hostinger/LiteSpeed/Apache — the production
+   host, which reads ONLY .htaccess) are all rewritten from it, because
+   hand-maintained copies of a policy drift and the drift is invisible until a
+   browser blanks the page. scripts/headers-test.mjs asserts they agree. */
 const SECURITY_HEADERS = [
   ["X-Content-Type-Options", "nosniff"],
   ["X-Frame-Options", "DENY"],
@@ -630,13 +663,43 @@ const SECURITY_HEADERS = [
   ["Cross-Origin-Resource-Policy", "same-origin"],
   ["Content-Security-Policy", cspPolicy()]
 ];
+/* [path glob (_headers/vercel), Cache-Control, file extensions (.htaccess)].
+   css/js are requested as ?v=<build stamp>, so a new build is a new URL and
+   the old one may be cached for good. Documents and the files that must be
+   seen fresh (the worker that versions the cache, the sitemap, the search
+   index) revalidate on every load. */
+const YEAR = "public, max-age=31536000, immutable";
+const FRESH = "no-cache";
 const CACHE_RULES = [
-  ["/assets/fonts/*", "public, max-age=31536000, immutable"],
-  ["/assets/img/*", "public, max-age=31536000, immutable"],
-  ["/assets/vendor/*", "public, max-age=31536000, immutable"],
-  ["/assets/css/*", "public, max-age=604800, must-revalidate"],
-  ["/assets/js/*", "public, max-age=604800, must-revalidate"]
+  ["/assets/fonts/*", YEAR, "woff2|woff|ttf|otf"],
+  ["/assets/img/*", YEAR, "webp|png|jpe?g|gif|svg|avif"],
+  ["/assets/vendor/*", YEAR, null],
+  ["/assets/css/*", YEAR, "css"],
+  ["/assets/js/*", YEAR, "js"],
+  ["/sw.js", FRESH, null],
+  ["/sitemap.xml", FRESH, null],
+  ["/search.json", FRESH, null],
+  ["/en/search.json", FRESH, null]
 ];
+/* legacy routes → current ones. [from, to, status] */
+const REDIRECTS = [
+  ["/about", "/group", 301],
+  ["/about.html", "/group", 301],
+  ["/insights", "/journal", 301],
+  ["/insights.html", "/journal", 301],
+  ["/work.html", "/work", 301],
+  ["/products.html", "/products", 301],
+  ["/services.html", "/services", 301],
+  ["/academy.html", "/academy", 301],
+  ["/contact.html", "/contact", 301],
+  ["/start", "/contact", 302],
+  ["/en/about", "/en/group", 301],
+  ["/en/insights", "/en/journal", 301],
+  ["/en/start", "/en/contact", 302]
+];
+/* paths that must never be served even if they reach the host by mistake */
+const PRIVATE_PATHS = String.raw`\.keys|\.panel-backups|\.git|\.claude[^/]*|src|scripts|shots|node_modules|dashboard|en/dashboard|serenity-spa[^/]*`;
+const PRIVATE_EXT = "zip|gz|md|mjs|pem|py|sh|log";
 
 write("_headers", [
   "# generated by build.mjs — do not edit by hand; the CSP carries a hash of the inline script",
@@ -646,9 +709,15 @@ write("_headers", [
   ...CACHE_RULES.flatMap(([path, v]) => [path, `  Cache-Control: ${v}`, ""])
 ].join("\n"));
 
+write("_redirects", [
+  "# generated by build.mjs — do not edit by hand (Netlify/Cloudflare format; .htaccess carries the same list)",
+  ...REDIRECTS.map(([from, to, s]) => `${from.padEnd(18)} ${to.padEnd(12)} ${s}`)
+].join("\n") + "\n");
+
 {
   const vercelPath = join(ROOT, "vercel.json");
   const v = JSON.parse(readFileSync(vercelPath, "utf8"));
+  v.redirects = REDIRECTS.map(([source, destination, s]) => ({ source, destination, permanent: s === 301 }));
   v.headers = [
     { source: "/(.*)", headers: SECURITY_HEADERS.map(([key, value]) => ({ key, value })) },
     ...CACHE_RULES.map(([path, value]) => ({ source: path.replace("/*", "/(.*)"), headers: [{ key: "Cache-Control", value }] }))
@@ -656,8 +725,112 @@ write("_headers", [
   writeFileSync(vercelPath, JSON.stringify(v, null, 2) + "\n");
 }
 
+/* .htaccess — Hostinger shared hosting runs LiteSpeed, which reads Apache
+   .htaccess syntax and nothing else: _headers and vercel.json are inert there.
+   Plain, widely supported directives only, each module behind <IfModule>. */
+{
+  const host = new URL(site.brand.url).host;
+  const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const q = (v) => `"${v.replace(/"/g, '\\"')}"`;
+  const htaccess = `# generated by build.mjs — do not edit by hand. Source: SECURITY_HEADERS,
+# CACHE_RULES and REDIRECTS in build.mjs (the same list _headers, _redirects
+# and vercel.json are written from). The CSP carries per-build script hashes.
+
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+# /work must not 301 to /work/ (the canonical URL has no trailing slash): the
+# rewrite below maps a directory to its index.html instead. Measured on Apache
+# 2.4 — without this, mod_dir redirects before the rewrite runs.
+<IfModule mod_dir.c>
+  DirectorySlash Off
+</IfModule>
+AddDefaultCharset utf-8
+ErrorDocument 404 /404.html
+<If "%{REQUEST_URI} =~ m#^/en(/|$)#">
+  ErrorDocument 404 /en/404/index.html
+</If>
+
+<IfModule mod_mime.c>
+  AddType text/javascript .js .mjs
+  AddType application/json .json
+  AddType application/manifest+json .webmanifest
+  AddType application/rss+xml .rss
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+  AddType font/woff2 .woff2
+  AddType image/x-icon .ico
+  AddCharset utf-8 .html .css .js .json .xml .txt .webmanifest
+</IfModule>
+
+# ---- private: never served, even if uploaded by mistake ----
+<IfModule mod_alias.c>
+  RedirectMatch 404 ^/(${PRIVATE_PATHS})(/|$)
+</IfModule>
+<FilesMatch "\\.(${PRIVATE_EXT})$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "^(_headers|_redirects|vercel\\.json|package(-lock)?\\.json|\\.htaccess)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # ---- one origin: https://${host} (www and http redirect here) ----
+  RewriteCond %{HTTP_HOST} ^www\\.${reEsc(host)}$ [NC]
+  RewriteRule ^ https://${host}%{REQUEST_URI} [R=301,L]
+  RewriteCond %{HTTP_HOST} ^${reEsc(host)}$ [NC]
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://${host}%{REQUEST_URI} [R=301,L]
+
+  # ---- legacy routes ----
+${REDIRECTS.map(([from, to, s]) => `  RewriteRule ^${reEsc(from.slice(1))}${from.endsWith(".html") ? "" : "/?"}$ ${to} [R=${s},L]`).join("\n")}
+
+  # /en is the one directory whose canonical URL ends in a slash
+  RewriteRule ^en$ /en/ [R=301,L]
+
+  # ---- clean URLs: /work → /work/index.html, served without a trailing-slash redirect ----
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteRule ^(.+)$ /$1/index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+${SECURITY_HEADERS.map(([k, v]) => `  Header always set ${k} ${q(v)}`).join("\n")}
+
+  # ---- caching ----
+  <FilesMatch "\\.(html|json|xml|txt|webmanifest)$">
+    Header set Cache-Control "${FRESH}"
+  </FilesMatch>
+${CACHE_RULES.filter(([, , ext]) => ext).map(([, v, ext]) => `  <FilesMatch "\\.(${ext})$">\n    Header set Cache-Control ${q(v)}\n  </FilesMatch>`).join("\n")}
+  <FilesMatch "\\.ico$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  <FilesMatch "^sw\\.js$">
+    Header set Cache-Control "${FRESH}"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml text/javascript application/javascript application/x-javascript application/json application/xml application/rss+xml image/svg+xml application/manifest+json image/x-icon
+</IfModule>
+`;
+  write(".htaccess", htaccess);
+}
+
 /* ---------- routes manifest (used by tests / OG generator) ---------- */
 write("src/routes.json", JSON.stringify(allRoutes, null, 2));
+
+/* ---------- deploy manifest: what the build wrote that the public may see ----------
+   scripts/pack.mjs zips exactly this plus the static assets, so a route that
+   exists is shipped and nothing else is guessed at. The owner's panel and the
+   build's own bookkeeping are not public. */
+write("src/deploy-manifest.json", JSON.stringify({
+  stamp: buildStamp,
+  files: [...WRITTEN].filter((f) => !/^(src\/|dashboard\/|en\/dashboard\/)/.test(f) && !["_headers", "_redirects", "vercel.json"].includes(f)).sort()
+}, null, 2));
 
 console.log(`✔ built ${count} pages (${LOCALES.length} locales) · css ${(cssBytes / 1024).toFixed(1)}KB (critical ${(criticalBytes / 1024).toFixed(1)}KB inline) · build ${buildStamp} · ${new Date().toLocaleTimeString("en-GB")}`);
 /* Proof is content only the owner can supply. Say what's still empty on every

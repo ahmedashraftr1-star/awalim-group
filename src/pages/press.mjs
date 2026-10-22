@@ -51,7 +51,7 @@ export default function render(ctx) {
     `<section class="sec sec--alt" id="founder">
       <div class="wrap wrap--wide">
         <div class="founder rv" data-stagger>
-          <div class="founder__img"><img src="${site.brand.founder.photo}" alt="${esc(press.founder.h)}، ${esc(press.founder.role)}" width="560" height="700" loading="lazy" decoding="async"></div>
+          <div class="founder__img"><img src="${site.brand.founder.photo}" srcset="${C.srcset(site.brand.founder.photo)}" sizes="(min-width: 900px) 680px, 200vw" alt="${esc(press.founder.h)}، ${esc(press.founder.role)}" width="1024" height="575" loading="lazy" decoding="async"></div>
           <div class="founder__b">
             ${C.eyebrow(press.founder.eyebrow)}
             <h2 class="d-1">${esc(press.founder.h)}</h2>

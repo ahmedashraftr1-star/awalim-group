@@ -228,7 +228,7 @@
   .kl > .kl__in { transform: none; animation: none; }
   .js :is(.hero, .phero, .chero) .rv { animation: none; }
   .js .sec-head .klh .klh__in, .js .sec-head.in .klh .klh__in { transform: none; transition: none; }
-  .hero__dev, .hero__orb, .marq__track, .chip--pulse .dot { animation: none; }
+  .hero__dev, .hero__orb, .phero::after, .marq__track, .chip--pulse .dot { animation: none; }
   [data-parallax], .dev--tilt[data-parallax] { --py: 0px; }
   .dev--tilt { transform: none; }
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
