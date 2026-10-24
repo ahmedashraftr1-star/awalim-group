@@ -22,5 +22,5 @@ export default function render(ctx) {
       </div>
     </section>`
   ]);
-  return { path: "/404", html: page({ site, seo: { ...n.seo, path: "/404" }, active: "", body, bodyClass: "page-404" }) };
+  return { path: "/404", html: page({ site, seo: { ...n.seo, path: ctx.locale === "en" ? "/404" : "/404.html" }, active: "", body, bodyClass: "page-404" }) };
 }

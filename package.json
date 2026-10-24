@@ -23,7 +23,8 @@
     "spacing": "node scripts/text-spacing.mjs",
     "engines": "node scripts/cross-engine.mjs",
     "pack": "node build.mjs && node scripts/pack.mjs",
-    "crawl": "node scripts/crawl-all.mjs"
+    "crawl": "node scripts/crawl-all.mjs",
+    "deploy": "node build.mjs && node scripts/deploy.mjs"
   },
   "devDependencies": {
     "axe-core": "^4.13.0",

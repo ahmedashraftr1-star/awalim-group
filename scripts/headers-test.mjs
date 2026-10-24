@@ -68,7 +68,13 @@ console.log("\n.htaccess carries the same headers and redirects");
   const missingR = redirects.filter(([from, to, s]) => !ht.includes(`RewriteRule ^${from.slice(1).replace(/\./g, "\\.")}`) || !ht.includes(` ${to} [R=${s},L]`)).map((r) => r.join(" "));
   ok(redirects.length > 0 && !missingR.length, `all ${redirects.length} _redirects rules are in .htaccess`, missingR.join("\n     "));
   ok(/ErrorDocument 404 \/404\.html/.test(ht) && /ErrorDocument 404 \/en\/404\/index\.html/.test(ht), "Arabic and English ErrorDocument 404 declared");
-  ok(/RedirectMatch 404 .*\\\.keys/.test(ht), "private paths (.keys, src, …) answer 404");
+  /* run the rule itself, not a substring of it */
+  const pm = ht.match(/RedirectMatch 404 (\S+)/);
+  const pre = pm ? new RegExp(pm[1]) : null;
+  const deny = ["/.keys/awalim.pem", "/.git/config", "/.builds/logs/x", "/.panel-backups/a", "/src/content/site.json", "/scripts/pack.mjs", "/dashboard/", "/en/dashboard/"];
+  const allow = ["/.well-known/acme-challenge/x", "/assets/css/awalim.css", "/work/rahmacare", "/en/", "/"];
+  const leaked = pre ? deny.filter((u) => !pre.test(u)) : deny, blocked = pre ? allow.filter((u) => pre.test(u)) : [];
+  ok(pre && !leaked.length && !blocked.length, "private paths (.keys, hidden dirs, src, …) answer 404; public ones and .well-known don't", [...leaked.map((u) => `not denied: ${u}`), ...blocked.map((u) => `wrongly denied: ${u}`)].join("\n     "));
 }
 
 /* ---- the policy has to be able to run the pages ---- */

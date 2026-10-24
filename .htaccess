@@ -30,7 +30,7 @@ ErrorDocument 404 /404.html
 
 # ---- private: never served, even if uploaded by mistake ----
 <IfModule mod_alias.c>
-  RedirectMatch 404 ^/(\.keys|\.panel-backups|\.git|\.claude[^/]*|src|scripts|shots|node_modules|dashboard|en/dashboard|serenity-spa[^/]*)(/|$)
+  RedirectMatch 404 ^/(\.(?!well-known)[^/]+|src|scripts|shots|node_modules|dashboard|en/dashboard|serenity-spa[^/]*)(/|$)
 </IfModule>
 <FilesMatch "\.(zip|gz|md|mjs|pem|py|sh|log)$">
   Require all denied

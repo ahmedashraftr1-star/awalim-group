@@ -5,7 +5,7 @@
    temp dir, serves it the way the host does (clean URLs, 404.html), fetches
    every sitemap URL and resolves every internal link inside the extracted copy.
    Usage: node build.mjs && node scripts/pack.mjs     (npm run pack does both) */
-import { readFileSync, existsSync, statSync, readdirSync, mkdirSync, rmSync, mkdtempSync } from "node:fs";
+import { chmodSync, readFileSync, existsSync, statSync, readdirSync, mkdirSync, rmSync, mkdtempSync } from "node:fs";
 import { join, dirname, extname, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
@@ -90,6 +90,9 @@ mkdirSync(DIST, { recursive: true });
 const zipPath = join(DIST, `awalim-hostinger-${day}.zip`);
 if (existsSync(zipPath)) rmSync(zipPath);
 const list = [...files].sort();
+/* the server reads files as another user: a file the build wrote 0600 (the og
+   generator did) uploads fine and then answers 403 on the live site */
+for (const f of list) { const m = statSync(join(ROOT, f)).mode & 0o777; if ((m & 0o044) !== 0o044) chmodSync(join(ROOT, f), (m | 0o644) & 0o755); }
 execFileSync("zip", ["-q", "-X", "-9", zipPath, "-@"], { cwd: ROOT, input: list.join("\n") + "\n" });
 
 /* re-read the zip itself, not our intent */

@@ -698,7 +698,7 @@ const REDIRECTS = [
   ["/en/start", "/en/contact", 302]
 ];
 /* paths that must never be served even if they reach the host by mistake */
-const PRIVATE_PATHS = String.raw`\.keys|\.panel-backups|\.git|\.claude[^/]*|src|scripts|shots|node_modules|dashboard|en/dashboard|serenity-spa[^/]*`;
+const PRIVATE_PATHS = String.raw`\.(?!well-known)[^/]+|src|scripts|shots|node_modules|dashboard|en/dashboard|serenity-spa[^/]*`;
 const PRIVATE_EXT = "zip|gz|md|mjs|pem|py|sh|log";
 
 write("_headers", [
