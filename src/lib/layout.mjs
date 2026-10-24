@@ -32,7 +32,8 @@ export const orgSchema = (site) => ({
   description: site.brand.shortDescription,
   founder: { "@type": "Person", name: site.brand.founder.latin, jobTitle: "Founder & Chief Engineer", ...(site.brand.founder.linkedin ? { sameAs: [site.brand.founder.linkedin] } : {}) },
   address: { "@type": "PostalAddress", addressCountry: "PS", addressRegion: "Palestine" },
-  contactPoint: [{ "@type": "ContactPoint", telephone: `+${site.contact.whatsapp}`, contactType: "sales", availableLanguage: ["ar", "en"] }],
+  contactPoint: [{ "@type": "ContactPoint", telephone: `+${site.contact.whatsapp}`, email: site.contact.email, contactType: "sales", availableLanguage: ["ar", "en"] }],
+  email: site.contact.email,
   knowsAbout: ["IFRS Accounting Software", "Agentic AI", "Flutter Engineering", "Design Systems", "Web Platforms"]
 });
 

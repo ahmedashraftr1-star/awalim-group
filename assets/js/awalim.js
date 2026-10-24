@@ -310,7 +310,7 @@
     var steps = $$(".msf__step", form), labels = $$("[data-msf-label]", form);
     var prev = $("[data-msf-prev]", form), next = $("[data-msf-next]", form), submit = $("[data-msf-submit]", form), mail = $("[data-msf-mail]", form);
     var bar = $("[data-msf-bar]", form), live = $("[data-msf-live]", form), review = $("[data-msf-review]", form), summary = $("[data-msf-summary]", form), status = $("[data-msf-status]", form);
-    var cur = 0, WA = "970593636136", MAIL = "hello@awalimgroup.com";
+    var cur = 0, WA = "970593636136", MAIL = "ceo@awalimgroup.com";
 
     function setErr(name, on) {
       var err = $('[data-err-for="' + name + '"]', form); if (err) err.hidden = !on;

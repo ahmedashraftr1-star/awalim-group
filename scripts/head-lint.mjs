@@ -76,7 +76,7 @@ for (const r of routes) {
   else if (!/^https?:\/\//.test(href)) add("canonical-نسبي", r, href);
   else {
     const path = href.replace(/^https?:\/\/[^/]+/, "") || "/";
-    const want = r === "/" ? "/" : r + "/";
+    const want = r === "/" ? "/" : r === "/404" ? "/404.html" : r + "/";   /* the Arabic 404 is served as /404.html (Apache ErrorDocument) */
     if (path !== want && path !== r) add("canonical-خاطئ", r, `${path} بدل ${want}`);
   }
 

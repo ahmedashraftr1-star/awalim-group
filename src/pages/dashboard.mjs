@@ -912,7 +912,7 @@ export default function dashboard(ctx) {
               </div>
               <div class="dash-field-group">
                 <label class="dash-label">${t("البريد الإلكتروني الرسمي للاستفسارات", "Official Contact Email")}</label>
-                <input type="email" class="dash-input" id="contact-input-email" value="${site.contact?.email || "hello@awalimgroup.com"}">
+                <input type="email" class="dash-input" id="contact-input-email" value="${site.contact?.email || "ceo@awalimgroup.com"}">
               </div>
               <div class="dash-field-group">
                 <label class="dash-label">${t("التزام مدة الرد على طلبات التعاقد", "Response Time Commitment")}</label>
